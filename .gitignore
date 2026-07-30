@@ -1,0 +1,22 @@
+# Gravações de sessão — ficam locais, nunca no repo (centenas de MB cada)
+*.mkv
+*.mp4
+*.mov
+*.flv
+*.wav
+*.mp3
+*.m4a
+design/raw/
+
+# Segredos
+.env
+.env.*
+!.env.example
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (as ferramentas de apoio)
+node_modules/
