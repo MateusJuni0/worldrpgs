@@ -15,7 +15,20 @@ De **cada uma das duas máquinas**: processador, gráficos integrados (modelo ex
 
 No Windows: `dxdiag` → *Guardar todas as informações*.
 
-**É a primeira pergunta a responder de toda a lista.** Tudo em WP12, WP13 e WP14 depende disto.
+**Meio respondida (30-07-2026).** A máquina do Rico está medida; falta a do Mateus:
+
+| | Máquina do Rico ✅ | Máquina do Mateus ⬜ |
+|---|---|---|
+| Processador | Intel Core i5-1334U (13.ª ger., 10 núcleos / 12 threads) | por medir |
+| Gráficos | Intel Iris Xe (integrado, sem placa dedicada) | |
+| RAM | **8 GB** — 2×4 GB DDR4-3200, **canal duplo** | |
+| Disco | SSD NVMe, 256 GB | |
+| Ecrã | 1920×1080 @ 60 Hz | |
+| SO | Windows 11 Home 64-bit | |
+| Comando | nenhum ligado — teclado+rato por agora | |
+
+⚠️ **A restrição real é mais dura do que a Lei 4 assumia: 8 GB, não ~12.** O orçamento de WP12/WP13/WP14 aponta à mais fraca das duas máquinas. Do lado bom: o canal duplo é o melhor cenário para gráficos integrados, e o ecrã de 60 Hz faz de 60 fps o tecto útil.
+
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 0b. O 3D aguenta-se neste hardware?
@@ -26,6 +39,8 @@ No Windows: `dxdiag` → *Guardar todas as informações*.
 A sessão 1 descreveu mundo aberto grande, 3D, ~61 chefes, 8 classes, dois sistemas de magia, montarias e co-op sincronizado. Isso é anos de trabalho para uma equipa.
 
 A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe e duas classes, isso já era um jogo que vocês queriam jogar?** Se sim, é por aí que se começa e o resto cresce por cima.
+
+**→ Proposta escrita (WP0):** [`10-fatia-1.md`](10-fatia-1.md) — 1 zona + 1 dungeon + 1 chefe, 6 classes (instrução directa do Rico), 5 armas, 3 magias, co-op desde o dia 1. Falta o sim (ou a correcção) dos dois.
 → [`00-visao.md`](00-visao.md) · secção de risco
 
 ### 2. Os biomas são patamares de dificuldade?
@@ -46,10 +61,14 @@ Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecid
 
 ### 5. Como funcionam os drops em co-op?
 O Rico levantou a pergunta às 05:36 e ficou sem resposta (o áudio do Mateus falhou). Três hipóteses: cópia para cada um, filtrado por classe, ou partilhado com negociação.
+
+*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md). A decisão final continua aqui.*
 → [`06-itens-inventario.md`](06-itens-inventario.md)
 
 ### 6. Os chefes ficam mais duros com dois jogadores?
 Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil passa a ser "chamar o outro", e o pilar 1 morre.
+
+*Entretanto, a fatia 1 joga com vida do chefe ×1,8 a dois, provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md).*
 → [`07-multiplayer.md`](07-multiplayer.md)
 
 ### 7. Como se recupera vida?
@@ -62,10 +81,14 @@ Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoraçã
 
 ### 9. Quantas classes no início?
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
+
+**→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md). Falta a palavra do Mateus.
 → [`02-personagem.md`](02-personagem.md)
 
 ### 10. O que acontece quando se morre?
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
+
+*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md). O tom definitivo decide-se aqui.*
 → [`01-combate.md`](01-combate.md)
 
 ---
