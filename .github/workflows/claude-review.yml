@@ -1,0 +1,51 @@
+name: claude-review
+
+# Revisão automática dos PRs do Rico e do Fable dele.
+#
+# ⚠️ Ao contrário do repo IRIS, aqui o bot NÃO faz merge. Comenta o veredito e
+# fica por aí. Quem aprova e faz merge é o Mateus — foi assim que ele definiu
+# este projeto desde o início: "ele vai vendo e tendo ideias e comitando e a
+# gente aprova".
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  rever:
+    # Só os PRs que não são do Mateus. Os dele não precisam de revisão do bot.
+    if: github.event.pull_request.user.login != 'MateusJuni0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: |
+            --model opus
+            --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(node tools/check-coerencia.mjs:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
+          prompt: |
+            Revê este PR ao repositório WorldRPGs.
+
+            O contexto todo está no CLAUDE.md do repositório — lê-o primeiro,
+            e depois os documentos que o PR toca.
+
+            NÃO faças merge. NÃO aprovies formalmente. Comenta o veredito com
+            `gh pr comment` e fica por aí — quem aprova é o Mateus.
+
+            Corre `node tools/check-coerencia.mjs --base origin/main` e inclui
+            o que sair no teu veredito.
+
+            Termina o comentário com uma destas linhas, e nada mais:
+            - `VEREDITO: pode entrar`
+            - `VEREDITO: pode entrar com reparos` (e lista os reparos)
+            - `VEREDITO: não deve entrar` (e diz porquê, com o caso concreto)

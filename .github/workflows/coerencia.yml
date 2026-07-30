@@ -1,0 +1,64 @@
+name: coerencia
+
+# Guarda técnico da spec. Corre em cada PR e comenta o resultado.
+# Apanha links partidos, documentos fora do índice, tensões perdidas de vista,
+# e — o que mais importa — [DECIDIDO] que muda sem decisão nova.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verificar coerência
+        id: check
+        run: |
+          set +e
+          node tools/check-coerencia.mjs --base origin/${{ github.base_ref }} > resultado.txt 2>&1
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          cat resultado.txt
+
+      - name: Comentar no PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const saida = fs.readFileSync('resultado.txt', 'utf8');
+            const falhou = '${{ steps.check.outputs.exit_code }}' !== '0';
+            const mexeuDecidido = saida.includes('[DECIDIDO] removida');
+
+            // Só comenta quando há alguma coisa a dizer.
+            if (!falhou && !mexeuDecidido && !saida.includes('aviso(s)')) return;
+
+            const titulo = falhou
+              ? '❌ A spec ficou incoerente'
+              : mexeuDecidido
+                ? '🔴 Este PR mexe num `[DECIDIDO]`'
+                : '🟡 Avisos de coerência';
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ${titulo}\n\n\`\`\`\n${saida.trim()}\n\`\`\``,
+            });
+
+      - name: Falhar se a spec ficou incoerente
+        if: steps.check.outputs.exit_code != '0'
+        run: exit 1

@@ -27,7 +27,9 @@ A spec cresce a partir das conversas. Nada entra aqui por invenção — cada de
 ## Mapa do repositório
 
 ```
+CLAUDE.md                    contexto para os agentes que trabalham aqui
 PARA-O-RICO.md               o que encontrei na sessao 1 — ler primeiro
+PONTE-CLAUDE.md              guia do Rico para a ponte
 SPEC.md                      índice mestre, com o estado de cada área
 spec/
   00-visao.md                o que é o jogo, e os pilares que não se negoceiam
@@ -45,6 +47,7 @@ prompts/
   BRIEFING-FABLE.md          prompt-raiz do agente que detalha a spec
   ARRANQUE-FABLE.md          o que o Rico cola no Fable para arrancar
 art/                         assets: manifesto, prompts de imagem, ficheiros
+tools/check-coerencia.mjs    guarda tecnico da spec, corre em cada PR
 design/
   transcripts/               transcrições das sessões
   ideas/                     ideias organizadas por sessão
