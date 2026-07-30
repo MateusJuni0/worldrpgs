@@ -8,6 +8,20 @@ Tudo o que falta decidir, por ordem de urgência. Serve de guião para a próxim
 
 ## 🔴 Bloqueiam tudo o resto
 
+### 0. Quais são as máquinas, ao certo?
+`[DECIDIDO]` que é PC sem placa gráfica dedicada e ~12 GB de RAM. Mas "ou assim" não dá para orçamentar nada — nem polígonos, nem texturas, nem engine.
+
+De **cada uma das duas máquinas**: processador, gráficos integrados (modelo exacto), RAM e se é canal simples ou duplo, SSD ou disco mecânico, resolução do ecrã, sistema operativo.
+
+No Windows: `dxdiag` → *Guardar todas as informações*.
+
+**É a primeira pergunta a responder de toda a lista.** Tudo em WP12, WP13 e WP14 depende disto.
+→ [`09-tecnico.md`](09-tecnico.md)
+
+### 0b. O 3D aguenta-se neste hardware?
+`[TENSÃO]` registada: um souls-like vive de janelas de frames, e quedas de fotogramas não são feias, são **injustas** — atacam directamente o pilar 1. Três caminhos (3D estilizado optimizado / 2.5D / 2D), com recomendação de manter o 3D **e medir cedo**.
+→ [`09-tecnico.md`](09-tecnico.md)
+
 ### 1. Qual é a fatia mais pequena disto que já é divertida a dois?
 A sessão 1 descreveu mundo aberto grande, 3D, ~61 chefes, 8 classes, dois sistemas de magia, montarias e co-op sincronizado. Isso é anos de trabalho para uma equipa.
 

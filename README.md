@@ -9,6 +9,7 @@ RPG 3D em terceira pessoa, **souls-like**, co-op para dois. Projeto hobby do **M
 | | |
 |---|---|
 | Fase | **Especificação** — sessão 1 de N |
+| Máquina alvo | **PC sem placa gráfica dedicada, ~12 GB RAM** |
 | Código | Nenhum, por decisão |
 | Engine | Por decidir |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
@@ -42,6 +43,7 @@ spec/
   99-perguntas-abertas.md    tudo o que falta decidir, por ordem de urgência
 prompts/
   BRIEFING-FABLE.md          prompt-raiz do agente que detalha a spec
+art/                         assets: manifesto, prompts de imagem, ficheiros
 design/
   transcripts/               transcrições das sessões
   ideas/                     ideias organizadas por sessão

@@ -57,6 +57,26 @@ Foi decidido explicitamente na sessão 1 (05:44 → 06:17), a partir de uma obje
 
 > "o que que vai te diferenciar do mago? Tu pegar um cajado bom, tu vai ser melhor com o mago?"
 
+### Lei 4 — A máquina alvo manda
+
+**PC sem placa gráfica dedicada. ~12 GB de RAM.** É nisto que os dois jogam. Não há hardware melhor à espera.
+
+Isto vem **antes** de qualquer decisão de arte, render ou engine. Não é um modo de baixa qualidade a acrescentar no fim — é o alvo.
+
+O que fica fora, na prática: iluminação global em tempo real, sombras dinâmicas em quantidade, pós-processamento pesado, texturas 4K, malhas densas, render diferido, e as engines que assumem tudo isto por defeito.
+
+E há uma ligação directa à Lei 1 que não podes perder de vista: **quedas de fotogramas num souls-like não são feio, são injusto.** Uma esquiva que falha porque o jogo engasgou tira ao jogador exactamente aquilo que a Lei 1 lhe promete. **Desempenho é uma questão de justiça, não de acabamento.**
+
+Regra prática: sempre que propuseres uma técnica visual, diz o que custa e porque é que cabe no orçamento. Ver [`spec/09-tecnico.md`](../spec/09-tecnico.md), onde está registada a `[TENSÃO]` entre o 3D e este hardware.
+
+---
+
+## Tens acesso ao repositório
+
+Lê-o todo antes de decidir seja o que for. O contexto que precisas está lá, e é preferível a assumires.
+
+Em particular, quando um documento citar um timestamp — `(sessão 1 · 04:23)` — isso aponta para uma frase real da conversa gravada. Se a transcrição estiver no repo, vai lê-la. Se não estiver, o resumo em [`PARA-O-RICO.md`](../PARA-O-RICO.md) cobre o essencial.
+
 ---
 
 ## Como marcar o que escreves
@@ -284,35 +304,154 @@ O sistema mais complexo do jogo, e está descrito numa única frase da gravaçã
 
 ---
 
-### WP12 — Arte, 3D e render · `spec/21-arte-render.md`
+### WP12 — Arte, render, efeitos e som · `spec/21-arte-render.md`
 
-**O maior custo real do projeto, e nunca foi falado na sessão 1.** É também onde o Mateus quer mais detalhe: como vão ser os inimigos em 3D, onde se vão buscar as coisas, e como se renderiza.
+**O maior custo real do projeto, e nunca foi falado na sessão 1.** Tudo aqui é decidido debaixo da Lei 4.
 
-- **Direcção de arte**, com referências concretas. Base: 3D, "realista não" (10:24), selva e floresta (11:37)
-- **Orçamento técnico:** polígonos por personagem / inimigo / chefe / cenário, resolução de texturas, ossos por esqueleto, resolução alvo e fotogramas por segundo
-- **Personagens e inimigos em 3D:** como são feitos, como são equipados (peças trocáveis ou modelo único), como são animados
-- **Animação.** É o que faz ou desfaz um souls-like. Lista das animações necessárias por personagem e por inimigo, e de onde vêm
-- **Onde ir buscar os assets** — tabela com: fonte, tipo, licença, custo, se serve para o estilo, e o risco. Cobrir bibliotecas gratuitas, lojas pagas, bibliotecas de animação, geração por IA, e fazer à mão. **A licença é obrigatória em cada linha**
-- **Pipeline de importação:** formatos, escala, orientação, convenção de nomes, como se liga um asset comprado ao esqueleto do jogo
-- **Render:** pipeline, iluminação (assada ou em tempo real), sombras, pós-processamento, névoa, efeitos. Quanto custa cada escolha em desempenho
-- **Efeitos visuais de combate** — rasto de arma, impacto, faísca de parry, magia. **A legibilidade importa mais do que a beleza**: o jogador tem de perceber o que o vai acertar
-- **Som:** música, ambiente, efeitos de combate, e de onde vêm
-- Máquina alvo: em que hardware é que isto tem de correr, já que são eles a jogar
+**Direcção de arte**
+- Estilo concreto, com referências. Base: 3D, "realista não" (10:24), selva e floresta (11:37), e um hardware que obriga a baixo poligonal estilizado
+- Paleta por bioma, e como a leitura visual muda entre zonas
+
+**Orçamento técnico** — números, para caberem na Lei 4
+- Polígonos por: jogador, inimigo comum, chefe, adereço, cenário por zona
+- Resolução de texturas por categoria, e o total de memória de vídeo
+- Ossos por esqueleto
+- Resolução alvo e fotogramas por segundo alvo, com um mínimo aceitável
+- Chamadas de desenho por cena, e como se mantêm baixas
+- **Orçamento de RAM.** Sobram talvez 6 GB depois do sistema e do vídeo partilhado
+
+**Personagens e inimigos em 3D**
+- Como são construídos, como são equipados (peças trocáveis ou modelo único — a segunda é muito mais barata)
+- Como são animados, e quantas animações precisa cada um
+- **A animação é o que faz ou desfaz um souls-like.** Lista completa por personagem e por inimigo, com duração e de onde vem cada uma
+
+**Render**
+- Pipeline, e porque é que aguenta gráficos integrados
+- Iluminação assada vs tempo real, e quantas luzes dinâmicas cabem
+- Sombras: quais, a que distância, ou nenhumas
+- Névoa e distância de visão — a névoa é aliada, esconde o corte do mundo
+- Pós-processamento: o que entra, o que fica de fora, e o custo de cada um
+- **Uma tabela de custo por técnica.** Cada linha diz o que ganha e quantos fotogramas custa
+
+**Efeitos visuais** — o Mateus pediu detalhe aqui
+- Rasto de arma, impacto, faísca de parry, sangue, morte
+- Cada magia com o seu efeito: lançamento, projéctil, impacto, marca no chão
+- Efeitos de estado: veneno, fogo, cura, buff
+- Ambiente: pó, folhas, chuva, tochas
+- Feedback de interface: dano recebido, stamina esgotada, vida baixa
+- **Regra:** a legibilidade vence a beleza. O jogador tem de perceber o que o vai acertar, e num souls-like isso é a diferença entre difícil e injusto. Um efeito bonito que esconde a telegrafia de um ataque é um efeito mau
+- Orçamento de partículas, que também paga na Lei 4
+
+**Som** — completo, não uma lista de intenções
+- Música: por zona, por chefe, no menu, na morte. Quantas faixas, que duração, como fazem a transição
+- Ambiente por bioma, em camadas
+- Efeitos de combate: cada arma a cortar, a acertar em carne, a acertar em metal, a ser aparada; passos por tipo de piso; esquiva; escudo; magia por escola
+- Vozes: grunhidos, dor, morte — do jogador e de cada inimigo
+- Interface: navegar, confirmar, cancelar, subir de nível, apanhar item
+- **Papel do som na Lei 1:** um chefe deve poder ser lido de ouvido. Ataques diferentes soam diferente, e isso é uma pista a mais para o jogador
+- Mistura: prioridades, canais, o que baixa quando toca outra coisa
+- De onde vem cada som, com licença
 
 ---
 
-### WP13 — Arquitectura técnica · `spec/22-tecnico.md`
+### WP13 — Catálogo de assets, prompts de imagem e pastas · `spec/22-assets.md` + `art/`
 
-- **Escolha de engine**, decidida pelo que a spec exige — 3D, terceira pessoa, animação precisa, mundo aberto, rede para dois — e não por gosto. Tabela comparativa e uma escolha justificada
+**Este pacote é o que liga a spec ao que vai existir no disco.** As imagens vão ser geradas pelo Mateus e pelo Rico com o **Codex / GPT image**. O teu trabalho é deixar tudo pronto para isso: o que gerar, com que prompt, com que tamanho, e para que pasta vai.
+
+#### Primeiro, separa o que a geração de imagens resolve do que não resolve
+
+> **Gerar imagens não é gerar modelos 3D.**
+
+| Resolve | Não resolve |
+|---|---|
+| Texturas (mapas de cor) | Malhas 3D |
+| Ícones de interface, itens, magias | Esqueletos e animação |
+| Arte de conceito para guiar quem modela | Colisões |
+| Retratos, ecrãs de menu, fundos | |
+| Céus | |
+
+Escreve isto claramente, e depois **diz de onde vêm os modelos e as animações** — bibliotecas gratuitas, lojas pagas, ou feitos à mão. Tabela com fonte, tipo, licença, custo, se serve para o estilo, e o risco. **A licença é obrigatória em cada linha**, e tem de ser compatível com um repositório público.
+
+#### Segundo, a estrutura de pastas
+
+Propõe e cria a árvore de `art/`, com um caminho canónico para cada asset. A regra é que o código, quando for escrito, saiba onde está cada coisa sem ter de perguntar.
+
+Sugestão de partida, ajusta se tiveres melhor:
+
+```
+art/
+  concept/       arte de conceito — guia, não entra no jogo
+  textures/
+    characters/  environment/  props/
+  ui/
+    icons/       items/  spells/  status/
+    hud/         frames/  bars/
+    menus/
+  vfx/           texturas de partículas e efeitos
+  sky/
+  models/        malhas 3D (não geradas por imagem)
+  audio/
+```
+
+Cada pasta leva um `README.md` a dizer o que lá vive, em que formato, e com que convenção de nome.
+
+#### Terceiro, o manifesto
+
+`art/MANIFESTO.md` — uma tabela com **todos** os assets visuais da fatia 1:
+
+| ID | Asset | Tipo | Caminho canónico | Dimensões | Formato | Origem | Fatia 1? |
+|---|---|---|---|---|---|---|---|
+
+O `ID` é o que a spec e o código usam para referir o asset. É o que faz tudo ligar.
+
+#### Quarto, os prompts
+
+`art/prompts/` — um ficheiro por asset, ou por família de assets, com o prompt pronto a colar no Codex / GPT image.
+
+Cada prompt tem de trazer:
+
+- O **prompt em si**, escrito em inglês (os geradores respondem melhor), completo e específico
+- **Uma frase de estilo repetida em todos** — é isto que faz 200 imagens parecerem do mesmo jogo. Escreve essa frase uma vez, e reutiliza-a literalmente
+- Dimensões e proporção
+- Fundo transparente ou não
+- O que **não** deve aparecer
+- Um exemplo de como se avalia se saiu bem
+- O caminho onde o ficheiro final vai ficar
+
+Exemplo do formato que quero:
+
+```markdown
+### `icon_spell_fireball` → `art/ui/icons/spells/fireball.png`
+
+**Prompt:**
+> [FRASE DE ESTILO], game UI icon of a fireball spell, ...
+
+**Dimensões:** 256×256 · **Fundo:** transparente · **Formato:** PNG
+**Não deve ter:** texto, moldura, sombra projectada
+**Sai bem se:** se ler a 48×48 sem virar uma mancha
+```
+
+O último ponto importa: um ícone que só se percebe em grande é um ícone que falha no jogo.
+
+#### Quinto, a ordem de geração
+
+Diz por onde começar, para eles poderem gerar por lotes sem se perderem, e para se poder validar o estilo em poucas imagens antes de gerar duzentas.
+
+---
+
+### WP14 — Arquitectura técnica · `spec/23-tecnico.md`
+
+- **Escolha de engine.** Decide-se pela Lei 4 primeiro, e só depois pelo resto. O critério que não pode faltar na comparação: **o que é que cada engine entrega mesmo sem GPU dedicada.** Tabela comparativa, com uma escolha justificada e a alternativa descartada
 - Arquitectura do código, por sistemas
 - Como os dados do jogo são guardados (armas, inimigos, magias) para se poder afinar sem recompilar
 - Gravação de progresso, e o que acontece quando os dois divergem
 - Plataformas, build, distribuição entre os dois
 - Ferramentas de afinação: consola, modo de depuração, sobreposição de hitboxes
+- **Medição de desempenho:** que números se vigiam, com que ferramenta, e a partir de que valor se pára tudo para optimizar
 
 ---
 
-### WP14 — Plano de construção · `spec/23-plano.md`
+### WP15 — Plano de construção · `spec/24-plano.md`
 
 O documento que o agente construtor vai abrir primeiro.
 
@@ -321,6 +460,8 @@ O documento que o agente construtor vai abrir primeiro.
 - Marcos, cada um com um teste jogável
 - Para cada marco: o que existe no fim, e como se verifica
 - Riscos, e o que fazer quando acontecerem
+
+**O marco 1 é obrigatoriamente um teste de desempenho**, e vem antes de qualquer conteúdo: um boneco a andar, três inimigos e uma zona pequena, **medido na máquina deles**. Existe para responder à `[TENSÃO]` do 3D contra o hardware ([`spec/09-tecnico.md`](../spec/09-tecnico.md)) com dados em vez de palpite. Diz que números se medem e qual é o valor abaixo do qual se muda de rumo.
 
 ---
 
@@ -353,6 +494,7 @@ Um pacote está pronto quando:
 - [ ] Não há um único adjectivo onde devia estar um número
 - [ ] Cada catálogo tem a coluna `Fatia 1?`
 - [ ] Cada número passou o teste da Lei 1, por escrito
+- [ ] Nada do que propuseste assume hardware que eles não têm (Lei 4)
 - [ ] Nada contradiz um `[DECIDIDO]` — e se contradisser, está assinalado em vez de escondido
 - [ ] Um agente que só leia este documento consegue implementar sem perguntar
 

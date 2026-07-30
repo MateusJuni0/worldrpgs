@@ -1,41 +1,101 @@
 # 09 — Técnico
 
-**Nada foi decidido nesta área.** Não é lapso da spec: a sessão 1 foi sobre o jogo, não sobre como construí-lo. Este documento existe para registar o tamanho do buraco.
+## ⚠️ A restrição que manda em tudo
 
-## O que se sabe
+`[DECIDIDO]` (Mateus, 31-07-2026)
 
-| | |
-|---|---|
-| 3D | `[DECIDIDO]` (11:28), com "pode ser de início" do Mateus a deixar porta aberta (11:32) |
-| Plataforma | PC, os dois, cada um em sua casa — implícito em toda a conversa |
-| Rede | Necessária. Nada mais decidido. |
+> **PC sem placa gráfica dedicada. ~12 GB de RAM.**
 
-## O que falta decidir, por ordem de peso
+Isto não é um detalhe de configuração. É a restrição mais dura do projeto e vem **antes** de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe.
 
-### 1. Engine `[EM ABERTO]`
+`[EM ABERTO]` — **Faltam os números reais.** "12 de RAM ou assim" não chega para orçamentar. É preciso, de cada uma das duas máquinas:
 
-Não foi mencionada nenhuma. É a decisão que condiciona tudo o resto e não deve ser tomada por gosto, mas pelo que a spec pede: 3D, terceira pessoa, combate com animação precisa, mundo aberto, rede para dois.
+- Processador (modelo exacto)
+- Gráficos integrados (modelo — Intel UHD 620? Iris Xe? AMD Vega 8?)
+- RAM: quantidade **e** se é canal simples ou duplo (num gráfico integrado, canal duplo chega a duplicar o desempenho)
+- Disco: SSD ou disco mecânico
+- Ecrã: resolução e taxa de actualização
+- Sistema operativo
 
-A discutir na próxima sessão sobre técnica, não agora.
+No Windows: `dxdiag` → *Guardar todas as informações*. Ambos.
 
-### 2. Rede `[EM ABERTO]`
+Sem isto, qualquer orçamento técnico é adivinhação.
 
-Ver [`07-multiplayer.md`](07-multiplayer.md). Duas perguntas ligadas:
-- Como se ligam duas casas diferentes (P2P com NAT punching, relay, ou servidor)
-- Quem tem autoridade sobre o combate (cliente ou servidor)
+### O que a restrição implica, de imediato
 
-A segunda é a que magoa se for adiada. Um souls-like em rede com autoridade errada dá esquivas que parecem acertar e não acertam, e não há forma barata de corrigir depois.
+Um gráfico integrado tem tipicamente entre 3% e 10% da capacidade de uma placa dedicada de gama média, e **partilha a RAM do sistema** — dos 12 GB, 1 a 2 GB vão para o vídeo, e o sistema operativo come mais 3 a 4. Sobram talvez 6 GB para o jogo.
 
-### 3. Arte 3D `[EM ABERTO]`
+Fica praticamente fora de questão: iluminação global em tempo real, sombras dinâmicas em quantidade, pós-processamento pesado, texturas 4K, malhas de alta densidade, render diferido, e as engines que assumem tudo isto por defeito.
 
-É provavelmente o maior custo real do projeto, e não foi falado. Modelos, animações de combate, cenários, efeitos. Comprar pronto, gerar, ou fazer? A resposta muda o cronograma numa ordem de grandeza.
+Fica dentro: 3D estilizado de baixa contagem de polígonos, iluminação assada, poucas luzes dinâmicas, texturas pequenas, render *forward*, distância de visão curta com névoa a esconder o corte.
 
-### 4. Gravação de progresso `[EM ABERTO]`
+**Isto não é má notícia.** Baixo poligonal estilizado é mais barato de produzir *e* de correr — alinha com serem duas pessoas. O que morre é o realismo, e o realismo já tinha sido recusado na sessão 1 ("Realista não", 10:24).
 
-Com progresso individual num mundo partilhado ([`07-multiplayer.md`](07-multiplayer.md)), onde é que fica guardado o estado de cada jogador, e quem manda quando divergem.
+### `[TENSÃO]` — 3D contra o hardware
+
+O 3D foi decidido (11:28), mas o Mateus deixou a porta aberta: *"pode ser de início. Vamos ver como é que..."* (11:32).
+
+Um souls-like vive de leitura de animação e janelas de frames. Num gráfico integrado, manter 60 fps estáveis em 3D com vários inimigos é difícil — e **quedas de fotogramas num souls-like não são feio, são injusto**: uma esquiva falha porque o jogo engasgou, não porque o jogador errou. Isso ataca directamente a Lei 1.
+
+Três caminhos, nenhum decidido:
+
+| | O que é | A favor | Contra |
+|---|---|---|---|
+| **A** | 3D estilizado, baixo poligonal, muito optimizado | É o que decidiram | Exige disciplina técnica constante; risco real de não chegar a 60 fps |
+| **B** | 2.5D — cenário 3D, câmara fixa ou isométrica | Corta a maior parte do custo gráfico e de animação | Não é o que imaginaram |
+| **C** | 2D com esqueletos | Souls-likes 2D excelentes existem (Hollow Knight corre em qualquer coisa) | Afasta-se muito da conversa |
+
+**Recomendação:** A, com um teste de desempenho logo no primeiro marco — um boneco a andar, três inimigos e uma zona pequena, medido na máquina deles. Se não der 60 fps estáveis, decide-se aí, com dados, e não agora por palpite.
+
+**Decidem:** Mateus + Rico.
+
+## Engine
+
+`[EM ABERTO]` — Nunca foi mencionada. A escolha decide-se pela restrição de hardware acima, não por gosto nem por popularidade.
+
+O que a spec exige: 3D em terceira pessoa, animação precisa, mundo aberto, rede para dois, e **correr em gráficos integrados**.
+
+Fica para o Fable comparar e propor, em [`prompts/BRIEFING-FABLE.md`](../prompts/BRIEFING-FABLE.md) · WP13. Critério que não pode faltar na comparação: **o que é que cada engine consegue mesmo entregar sem GPU dedicada.**
+
+## Rede
+
+`[EM ABERTO]` — Ver [`07-multiplayer.md`](07-multiplayer.md). Duas perguntas ligadas:
+
+- Como se ligam duas casas diferentes: P2P com NAT punching, relay, ou servidor
+- **Quem tem autoridade sobre o combate:** cliente ou servidor
+
+A segunda é a que magoa se for adiada. Num souls-like com esquiva e parry, a autoridade errada dá golpes que parecem acertar e não acertam, e não há forma barata de corrigir depois.
+
+## Arte e assets
+
+`[EM ABERTO]` — Ver [`21-arte-render.md`] (a criar pelo Fable, WP12).
+
+Fica já registada uma distinção que é fácil de confundir e cara de descobrir tarde:
+
+> **Gerar imagens não é gerar modelos 3D.**
+
+A geração de imagens (Codex / GPT image) serve para:
+
+- ✅ Texturas (mapas de cor)
+- ✅ Ícones de interface, itens, magias
+- ✅ Arte de conceito, para guiar quem modela
+- ✅ Retratos, cartas, ecrãs de menu
+- ✅ Céus e fundos
+
+E **não** serve para:
+
+- ❌ Malhas 3D
+- ❌ Esqueletos e animação
+- ❌ Colisões
+
+Ou seja: as imagens resolvem uma fatia grande do trabalho visual, mas **os modelos e as animações têm de vir de outro lado** — bibliotecas gratuitas, lojas, ou feitos à mão. O Fable tem de resolver isso explicitamente em WP12, e dizer de onde vem cada coisa.
+
+## Gravação de progresso
+
+`[EM ABERTO]` — Com progresso individual num mundo partilhado ([`07-multiplayer.md`](07-multiplayer.md)), falta decidir onde fica o estado de cada jogador e quem manda quando divergem.
 
 ## Nota sobre o método
 
-A intenção é o Fable do Rico construir a partir desta spec. Isso levanta a exigência de precisão: o que estiver vago aqui vai ser decidido por quem constrói, e provavelmente de forma diferente do que os dois imaginam.
+A spec vai ser detalhada pelo **Fable do Rico** e implementada depois por outro agente. O que estiver vago aqui vai ser decidido por quem constrói, e provavelmente de forma diferente do que os dois imaginam.
 
-A regra útil: **tudo o que estiver `[EM ABERTO]` quando a construção começar é uma decisão que vocês delegaram sem saber.** Ver [`99-perguntas-abertas.md`](99-perguntas-abertas.md).
+**Tudo o que estiver `[EM ABERTO]` quando a construção começar é uma decisão delegada sem se dar por isso.** Ver [`99-perguntas-abertas.md`](99-perguntas-abertas.md).

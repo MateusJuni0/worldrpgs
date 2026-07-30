@@ -59,6 +59,16 @@ O que **não** foi discutido do Dark Souls, e portanto não está decidido: fogu
 
 Para os dois. Não há intenção de vender, publicar ou fazer disto produto. Isso muda o que faz sentido: podem cortar tudo o que existe só para agradar a estranhos (tutorial extenso, acessibilidade de mercado, localização, monetização), e podem manter coisas que só fazem sentido para eles.
 
+## ⚠️ A restrição de hardware
+
+`[DECIDIDO]` (Mateus, 31-07-2026) — **PC sem placa gráfica dedicada, ~12 GB de RAM.**
+
+Vem antes de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe. Detalhe e consequências em [`09-tecnico.md`](09-tecnico.md).
+
+Há uma tensão registada entre isto e o 3D, com três caminhos e uma recomendação — está em [`09-tecnico.md`](09-tecnico.md), à espera de decisão dos dois.
+
+Do lado bom: a restrição empurra para 3D estilizado de baixo poligonal, que é **mais barato de produzir e de correr**. Alinha com serem duas pessoas, e com o "realista não" da sessão 1 (10:24).
+
 ## ⚠️ Risco de escopo — ler antes de decidir mais
 
 Nada disto invalida o projeto. Mas fica registado, porque é a diferença entre um jogo acabado e uma pasta abandonada.

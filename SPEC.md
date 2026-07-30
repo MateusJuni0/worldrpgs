@@ -26,12 +26,12 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 06 | [Itens e inventário](spec/06-itens-inventario.md) | Armas, mochila, montarias, drops | 🟢 a regra das armas está fechada |
 | 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🟠 sistema complexo em uma frase |
 | 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🟡 esqueleto |
-| 09 | [Técnico](spec/09-tecnico.md) | Engine, rede, plataformas | 🔴 nada decidido |
+| 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
 
-Onze coisas saíram da sessão 1 como decisão:
+Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
 
 1. RPG de acção 3D, terceira pessoa, souls-like, fantasia medieval
 2. **Ganha-se com habilidade, não com nível.** Sem gating, sem grind obrigatório
@@ -44,15 +44,22 @@ Onze coisas saíram da sessão 1 como decisão:
 9. Magia do bem e do mal, com usos limitados, magias desenhadas à mão
 10. Mundo aberto grande, por biomas, com dungeons escondidas em pontos do mapa
 11. Hotbar no fundo do ecrã + mochila de capacidade limitada
+12. **A máquina alvo é PC sem placa gráfica dedicada, ~12 GB de RAM.** Manda em toda a arte, render e escolha de engine
 
 ## O que trava
 
-Quatro perguntas bloqueiam o resto — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
+Seis perguntas bloqueiam o resto — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
 
-1. Qual é a fatia mais pequena disto que já é divertida a dois?
-2. Os biomas são patamares de dificuldade? (colide com o pilar 1)
-3. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)
-4. "Mapa grande" é quanto?
+1. **Quais são as máquinas, ao certo?** Sem os números reais não há orçamento técnico possível
+2. **O 3D aguenta-se neste hardware?** `[TENSÃO]` — quedas de fotogramas atacam o pilar 1
+3. Qual é a fatia mais pequena disto que já é divertida a dois?
+4. Os biomas são patamares de dificuldade? (colide com o pilar 1)
+5. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)
+6. "Mapa grande" é quanto?
+
+## A construir
+
+[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz. Manda o Fable detalhar isto tudo em 16 pacotes (WP0–WP15), um PR cada, até ficar implementável sem perguntas. Inclui o catálogo de assets, os prompts de imagem para o Codex/GPT image, e a estrutura de pastas de `art/`.
 
 ## Sessões
 
