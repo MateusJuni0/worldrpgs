@@ -26,6 +26,7 @@ A spec cresce a partir das conversas. Nada entra aqui por invenção — cada de
 ## Mapa do repositório
 
 ```
+PARA-O-RICO.md               o que encontrei na sessao 1 — ler primeiro
 SPEC.md                      índice mestre, com o estado de cada área
 spec/
   00-visao.md                o que é o jogo, e os pilares que não se negoceiam
@@ -39,6 +40,8 @@ spec/
   08-ui.md                   HUD, hotbar, menus
   09-tecnico.md              engine, rede, plataformas
   99-perguntas-abertas.md    tudo o que falta decidir, por ordem de urgência
+prompts/
+  BRIEFING-FABLE.md          prompt-raiz do agente que detalha a spec
 design/
   transcripts/               transcrições das sessões
   ideas/                     ideias organizadas por sessão
