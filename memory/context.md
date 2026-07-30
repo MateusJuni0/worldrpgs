@@ -5,7 +5,7 @@ Especificar por inteiro um RPG 3D souls-like co-op para dois, antes de escrever 
 
 ## Âmbito
 - **Dentro:** design do jogo, em documento
-- **Fora:** implementação. O Fable do Rico constrói depois, a partir desta spec
+- **Fora:** implementação. O Fable do Rico detalha a spec; a construção é do **Opus 5**
 
 ## Quem é quem
 | | |

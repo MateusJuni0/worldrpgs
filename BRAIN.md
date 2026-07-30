@@ -31,7 +31,7 @@ node transcribe.mjs "C:/Users/mjnol/Videos/<ficheiro>.mp4" \
 
 - Sessão 1 gravada (30-07, 13m13s), transcrita e especificada
 - Repo criado, estrutura montada, 11 documentos de spec escritos
-- **Zero código, por decisão.** O Fable do Rico constrói depois, a partir desta spec
+- **Zero código, por decisão.** O Fable do Rico detalha a spec; quem constrói depois é o **Opus 5**
 - Próximo: sessão 2, com o guião de `spec/99-perguntas-abertas.md`
 
 ## Decisões que definem tudo

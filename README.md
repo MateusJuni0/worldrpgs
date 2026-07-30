@@ -10,7 +10,7 @@ RPG 3D em terceira pessoa, **souls-like**, co-op para dois. Projeto hobby do **M
 |---|---|
 | Fase | **Especificação** — sessão 1 de N |
 | Máquina alvo | **PC sem placa gráfica dedicada, ~12 GB RAM** |
-| Código | Nenhum, por decisão |
+| Código | Nenhum, por decisão — constrói o Opus 5, depois da spec |
 | Engine | Por decidir |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 
@@ -43,6 +43,7 @@ spec/
   99-perguntas-abertas.md    tudo o que falta decidir, por ordem de urgência
 prompts/
   BRIEFING-FABLE.md          prompt-raiz do agente que detalha a spec
+  ARRANQUE-FABLE.md          o que o Rico cola no Fable para arrancar
 art/                         assets: manifesto, prompts de imagem, ficheiros
 design/
   transcripts/               transcrições das sessões

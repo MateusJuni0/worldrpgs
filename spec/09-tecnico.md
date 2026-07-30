@@ -96,6 +96,6 @@ Ou seja: as imagens resolvem uma fatia grande do trabalho visual, mas **os model
 
 ## Nota sobre o método
 
-A spec vai ser detalhada pelo **Fable do Rico** e implementada depois por outro agente. O que estiver vago aqui vai ser decidido por quem constrói, e provavelmente de forma diferente do que os dois imaginam.
+A spec vai ser detalhada pelo **Fable do Rico** e implementada depois pelo **Opus 5**. O que estiver vago aqui vai ser decidido por quem constrói, e provavelmente de forma diferente do que os dois imaginam.
 
 **Tudo o que estiver `[EM ABERTO]` quando a construção começar é uma decisão delegada sem se dar por isso.** Ver [`99-perguntas-abertas.md`](99-perguntas-abertas.md).

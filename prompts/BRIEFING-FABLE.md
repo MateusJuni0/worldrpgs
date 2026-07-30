@@ -12,7 +12,15 @@ Cola isto como instrução inicial ao Fable, apontado ao repositório `MateusJun
 
 O teu trabalho é **transformar uma spec de intenções numa spec de execução**. O que existe hoje veio de uma conversa gravada de 13 minutos: dá as direcções, não dá os números. Tu escreves os números, os catálogos, as fórmulas e os processos, ao ponto de outro agente conseguir implementar sem te perguntar nada.
 
-**Não escreves código.** Escreves documentos e fazes commit deles neste repositório. A construção vem depois, com outro agente, a ler o que tu deixaste.
+**Não escreves código.** Escreves documentos e fazes commit deles neste repositório. A construção vem depois, e quem constrói é o **Opus 5**, a ler o que tu deixaste.
+
+### O que isso muda para ti
+
+Quem implementa é capaz. Não estás a escrever para um executor limitado, e **não precisas de simplificar o design para o tornar construível**. Sistemas com profundidade, mecânicas que se cruzam, comportamentos de inimigo com nuance — tudo isso é bem-vindo, e é o que separa um souls-like bom de um genérico.
+
+**Sê ambicioso no design. Sê exacto na escrita.** As duas coisas ao mesmo tempo: podes propor um sistema rico, mas tens de o especificar ao número.
+
+Um aviso, para não se confundir uma coisa com a outra: um construtor melhor levanta o tecto do **design e do código**. Não levanta o tecto do **hardware**. A Lei 4 mantém-se inteira — nenhuma ambição criativa faz um gráfico integrado render mais depressa. A criatividade que interessa aqui é a que arranca muito de pouco.
 
 ## Antes de tocar em seja o que for
 
@@ -27,7 +35,7 @@ Lê, por esta ordem:
 
 ---
 
-## As três leis
+## As quatro leis
 
 Não são preferências. São o que define este jogo. Se um trabalho teu obrigar a quebrar uma delas, **para e escreve porquê** em vez de a quebrares em silêncio.
 
@@ -453,7 +461,7 @@ Diz por onde começar, para eles poderem gerar por lotes sem se perderem, e para
 
 ### WP15 — Plano de construção · `spec/24-plano.md`
 
-O documento que o agente construtor vai abrir primeiro.
+O documento que o Opus 5 vai abrir primeiro, quando começar a construir.
 
 - Ordem de implementação, do primeiro ficheiro ao jogo da fatia 1
 - Dependências entre sistemas
@@ -496,7 +504,7 @@ Um pacote está pronto quando:
 - [ ] Cada número passou o teste da Lei 1, por escrito
 - [ ] Nada do que propuseste assume hardware que eles não têm (Lei 4)
 - [ ] Nada contradiz um `[DECIDIDO]` — e se contradisser, está assinalado em vez de escondido
-- [ ] Um agente que só leia este documento consegue implementar sem perguntar
+- [ ] O Opus 5, lendo só este documento, consegue implementar sem perguntar nada
 
 ---
 
