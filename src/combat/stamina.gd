@@ -51,7 +51,11 @@ func tick(delta: float, blocking: bool) -> void:
 	if blocking:
 		current = minf(maximum, current + _block_regen * delta)
 	elif _since_spend >= _regen_delay:
-		current = minf(maximum, current + _regen_rate * delta)
+		# So conta o tempo decorrido DEPOIS dos 0,8 s. No frame em que o atraso
+		# acaba, regenera-se a fatia certa em vez do delta inteiro — senao a
+		# histerese devolvia stamina a mais no primeiro frame de regeneracao.
+		var effective := minf(delta, _since_spend - _regen_delay)
+		current = minf(maximum, current + _regen_rate * effective)
 
 	if locked_out and current >= _hysteresis:
 		locked_out = false
