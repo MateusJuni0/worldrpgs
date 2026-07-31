@@ -51,6 +51,13 @@
 
 ### Volta 4 — magia
 
+⭐ **A forma de entrega é obrigatória em toda a ficha** — [`55-formas-de-feitico.md`](spec/55-formas-de-feitico.md). 12 formas, e o dano é o que menos as separa.
+
+| | Lacuna | Origem |
+|---|---|---|
+| 🟠 | ⭐ **Três formas que nos faltam:** perseguidor, chuva, e forma de arma (golpe de corpo a corpo feito de magia — resolve o "mago frágil ao perto" melhor que a besta) | [`55`](spec/55-formas-de-feitico.md) §5 |
+| 🟠 | ⚠️ **O traçado das zonas passa a afectar a magia** — tectos, corredores, terreno partido. A chuva morre debaixo de tecto | [`55`](spec/55-formas-de-feitico.md) §2 |
+
 ⭐ **A escola vermelha já está desenhada** — [`52-mago-do-mal.md`](spec/52-mago-do-mal.md), feita pelo Claude a pedido do Mateus (é o personagem dele). O WP4 herda-a; **não a reescreve.**
 
 | | Lacuna | Origem |
