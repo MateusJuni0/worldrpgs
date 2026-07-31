@@ -70,6 +70,8 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 47 | [**Do greybox ao visual**](spec/47-do-greybox-ao-visual.md) | O que temos hoje, visto e não suposto; o que faz parecer a referência (luz > polígonos); a ordem da conversão; capturas em todo o marco | 🟢 `[DECIDIDO]` 31-07 |
+| 46 | [**Coerência: bioma → raça → item → história**](spec/46-coerencia-bioma-raca-item.md) | A lei que impede a sopa, o motor que gera 300 descrições de 24 fichas, a camada dos subchefes, e os 61 chefes derivados do mapa | 🟢 `[DECIDIDO]` 31-07 |
 | 45 | [**Controlos configuráveis**](spec/45-controlos-configuraveis.md) | O jogador escolhe as teclas dentro do jogo — dissolve a guerra do parry | 🟢 `[DECIDIDO]` 31-07 |
 | 44 | [**O protótipo**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, lacunas encontradas a construir | 🟢 metade da ressalva do 0b fechada |
 | 43 | [**Estudo: espólio, inventário, segredos, carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços, mímicos, a porta de nevoeiro | 🟢 10 accionáveis |

@@ -10,6 +10,29 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### Do greybox ao visual → [`spec/47-do-greybox-ao-visual.md`](spec/47-do-greybox-ao-visual.md)
+`[DECIDIDO]` (Mateus, 31-07-2026) — *"vê se não está estilo jogo de PS1, tem que ser estilo Dark Souls."*
+- **Fui ver, não supor:** corri o modo fotografia do protótipo e olhei para as seis capturas
+- **Não é "estilo PS1" — é "sem estilo nenhum".** É greybox: cones por árvores, cápsulas por personagens, cores por ESTADO e não por beleza (o próprio `graphics.json` diz isso). Correcto para um protótipo de combate
+- ⚠️ **Mas o risco é real e é outro:** não há **nada no plano que converta** greybox em visual. Nenhum marco do WP15 diz *"aqui o jogo deixa de ser cinzento"* — e é assim que um protótipo se torna o jogo, sem ninguém decidir
+- ⭐ **O que faz parecer a referência NÃO é geometria:** luz com contraste, névoa com cor por bioma e gradação de cor valem **mais** do que modelos e texturas, e custam **quase zero fotogramas**. Trocar 40 modelos custa dias e dá salto médio; afinar luz e névoa custa horas e dá o salto maior
+- ⭐ **A cor vem da ficha de bioma** ([`46`](spec/46-coerencia-bioma-raca-item.md) §2) — os 3 valores de paleta deixam de ser decoração e passam a ser configuração de luz e névoa
+- ⭐ **Capturas obrigatórias em todo o marco.** A ferramenta já existe (o modo fotografia do Fable). A pergunta por marco: *está mais perto da barra do que no anterior?* Duas vezes "não" = o visual parou
+- ⚠️ **A animação de esqueleto continua a ser o único risco técnico por medir** — a folga de 6× é orçamento para ela, não garantia
+- **Substitui:** nada — a barra do [`30-qualidade-visual.md`](spec/30-qualidade-visual.md) não muda
+
+### Coerência do mundo, subchefes e escala → [`spec/46-coerencia-bioma-raca-item.md`](spec/46-coerencia-bioma-raca-item.md)
+`[DECIDIDO]` (Mateus, 31-07-2026) — *"as descrições têm que ter a ver com o bioma... a armadura do orc tem que ser de fogo se ele estiver num bioma de fogo. **Cuidado pra não misturar nesse aspecto.**"*
+- ⭐ **A lei de herança: `item = função × raça × bioma`.** Escolhe-se o bioma e a raça; material, resistência, fraqueza, onde cai, aspecto e descrição **deduzem-se**
+- ⭐ **O motor de produção: 12 fichas de bioma + 12 de raça = 300 descrições coerentes.** 24 fichas de 8 linhas, meio dia de trabalho, e desbloqueia o catálogo todo
+- ⚠️ **Um item fora do bioma é permitido — mas nunca por acidente.** Precisa de duas frases que expliquem a viagem, e aí passa a ser a coisa mais interessante da zona
+- ⭐ **A camada que faltava: SUBCHEFE.** Não é um chefe pequeno — vive **no mundo, sem arena, sem porta, sem música**. Aparece sem avisar, **pode-se fugir dele**, e guarda uma coisa que se vê. ⚠️ Aparecer sem aviso ≠ atacar sem aviso: os 0,50 s de telegrafia continuam
+- ⭐ **61 chefes DERIVADOS DO MAPA:** 1 Ultra + 12 subchefes + 12 guardiões + 36 de campo, com 12 biomas. Fecha a pergunta 13 **e** a 4 de uma vez — decidir biomas decide chefes
+- **10–15 raças** (temos 6) · **mais inimigos** — a alavanca é a **mesma raça em vários biomas, vestida pelo bioma**: muda material, resistência e **um** ataque; não muda esqueleto nem animações
+- **Todas as raças e chefes têm história** — 8 linhas por raça, +3 por chefe. Não é prosa: é a matéria-prima das descrições
+- ⚠️ **Muda a ordem de escrita:** as 24 fichas vêm **antes** do catálogo. Ao contrário, cada descrição é inventada de novo e a lei é impossível de aplicar
+- **Substitui:** nada — mas altera a ordem do [`ESTADO.md`](ESTADO.md) §3
+
 ### O código vem para este repositório → [`ESTADO.md`](ESTADO.md) §1
 `[DECIDIDO]` (Mateus, 31-07-2026) — **o jogo passa a viver em `game/`, ao lado da spec.**
 - ⚠️ **O jogo já existia e vivia num sítio só** — o disco do Rico. Sem cópia, sem revisão possível

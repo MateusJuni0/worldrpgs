@@ -86,13 +86,21 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 ## 3. ⭐ A ordem, e por que é esta
 
+⚠️ **Actualizada a 31-07 pelo [`46`](spec/46-coerencia-bioma-raca-item.md):** as **24 fichas** (12 de bioma + 12 de raça) vêm **antes** dos catálogos. São 8 linhas cada, meio dia de trabalho, e é delas que saem as descrições de tudo — com coerência de graça. Ao contrário, cada descrição é inventada de novo e a regra anti-mistura é impossível de aplicar porque não há biomas definidos para comparar.
+
+
+
 **Não é uma lista de desejos — é uma cadeia de dependências.** Cada passo desbloqueia o seguinte.
 
 ```
-0. O código vem para o repositório
-        │  sem isto não há revisão nem cópia de segurança
+0. ✅ O código veio para o repositório               (feito, PR #13)
         ▼
-1. Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
+1. AS 24 FICHAS  ── 12 de bioma + 12 de raça, 8 linhas cada
+        │           ~meio dia. É delas que sai TUDO o resto
+        ▼
+2. Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
+        │           cada item = intersecção de uma ficha de bioma
+        │           com uma de raça — a descrição sai quase sozinha
         │
         ├──► desbloqueia AS IMAGENS ──► não se desenham 120 armas
         │                               sem saber quais são
@@ -100,17 +108,21 @@ $ godot --headless --path game/ scenes/selftest.tscn
         └──► desbloqueia O CONTEÚDO ──► o motor é data-driven:
                                         o catálogo É o jogo
         ▼
-2. Os SISTEMAS que faltam  (interrupção · contra-ataque · baralho ·
+3. Os SISTEMAS que faltam  (interrupção · contra-ataque · baralho ·
         │                   soft caps · piso de 30% · carregamento por área)
         ▼
-3. O MUNDO  (WP8: círculos, atalhos, 10+ biomas, descanso à porta do chefe)
+4. O MUNDO  (WP8: círculos, atalhos, 12 biomas, descanso à porta do chefe)
         ▼
-4. O ALINHAMENTO dos documentos antigos contra o DECISOES.md
+5. O ALINHAMENTO dos documentos antigos contra o DECISOES.md
 ```
 
-### Porque é que o catálogo vem primeiro, e não o código
+### Porque é que as fichas vêm antes do catálogo
 
-⭐ **Porque é o único passo que desbloqueia dois caminhos ao mesmo tempo.**
+⭐ **Porque são o motor de produção.** 12 fichas de bioma + 12 de raça = **24 fichas de 8 linhas**, e cada uma das ~300 descrições do jogo é **uma intersecção de duas delas**. Se a ficha do bioma diz *"obsidiana"* e a da raça diz *"usam os ossos dos inimigos"*, o machado escreve-se sozinho.
+
+⚠️ **Ao contrário, cada descrição é inventada de novo, nenhuma combina com as outras, e a regra anti-mistura do [`46`](spec/46-coerencia-bioma-raca-item.md) §4 é impossível de aplicar** — não há biomas definidos contra os quais comparar.
+
+### E porque é que o catálogo vem antes dos sistemas
 
 As imagens estão paradas à espera dele: os 32 assets que existem cobrem cenários, classes e as 7 raças — **não há um único ícone de arma, de armadura ou de feitiço**, porque ninguém sabe ainda quais são. E o motor é data-driven por desenho ([`44`](spec/44-prototipo.md) §2): *"nenhum número de combate vive em código"*. **Escrever o catálogo é, literalmente, produzir conteúdo jogável.**
 

@@ -74,7 +74,9 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 32–43 | Claude | construção, referências, morte, catálogo, estudos, física, anéis, ataques, decisões |
 | 44 | Fable | protótipo |
 | 45 | Claude | controlos configuráveis |
-| **46+** | **livre** | |
+| 46 | Claude | coerência bioma→raça→item |
+| 47 | Claude | do greybox ao visual |
+| **48+** | **livre** | |
 
 ## Quem trata das entregas
 

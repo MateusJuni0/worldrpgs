@@ -97,19 +97,56 @@ As 120 armas **herdam** da família e variam em: requisitos, escala por atributo
 # A ordem
 
 ```
-1. CATÁLOGOS (camada 1 + fatia 1 da camada 2)
+1. AS 24 FICHAS (12 bioma + 12 raça) ── o motor de produção
+2. CATÁLOGOS (camada 1 + fatia 1 da camada 2)
        ├──► desbloqueia AS IMAGENS
        └──► desbloqueia O CONTEÚDO (o catálogo É o jogo)
-2. SISTEMAS que faltam
-3. MUNDO
-4. ALINHAMENTO dos documentos antigos
+3. SISTEMAS que faltam
+4. MUNDO
+5. ALINHAMENTO dos documentos antigos
 ```
 
 ---
 
-# Tarefa 1 — os catálogos
+# ⭐ Tarefa 1 — as 24 fichas, e é a tarefa mais rentável de todas
 
-## 1a. Magia (WP4) — ⭐ o maior e o mais importante
+`[DECIDIDO]` (Mateus, 31-07) — *"as descrições têm que ter a ver com o bioma. A armadura do orc tem que ser de fogo se ele estiver num bioma de fogo. **Cuidado pra não misturar nesse aspecto.**"*
+
+**Tudo isto está desenhado em [`../spec/46-coerencia-bioma-raca-item.md`](../spec/46-coerencia-bioma-raca-item.md). Lê antes de escrever uma linha de catálogo.**
+
+## Porque é que isto vem primeiro
+
+> **Não se escrevem 300 descrições. Escrevem-se 12 fichas de bioma e 12 de raça — e cada descrição é uma intersecção das duas.**
+
+**24 fichas × 8 linhas = 192 linhas. Meio dia.** E a partir daí a coerência é **de graça**: se a ficha do bioma diz *"obsidiana"* e a da raça diz *"usam os ossos dos inimigos"*, o machado escreve-se sozinho — obsidiana amarrada a um osso — e a descrição já sabe o que dizer.
+
+⚠️ **Ao contrário, cada descrição é inventada de novo, nenhuma combina com as outras, e a regra anti-mistura é impossível de aplicar** porque não há biomas definidos contra os quais comparar.
+
+## 1a. 12 fichas de bioma — 8 linhas cada
+
+Elemento dominante · elemento que lá funciona · material característico · paleta (3 cores) · raças que lá vivem · o que se colhe · a ameaça · ⭐ **o que aconteceu aqui** (uma frase — é a raiz de todas as descrições daquele sítio).
+
+⚠️ **12 biomas fecha duas perguntas de uma vez** — a 4 (tamanho do mapa) e a 13 (quantos chefes). Ver §6 do [`46`](../spec/46-coerencia-bioma-raca-item.md): **decidir o número de biomas decide o número de chefes.**
+
+## 1b. 12 fichas de raça — 8 linhas cada
+
+`[DECIDIDO]` — **10 a 15 raças.** Temos 6 esboçadas, **faltam 6**, e essas são tuas para inventar.
+
+De onde vem · o que quer · **porque está neste bioma** · como trata as outras raças · o que faz com os mortos · como se veste · como luta (o papel: rápido/pesado/distância/grupo/armadilha) · ⭐ **uma coisa que ninguém sabe**.
+
+## 1c. A lei de herança, e a regra anti-mistura
+
+> **`item = função × raça × bioma`.** Escolhe-se o bioma e a raça; material, resistência, fraqueza, onde cai, aspecto e descrição **deduzem-se**.
+
+⚠️ **Um item só aparece no bioma onde o material dele existe.**
+
+⭐ **Com uma excepção que vale ouro:** um item fora do sítio **é permitido, mas nunca por acidente** — precisa de duas frases que expliquem a viagem. Aí deixa de ser erro e passa a ser **a coisa mais interessante daquela zona**, e é exactamente o *"a gente nunca zera"* que o Mateus quer.
+
+---
+
+# Tarefa 2 — os catálogos
+
+## 2a. Magia (WP4) — ⭐ o maior e o mais importante
 
 O Mateus: *"o mago vai ser o mais apelão. As magias fazem tudo — cura, dano, buffs, elementos. Vamos ser bem vastos em magia."* **É a classe favorita dele.**
 
@@ -123,7 +160,7 @@ Base: [`../spec/42-estudo-magia.md`](../spec/42-estudo-magia.md). Falta encher:
 
 ⚠️ **A tensão 28 é tua para resolver se souberes melhor:** se a magia faz tudo, o mago é a classe correcta e a Lei 3 cai. Há cinco travões propostos em [`42`](../spec/42-estudo-magia.md) §8 — **se tiveres um melhor, propõe.**
 
-## 1b. Armas e armaduras (WP5)
+## 2b. Armas e armaduras (WP5)
 
 Base: [`../spec/41-estudo-armas-e-golpes.md`](../spec/41-estudo-armas-e-golpes.md).
 
@@ -138,7 +175,44 @@ Base: [`../spec/41-estudo-armas-e-golpes.md`](../spec/41-estudo-armas-e-golpes.m
 - **Melhoria de armas**: reforço (números) e infusão (**troca** de escala = Lei 2)
 - **Estados alterados** — veneno, sangramento, queimadura. Nunca foram escritos
 
-## 1c. Bestiário (WP6)
+## 2c. Bestiário (WP6) — ⚠️ e a camada que faltava
+
+`[DECIDIDO]` (Mateus, 31-07) — *"você não pensou nos subchefes, só colocou os chefes. Temos que adicionar mais inimigos, tem só três."*
+
+### ⭐ O subchefe não é um chefe pequeno
+
+O [`16-chefes.md`](../spec/16-chefes.md) tem a camada 2 chamada *"subchefes"*, mas com **regras de chefe**. A diferença é **onde ele vive** ([`46`](../spec/46-coerencia-bioma-raca-item.md) §6):
+
+| | Guardião | ⭐ Subchefe |
+|---|---|---|
+| Onde | arena, com porta de nevoeiro | ⭐ **no mundo — sem arena, sem porta, sem música** |
+| Aviso | música, barra a encher | ⚠️ **nenhum. Estás a andar e aquilo está ali** |
+| Podes fugir? | não — a porta tranca | ⭐ **sim, e é uma resposta válida** |
+| Guarda | o fim da zona | um baú, um atalho — **algo que se vê** |
+
+**Faz três coisas que um chefe de arena não consegue:** ensina que **o mundo é perigoso fora das portas** · deixa-te **decidir se estás pronto** (Lei 1) · e mostra-te o prémio e o guarda ao mesmo tempo.
+
+⚠️ **E a regra que o mantém honesto:** aparecer sem aviso **não é atacar sem aviso**. Os 0,50 s de telegrafia por ataque continuam obrigatórios ([`38`](../spec/38-ataques-e-honestidade.md)). Surpresa é **onde ele está**; nunca o que ele faz.
+
+### ⭐ Mais inimigos sem mais desenho
+
+**Temos 3 inimigos em dados. A alavanca é a lei da coerência a pagar-se:**
+
+> **A mesma raça aparece em vários biomas, vestida pelo bioma.**
+
+Orcs no vulcão e orcs no gelo são a **mesma raça** — mesmo esqueleto, mesmas animações. Muda: material e paleta · resistência e fraqueza · **um** ataque (o que usa o elemento local) · o baralho · a descrição.
+
+**Custo: uma textura e um ataque. Ganho: um inimigo que se lê de outra maneira.**
+
+⚠️ **A regra que impede isto de ser preguiça:** a variante **tem de mudar como se luta contra ela**. Se o orc do gelo se resolve exactamente como o do fogo, é o mesmo inimigo com outra cor — e isso percebe-se em cinco minutos.
+
+**Alvo:** ~12 raças × 2–3 biomas cada = **~30 a 36 fichas distintas**, com **≥ 3 papéis diferentes por bioma**.
+
+### A aritmética dos chefes, que agora deriva do mapa
+
+Com 12 biomas: **1 Ultra + 12 subchefes + 12 guardiões + 36 de campo = 61.** É exactamente o número planeado desde o [`00-visao.md`](../spec/00-visao.md) — e deixa de ser palpite.
+
+### E o resto da ficha
 
 - ⭐ **O baralho de espólio de 10 cartas por inimigo** ([`43`](../spec/43-estudo-espolio-inventario-mundo.md) §2) — é o que cumpre a garantia do Mateus
 - **Ficha de 11 colunas por ataque** ([`38`](../spec/38-ataques-e-honestidade.md) §3), com ⚠️ **"como se escapa" obrigatório e nunca "não dá"**
@@ -149,7 +223,7 @@ Base: [`../spec/41-estudo-armas-e-golpes.md`](../spec/41-estudo-armas-e-golpes.m
 
 ---
 
-# Tarefa 2 — os sistemas que faltam
+# Tarefa 3 — os sistemas que faltam
 
 **Não é investigação — é integração.** Todos com números já estudados.
 
@@ -182,7 +256,7 @@ O `data/controls.json` **já constrói o mapa em runtime**. Falta o ecrã.
 
 ---
 
-# Tarefa 3 — o mundo (WP8)
+# Tarefa 4 — o mundo (WP8)
 
 - ⚠️ **6 zonas contra 10+ biomas aprovados.** Resolve
 - ⭐ **Toda a zona fecha um círculo** para um sítio já visitado, e **o atalho abre-se do lado de dentro**. Pelo menos um círculo por zona é **vertical**
@@ -194,7 +268,7 @@ O `data/controls.json` **já constrói o mapa em runtime**. Falta o ecrã.
 
 ---
 
-# Tarefa 4 — alinhar os documentos antigos
+# Tarefa 5 — alinhar os documentos antigos
 
 Por último — é limpeza, e metade resolve-se ao reescrever os catálogos. A lista está no [`ESTADO.md`](../ESTADO.md) §2.
 
