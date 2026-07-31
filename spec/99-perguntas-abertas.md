@@ -89,19 +89,19 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 ### 10. O que acontece quando se morre?
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
 
-*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md). O tom definitivo decide-se aqui.*
+*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md), formalizado no WP1 ([`01-combate.md`](01-combate.md), secção Morte, incluindo morte em co-op). O tom definitivo decide-se aqui.*
 → [`01-combate.md`](01-combate.md)
 
 ---
 
 ## 🟡 Precisam de resposta antes de construir
 
-11. **Números do combate** — janela de invencibilidade da esquiva, custos de stamina, janela de parry. Não se decidem em conversa; decidem-se a jogar um protótipo. → [`01-combate.md`](01-combate.md)
+11. **Números do combate** — *ponto de partida completo escrito no WP1* `[FABLE]`: esquiva 0,60 s com 300 ms de invencibilidade, parry 133 ms, stamina 100 com custos por acção, frames das 5 armas. **Fecham-se a jogar o protótipo (marco 2)**, como sempre se disse. → [`01-combate.md`](01-combate.md)
 12. **Vida e Constituição fazem o quê, cada um?** Sobrepõem-se como estão. → [`02-personagem.md`](02-personagem.md)
 13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
 14. **Existe armadura?** Não foi dita uma única vez. → [`06-itens-inventario.md`](06-itens-inventario.md)
 15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. → [`05-mundo.md`](05-mundo.md)
-16. **Lock-on em alvo?** Muda o esquema de controlos inteiro. → [`01-combate.md`](01-combate.md)
+16. **Lock-on em alvo?** — *respondida no WP1* `[FABLE]`: **sim** — engate a 18 m, quebra a 25 m, strafe, sem re-engate automático. A câmara do lock é do WP1B. → [`01-combate.md`](01-combate.md)
 17. **Engine.** → [`09-tecnico.md`](09-tecnico.md)
 18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** A segunda é a que magoa se for adiada. → [`09-tecnico.md`](09-tecnico.md)
 19. **Arte 3D: comprar, gerar ou fazer?** Provavelmente o maior custo real. → [`09-tecnico.md`](09-tecnico.md)
