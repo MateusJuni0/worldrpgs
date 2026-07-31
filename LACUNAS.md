@@ -40,8 +40,12 @@
 
 ### Volta 4 — magia
 
+⭐ **A escola vermelha já está desenhada** — [`50-mago-do-mal.md`](spec/50-mago-do-mal.md), feita pelo Claude a pedido do Mateus (é o personagem dele). O WP4 herda-a; **não a reescreve.**
+
 | | Lacuna | Origem |
 |---|---|---|
+| ⏳ | **As 6 perguntas do Mateus sobre o mago do mal** — instrumento, nº de invocados, custo do chefe, chefe portátil ou não, que feitiços cortar, e se o Voto de Sangue entra | [`50`](spec/50-mago-do-mal.md) §10 |
+| 🟠 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* | [`50`](spec/50-mago-do-mal.md) §9 |
 | 🟠 | **Inimigos que lançam magia usam as mesmas regras?** *(proposta: sim, incluindo ser interrompíveis)* | [`42`](spec/42-estudo-magia.md), [`48`](spec/48-arcos-bestas-escudos.md) |
 | 🟠 | **Quantos feitiços na fatia 1** *(proposta: 3 — dano, cura, utilidade)* | [`42`](spec/42-estudo-magia.md) |
 | 🟠 | **O material de melhoria de feitiço é o mesmo das armas, ou outro?** | [`42`](spec/42-estudo-magia.md) §6 |
