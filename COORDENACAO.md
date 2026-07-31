@@ -22,6 +22,8 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP13 | `art/` + `spec/22-assets.md` | Claude | 31-07 | ✅ entregue — manifesto, prompts, fontes/licenças **e as 25 imagens geradas** (`83df034`) |
 | WP11B | `spec/27-aprendizagem.md` | Claude | 31-07 | ✅ entregue — valida-se com teste de pessoa de fora (WP15B) |
 | WP8B | `spec/26-narrativa.md` | Claude | 31-07 | ✅ entregue — guião de gravação de 7 perguntas para os donos |
+| — | `spec/29-perspectiva.md` (1.ª/3.ª pessoa) | Claude | 31-07 | ✅ entregue — decisão nova do Mateus, com o que obriga |
+| — | `spec/30-qualidade-visual.md` (barra visual) | Claude | 31-07 | ✅ entregue — desfaz o mal-entendido do "baixo poligonal" |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 

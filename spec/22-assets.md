@@ -20,7 +20,7 @@ Este repositório é **público**. Isso transforma a licença de cada asset numa
 
 ## Modelos 3D — de onde vêm
 
-O estilo (baixo poligonal estilizado, Lei 4) tem um ecossistema CC0 maduro. Prioridade pela ordem:
+O estilo (estilizado com orçamento consciente — [`30-qualidade-visual.md`](30-qualidade-visual.md)) tem um ecossistema CC0 maduro. ⚠️ Ao escolher packs, verificar a contagem real: muitos assets CC0 são bem abaixo dos 8–15 mil tri que queremos, e ficam pobres ao lado do resto. Prioridade pela ordem:
 
 | Fonte | O que dá | Licença | Custo | Encaixe |
 |---|---|---|---|---|

@@ -2,7 +2,9 @@
 
 ## Pitch
 
-Um RPG de acção em 3D, terceira pessoa, com combate souls-like, num mundo aberto grande dividido por biomas, onde dois amigos jogam juntos do princípio ao fim. `[DECIDIDO]` (sessão 1 · 00:04, 11:28, 12:28)
+Um RPG de acção em 3D, **em primeira ou terceira pessoa à escolha do jogador**, com combate souls-like, num mundo aberto grande dividido por biomas, onde dois amigos jogam juntos do princípio ao fim. `[DECIDIDO]` (sessão 1 · 00:04, 11:28, 12:28) + perspectiva `[DECIDIDO]` (Mateus, 31-07-2026) — ver [`29-perspectiva.md`](29-perspectiva.md), que lista o que isso obriga.
+
+**Plataforma: PC.** `[DECIDIDO]` `[DECIDIDO]` (Mateus, 31-07-2026) — sem consolas, sem telemóvel.
 
 ## Os pilares
 
@@ -67,7 +69,9 @@ Vem antes de qualquer decisão de arte, render ou engine. O jogo tem de correr b
 
 A tensão entre isto e o 3D **fechou**: `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **caminho A, 3D estilizado optimizado**. Detalhe em [`09-tecnico.md`](09-tecnico.md). ⚠️ A medição que sustenta a escolha não tem prova no repositório; o marco 1 do WP15 é que a dá.
 
-Do lado bom: a restrição empurra para 3D estilizado de baixo poligonal, que é **mais barato de produzir e de correr**. Alinha com serem duas pessoas, e com o "realista não" da sessão 1 (10:24).
+Do lado bom: a restrição empurra para 3D estilizado com **orçamento consciente** — mais barato de produzir *e* de correr. Alinha com serem duas pessoas, e com o "realista não" da sessão 1 (10:24).
+
+⚠️ **Orçamento consciente não é PlayStation 1.** A faixa é 8–15 mil polígonos por personagem, não 400 — ver [`30-qualidade-visual.md`](30-qualidade-visual.md), que existe precisamente para desfazer esse mal-entendido.
 
 ## ⚠️ Risco de escopo — ler antes de decidir mais
 

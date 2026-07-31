@@ -1,6 +1,6 @@
 # WorldRPGs — Especificação
 
-RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
+RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Índice mestre.
 
 > Cada afirmação nos documentos abaixo traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
 
@@ -33,15 +33,17 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 13 | [Magia, por dentro](spec/13-magia.md) | Bem/mal com mecânica proposta, catálogo, cargas, pergaminhos, encantamentos | 🟠 `[FABLE]` (WP4) — bem/mal aguarda o sim dos dois (pergunta 8) |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
+| 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
+| 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
 
-Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
+Quinze coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
 
-1. RPG de acção 3D, terceira pessoa, souls-like, fantasia medieval
+1. RPG de acção 3D para PC, **primeira ou terceira pessoa à escolha do jogador**, souls-like, fantasia medieval
 2. **Ganha-se com habilidade, não com nível.** Sem gating, sem grind obrigatório
 3. Co-op para dois, sempre disponível
 4. Esquiva e parry no corpo a corpo
@@ -53,6 +55,9 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 10. Mundo aberto grande, por biomas, com dungeons escondidas em pontos do mapa
 11. Hotbar no fundo do ecrã + mochila de capacidade limitada
 12. **A máquina alvo é PC sem placa gráfica dedicada** — Iris Xe integrados, 1080p @ 60 Hz. Manda em toda a arte, render e escolha de engine
+13. **Primeira ou terceira pessoa, à escolha do jogador** — ver [`spec/29-perspectiva.md`](spec/29-perspectiva.md)
+14. **Plataforma: PC.** Sem consolas, sem telemóvel
+15. **A barra visual não é PlayStation 1** — 8–15 mil tri por personagem, ver [`spec/30-qualidade-visual.md`](spec/30-qualidade-visual.md)
 
 ## O que trava
 

@@ -1,6 +1,6 @@
 # WorldRPGs
 
-RPG 3D em terceira pessoa, **souls-like**, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
+RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
 
 > **Este repositório é de especificação, não de código.** Aqui desenha-se o jogo. A construção vem depois, a partir do que estiver escrito.
 

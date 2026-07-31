@@ -4,7 +4,7 @@ Lê isto antes de responder ou de rever seja o que for. É daqui que vem o conte
 
 ## O que é este repositório
 
-**WorldRPGs** — RPG 3D em terceira pessoa, souls-like, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
+**WorldRPGs** — RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
 
 **É um repositório de especificação. Não tem código, e é de propósito.** A spec cresce a partir de conversas gravadas entre os dois; a construção vem depois, com o Opus 5.
 

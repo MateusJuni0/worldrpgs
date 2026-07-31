@@ -49,7 +49,7 @@ Não estimado. Lido da máquina.
 
 Fica praticamente fora de questão: iluminação global em tempo real, sombras dinâmicas em quantidade, pós-processamento pesado, texturas 4K, malhas de alta densidade, render diferido, e as engines que assumem tudo isto por defeito.
 
-Fica dentro: 3D estilizado de baixa contagem de polígonos, iluminação assada, poucas luzes dinâmicas, texturas pequenas, render *forward*, distância de visão curta com névoa a esconder o corte.
+Fica dentro: 3D estilizado com **orçamento consciente** (8–15 mil tri por personagem — ver [`30-qualidade-visual.md`](30-qualidade-visual.md)), iluminação assada, poucas luzes dinâmicas, texturas de 1–2 K, render *forward*, distância de visão curta com névoa a esconder o corte.
 
 **Isto não é má notícia.** Baixo poligonal estilizado é mais barato de produzir *e* de correr — alinha com serem duas pessoas. O que morre é o realismo, e o realismo já tinha sido recusado na sessão 1 ("Realista não", 10:24).
 
@@ -65,7 +65,7 @@ Três caminhos, nenhum decidido:
 
 | | O que é | A favor | Contra |
 |---|---|---|---|
-| **A** | 3D estilizado, baixo poligonal, muito optimizado | É o que decidiram | Exige disciplina técnica constante; risco real de não chegar a 60 fps |
+| **A** | 3D estilizado com orçamento consciente, muito optimizado | É o que decidiram | Exige disciplina técnica constante; risco real de não chegar a 60 fps |
 | **B** | 2.5D — cenário 3D, câmara fixa ou isométrica | Corta a maior parte do custo gráfico e de animação | Não é o que imaginaram |
 | **C** | 2D com esqueletos | Souls-likes 2D excelentes existem (Hollow Knight corre em qualquer coisa) | Afasta-se muito da conversa |
 
@@ -93,7 +93,7 @@ Protótipo greybox em Godot 4.7.1, medido **na máquina do Rico — a mais fraca
 
 `[EM ABERTO]` — Nunca foi mencionada. A escolha decide-se pela restrição de hardware acima, não por gosto nem por popularidade.
 
-O que a spec exige: 3D em terceira pessoa, animação precisa, mundo aberto, rede para dois, e **correr em gráficos integrados**.
+O que a spec exige: 3D **em primeira e terceira pessoa** ([`29-perspectiva.md`](29-perspectiva.md)), animação precisa, mundo aberto, rede para dois, e **correr em gráficos integrados**. A perspectiva dupla pesa na escolha: a engine tem de tornar barato manter dois conjuntos de animação de combate.
 
 Fica para o Fable comparar e propor, em [`prompts/BRIEFING-FABLE.md`](../prompts/BRIEFING-FABLE.md) · WP13. Critério que não pode faltar na comparação: **o que é que cada engine consegue mesmo entregar sem GPU dedicada.**
 
