@@ -38,13 +38,13 @@ Com gravidade a −18 m/s², a velocidade ao aterrar de uma altura `h` é `v = �
 | 16 m | 1,33 s | 24,0 m/s | ~90% |
 | 20 m+ | 1,49 s | 26,8 m/s | **morte** |
 
-**Fórmula:** `dano = 0` se `h ≤ 3`, senão `dano% = ((h − 3) / 17)^1,6 × 100`, com morte a `h ≥ 20`.
+⚠️ **SUBSTITUÍDA a 31-07** — ver [`37-aneis-e-elementos.md`](37-aneis-e-elementos.md) §3. A tabela acima usava **percentagem pura**, o que faz o nível não valer nada nas quedas. O Mateus corrigiu: subir de nível tem de fazer diferença. O modelo novo é **parte fixa + parte proporcional**, com tecto absoluto aos 25 m onde ninguém sobrevive. A tabela acima fica como registo do raciocínio.
 
 *O expoente 1,6 é o que interessa:* faz as quedas pequenas serem quase inofensivas e as grandes serem fatais depressa, em vez de uma rampa linear que castiga cair de um degrau.
 
 ### O que a queda obriga
 
-1. **Percentagem dos PV, não valor fixo.** Uma queda de 12 m tira 55% ao nível 1 e 55% ao nível 100. **Isto é Lei 1:** subir de nível não compra o direito de saltar de sítios altos.
+1. ⚠️ **CORRIGIDO:** era percentagem pura; passa a **fixo + proporcional** ([`37-aneis-e-elementos.md`](37-aneis-e-elementos.md) §3). Eu tinha aplicado a Lei 1 onde ela não se aplica — sobreviver a uma queda não é conteúdo trancado. **A Lei 1 vive agora no tecto absoluto dos 25 m**, que ninguém sobrevive em nível nenhum.
 2. **A carga afecta a queda** (confirmado na referência): mais peso, mais dano. Proposta: `dano_final = dano × (1 + carga_relativa × 0,4)` — um jogador com armadura pesada leva até 40% mais.
 3. **Armaduras que cortam o dano de queda** ([`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §2c) aplicam-se **depois** da carga. Uma peça que dê −50% torna quedas de 12 m sobreviváveis, e isso é uma construção legítima: trocar defesa por mobilidade vertical.
 4. **`→WP8`:** o traçado das zonas tem de conhecer estes números. Um desnível de 4 m é atalho; um de 20 m é morte. **Os atalhos que descem desenham-se com a tabela à frente**, não a olho.

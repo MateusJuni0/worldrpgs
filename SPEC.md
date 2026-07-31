@@ -59,6 +59,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, escudos por elemento, dano de queda corrigido | 🟠 escala fixada, catálogo por escrever |
 | 36 | [**Física**](spec/36-fisica.md) | Gravidade, queda, balística das setas, empurrão, colisão | 🟠 constantes propostas, validam-se no M2 |
 | 35 | [**Estudo da referência**](spec/35-estudo-referencia.md) | Números reais do DS2 comparados com os nossos — 8 descobertas accionáveis | 🟢 feito 31-07, com fontes |
 | 34 | [**Catálogo e comandos**](spec/34-catalogo-e-comandos.md) | 30 armaduras, ~20 armas/classe, e a regra de que toda a habilidade diz como se activa | 🟢 escala e regra fixadas |
