@@ -78,7 +78,9 @@ Quatro perguntas bloqueiam o resto (as duas primeiras já caíram) — detalhe e
 
 ## A construir
 
-[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz. Manda o Fable detalhar isto tudo em 20 pacotes, um PR cada, até ficar implementável sem perguntas. Inclui o catálogo de assets, os prompts de imagem para o Codex/GPT image, e a estrutura de pastas de `art/`.
+[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz: 20 pacotes, do combate ao plano de construção.
+
+**Estado (31-07-2026): os 20 pacotes estão escritos** — ver a tabela acima e as reservas em [`COORDENACAO.md`](COORDENACAO.md). O que falta não é escrita, é decisão: as propostas 🔴/🟠 do [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) esperam o sim (ou o corte) do Mateus e do Rico numa sessão 2 gravada. Depois disso, [`spec/24-plano.md`](spec/24-plano.md) é o ponto de partida do Opus 5.
 
 ## Sessões
 
