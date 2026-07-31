@@ -259,19 +259,114 @@ O contrato garante que **todo o ataque avisa com pelo menos 0,50 s**. O espelho 
 
 ---
 
-## 10. O que fica para o Mateus decidir
+## 10. ⭐ As decisões do Mateus — e o que elas fazem juntas
+
+`[DECIDIDO]` (Mateus, 31-07-2026). **Escolheu a opção mais forte nas quatro**, e o resultado é melhor do que o que eu tinha proposto.
+
+| # | Decisão |
+|---|---|
+| **1** | ⭐ **O chefe levantado é PORTÁTIL** — vai contigo para onde quiseres |
+| **2** | ⭐ **Não há tecto de invocados** — levantas quantos a tua vida aguentar pagar |
+| **3** | ⭐ **O Voto de Sangue empilha até 3×** — 60% da vida por +90% de dano |
+| **4** | **O instrumento é livre** — dois instrumentos, ou um que faça as duas coisas |
+
+---
+
+### ⭐ E aqui está o que elas fazem juntas, que eu não tinha visto
+
+**As três primeiras gastam a mesma coisa: vida.** E a aritmética fecha-se sozinha:
+
+| O que queres | Custa da tua vida máxima |
+|---|---|
+| Levantar o chefe | **50%** |
+| Voto de Sangue, 3 camadas | **60%** |
+| Cada morto levantado | 5% a 15% |
+| | **↑ mais de 100%** |
+
+> ⭐ **Não podes ter o chefe e o Voto triplo ao mesmo tempo. É matematicamente impossível.**
+
+**Isto é um travão que não precisa de nenhuma regra.** Eu tinha proposto tectos arbitrários — 3 invocados, chefe preso à zona — e o Mateus tirou-os todos. **Ao tirá-los, transformou a vida no orçamento único da classe**, e o orçamento faz o trabalho que as regras faziam, mas melhor:
+
+| | Com tectos (a minha proposta) | ⭐ Com orçamento único (a dele) |
+|---|---|---|
+| O limite é | um número que alguém escolheu | **uma consequência** |
+| A decisão é | *"já usei os meus 3"* | *"quanto é que estou disposto a arriscar?"* |
+| Muda ao longo do jogo? | não | ⭐ **sim** — mais vida máxima = mais margem |
+| Lei 2? | não — é um tecto | ⭐ **sim** — são opções que competem |
+
+⭐ **E torna-se a classe mais perigosa e mais interessante do jogo:** um mago do mal com o chefe levantado anda a **metade da vida**. Um golpe que outra classe aguenta, mata-o. **Ele escolheu isso.**
+
+---
+
+### As regras finais
+
+#### Invocados — sem tecto de desenho
+
+| | |
+|---|---|
+| Quantos | **os que a tua vida pagar** |
+| Custo por morto | 5% (pequeno) · 10% (médio) · 15% (grande) da vida máxima |
+| Vida deles | 60% do que tinham · **não regeneram, não se curam** |
+| Duram | até caírem, até saíres da zona, ou até descansares |
+| Não se repete | um corpo levantado que cai **não se levanta outra vez** |
+
+⚠️ **Há um tecto, mas é da máquina e não do desenho** (Lei 4): a Iris Xe não desenha exércitos. O motor corta pela definição gráfica — **8 no preset alto, 5 no médio, 3 no baixo** — e o jogo **diz-o ao jogador** em vez de o esconder. `→WP14`
+
+**É a diferença entre um limite de regra e um limite de hardware, e o jogador merece saber qual é qual.**
+
+#### O chefe — portátil
+
+`[DECIDIDO]` — vai contigo para onde quiseres. **Levantei a objecção de que mata o desafio de um bioma novo; o Mateus decidiu na mesma, e é decisão dele.**
+
+**O que a torna sustentável sem nenhuma regra nova:**
+
+| | |
+|---|---|
+| Custa | **50% da vida máxima**, e **não volta com descanso** |
+| Enquanto ele estiver de pé | ⚠️ **jogas a metade da vida, em todo o lado** |
+| Quantos | **um** |
+| Acaba | ao descansar, ou ao cair |
+| Não se repete | o corpo dele fica gasto até ao próximo ciclo |
+
+⭐ **A metade da vida é o preço, e é um preço que se sente em cada encontro.** Levar um chefe para um bioma novo é levá-lo **a metade da vida, num sítio que não conheces**. Pode correr muito bem, e pode ser a morte mais estúpida da sessão. **Isso é uma aposta, e apostas são jogo.**
+
+#### Voto de Sangue — até 3 camadas
+
+| Camadas | Vida que dás | Dano que ganhas |
+|---|---|---|
+| 1 | 20% | +30% |
+| 2 | 40% | +60% |
+| 3 | **60%** | **+90%** |
+
+⚠️ **A 3 camadas ficas com 40% da vida e nunca mais nada podes levantar.** Sai só ao descansar.
+
+⚠️ **E o que isto obriga em co-op** `→WP10`: o Rico tem de **ver** que tu estás a 40%. A barra dele mostra a tua vida ([`19`](19-rede.md)), mas com o Voto a tua **vida máxima** desceu — se a barra dele não mostrar isso, ele acha que estás bem quando estás a um golpe de morrer. **A barra do parceiro mostra a vida máxima actual, não a original.**
+
+#### O instrumento — livre
+
+`[DECIDIDO]` — **dois instrumentos, ou um que faça as duas coisas.** As três construções da §3 continuam válidas; acrescenta-se uma quarta:
+
+| Construção | O que ganha | O que perde |
+|---|---|---|
+| Cajado + relicário | dano e necromancia no máximo | zero defesa ao perto |
+| ⭐ **Um instrumento que faz os dois** | **uma mão livre** — escudo, besta ou arma | é pior nas duas coisas do que um dedicado |
+| Cajado + escudo | dano e sobrevive | levanta pouco |
+| Relicário + arma | exército e uma faca | dano directo fraco |
+
+⭐ **O instrumento que faz os dois é a escolha do jogador que quer sobreviver**, e paga por isso em eficácia. É a Lei 2 — nenhuma é a certa.
+
+---
+
+## 11. O que ainda fica em aberto
 
 | | Pergunta |
 |---|---|
-| 1 | **Cajado + relicário** é o desenho certo, ou preferes um instrumento só? |
-| 2 | **3 invocados** chega, ou queres mais? *(mais do que 3 e a arena fica cheia)* |
-| 3 | **Metade da vida máxima** pelo chefe é caro de mais, ou é o preço certo? |
-| 4 | **"Só na zona onde o mataste"** — aceitas, ou queres o chefe portátil? |
-| 5 | Dos ~20 feitiços, **quais é que não te interessam** e o que falta? |
-| 6 | O **Voto de Sangue** entra? É o mais perigoso de equilibrar |
+| 1 | Dos ~20 feitiços da §8, **quais não te interessam** e o que falta? |
+| 2 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* → [`99`](99-perguntas-abertas.md) |
+| 3 | O tecto de máquina (8/5/3 por preset) é aceitável, ou preferes menos e mais fortes? |
 
 ## Ligações
 
-[`42-estudo-magia.md`](42-estudo-magia.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`46-coerencia-bioma-raca-item.md`](46-coerencia-bioma-raca-item.md) · [`48-arcos-bestas-escudos.md`](48-arcos-bestas-escudos.md) · [`12-classes.md`](12-classes.md) · [`13-magia.md`](13-magia.md) · [`19-rede.md`](19-rede.md)
+[`42-estudo-magia.md`](42-estudo-magia.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`46-coerencia-bioma-raca-item.md`](46-coerencia-bioma-raca-item.md) · [`48-arcos-bestas-escudos.md`](48-arcos-bestas-escudos.md) · [`50-racas.md`](50-racas.md) · [`51-familias.md`](51-familias.md) · [`19-rede.md`](19-rede.md)
 
 **Fontes:** [Hexes — DS2 Wiki](https://darksouls2.wiki.fextralife.com/Hexes) · [Spirit Ashes — Elden Ring Wiki](https://eldenring.wiki.fextralife.com/Spirit+Ashes) · [Minion — Path of Exile Wiki](https://pathofexile.fandom.com/wiki/Minion) · [Minion Necromancer — Maxroll](https://maxroll.gg/d4/build-guides/minion-necromancer-guide) · [Leech mechanics](https://ggwtb.com/blog/poe-2-leech-mechanics-types--statistics--example-and-keypoints)

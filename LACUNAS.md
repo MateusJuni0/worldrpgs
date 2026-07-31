@@ -44,7 +44,7 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| ⏳ | **As 6 perguntas do Mateus sobre o mago do mal** — instrumento, nº de invocados, custo do chefe, chefe portátil ou não, que feitiços cortar, e se o Voto de Sangue entra | [`50`](spec/52-mago-do-mal.md) §10 |
+| ⏳ | ~~As 6 perguntas do mago do mal~~ ✅ **4 respondidas 31-07** (chefe portátil · sem tecto de invocados · Voto empilha 3× · instrumento livre). Faltam: que feitiços cortar, e o tecto de máquina | [`52`](spec/52-mago-do-mal.md) §11 |
 | 🟠 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* | [`50`](spec/52-mago-do-mal.md) §9 |
 | 🟠 | **Inimigos que lançam magia usam as mesmas regras?** *(proposta: sim, incluindo ser interrompíveis)* | [`42`](spec/42-estudo-magia.md), [`48`](spec/48-arcos-bestas-escudos.md) |
 | 🟠 | **Quantos feitiços na fatia 1** *(proposta: 3 — dano, cura, utilidade)* | [`42`](spec/42-estudo-magia.md) |
