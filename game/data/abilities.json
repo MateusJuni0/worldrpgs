@@ -1,0 +1,11 @@
+{
+  "_fonte": "spec/12-classes.md (WP3) — habilidade especial por classe, sob a Lei 2: verbos novos, nao numeros. Cooldowns fixos, nada escala com nivel.",
+  "_tecla": "[PROTO] V — a tabela de comandos do WP1 nao reservou tecla para a habilidade. Lacuna registada em PERGUNTAS.md.",
+
+  "warrior":   { "id": "impeto",       "display_name": "Impeto",       "cooldown_s": 15.0, "stamina_cost": 30.0, "dash_m": 6.0, "dash_seconds": 0.35, "strike_mv": 1.2 },
+  "sorcerer":  { "id": "eco",          "display_name": "Eco",          "cooldown_s": 60.0, "_estado": "por implementar — repete a ultima magia sem gastar carga" },
+  "tank":      { "id": "provocacao",   "display_name": "Provocacao",   "cooldown_s": 30.0, "radius_m": 8.0, "duration_s": 4.0 },
+  "assassin":  { "id": "passo_sombra", "display_name": "Passo Sombra", "cooldown_s": 25.0, "_estado": "por implementar — esquiva atravessa + backstab MV 2,0" },
+  "berserker": { "id": "furia",        "display_name": "Furia",        "cooldown_s": 45.0, "duration_s": 8.0 },
+  "paladin":   { "id": "julgamento",   "display_name": "Julgamento",   "cooldown_s": 40.0, "duration_s": 10.0, "_estado": "por implementar — dano vira raio; entra com as resistencias do WP6" }
+}
