@@ -13,15 +13,20 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Pacote | Documento | Quem | Desde | Estado |
 |---|---|---|---|---|
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |
-| WP1B | `spec/25-controlo.md` | Claude | 31-07 | 🔨 em curso |
-| WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 em curso — branch `claude/game-spec-completa-81xz3g` |
-| WP2 | `spec/11-formulas.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
-| WP3 | `spec/12-classes.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
-| WP4 | `spec/13-magia.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
-| WP5 | `spec/14-equipamento.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 PR #5 aberto |
+| WP1B | `spec/25-controlo.md` | Claude | 31-07 | ✅ entregue — números `[CLAUDE]`, afinam-se no protótipo |
+| WP2 | `spec/11-formulas.md` | Fable | 31-07 | 🔨 PR #6 aberto |
+| WP3 | `spec/12-classes.md` | Fable | 31-07 | 🔨 PR aberto |
+| WP4 | `spec/13-magia.md` | Fable | 31-07 | 🔨 PR aberto |
+| WP13 | `art/` + `spec/22-assets.md` | Claude | 31-07 | ✅ entregue — manifesto + 22 prompts + fontes/licenças de modelos, animações e áudio |
+| WP11B | `spec/27-aprendizagem.md` | Claude | 31-07 | ✅ entregue — valida-se com teste de pessoa de fora (WP15B) |
+| WP8B | `spec/26-narrativa.md` | Claude | 31-07 | ✅ entregue — guião de gravação de 7 perguntas para os donos |
+| WP5 | `spec/14-equipamento.md` | Fable | 31-07 | 🔨 em curso — branch `claude/game-spec-completa-81xz3g`, alinhado aos números do WP1/WP2 |
 | WP12 | `spec/21-arte-render.md` | Fable | 31-07 | 🔨 em curso — mesmo branch (animações, efeitos e som, pedido do Rico 31-07) |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
+
+> Nota (31-07, Fable): uma segunda sessão do Fable chegou a duplicar WP1–WP4 sem ver estas reservas (os branches ainda não estavam na `main`). Resolvido a favor das versões com PR aberto e protótipo — as duplicadas foram descartadas no merge, e é por casos destes que a reserva se faz com push imediato.
 
 ## Como reservar
 

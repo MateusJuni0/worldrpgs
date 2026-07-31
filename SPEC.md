@@ -18,7 +18,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
 | 00 | [Visão](spec/00-visao.md) | Pitch, os três pilares, referências, risco de escopo | 🟢 base sólida |
-| 01 | [Combate](spec/01-combate.md) | Esquiva, parry, stamina, armas | 🟢 números completos `[FABLE]` (WP1), aguarda Mateus + Rico |
+| 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, stamina, as 5 armas | 🟠 números de partida `[FABLE]` (WP1) — validam-se no protótipo (marco 2) |
 | 02 | [Personagem](spec/02-personagem.md) | Atributos, classes, evoluções, skills | 🟡 muito nomeado, pouco definido |
 | 03 | [Magia](spec/03-magia.md) | Bem e mal, usos, encantamentos | 🟡 conceito sem mecânica |
 | 04 | [Inimigos e chefes](spec/04-inimigos-chefes.md) | Raças, hierarquia de chefes | 🟡 quantidades por acertar |
@@ -28,10 +28,15 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🟡 esqueleto |
 | 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
 | 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟠 proposta `[FABLE]` (WP0), aguarda Mateus + Rico |
-| 11 | [Fórmulas](spec/11-formulas.md) | Atributos, nível, fórmula de dano, curva dos inimigos, tecto da Lei 1 | 🟢 proposta `[FABLE]` (WP2), aguarda Mateus + Rico |
-| 12 | [Classes](spec/12-classes.md) | As 6 da fatia, habilidades-verbo, skills, tensão das evoluções | 🟢 proposta `[FABLE]` (WP3), aguarda Mateus + Rico |
-| 13 | [Magia](spec/13-magia.md) | Luz/Sombra com duas moedas, catálogo, cargas, encantamentos | 🟢 proposta `[FABLE]` (WP4), aguarda Mateus + Rico — responde à pergunta 8 |
-| 14 | [Equipamento](spec/14-equipamento.md) | Catálogo de armas, Lei 3 com números, frasco de cura, armadura em proposta | 🟢 proposta `[FABLE]` (WP5), aguarda Mateus + Rico |
+| 11 | [Atributos e fórmulas](spec/11-formulas.md) | Os 6 atributos, fórmula de dano, curvas dos inimigos da fatia | 🟠 números de partida `[FABLE]` (WP2) — validam-se no protótipo |
+| 12 | [Classes](spec/12-classes.md) | As 8 fichas, habilidades especiais, skills, e a tensão das evoluções proposta | 🟠 `[FABLE]` (WP3) — evoluções aguardam decisão A/B dos dois |
+| 13 | [Magia, por dentro](spec/13-magia.md) | Bem/mal com mecânica proposta, catálogo, cargas, pergaminhos, encantamentos | 🟠 `[FABLE]` (WP4) — bem/mal aguarda o sim dos dois (pergunta 8) |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo completo de armas, Lei 3 em números, frasco de cura, armadura em proposta (WP5) | 🟠 proposta `[FABLE]` — pergunta 7 e 14 aguardam os dois |
+| 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
+| 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
+| 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
+| 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
+| 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
@@ -53,10 +58,10 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 
 ## O que trava
 
-Cinco perguntas bloqueiam o resto (a primeira já caiu) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
+Quatro perguntas bloqueiam o resto (as duas primeiras já caíram) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
 
 1. ~~Máquinas~~ ✅ **respondida** — as duas medidas. A do Rico (**8 GB**) é o alvo, por ser a mais fraca
-2. **O 3D aguenta-se neste hardware?** `[TENSÃO]` — quedas de fotogramas atacam o pilar 1
+2. ~~O 3D aguenta-se?~~ ✅ **medido no protótipo: aguenta** — 60 fps cravados no cenário da fatia, 20 min quentes sem degradação; ressalva: animação de esqueleto por medir (pergunta 0b)
 3. Qual é a fatia mais pequena disto que já é divertida a dois? — **proposta escrita em [`spec/10-fatia-1.md`](spec/10-fatia-1.md)**, falta o sim dos dois
 4. Os biomas são patamares de dificuldade? (colide com o pilar 1)
 5. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)

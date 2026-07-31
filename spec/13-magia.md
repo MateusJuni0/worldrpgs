@@ -1,99 +1,95 @@
-# 13 — Magia
+# 13 — Magia, por dentro
 
-> **WP4.** O que a sessão 1 fechou: duas escolas, bem e mal (00:40, 05:04); magias desenhadas à mão, não genéricas (05:04); usos limitados (03:50); encantamentos existem (00:38 → 00:45). O que faltava era a mecânica — e a pergunta 8 ("o que é que bem/mal **faz**?") é o coração deste documento. A proposta é `[FABLE]`; o sim é deles.
+> **WP4 · Fable** (31-07-2026). O documento de execução da magia: a mecânica proposta para o bem e o mal, o catálogo com números, cargas, aprendizagem e encantamentos. O registo da sessão 1 continua em [`03-magia.md`](03-magia.md) — nada de lá muda. **A proposta bem/mal é a peça grande deste documento e pede confirmação dos dois** (pergunta 8): pode ser o sistema mais interessante do jogo, e não se carimba um desses sem os donos.
 
-## A proposta: duas escolas, duas moedas
+## O que eles decidiram (e este documento obedece)
 
-**Luz** (a do bem) e **Sombra** (a do mal) não se distinguem por tema — distinguem-se pelo **que pagam**:
+- Magia do bem e magia do mal `[DECIDIDO]` (00:40, 05:04)
+- Usos limitados — cargas, não mana `[DECIDIDO]` (03:50)
+- Magias desenhadas à mão, "certinhas", com o inimigo certo a importar `[DECIDIDO]` (05:04)
+- Encantamentos existem; "espada de fogo" `[DECIDIDO]` (00:38 → 00:45)
+- Do WP1: conjurar trava o movimento a 40%; **interrupção gasta a carga**; o cajado é o plano B sem custo. Do WP2: `cargas = 4 + ⌊Sabedoria/4⌋`; dano de magia escala com Sabedoria (peso 1,0).
 
-| | **Luz** | **Sombra** |
+## A proposta para o bem e o mal `[FABLE]` — pede o sim dos dois
+
+**Bem = controlo sem preço. Mal = poder com preço, pago em vida.**
+
+| | Magia do bem | Magia do mal |
 |---|---|---|
-| Paga com | **cargas**, só | cargas **+ vida** (o *preço de sangue*, % da vida máxima) |
-| Gramática | precisão — recompensa posição e timing | risco — poder maior, pago no corpo |
-| Verbos típicos | proteger, revelar, ferir com pontaria | drenar, corromper, trocar vida por poder |
-| Falha típica | errar o alvo = carga perdida | acertar e mesmo assim sangrar de mais |
+| Custo | só cargas | cargas **+ 8% dos PV máximos por lançamento** |
+| Força | honesta | ~1,5× mais efeito por carga |
+| Verbos | dano directo, protecção, controlo | dreno, invocação, corrupção |
+| Contra mortos-vivos | **fortes** (DEF −20 do alvo) | fracos (DEF +20 do alvo) |
 
-- **Qualquer personagem usa as duas** — Lei 3: nenhum bloqueio por classe ou por "alinhamento". O requisito é Sabedoria; a diferença entre um especialista e um curioso vem da escala e das cargas ([`11-formulas.md`](11-formulas.md)), e a Sombra tem um custo que a Sabedoria **não** reduz: o sangue é o mesmo para todos.
-- **Os inimigos respondem às escolas** — "tem que ver a magia que tu usa nele" (05:04): as fraquezas cruzadas vivem na tabela de defesas do WP2 (ex.: mortos-vivos: Luz −30 de defesa, Sombra +60), e têm de ser **legíveis no corpo** do inimigo (regra no WP6/WP12).
+- **Qualquer personagem usa as duas.** Sem escolha exclusiva, sem trancas — o espírito da Lei 3 aplicado às escolas. O "Mago do mal" (classe, ⬜) não é quem *pode* usar o mal: é quem constrói a ficha à volta do preço — muita Vida para pagar, e ferramentas de dreno para recuperar.
+- O preço em PV é **visível e imediato** — sem medidores de corrupção, sem reputação, sem julgamento do sistema (não há NPCs para julgar — WP8B). O jogo não te diz que és mau; cobra-te à vista.
+- *Porquê assim:* dá à divisão um **significado mecânico numa frase** ("o mal é mais forte e morde a mão"), cria decisões por situação em vez de identidade fixa, e liga-se ao bestiário — mortos-vivos temem o bem, e o Ceifador ([`04-inimigos-chefes.md`](04-inimigos-chefes.md)) ganha a sua zona temática de borla.
+- *Alternativa descartada:* escolas exclusivas por classe — é bloqueio duro (contra o espírito da Lei 3) e mata a experimentação, que é onde "tem que ver a magia que tu usa nele" (05:04) vive.
 
-*Porquê esta divisão:* dá às duas escolas **sensações** diferentes sem duplicar sistemas — uma moeda nova (vida) em vez de uma barra nova. O preço de sangue auto-equilibra a Sombra: mais forte por golpe, auto-limitada pelo mesmo recurso que o inimigo ataca. *Alternativa descartada:* bem/mal por reputação/corrupção narrativa — não há NPCs nem narrativa fechada (WP8B é território virgem), seria decoração pendurada no vazio.
+*Teste da Lei 1:* o mal não é um upgrade — é uma aposta. O poder extra paga-se em margem de erro (PV), portanto quem o usa está a trocar exactamente aquilo que o nível compra. Um jogador fraco de mão não fica mais forte por escolher o mal; fica mais frágil. ✅
 
-*Teste da Lei 1:* o preço de sangue é % da vida máxima — um nível 1 e um nível 100 pagam a mesma fracção; a Sombra não fica "grátis" com nível. ✅
+## Regras de conjuração
 
-## Cargas
-
-`[DECIDIDO]` (03:50) usos limitados; o desenho `[FABLE]`:
-
-- **Cargas por magia** (à Dark Souls), não reservatório comum. *Porquê:* faz de cada magia um recurso com identidade ("ainda tenho duas Ruínas") e impede que uma magia boa esvazie as outras. *Alternativa descartada:* mana contínua — vira metralhadora com pausa, e a regra da pressão (WP1) morre.
-- **Recuperam ao descansar** no ponto de descanso (o mesmo que renasce inimigos).
-- **Sabedoria dá cargas extra:** +25% às cargas base de cada magia com Sab 25, +50% com Sab 45 (arredonda para baixo).
-- **Em combate:** sem recuperação na fatia 1. O **Cristal de Éter** (consumível raro, restaura todas as cargas) entra com a economia no WP9. ⬜
-- **3 magias equipadas** ao mesmo tempo (slots — WP11 mostra-as); troca em combate livre, gesto de 0,3 s. A magia é um verbo; trancar verbos a meio da luta seria trancar botões.
-
-**O plano B, sem o qual a Lei 1 quebrava:** o **Dardo do cajado** (WP1) — ataque leve do cajado, projéctil gratuito, dano baixo, queda além de 8 m. O mago sem cargas ainda é um duelista fraco à distância, nunca um espectador. A `[TENSÃO]` "usos limitados vs Lei 1" do documento antigo fecha-se aqui: cargas vazias tiram o **melhor** verbo, não o único. ✅
+- Conjurar exige **cajado equipado** `[FABLE]` — a magia tem uma mão ocupada, como qualquer arma; escolher levar o cajado é escolher não levar outra coisa. *Alternativa descartada:* conjurar de mão livre — grátis demais, e apaga a decisão de equipamento.
+- Tempos, alcances e interrupção: por magia, tabela abaixo; a regra da interrupção é do WP1.
+- **Cargas são um bolso único** (WP2), cada magia gasta as suas. Recuperação: **descansar no ponto de renascimento** (a boca da Toca, na fatia) restaura tudo — cargas, PV, stamina; o modelo definitivo de descanso decide-se com a pergunta 7 (WP5). Sem item de recarga em combate na fatia 1.
 
 ## O catálogo
 
-Colunas: lançamento (âncora — parado ou a 50% de andamento, WP1), cargas base, preço de sangue (% vida máx.), e o verbo — porque **cada magia é um verbo, não um escalão de dano** (Lei 2 + "as magias são diferentes, não são padrão", 05:04).
+Colunas: custo em cargas · tempo de conjuração · alcance · dano base (escala com Sab, WP2) · o verbo. Telegrafia de cada magia é obrigatória no WP12 (efeitos): quem está à frente — inimigo **ou parceiro** — tem de ler o que aí vem.
 
-### Luz
+### Fatia 1 — escola do bem, as três do WP0
 
-| Magia | Verbo | Lançamento | Alcance / área | Efeito | Cargas | Fatia 1? |
+| Magia | Cargas | Tempo | Alcance | Dano base | O verbo | Fatia 1? |
 |---|---|---|---|---|---|---|
-| **Dardo** | ferir com pontaria | 0,45 s | projéctil, 15 m | 55 de dano Luz | 8 | ✅ |
-| **Égide** | apagar um erro | 0,30 s | própria | escudo orbital 6 s: anula **um** golpe por completo (qualquer) | 4 | ✅ |
-| **Lança Solar** | atravessar a fila | 1,20 s | linha, 12 m | 120 Luz, perfura todos na linha | 3 | ⬜ |
-| **Clarão** | roubar um turno | 0,60 s | nova 8 m | cega 2 s (inimigos perdem o alvo), interrompe telegrafias aparáveis | 3 | ⬜ |
-| **Elo** | dividir o fardo | 2,0 s canal | toque, parceiro | transfere até 30% da tua vida para ele (não cria vida — move) | 5 | ⬜ |
-| **Cólera do Céu** | pregar ao chão | 0,90 s | alvo marcado, 14 m | 70 Raio + acumulação de Choque 60 | 4 | ⬜ |
+| **Dardo** | 1 | 0,8 s | 18 m (projéctil, 20 m/s) | 45 | ferir à distância, barato e fiável | ✅ |
+| **Ruína** | 3 | 1,6 s (parado) | área raio 4 m, até 12 m; marca no chão 0,5 s antes | 70 | mudar uma sala inteira | ✅ |
+| **Égide** | 2 | 0,5 s | o próprio | — | absorve 120 de dano OU dura 2,5 s; hiper-armadura enquanto dura | ✅ |
 
-### Sombra
+Três verbos, zero escalões — a Lei 2 tal como o WP0 a fixou. O Feiticeiro de arranque (Sab 14 → **7 cargas**) faz 7 Dardos, ou 2 Ruínas + 1 Dardo, ou 2 Égides + 3 Dardos: o bolso único é o puzzle.
 
-| Magia | Verbo | Lançamento | Alcance / área | Efeito | Cargas | Sangue | Fatia 1? |
-|---|---|---|---|---|---|---|---|
-| **Ruína** | arrasar a roda | 0,80 s | esfera lançada, área 3,5 m | 90 Sombra em área | 5 | 8% | ✅ |
-| **Sanguessuga** | comer para viver | 0,55 s | projéctil, 12 m | 40 Sombra; devolve metade do dano causado como vida | 6 | 5% | ⬜ |
-| **Mortalha** | desaparecer | 0,50 s | própria, 6 s | inimigos a > 6 m perdem-te; dreno de 4% vida/s enquanto dura | 3 | — (dreno) | ⬜ |
-| **Espinhos do Lodo** | envenenar o chão | 0,90 s | círculo 5 m, 8 s | 10 Sombra/s + acumulação de Veneno 20/s a quem lá estiver | 4 | 10% | ⬜ |
-| **Pacto** | hipotecar o corpo | 0,40 s | própria | sacrifica 25% da vida: as próximas 3 magias não gastam cargas | 2 | 25% | ⬜ |
+### Fatia 2+ — esboço com um verbo cada (⬜ tudo)
 
-A fatia 1 leva **Dardo, Égide e Ruína** (WP0) — e com a Ruína na Sombra, a fatia já testa as duas moedas: se o preço de sangue não souber bem no protótipo, a pergunta 8 responde-se com dados.
+| Magia | Escola | O verbo |
+|---|---|---|
+| Lança de Luz | bem | perfura em linha — o anti-fila |
+| Círculo de Quietude | bem | zona que trava projécteis inimigos |
+| Bênção de Ferro | bem | dá hiper-armadura **ao parceiro** por 3 s |
+| Sinal | bem | marca um inimigo: o parceiro vê-o através de paredes |
+| Drenar | mal | rouba PV ao alvo — o sustain de quem paga em vida |
+| Enxame | mal | nuvem persistente que persegue devagar |
+| Servo | mal | ergue um esqueleto do chão por 20 s |
+| Sangue por Poder | mal | converte PV em cargas — a bomba de risco |
+| Marca da Ruína | mal | o alvo leva +dano de TODAS as fontes 6 s — a ferramenta de co-op do mal |
+| Mortalha | mal | invisível 4 s ou até atacar |
 
-*Teste da Lei 1 (dano):* Dardo 55 com escala de Sabedoria entra na mesma fórmula e nos mesmos tectos do WP2 (nível ≤ ×2,5); nenhum inimigo é imune às **duas** escolas ao mesmo tempo, e o Dardo do cajado nunca cai abaixo do chão dos 40%. ✅
+Cada uma será desenhada à mão quando entrar ("depois a gente cria várias magias", 05:04) — isto reserva o verbo, não fecha números.
 
 ## Como se aprendem
 
-`[FABLE]` **Tomos encontrados** — exploração (baús, altares escondidos) e chefes (a recompensa é um verbo novo — Lei 2 aplicada ao loot, WP9). Nunca desbloqueadas por nível, nunca compradas com Essência. *Alternativa descartada:* árvore de magias por nível — é gating de conteúdo por número, Lei 1 proíbe. Um jogador nível 1 que encontre o tomo da Lança Solar **usa-a** (mal, com Sab 10 — mas usa).
+`[FABLE]` — **pergaminhos, largados por chefes e escondidos em dungeons.** O Feiticeiro da fatia começa com as três; tudo o resto encontra-se. *Razão:* é a Lei 2 na economia — chefes recompensam com **opções novas**, nunca com números; e casa com "o cara pode descobrir as dungeons" (03:12): explorar paga em verbos. *Alternativa descartada:* comprar a vendedores — não há vendedores (WP8B em aberto), e comprar poder com moeda é a porta de trás do grind.
 
 ## Encantamentos
 
-`[DECIDIDO]` que existem (00:45, "espada de fogo"). O desenho `[FABLE]`:
-
-- **O jogador aplica** — **Pedras de Encantar** encontradas no mundo; aplicam-se no ponto de descanso.
-- **Permanentes até substituir; uma por arma.** Substituir devolve nada — a pedra velha desfaz-se (escolher custa).
-- Efeito: converte 30% do dano físico da arma no elemento da pedra + acumulação de estado respectiva (Fogo → Queimadura, Raio → Choque, Sombra → dreno 3%, Luz → +dano a criaturas fracas a Luz).
-- *Alternativa descartada:* encantamentos prontos no loot ("espada de fogo" cai feita) — colide com a Lei 3 na prática: o jogo passa a mandar na tua arma; com pedras, a espada de fogo do exemplo continua a existir — és tu que a fazes.
-- Fatia 1: **fora** (WP0). Entra no WP5/WP9 com o loot.
+`[FABLE]` — na entrada deles no jogo (fatia 2, com o WP5): **vêm no item, permanentes, um por arma** — encontra-se a *espada de fogo* (00:45), não se fabrica. Aplicação pelo jogador fica para um eventual sistema de forja, se algum dia o quiserem — nota no WP5, não é promessa. *Alternativa descartada:* encantar na hora — pede UI, materiais e economia que não existem, e dilui o momento "olha o que eu achei".
 
 ## Magia em co-op
 
-Provisório `[FABLE]`, enquanto a pergunta 20 (fogo amigo) não é deles:
+**Fogo amigo: fica no WP10** (pergunta 20), com a rede à frente — a decisão muda conforme a autoridade de rede. O que fica já garantido aqui: a Ruína marca o chão 0,5 s antes **também para o parceiro**, e a telegrafia de tudo o que é área é desenhada para dois pares de olhos (WP12).
 
-- **Dano directo de magia não acerta o parceiro** — nem projécteis nem áreas (a Ruína ao lado do Tanque não o fere).
-- Efeitos **positivos** de área/toque (Égide não, é própria; Elo sim) afectam só quem se escolhe.
-- *Porquê:* fogo amigo com áreas de Sombra transformava o Feiticeiro num risco para o parceiro em arenas apertadas — fricção entre amigos sem ganho de leitura. *Alternativa descartada:* fogo amigo total "por realismo" — realismo não é pilar; a decisão de tom fica com eles na pergunta 20.
+## O que este documento entrega aos outros
 
-## O Mago do mal — esboço para quando a pergunta 8 tiver o sim
+| Para | O quê |
+|---|---|
+| **WP5** | o modelo de descanso a fechar com a pergunta 7; encantamentos no loot |
+| **WP6/WP7** | DEF ±20 dos mortos-vivos por escola; a fraqueza legível como regra de bestiário |
+| **WP9** | pergaminhos nas tabelas de loot dos chefes |
+| **WP10** | fogo amigo por decidir; Bênção de Ferro e Marca da Ruína como casos de teste do co-op |
+| **WP12** | telegrafia por magia (lançamento, voo, impacto, marca no chão) — legibilidade acima de beleza |
+| **Protótipo** | as 3 da fatia com números fechados, data-driven |
 
-Se a divisão Luz/Sombra por moeda for aprovada, a oitava classe ganha chão: especialista em Sombra — arranque Sab 18 / Vida 13 (o corpo é a mana), habilidade especial candidata: **Pacto Maior** (a versão-habilidade do Pacto: converte vida em cargas, recarga 60 s). Fica esboço ⬜ — não entra em catálogo nenhum antes da decisão deles (WP0 já o deixou fora da fatia).
+## O que continua aberto
 
-## O que este documento não fecha
-
-- **Fogo amigo** — pergunta 20, deles; aqui joga-se com o provisório acima
-- **Efeitos visuais e som de cada magia** → WP12 (cada linha do catálogo ganha lá a sua ficha de efeito)
-- **Tomos: onde estão no mapa** → WP8/WP9 · **Cristal de Éter e economia** → WP9
-- **A pergunta 8 continua no 99** até os dois dizerem sim a esta mecânica — é a decisão que desbloqueia o Mago do mal
-
-## Ligações
-
-[`03-magia.md`](03-magia.md) (o que a sessão 1 disse) · [`01-combate.md`](01-combate.md) (regra da pressão, Dardo do cajado) · [`11-formulas.md`](11-formulas.md) (escala, defesas, estados) · [`12-classes.md`](12-classes.md) · [`10-fatia-1.md`](10-fatia-1.md)
+- **Pergunta 8** — a proposta bem/mal acima **aguarda o sim (ou o corte) do Mateus e do Rico** na sessão 2. Até lá, a fatia joga só com o bem, e nada trava.
+- **Pergunta 7** — o modelo de descanso/cura manda na recuperação de cargas; WP5.
+- **Pergunta 20** — fogo amigo; WP10.

@@ -32,8 +32,8 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 
 → [`09-tecnico.md`](09-tecnico.md)
 
-### 0b. O 3D aguenta-se neste hardware?
-`[TENSÃO]` registada: um souls-like vive de janelas de frames, e quedas de fotogramas não são feias, são **injustas** — atacam directamente o pilar 1. Três caminhos (3D estilizado optimizado / 2.5D / 2D), com recomendação de manter o 3D **e medir cedo**.
+### 0b. O 3D aguenta-se neste hardware? — ✅ medido: aguenta
+**Medido no protótipo local (31-07-2026), na máquina mais fraca:** 60 fps cravados no cenário da fatia com vsync; 416 fps médios em greybox ao fim de **20 minutos quentes, sem degradação térmica**; renderer Mobile escolhido. Ressalvas: sem animação de esqueleto ainda (a incógnita cara), e memória a vigiar. Os três caminhos (3D / 2.5D / 2D) ficam com dados à frente — **falta só o vosso carimbo no caminho A**.
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 1. Qual é a fatia mais pequena disto que já é divertida a dois?
@@ -51,8 +51,8 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 ### 3. As evoluções de classe dão poder ou dão opções?
 Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar vantagem — que é o que o pilar 1 recusa. O próprio Rico já apontou para o lado certo às 09:21 ("não aumentar o dano, uma magia diferente"). Falta confirmar como regra.
 
-*Formalizada como `[TENSÃO]` com duas opções e recomendação (A: verbos por feito, não números por nível) em [`12-classes.md`](12-classes.md) (WP3). A decisão continua a ser dos dois.*
-→ [`02-personagem.md`](02-personagem.md), [`12-classes.md`](12-classes.md)
+**→ Proposta escrita (WP3):** as duas opções lado a lado, com recomendação **A (opções)** e subida por marco em vez de nível — [`12-classes.md`](12-classes.md). A fatia 1 não tem evoluções, portanto nada trava até decidirem.
+→ [`02-personagem.md`](02-personagem.md)
 
 ### 4. "Mapa grande" é quanto?
 Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecido como comparação — não dá para dimensionar mais nada.
@@ -83,8 +83,8 @@ Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide t
 ### 8. O que é que "magia do bem e do mal" faz mecanicamente?
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
 
-**→ Proposta escrita (WP4):** duas moedas — a Luz paga com cargas, a Sombra paga com cargas **e vida** (preço de sangue em % da vida máxima). Catálogo completo em [`13-magia.md`](13-magia.md); a Ruína (Sombra) já vai na fatia 1, por isso testa-se a jogar. Falta o sim dos dois — e é este sim que desbloqueia o Mago do mal.
-→ [`03-magia.md`](03-magia.md), [`13-magia.md`](13-magia.md)
+**→ Proposta escrita (WP4):** *bem = controlo sem preço; mal = ~1,5× mais forte por carga mas custa 8% dos PV por lançamento; qualquer um usa as duas; mortos-vivos temem o bem.* Detalhe e alternativa descartada em [`13-magia.md`](13-magia.md). **Falta o sim dos dois** — a fatia joga só com o bem até lá.
+→ [`03-magia.md`](03-magia.md)
 
 ### 9. Quantas classes no início?
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
@@ -95,22 +95,23 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 ### 10. O que acontece quando se morre?
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
 
-*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md). O tom definitivo decide-se aqui.*
+*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md), formalizado no WP1 ([`01-combate.md`](01-combate.md), secção Morte, incluindo morte em co-op). O tom definitivo decide-se aqui.*
 → [`01-combate.md`](01-combate.md)
 
 ---
 
 ## 🟡 Precisam de resposta antes de construir
 
-11. **Números do combate** — ~~por escrever~~ **→ proposta completa `[FABLE]` (WP1)**: esquiva 0,60 s com i-frames 0,08–0,38; parry com janela de 150 ms; custos de stamina; frame data das 5 armas da fatia. Está tudo em [`01-combate.md`](01-combate.md). Confirmam-se **a jogar o protótipo** — os números são o ponto de partida medível, não o fim.
-12. **Vida e Constituição fazem o quê, cada um?** **→ resolvida por proposta `[FABLE]` (WP2)**: Vida = PV; Constituição = defesa física + resistência a estados + carga futura; acrescentados Força/Destreza para a Lei 3 ter requisitos. Ver [`11-formulas.md`](11-formulas.md). Falta o sim dos dois.
+11. **Números do combate** — *ponto de partida completo escrito no WP1* `[FABLE]`: esquiva 0,60 s com 300 ms de invencibilidade, parry 133 ms, stamina 100 com custos por acção, frames das 5 armas. **Fecham-se a jogar o protótipo (marco 2)**, como sempre se disse. → [`01-combate.md`](01-combate.md)
+12. **Vida e Constituição fazem o quê, cada um?** — *respondida no WP2* `[FABLE]`: Vida = PV (margem total), Constituição = defesa por golpe (dureza). E entraram Força/Destreza para os requisitos de arma que eles pediram (06:14). → [`11-formulas.md`](11-formulas.md)
 13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
 14. **Existe armadura?** Não foi dita uma única vez. **→ Posta em formato de proposta no WP5** (A: sem sistema, vestes visuais + talismãs; B: 3 pesos que trocam i-frames por defesa; recomendação A pela Lei 4). Decisão dos dois. → [`14-equipamento.md`](14-equipamento.md)
-15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. → [`05-mundo.md`](05-mundo.md)
-16. **Lock-on em alvo?** **→ proposta `[FABLE]` (WP1): existe** — aquisição 20 m, troca na roda do rato, strafe com lock. Esquema de comandos completo em [`01-combate.md`](01-combate.md). Falta o sim dos dois.
+15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. **→ Proposta concreta no WP12** ([`21-arte-render.md`](21-arte-render.md): low-poly facetado, proporções 1:6,5, paleta de Brumal, referências Ashen/Absolver/Tunic), coerente com a frase de estilo do WP13. Caminho barato para o sim: gerar 3–4 conceitos com `art/prompts/` e escolherem. → [`05-mundo.md`](05-mundo.md)
+21. **Tom, nome do jogo, idioma, e mais 4 perguntas de narrativa** — guião de gravação de ~15 min pronto em [`26-narrativa.md`](26-narrativa.md) §3.
+16. **Lock-on em alvo?** — *respondida no WP1* `[FABLE]`: **sim** — engate a 18 m, quebra a 25 m, strafe, sem re-engate automático. A câmara do lock é do WP1B. → [`01-combate.md`](01-combate.md)
 17. **Engine.** → [`09-tecnico.md`](09-tecnico.md)
 18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** A segunda é a que magoa se for adiada. → [`09-tecnico.md`](09-tecnico.md)
-19. **Arte 3D: comprar, gerar ou fazer?** Provavelmente o maior custo real. → [`09-tecnico.md`](09-tecnico.md)
+19. **Arte 3D: comprar, gerar ou fazer?** — *respondida em conjunto pelo WP13 + WP12*: modelos e ciclos base de packs CC0 (KayKit/Quaternius), Mixamo fora do repo, e **à mão o que é a alma** — telegrafias, parry, chefe. Fontes e licenças em [`22-assets.md`](22-assets.md); inventário de animações e orçamentos em [`21-arte-render.md`](21-arte-render.md). → [`09-tecnico.md`](09-tecnico.md)
 20. **Fogo amigo em co-op?** → [`07-multiplayer.md`](07-multiplayer.md)
 
 ---

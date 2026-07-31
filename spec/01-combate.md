@@ -1,276 +1,229 @@
 # 01 — Combate
 
-> **WP1.** O coração do jogo. Reescrito pelo Fable a partir das decisões da sessão 1; tudo o que aqui tem número novo é `[FABLE]`, com razão e alternativa descartada. Os frames contam a **60 fps** (1 frame = 16,7 ms) — a taxa alvo da Lei 4.
->
-> Fronteira com o WP1B (`spec/25-controlo.md`, reservado ao Claude): **este documento diz o que cada mecânica faz e quanto dura; o WP1B diz como a entrada chega lá** (buffer de input, latência, câmara, sensação de impacto). Os números daqui assumem que o WP1B entrega entrada fiável.
+O núcleo do jogo. É aqui que o pilar "habilidade acima de nível" vive ou morre.
 
-## O que herda da sessão 1
+> **WP1 · reescrito pelo Fable** (31-07-2026). Tudo o que era `[EM ABERTO]` neste documento tem agora um número. **Todos os números são pontos de partida `[FABLE]`**, escritos para o protótipo de combate os validar (marco 2 do plano de construção, WP15) — o que o protótipo desmentir, volta aqui e muda-se **neste documento primeiro**. Fronteira com o WP1B (`spec/25-controlo.md`, do Claude): este documento define **o que as acções fazem e quando**; o WP1B define **como se sentem** — câmara, guarda de entrada (*input buffer*), orçamento de latência, paragem de impacto. Nada aqui duplica isso.
 
-| Elemento | Estado | Fonte |
+## O que eles decidiram
+
+| Elemento | Estado | Timestamp |
 |---|---|---|
-| Corpo a corpo com espada, escudo, arco, magia | `[DECIDIDO]` | sessão 1 · 00:16 |
-| Esquiva | `[DECIDIDO]` | 02:04 |
-| Parry no corpo a corpo | `[DECIDIDO]` | 02:04, 02:11 |
-| Stamina como recurso | `[DECIDIDO]` | 03:50, 06:33 |
-| Ganha-se com habilidade (Lei 1) | `[DECIDIDO]` | 01:17 → 04:28 |
+| Corpo a corpo com espada | `[DECIDIDO]` | 00:16 |
+| Escudo | `[DECIDIDO]` | 00:16 |
+| Arco e flecha (distância) | `[DECIDIDO]` | 00:16 |
+| Magia como forma de combate | `[DECIDIDO]` | 00:16 |
+| **Esquiva** | `[DECIDIDO]` | 02:04 |
+| **Parry** | `[DECIDIDO]` — "no combate corpo a corpo e tal" (Rico, 02:11) | 02:04, 02:11 |
+| Stamina como recurso | `[DECIDIDO]` — aparece como atributo a subir | 03:50, 06:33 |
 
----
+> "Esquiva, esse bagulho tem que ter também, né? Esquiva, bagulho de parry." — Mateus (02:04)
 
-## A máquina de estados do personagem
+Nada abaixo contradiz uma linha desta tabela. Tudo abaixo é a tabela transformada em números.
 
-Todo o resto do documento pendura aqui. Um personagem está sempre em exactamente **um** destes estados:
+## Convenções
 
-| Estado | Entra por | Sai para | Pode ser interrompido por dano? |
+- **60 fps de referência** (o tecto das duas máquinas — pergunta 0). Tempos em segundos e frames: `0,60 s (36 f)`.
+- **Frames de um ataque:** `arranque / activo / recuperação` — o golpe só acerta nos frames activos.
+- **MV (valor de movimento):** multiplicador de dano do golpe. A interface com o WP2 é: `dano = MV × dano_base_da_arma × escala_de_atributos − defesa`. O WP1 fixa os MV; o WP2 fixa o resto da fórmula.
+- **Cancelável:** a animação pode ser cortada por outra acção no intervalo dito. Fora desses intervalos, o compromisso é total — é isso que dá peso às escolhas.
+
+## A máquina de estados
+
+```mermaid
+stateDiagram-v2
+    Livre --> Ataque : leve / pesado
+    Livre --> Esquiva : esquiva
+    Livre --> Bloqueio : segurar bloqueio
+    Livre --> Parry : parry
+    Livre --> Conjuracao : lançar magia
+    Livre --> UsoDeItem : item da hotbar
+    Ataque --> Livre : recuperação termina
+    Ataque --> Ataque : combo (janela)
+    Ataque --> Esquiva : cancel (só a 60% da recuperação)
+    Esquiva --> Livre : 0,60 s
+    Esquiva --> Ataque : cancel (a partir de 0,45 s)
+    Bloqueio --> Livre : soltar
+    Bloqueio --> GuardaQuebrada : stamina a 0 num golpe
+    Parry --> Livre : falhou (0,667 s exposto)
+    Conjuracao --> Livre : lançou / interrompido
+    HitStun --> Livre : 0,4–0,7 s
+    GuardaQuebrada --> Livre : 1,5 s
+    Morto --> [*]
+```
+
+**Prioridade de interrupção** (o que corta o quê): Morte > Cambaleio/GuardaQuebrada > HitStun > tudo o resto. Levar dano interrompe qualquer acção — **excepto** nas janelas de invencibilidade (esquiva, riposte) e de hiper-armadura (pesado do machadão, Égide). O jogador nunca fica "preso" num estado por mais de 1,5 s.
+
+## Movimento
+
+| Modo | Velocidade | Custo | Notas |
 |---|---|---|---|
-| **Parado / A andar** | omissão | qualquer um | sim → A levar dano |
-| **A correr** | segurar corrida com stamina > 0 | qualquer um | sim |
-| **A esquivar** | tecla de rolamento | Parado, Ataque (encadeado), Bloqueio | não (ver i-frames) |
-| **A atacar** (leve/pesado/crítico) | botão de ataque | Parado, Esquiva (cancelamento), Ataque seguinte | sim, salvo hiperarmadura |
-| **A bloquear** | segurar bloqueio com escudo/arma | qualquer um | absorve (ver bloqueio) |
-| **A aparar (parry)** | tecla de parry | Parado, Riposte | sim, fora da janela activa |
-| **A lançar magia** | botão de lançamento | Parado, Esquiva (só na recuperação) | sim — lançamento interrompido perde a carga? **não**, a carga só se gasta no frame de disparo |
-| **A levar dano (stagger)** | dano sem hiperarmadura | Parado | não acumula: durante o stagger há 0,20 s de imunidade a novo stagger (nunca a dano) |
-| **Quebra de guarda** | bloquear sem stamina | Parado (após 1,5 s) | sim — e fica ripostável |
-| **Caído / A morrer** | vida a 0 | respawn | — |
+| Andar | 3,0 m/s | 0 | sempre disponível, mesmo exausto |
+| Correr | 5,0 m/s | 0 | o passo por defeito |
+| Sprint | 7,0 m/s | 8 stamina/s | mantém o lock-on |
+| Strafe (com lock-on) | 4,0 m/s | 0 | lateral e para trás |
+| Conjuração | 40% do modo actual | — | ver "Combate à distância" |
 
-`[FABLE]` **Sem salto manual.** O mundo desenha-se sem saltos obrigatórios; obstáculos até 0,5 m transpõem-se automaticamente ao andar. *Porquê:* menos um botão no esquema, menos ~8 animações, e um souls-like clássico prova que não faz falta. *Alternativa descartada:* salto livre à Elden Ring — custa animação, física de queda e desenho de mundo vertical, e não serve a fatia 1.
-
----
+*Teste da Lei 1:* correr é grátis e mais rápido do que qualquer inimigo comum em patrulha (WP6 herda isto como tecto de velocidade). **Fugir nunca depende de estatísticas** — um jogador em apuros sai sempre a andar. ✅
 
 ## Esquiva (rolamento)
 
-`[FABLE]` — os números:
+| Parâmetro | Valor |
+|---|---|
+| Duração total | **0,60 s (36 f)** |
+| Invencibilidade | **0,08 s → 0,38 s** (frames 5–23 · **300 ms**) |
+| Custo | **25 stamina** |
+| Distância | **3,5 m**, 8 direcções (sem direcção: para trás) |
+| Recuperação vulnerável | 0,38 s → 0,60 s |
+| Cancelável | a partir de 0,45 s, em: ataque leve · bloqueio · nova esquiva |
 
-| Parâmetro | Valor | Em frames |
-|---|---|---|
-| Duração total | **0,60 s** | 36 f |
-| Invencibilidade (i-frames) | **0,08 s → 0,38 s** | frames 5–23 (18 f = 300 ms) |
-| Custo | **25 stamina** | — |
-| Distância | **3,5 m** | — |
-| Direcções | 8, relativas à câmara (com lock-on: relativas ao alvo) | — |
-| Cancelável? | **Não** até 0,38 s. De 0,38 s em diante encadeia em: ataque leve (roll-attack), bloqueio | — |
-| Nova esquiva | a partir de **0,45 s** | f 27 |
+Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunta 14). Se armadura entrar, o rolamento ganha classes de peso **neste documento**, não lá.
 
-Durante a recuperação (0,38 → 0,60 s) o personagem é vulnerável — esquivar por hábito, sem ler o ataque, é punível. É essa a diferença entre esquivar e estar invencível.
-
-*Porquê estes números:* 300 ms de invencibilidade é janela generosa para reagir a qualquer telegrafia ≥ 0,5 s (todas as do jogo são — regra no WP6), e os 5 frames de arranque impedem a esquiva de ser um botão de pânico sem leitura. *Alternativa descartada:* i-frames desde o frame 1 (à Bloodborne) — torna a esquiva reactiva pura e mata o parry, porque esquivar passa a dominar sempre.
-
-*Teste da Lei 1:* a invencibilidade não depende de atributo nenhum. Um personagem nível 1 atravessa **qualquer** ataque do jogo com a mesma janela que um nível 100. O nível compra mais stamina (mais esquivas seguidas = margem de erro), nunca uma esquiva melhor. ✅
-
-`[FABLE]` **Sem backstep** na fatia 1 (o passo curto para trás do Dark Souls). *Porquê:* segunda animação, segunda tabela de i-frames, ganho pequeno. *Alternativa descartada:* backstep com 6 i-frames — fica em "ideias para depois".
-
----
+*Teste da Lei 1:* 300 ms de invencibilidade cobrem qualquer ataque telegrafado do jogo — o WP6 fica obrigado a ≥ 0,5 s de aviso legível em todo o ataque inimigo. A esquiva não escala com nível: o jogador de nível 1 tem exactamente os mesmos 300 ms que o de nível 100. O nível compra stamina (mais esquivas), nunca esquivas melhores — margem de erro, não porta. ✅
 
 ## Parry
 
-`[FABLE]` — os números:
+**Quem apara:** o **escudo** e a **adaga** `[FABLE]`. Espada, machadão e cajado não aparam. *Razão:* dá identidade às armas dentro da Lei 3 — o bloqueio é a defesa "segura" do escudo, o parry da adaga é a defesa de risco do Assassino, o machadão troca defesa por hiper-armadura. *Alternativa descartada:* parry universal — dilui a identidade das armas e obriga a equilibrar cinco janelas em vez de duas.
 
-| Parâmetro | Valor | Em frames |
-|---|---|---|
-| Arranque | 0,05 s | 3 f |
-| **Janela activa** | **0,05 s → 0,20 s** | frames 4–12 (9 f = 150 ms) |
-| Recuperação (se falha) | 0,20 → 0,60 s | 24 f vulnerável |
-| Custo | 10 stamina | — |
-| Com quê | escudo ou adaga na mão esquerda; cajado e machadão **não aparam** | — |
+| Parâmetro | Valor |
+|---|---|
+| Arranque | 4 f (0,067 s) |
+| **Janela activa** | **8 f (0,133 s)** |
+| Falhou | 40 f (0,667 s) exposto, sem defesa |
+| Custo | 10 stamina (na tentativa, acerte ou falhe) |
+| Acertou | golpe anulado (0 dano, 0 stamina) → atacante em **Postura Quebrada** 2,0 s |
+| Riposte | primeiro golpe sobre Postura Quebrada: **MV 2,5**, animação 0,9 s **com invencibilidade** |
 
-**Ao acertar:** o atacante entra em **Ruptura** — 2,5 s de stagger, cai de joelhos, e fica **ripostável** (ver críticos). O som e a faísca do parry saem no frame exacto do contacto (WP12), sempre iguais — é o "acertei" que se aprende de ouvido.
+**O que se apara:** o WP6 marca cada ataque inimigo como `aparável` ou `só esquiva` (projécteis grandes, agarrões e pancadas de área não se aparam — a esquiva cobre-os). O brutamontes é o professor: todos os golpes dele são aparáveis e lentos.
 
-**Ao falhar:** 24 frames de recuperação de braços abertos. Falhar um parry na cara de um brutamontes é levar o golpe inteiro. É esse o contrato: risco alto, prémio alto.
-
-**O que se apara e o que não:**
-
-| Tipo de ataque | Aparável? | Como se comunica |
-|---|---|---|
-| Golpes de arma de humanoides (lanceiro, espadachins) | ✅ | telegrafia normal |
-| Pancadas esmagadoras (brutamontes, martelos, quedas de cima) | ❌ — bloqueável, esquivável | o inimigo ergue a arma **acima da cabeça** — regra visual fixa do jogo inteiro |
-| Agarrões (chefes) | ❌ — só esquiva | brilho vermelho curto no inimigo, 0,25 s antes (regra fixa) |
-| Projécteis físicos (lanças atiradas, flechas) | ✅ — desvia, não abre riposte | — |
-| Magia | ❌ na fatia 1 | fica em "ideias para depois" (aparar magia com Égide é candidato) |
-
-*Porquê 150 ms de janela:* é apertado o suficiente para ser uma aposta (o dobro da esquiva de exigência), largo o suficiente para se aprender — com a telegrafia mínima de 0,5 s (WP6), o jogador tem de acertar o timing com ±75 ms, que é o alcance de um humano treinado num ritmo aprendido. *Alternativa descartada:* janela de 5 f (à Sekiro) — para dois jogadores casuais em máquinas de 60 Hz, transforma o parry em item de colecção.
-
-*Teste da Lei 1:* o parry não escala com nada. A recompensa (riposte ×3,0) é fixa em multiplicador, por isso um jogador fraco que apare bem mata depressa na mesma. ✅ · E as regras visuais fixas (arma acima da cabeça = não aparável; brilho vermelho = só esquiva) fazem da leitura uma habilidade transferível a todo o bestiário.
-
----
+*Teste da Lei 1:* risco e recompensa puros — 133 ms de janela contra 667 ms de castigo. Não escala com nada: o parry do nível 1 é o parry do nível 100. Um jogador excelente mata o Vorgar à base de parry sem gastar um ponto. A janela é generosa de propósito no arranque (Dark Souls anda pelos 100–167 ms); **aperta-se no protótipo se for trivial** — nunca por nível. ✅
 
 ## Bloqueio
 
-Segurar o botão com escudo (ou arma a duas mãos, pior) à frente. Levantar o escudo demora **0,10 s** (6 f); baixar é imediato.
+| Situação | Absorção | Custo de stamina |
+|---|---|---|
+| Escudo vs físico | **100%** | 15 × peso do golpe (leve 1,0 · pesado 1,8) |
+| Escudo vs magia | 50% | idem |
+| Arma de uma mão (sem escudo) | 50% | ×1,5 |
+| Machadão / cajado (duas mãos) | não bloqueiam | — |
 
-| Com | Absorção física | Absorção mágica | Custo por golpe |
-|---|---|---|---|
-| Escudo de madeira (fatia 1) | 90% | 40% | dano × 0,60 em stamina |
-| Escudos melhores (WP5) | até 100% | até 70% | dano × 0,40–0,55 |
-| Arma a duas mãos (guarda) | 60% | 20% | dano × 0,80 |
+- Regeneração **enquanto bloqueia: 10/s** (25% da normal).
+- **Guarda Quebrada:** stamina chega a 0 a absorver um golpe → cambaleio de **1,5 s**, exposto a riposte como na Postura Quebrada. É o castigo de bloquear tudo — o escudo é seguro, não é grátis.
 
-- Os 10% que passam ("chip damage") mantêm o bloqueio como adiamento, não como solução.
-- **Stamina regenera a metade (20/s) com o escudo levantado.** Andar de escudo em riste o dia todo tem preço.
-- **Quebra de guarda:** se o custo do golpe exceder a stamina restante, a guarda parte — 1,5 s (90 f) de stagger, **ripostável**. É a punição por bloquear o que devia ser esquivado.
-
-*Teste da Lei 1:* bloquear não exige atributos; a stamina baixa de um nível 1 só encurta quantos golpes aguenta antes de ter de fazer o que o jogo ensina — esquivar ou aparar. O escudo é rede de segurança, não resposta. ✅
-
----
+*Teste da Lei 1:* o Tanque de nível 1 bloqueia o mesmo que o de nível 50 — o nível compra a stamina que aguenta mais golpes, não a absorção. E a Guarda Quebrada garante que "segurar RMB" nunca é resposta completa: bloquear sem ler o inimigo acaba em cambaleio. ✅
 
 ## Stamina
 
 | Parâmetro | Valor |
 |---|---|
-| Base no nível 1 | **100** (cresce com o atributo Stamina — fórmula no WP2) |
-| Regeneração | **45/s**, após **0,7 s** sem gastar |
-| Regeneração a bloquear | 20/s |
-| Regeneração em exaustão (chegou a 0) | espera **1,0 s**, e o personagem só volta a poder agir com ≥ 20 pontos |
-| Exaustão | não pode atacar, esquivar, aparar nem bloquear; anda a 80% da velocidade; **não cambaleia** (só a quebra de guarda cambaleia) |
+| Base (nível 1) | **100** — a escala por atributo é do WP2 |
+| Regeneração | **40/s**, após **0,8 s** sem gastar |
+| A bloquear | 10/s |
+| A zero | sem acções ofensivas/defensivas até recuperar **15** (histerese); andar e correr sempre possíveis; sprint não |
 
-**Custos de cada acção:**
+Custos, todos num sítio: esquiva 25 · parry 10 · sprint 8/s · bloqueio por golpe (tabela acima) · ataques (tabela abaixo). Magia gasta **cargas**, não stamina (03:50) — dois recursos, duas decisões.
 
-| Acção | Custo |
-|---|---|
-| Rolamento | 25 |
-| Parry | 10 |
-| Corrida | 12/s |
-| Ataque leve | 12–30 (por arma — tabela abaixo) |
-| Ataque pesado | ×1,7 do leve da mesma arma |
-| Bloquear um golpe | dano × factor do escudo |
-| Andar, bloquear parado | 0 |
+*Teste da Lei 1:* a zero, o jogador nunca fica indefeso de facto — anda, corre, cria distância, e 0,8 s + 15 de histerese devolvem-lhe a esquiva em ~1,2 s. Exaustão pune a ganância; não executa ninguém. ✅
 
-**Regra de justiça** `[FABLE]`: uma acção com stamina > 0 mas insuficiente **executa na mesma** e deixa a barra a zero (estilo Dark Souls). *Porquê:* recusar a acção "porque faltavam 3 pontos" é o jogo a comer botões — viola a regra final do WP1B. *Alternativa descartada:* bloquear acções sem stamina cheia para elas — pune a leitura certa por contabilidade errada.
+## Ataques — as armas da fatia
 
-*Teste da Lei 1:* com 100 de stamina, um nível 1 tem 4 rolamentos ou ~7 golpes leves de espada por barra — chega para qualquer padrão do jogo com gestão. O atributo compra fôlego (margem), não acesso. ✅
+Frames `arranque/activo/recuperação` a 60 fps. Combo: número máximo de leves encadeados (a janela de encadear abre nos últimos 40% da recuperação).
 
----
+| Arma | Leve | Custo | MV | Pesado | Custo | MV | Combo | Alcance | Fatia 1? |
+|---|---|---|---|---|---|---|---|---|---|
+| **Adaga** | 12/4/14 (0,50 s) | 12 | 0,55 | 20/5/20 (0,75 s) | 20 | 0,85 | ×4 (4.º: MV 0,7) | 1,4 m | ✅ |
+| **Espada longa** | 16/6/18 (0,67 s) | 18 | 1,0 | 28/8/26 (1,03 s) | 30 | 1,6 | ×3 (3.º: MV 1,2) | 2,0 m | ✅ |
+| **Machadão** | 24/8/26 (0,97 s) | 28 | 1,5 | 38/10/34 (1,37 s) | 45 | 2,4 | ×2 | 2,3 m | ✅ |
+| **Cajado (pancada)** | 18/5/20 (0,72 s) | 15 | 0,7 | 30/7/28 (1,08 s) | 25 | 1,1 | ×2 | 1,8 m | ✅ |
+| **Escudo (bash)** | 14/4/16 (0,57 s) | 15 | 0,4 — postura ×2 | — | — | — | — | 1,2 m | ✅ |
+| Arco | ver "Combate à distância" | | | | | | | | ⬜ fatia 2 |
 
-## Ataques
+Regras transversais:
 
-Dois botões: **leve** (encadeia até 3) e **pesado** (um golpe, mais lento, quebra postura). O dano base e os requisitos são do WP5; aqui ficam os tempos e custos das cinco armas da fatia 1:
+- **Pesado do machadão é carregável:** segurar até +20 f → MV 3,0. **Hiper-armadura nos frames 30–48**: leva o dano, não é interrompido. É a identidade do Berserker dentro da Lei 3 — qualquer um pega no machadão, mas é preciso ler o inimigo para trocar dano por dano.
+- **Cancelamentos:** a recuperação de um **leve** é cancelável em esquiva ou bloqueio a partir de 60% dela. O **pesado** não se cancela — compromisso total (o carregado do machadão pode soltar cedo). Ataque nunca cancela ataque fora da janela de combo.
+- **Duas mãos:** machadão e cajado ocupam as duas; adaga/espada/cajado combinam com escudo na outra.
 
-| Arma | Golpe | Arranque | Activo | Recuperação | Total | Stamina | Notas |
-|---|---|---|---|---|---|---|---|
-| **Espada longa** | leve (×3) | 0,20 s | 0,10 s | 0,25 s | 0,55 s | 18 | o metro do jogo |
-| | pesado | 0,45 s | 0,12 s | 0,45 s | 1,02 s | 30 | +50% dano de postura |
-| **Adaga** | leve (×3) | 0,12 s | 0,08 s | 0,18 s | 0,38 s | 12 | alcance 1,2 m (curto) |
-| | pesado | 0,30 s | 0,10 s | 0,30 s | 0,70 s | 20 | bónus de backstab ×3,0 (vs ×2,5) |
-| **Machadão** | leve (×2) | 0,35 s | 0,15 s | 0,40 s | 0,90 s | 30 | arco largo, acerta grupos |
-| | pesado | 0,60 s | 0,15 s | 0,60 s | 1,35 s | 45 | **hiperarmadura** 0,25 s → 0,75 s |
-| **Cajado** | leve | 0,25 s | proj. | 0,35 s | 0,60 s | 10 | **Dardo do cajado** — ver plano B, WP4 |
-| | pesado | 0,40 s | 0,10 s | 0,40 s | 0,90 s | 22 | pancada física |
-| **Escudo** | investida | 0,25 s | 0,10 s | 0,35 s | 0,70 s | 15 | dano baixo, alto dano de postura |
+*Teste da Lei 1 — e a restrição que o WP2 herda:* com atributos de nível 1 e zero pontos, a curva de dano do WP2 **tem de satisfazer**: orc lanceiro morre em 3–5 leves de espada; brutamontes em 6–9; Vorgar em 45–70. Se o WP2 produzir números fora disto, está errado o WP2 — o chefe passa a testar paciência. Fica escrito aqui para o teste jogado do critério 3 da fatia (nível 1, zero pontos, mata o Vorgar) ter chão. ✅
 
-**Encadeamento do combo leve:** o golpe seguinte aceita-se do início da recuperação até 0,4 s depois dela acabar; o 2.º e 3.º golpes da cadeia ganham +10% e +20% de dano. Largar a cadeia a meio não tem penalização.
+## Poise e interrupção
 
-**Cancelamentos** `[FABLE]`:
-- Ataque leve → **rolamento**, a partir de 60% da recuperação. *Porquê:* premeia agressão com leitura; sem isto, atacar ao pé de um chefe é sempre erro.
-- Ataque pesado → **não cancela**. É um compromisso; a hiperarmadura (machadão) é a compensação.
-- Bloqueio e corrida cancelam para qualquer coisa de imediato.
-- *Alternativa descartada:* cancelar tudo a qualquer momento (à action game) — dissolve o peso das escolhas, e o peso é o género.
+- **Jogador: poise zero por defeito.** Qualquer dano interrompe (HitStun 0,4 s golpe leve · 0,7 s pesado). Excepções: i-frames (esquiva, riposte) e hiper-armadura (machadão pesado; Égide — WP4).
+- **Inimigos: postura 0–100** (valor por inimigo no WP6). Dano de postura por golpe = `MV × 10`; bash de escudo ×2; parry acertado = quebra imediata. A 0 → **Cambaleio 1,2 s** e a postura volta ao máximo.
 
-**Hiperarmadura:** durante os frames marcados, dano recebido **não interrompe** a animação (o dano entra na mesma). Reservada a: pesado do machadão, habilidades marcadas no WP3, ataques marcados de inimigos grandes (WP6).
-
-**Poise / interrupção do jogador** `[FABLE]`: levar dano fora de i-frames e sem hiperarmadura causa **stagger de 0,35 s** e interrompe o que estava a meio. Não há barra de poise no jogador na fatia 1 — armadura ainda não existe (pergunta 14). *Alternativa descartada:* poise numérico à Dark Souls já — sem armadura para o alimentar, era um número morto.
-
-**Postura dos inimigos:** cada inimigo tem **Postura** (valor no WP6). Cada golpe tira postura (dano de postura ≈ custo de stamina do golpe; pesados +50%). A zero → **Ruptura**: 2,0 s de stagger, ripostável, postura recomeça cheia. Regenera 10/s após 3 s sem levar dano de postura.
-
----
-
-## Críticos: riposte e backstab
-
-| Crítico | Condição | Multiplicador | Animação |
-|---|---|---|---|
-| **Riposte** | inimigo em Ruptura (parry ou postura a zero) + ataque leve de frente | **×3,0** do dano do leve | 1,8 s, invencível durante a execução |
-| **Backstab** | cone de 60° nas costas de inimigo comum, arma de uma mão, ataque leve | **×2,5** (adaga: ×3,0) | 1,5 s, invencível durante a execução |
-
-Chefes **não** têm backstab; têm Ruptura (a barra de postura é a porta de entrada do crítico neles). A invencibilidade durante a animação é o que torna o crítico seguro em co-op — o parceiro não te acerta lá dentro (ver fogo amigo, WP4/WP10).
-
-*Teste da Lei 1:* os críticos multiplicam o dano que o jogador tem, seja ele qual for. Um nível 1 que domine parry mata o lanceiro em 2 ripostes; um nível 50 em 1. Margem, não porta. ✅
-
----
+*Teste da Lei 1:* a postura premeia agressão com leitura — quebrar um inimigo é habilidade acumulada, não estatística. E o jogador sem poise significa que nível nenhum o deixa ignorar golpes: até ao 100, levar dano continua a custar o turno. ✅
 
 ## Lock-on
 
-`[FABLE]` — existe, e é o modo por omissão de ler um inimigo:
+**Existe.** `[FABLE]` *Razão:* esquiva direccional e parry vivem de duelo legível; e em co-op os dois precisam de saber quem tem a atenção de quem. *Alternativa descartada:* mira livre pura — funciona com rato, mas parte a leitura de duelos e obriga cada golpe a ser um julgamento de mira, que não é o jogo que eles descreveram.
 
 | Parâmetro | Valor |
 |---|---|
-| Alcance de aquisição | 20 m, no cone de 30° do centro da câmara |
-| Quebra | > 28 m, ou 2 s sem linha de vista |
-| Troca de alvo | roda do rato (com lock activo); movimento lateral do rato > 300 px/s também troca |
-| Movimento | vira o personagem para o alvo; andar passa a *strafe*; correr quebra o strafe (continua locked) |
-| Esquiva com lock | nas 8 direcções relativas ao alvo |
+| Alcance de engate | 18 m, com linha de vista |
+| Quebra | > 25 m, ou 1,5 s sem linha de vista, ou alvo morto |
+| Trocar de alvo | flick do rato / stick direito |
+| Movimento | strafe 4,0 m/s; esquiva 8-direccional; sprint mantém o lock |
 
-Sem alvo, os ataques saem na direcção da câmara. O comportamento da câmara com lock (enquadramento, chefe gigante em cima, co-op) é do WP1B.
+Ao quebrar por morte do alvo, **não re-engata sozinho** — re-engatar é decisão do jogador (evita a câmara a saltar para o parceiro ou para o inimigo errado no meio de um combo). O enquadramento, a rotação e o caso "chefe em cima do jogador" são do **WP1B**.
 
-*Alternativa descartada:* combate só de câmara livre (à Monster Hunter antigo) — exige mira manual constante que o rato até suporta, mas o parry e o strafe à volta de um chefe ficam muito mais caros de aprender. O jogo é dos dois, não de veteranos.
+## Combate à distância — o problema do género, resolvido no sistema
 
----
+O risco conhecido ([`00-visao.md`](00-visao.md)): se atacar de longe for seguro, ninguém esquiva nem apara, e as duas mecânicas centrais morrem. A resposta não é proibir a distância — é fazê-la **cara, lenta e interrompível**:
 
-## Combate à distância — a regra da pressão
+1. **Magia gasta cargas** (03:50, decidido por eles) — o recurso não regenera em combate (recuperação: WP4/WP5, com o modelo de descanso da pergunta 7).
+2. **Conjurar trava o movimento a 40%** e tem tempo de lançamento por magia (pontos de partida no WP4: Dardo 0,8 s · Ruína 1,6 s · Égide 0,5 s).
+3. **Levar dano durante a conjuração interrompe e gasta a carga.** `[FABLE]` *Razão:* conjurar na cara de um inimigo tem de ser uma aposta, senão a magia vira spam-até-sair. *Alternativa descartada:* interromper sem gastar — mais simpática, mas remove o único custo de conjurar mal.
+4. **Anti-kite:** um inimigo que passe **4 s** sem conseguir alcançar o alvo ganha comportamento de fecho — sprint, salto, projéctil próprio (o WP6 implementa por inimigo; o lanceiro é o primeiro).
+5. **O plano B do mago é o cajado** — pancada sem custo nenhum (tabela acima). Sem cargas, o Feiticeiro é um lutador fraco mas inteiro: esquiva, apara com escudo se o tiver, e bate. **A Lei 1 nunca fica refém do contador de cargas.**
 
-O problema conhecido do género, dito no documento antigo: **se atacar de longe for seguro, ninguém esquiva nem apara, e as duas mecânicas centrais morrem.**
+**Arco (fatia 2), regras desde já** para o WP5 herdar: puxar 0,9 s para dano pleno (50% aos 0,45 s) · movimento a 30% enquanto puxa · aljava de 15 · ~70% das setas recuperáveis dos corpos · sem i-frames a disparar. O Batedor entra quando isto entrar.
 
-`[FABLE]` A resposta é uma regra com três dentes, e chama-se **regra da pressão**:
-
-1. **Custo auto-limitado.** Magia gasta cargas (WP4); o Dardo do cajado é gratuito mas fraco e com queda: **−50% de dano além de 8 m** (queda linear de 8 m a 15 m, alcance máximo 15 m). Não há metralhadora arcana.
-2. **Os inimigos fecham.** Qualquer inimigo atingido ou que veja um projéctil entra em comportamento de fecho: corre ao jogador a velocidade ≥ da corrida do jogador (6 m/s), em zigue-zague leve (WP6). Ficar parado a disparar é decisão com prazo.
-3. **Lançar é âncora.** Lançamentos de magia (0,4–1,2 s por magia, WP4) e puxar de arco (1,2 s, fatia 2) fazem-se **parado ou a andar a 50%**. Distância compra dano por tempo, não segurança.
-
-*Teste da Lei 1:* um mago excelente gere as cargas, ganha espaço com a esquiva e termina com o Dardo — habilidade. Um mago mau esvazia as cargas ao longe e morre com o lanceiro em cima — leu mal. Nenhum dos dois resolve com nível. ✅
-
-O arco e flecha (decidido a 00:16) entra na **fatia 2** com este sistema: munição limitada, 1,2 s de puxa, dano cai com a distância a partir de 20 m. Detalhe no WP5 quando chegar a vez.
-
----
+*Teste da Lei 1:* a distância continua a ser opção a sério (a Ruína muda salas inteiras), mas nunca é a opção **segura** — o jogo empurra sempre de volta para a dança da esquiva e do parry, que é onde a habilidade vive. ✅
 
 ## Morte
 
-Provisório da fatia 1, herdado do WP0 (pergunta 10 continua aberta — é a decisão de tom deles):
+Formaliza o provisório da fatia 1 ([`10-fatia-1.md`](10-fatia-1.md)):
 
-- Vida a 0 → animação de queda (1,5 s) → ecrã de morte (2 s) → respawn no último ponto de descanso. **Total < 30 s até estar a jogar.**
-- Inimigos normais renascem no respawn; chefes não.
-- **Nada se perde.** Sem economia na fatia, punição de perda seria arbitrária.
-- Em co-op: o caído fica no chão **ressuscitável durante 30 s** (parceiro segura interacção 3 s ao lado, canalizável — interrompe-se com dano). Se os 30 s passarem ou o parceiro também cair, os dois voltam ao ponto de descanso. `[FABLE]` *Porquê:* transforma "ele morreu" em decisão táctica de risco em vez de espera. *Alternativa descartada:* morte de um = reset imediato — pune o jogador que ainda está de pé e a aprender.
+- Renasces na **entrada de Brumal**; depois de descoberta, a **boca da Toca** é o ponto de renascimento (descobrir = checkpoint, sem fogueira nem menu).
+- **Não se perde nada.** Vida, stamina e cargas restauradas; inimigos normais renascem; o chefe faz reset total.
+- Morrer no Vorgar → nova tentativa em **< 30 s**, também em co-op (critério 4 da fatia).
+- Em co-op: um jogador morto **fica morto até o combate actual acabar** (chefe: até a tentativa acabar; mundo: até o parceiro sair de combate) e renasce ao lado do parceiro. `[FABLE]` *Razão:* reviver a meio do chefe transformava o ×1,8 de vida em corrida de revezamento. *Alternativa descartada:* ressuscitar o parceiro no local — é a pergunta certa para o WP10 revisitar com a rede à frente.
 
----
-
-## Dificuldade
-
-`[FABLE]` **Não há selector de dificuldade.** A dificuldade é o desenho dos padrões; a margem vem do nível (Lei 1) e do co-op (pilar 2). *Alternativa descartada:* modos fácil/normal/difícil — obrigam a equilibrar o jogo três vezes, e o jogo é para dois jogadores concretos, não para um mercado.
-
----
+A **pergunta 10** (perde-se alguma coisa ao morrer — o tom do jogo) **continua deles**. Quando decidirem, muda aqui e o resto da spec herda.
 
 ## Comandos
 
-Teclado e rato é o esquema principal — **nenhuma das duas máquinas tem comando** (pergunta 0). Remapeável no WP11.
+Nenhuma das duas máquinas tem comando (pergunta 0) — **teclado+rato é o esquema primário**; o de comando fica como referência para quando existir um.
 
-| Acção | Teclado + rato | Comando (futuro) |
+| Acção | Teclado+rato | Comando (referência) |
 |---|---|---|
-| Mover | WASD | analógico esq. |
-| Correr | Shift (segurar) | B/○ (segurar) |
-| Rolamento | Espaço | B/○ (toque) |
-| Ataque leve | botão esq. do rato | R1 |
-| Ataque pesado | botão dir. do rato | R2 |
-| Bloquear | Ctrl (segurar) | L1 |
-| Parry | F | L2 |
-| Lock-on | Q ou botão do meio | analógico dir. (clique) |
-| Trocar alvo / magia | roda do rato / roda com Alt | analógico dir. / d-pad |
-| Lançar magia (cajado na mão) | botão dir. do rato | L2 |
-| Frasco / consumível activo | R | quadrado/X |
-| Interagir | E | A/✕ |
-| Hotbar | 1–8 | d-pad |
-| Mochila | Tab | opções |
+| Mover | WASD | stick esquerdo |
+| Câmara | rato | stick direito |
+| Ataque leve | LMB | RB |
+| Ataque pesado | Shift+LMB | RT |
+| Bloqueio (segurar) | RMB | LB |
+| Parry | Q | LT |
+| Esquiva / Sprint | Space toque / segurar | B toque / segurar |
+| Lock-on | Tab | RS click |
+| Magia seguinte | F | seta ↑ |
+| Usar item activo | R | X |
+| Hotbar | 1–5 | seta ↓ (ciclo) |
+| Interagir | E | A |
 
-Nota de coerência: com cajado equipado, o botão direito lança a magia activa (o cajado não bloqueia nem tem pesado útil — a pancada pesada fica em Shift+botão esq., parado). Cada arma diz o seu mapa no WP5.
+Sensibilidade, remapeamento e afinação são do **WP1B/WP11** — isto é o mapa por defeito.
 
----
+## O que este documento entrega aos outros
 
-## O que este documento não fecha
+| Para | O quê |
+|---|---|
+| **WP2** | os MV de todas as armas; a fórmula `MV × base × escala − defesa`; as restrições de golpes-para-matar a nível 1 (secção Ataques) |
+| **WP1B** | as janelas em frames que o buffer e a latência têm de servir; a lista de estados canceláveis |
+| **WP6** | ≥ 0,5 s de aviso legível em todo o ataque; a marca `aparável`/`só esquiva` por ataque; postura por inimigo; anti-kite aos 4 s; velocidade de patrulha < 5,0 m/s |
+| **WP7** | o sistema de postura e o riposte; o reset total do chefe na morte; o ×1,8 em co-op (da fatia 1) |
+| **WP4** | tempos de conjuração de partida; a regra interrupção-gasta-carga; hiper-armadura da Égide |
+| **WP15** | o **marco 2** valida cada número deste documento no protótipo — um boneco, três inimigos, as cinco armas |
 
-- **Buffer de entrada, latência, câmara, hit-stop** → WP1B (Claude, reservado)
-- **Dano base, requisitos e escala das armas** → WP5 · **Fórmula de dano e defesas** → WP2
-- **Telegrafias concretas de cada inimigo** (com a regra mínima: aviso ≥ 0,5 s) → WP6
-- **Cargas e catálogo de magia** → WP4 · **Fogo amigo** → pergunta 20, provisório no WP4
-- **Morte definitiva** (perde-se algo? fogueiras?) → pergunta 10, deles
-- **Estados alterados** (veneno, fogo, choque) → framework no WP2, efeitos no WP4/WP6
+## O que continua aberto
 
-## Ligações
-
-- Pilares e Lei 1: [`00-visao.md`](00-visao.md) · Fatia 1: [`10-fatia-1.md`](10-fatia-1.md)
-- Controlo e game feel: `25-controlo.md` (WP1B, em curso pelo Claude)
-- Fórmulas: [`11-formulas.md`](11-formulas.md) · Armas: [`14-equipamento.md`](14-equipamento.md) · Magia: [`13-magia.md`](13-magia.md)
+- **Pergunta 10** — o tom da morte (perder algo?). Deles.
+- **Pergunta 20** — fogo amigo. Decide-se no WP10 com a rede à frente.
+- **Todos os números deste documento** fecham no protótipo do marco 2. Até lá são `[FABLE]`, com esta ordem de confiança: janelas de esquiva/parry (alta — vêm da gramática do género), frames por arma (média), custos de stamina (média), restrições de golpes-para-matar (baixa — dependem do WP2).
