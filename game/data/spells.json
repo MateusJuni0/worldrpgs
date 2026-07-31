@@ -1,0 +1,73 @@
+{
+  "_fonte": "spec/13-magia.md (WP4), 'O catalogo' — cargas, tempo, alcance, dano base. LEI: deixou de ser [PROTO] quando o WP4 chegou.",
+  "_fonte_regras": "spec/01-combate.md (interrupcao gasta a carga, movimento a 40%) + spec/11-formulas.md (bolso unico = 4 + floor(Sab/4), escala pela Sabedoria peso forte).",
+  "_lei_2": "Tres verbos diferentes, zero escaloes de dano: projectil, area, barreira.",
+
+  "_rules": {
+    "move_multiplier_while_casting": 0.40,
+    "interrupt_spends_charge": true,
+    "charges_regen_in_combat": false,
+    "charges_restored_on_rest": true,
+    "charges_restored_on_death": true,
+    "shared_charge_pool": true,
+    "requires_staff": true,
+    "scaling_attribute": "sabedoria",
+    "scale_weight": "forte",
+    "_nota_cajado": "WP4: conjurar exige cajado equipado — a magia ocupa uma mao, como qualquer arma.",
+    "_nota_interrupcao": "Levar dano a conjurar interrompe E gasta a carga. Conjurar na cara de um inimigo tem de ser uma aposta.",
+    "_nota_bolso": "Bolso unico partilhado pelas tres. O Feiticeiro de arranque (Sab 14) tem 7 cargas: 7 Dardos, ou 2 Ruinas + 1 Dardo, ou 2 Egides + 3 Dardos. O bolso e o puzzle."
+  },
+
+  "dardo": {
+    "display_name": "Dardo",
+    "verb": "ferir a distancia, barato e fiavel",
+    "cast_time": 0.8,
+    "charge_cost": 1,
+    "type": "projectile",
+    "mv": 1.0,
+    "base_damage": 45,
+    "damage_type": "magico",
+    "school": "bem",
+    "speed": 20.0,
+    "max_range": 18.0,
+    "movement_locked": false,
+    "weight": "light"
+  },
+
+  "ruina": {
+    "display_name": "Ruina",
+    "verb": "mudar uma sala inteira",
+    "cast_time": 1.6,
+    "charge_cost": 3,
+    "type": "aoe",
+    "mv": 1.0,
+    "base_damage": 70,
+    "damage_type": "magico",
+    "school": "bem",
+    "radius": 4.0,
+    "max_range": 12.0,
+    "telegraph_seconds": 0.5,
+    "movement_locked": true,
+    "weight": "heavy",
+    "_nota": "WP4 diz '1,6 s (parado)' — a Ruina trava o movimento por completo, nao aos 40%. A marca no chao aparece 0,5 s antes e e visivel tambem para o parceiro."
+  },
+
+  "egide": {
+    "display_name": "Egide",
+    "verb": "barreira",
+    "cast_time": 0.5,
+    "charge_cost": 2,
+    "type": "barrier",
+    "mv": 0.0,
+    "base_damage": 0,
+    "school": "bem",
+    "duration": 2.5,
+    "absorb": 120,
+    "movement_locked": false,
+    "hyper_armor_while_casting": true,
+    "hyper_armor_while_active": true,
+    "_nota": "WP4: absorve 120 de dano OU dura 2,5 s, o que vier primeiro. Hiper-armadura enquanto dura."
+  },
+
+  "order": ["dardo", "ruina", "egide"]
+}

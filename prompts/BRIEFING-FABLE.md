@@ -660,7 +660,7 @@ Um pacote está pronto quando:
 
 ## O que não fazer
 
-- **Não escrevas código.** Nem protótipos, nem exemplos que pareçam implementação.
+- **Não escrevas código *nos documentos de spec*.** Nem protótipos, nem exemplos que pareçam implementação — a spec descreve o que o jogo faz, não como o código o faz. *(Actualizado 31-07: o código do protótipo existe e vive em [`game/`](../game/), por decisão do Mateus. O que não muda é a separação — spec em `spec/`, implementação em `game/`, e é a spec que manda nos números.)*
 - **Não mexas em `[DECIDIDO]`.** Detalha por baixo, não por cima.
 - **Não inventes que eles disseram coisas.** Se vier de ti, é `[FABLE]`. A honestidade sobre a origem é o que faz esta spec valer alguma coisa.
 - **Não decidas as `[TENSÃO]` sozinho.** Propõe, recomenda, segue em frente marcado como provisório.

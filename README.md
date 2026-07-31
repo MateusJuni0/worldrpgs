@@ -10,7 +10,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-o
 |---|---|
 | Fase | **Construção** — spec completa, 20/20 pacotes |
 | Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada |
-| Código | **A arrancar** (31-07) — ver [`spec/32-construcao.md`](spec/32-construcao.md) |
+| Código | **Em [`game/`](game/)** — protótipo jogável em Godot 4.7.1; abre com `game/JOGAR.bat` |
 | Engine | Por decidir |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 
@@ -51,6 +51,8 @@ prompts/
   PROXIMOS-PACOTES.md        a fila dos 11 pacotes que faltam
   REALINHAMENTO.md           o que dar ao Fable depois dos commits dele
 art/                         assets: manifesto, prompts de imagem, ficheiros
+game/                        o protótipo jogável (Godot 4.7.1) — JOGAR.bat abre com dois cliques
+medicoes/                    medições de desempenho cruas, tal como a ferramenta as escreveu
 tools/check-coerencia.mjs    guarda tecnico da spec, corre em cada PR
 design/
   transcripts/               transcrições das sessões

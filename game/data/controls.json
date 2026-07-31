@@ -1,0 +1,41 @@
+{
+  "_fonte": "spec/01-combate.md, tabela 'Comandos'. Teclado+rato e o esquema primario (nenhuma das duas maquinas tem comando).",
+  "_nota": "O mapa e construido em runtime pelo GameData a partir deste ficheiro - remapear nao exige recompilar (WP11 herda isto).",
+  "_lacuna_spec": "A tabela da spec nao tem tecla para CONJURAR (so 'magia seguinte: F'). Ver PERGUNTAS.md P2 e DECISOES-PROTOTIPO.md D6 - o prototipo usa C.",
+
+  "actions": {
+    "move_forward":   [{ "type": "key", "key": "W" }],
+    "move_back":      [{ "type": "key", "key": "S" }],
+    "move_left":      [{ "type": "key", "key": "A" }],
+    "move_right":     [{ "type": "key", "key": "D" }],
+
+    "attack":         [{ "type": "mouse", "button": 1 }],
+    "heavy_mod":      [{ "type": "key", "key": "Shift" }],
+    "block":          [{ "type": "mouse", "button": 2 }],
+    "parry":          [{ "type": "key", "key": "Q" }],
+    "dodge_sprint":   [{ "type": "key", "key": "Space" }],
+    "lock_on":        [{ "type": "key", "key": "Tab" }],
+
+    "next_spell":     [{ "type": "key", "key": "F" }],
+    "cast":           [{ "type": "key", "key": "C" }],
+    "use_item":       [{ "type": "key", "key": "R" }],
+    "ability":        [{ "type": "key", "key": "V" }],
+    "interact":       [{ "type": "key", "key": "E" }],
+    "debug_class_next": [{ "type": "key", "key": "F6" }],
+
+    "hotbar_1":       [{ "type": "key", "key": "1" }],
+    "hotbar_2":       [{ "type": "key", "key": "2" }],
+    "hotbar_3":       [{ "type": "key", "key": "3" }],
+    "hotbar_4":       [{ "type": "key", "key": "4" }],
+    "hotbar_5":       [{ "type": "key", "key": "5" }],
+
+    "loadout_next":   [{ "type": "key", "key": "BracketRight" }],
+    "loadout_prev":   [{ "type": "key", "key": "BracketLeft" }],
+
+    "toggle_perf":    [{ "type": "key", "key": "F1" }],
+    "toggle_help":    [{ "type": "key", "key": "F2" }],
+    "toggle_mouse":   [{ "type": "key", "key": "F3" }],
+    "reset_arena":    [{ "type": "key", "key": "F5" }],
+    "quit_game":      [{ "type": "key", "key": "Escape" }]
+  }
+}

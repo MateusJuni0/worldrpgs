@@ -1,0 +1,120 @@
+{
+  "_fonte_frames": "spec/01-combate.md (WP1), tabela 'Ataques - as armas da fatia'. Frames arranque/activo/recuperacao a 60 fps.",
+  "_fonte_dano": "spec/11-formulas.md (WP2), tabela 'As armas da fatia' — dano base, requisito, escala, peso.",
+  "_verificacao_frames": "adaga 12+4+14=30f=0,50s | espada 16+6+18=40f=0,67s | machadao 24+8+26=58f=0,97s | cajado 18+5+20=43f=0,72s | escudo 14+4+16=34f=0,57s",
+
+  "dagger": {
+    "display_name": "Adaga",
+    "slot": "main",
+    "hands": 1,
+    "range": 1.4,
+    "can_parry": true,
+    "can_block": true,
+    "block_type": "onehand",
+    "base_damage": 32,
+    "requirements": { "destreza": 10 },
+    "scaling_attribute": "destreza",
+    "scale_weight": "forte",
+    "light": { "startup": 12, "active": 4, "recovery": 14, "stamina": 12, "mv": 0.55 },
+    "heavy": { "startup": 20, "active": 5, "recovery": 20, "stamina": 20, "mv": 0.85 },
+    "combo": { "max": 4, "final_mv": 0.7 }
+  },
+
+  "longsword": {
+    "display_name": "Espada longa",
+    "slot": "main",
+    "hands": 1,
+    "range": 2.0,
+    "can_parry": false,
+    "can_block": true,
+    "block_type": "onehand",
+    "base_damage": 40,
+    "requirements": { "forca": 10, "destreza": 8 },
+    "scaling_attribute": "forca",
+    "scale_weight": "medio",
+    "light": { "startup": 16, "active": 6, "recovery": 18, "stamina": 18, "mv": 1.0 },
+    "heavy": { "startup": 28, "active": 8, "recovery": 26, "stamina": 30, "mv": 1.6 },
+    "combo": { "max": 3, "final_mv": 1.2 }
+  },
+
+  "greataxe": {
+    "display_name": "Machadao",
+    "slot": "main",
+    "hands": 2,
+    "range": 2.3,
+    "can_parry": false,
+    "can_block": false,
+    "block_type": "none",
+    "base_damage": 52,
+    "requirements": { "forca": 14 },
+    "scaling_attribute": "forca",
+    "scale_weight": "forte",
+    "light": { "startup": 24, "active": 8, "recovery": 26, "stamina": 28, "mv": 1.5 },
+    "heavy": {
+      "startup": 38, "active": 10, "recovery": 34, "stamina": 45, "mv": 2.4,
+      "chargeable": true,
+      "charge_max_frames": 20,
+      "charge_max_mv": 3.0,
+      "hyper_armor_start_frame": 30,
+      "hyper_armor_end_frame": 48
+    },
+    "combo": { "max": 2, "final_mv": null }
+  },
+
+  "staff": {
+    "display_name": "Cajado",
+    "slot": "main",
+    "hands": 2,
+    "range": 1.8,
+    "can_parry": false,
+    "can_block": false,
+    "block_type": "none",
+    "can_cast": true,
+    "base_damage": 30,
+    "requirements": {},
+    "scaling_attribute": "sabedoria",
+    "scale_weight": "fraco",
+    "light": { "startup": 18, "active": 5, "recovery": 20, "stamina": 15, "mv": 0.7 },
+    "heavy": { "startup": 30, "active": 7, "recovery": 28, "stamina": 25, "mv": 1.1 },
+    "combo": { "max": 2, "final_mv": null },
+    "_nota": "Plano B do mago: pancada sem custo de CARGAS (custa stamina). A Lei 1 nunca fica refem do contador de cargas."
+  },
+
+  "shield": {
+    "display_name": "Escudo de madeira",
+    "slot": "offhand",
+    "hands": 1,
+    "range": 1.2,
+    "can_parry": true,
+    "can_block": true,
+    "block_type": "shield",
+    "base_damage": 25,
+    "requirements": { "forca": 8 },
+    "scaling_attribute": "forca",
+    "scale_weight": "fraco",
+    "bash": { "startup": 14, "active": 4, "recovery": 16, "stamina": 15, "mv": 0.4, "posture_multiplier": 2.0 },
+    "_nota": "Bash sai com ataque leve enquanto se bloqueia — ver DECISOES-PROTOTIPO.md D5."
+  },
+
+  "loadouts": {
+    "_fonte": "spec/10-fatia-1.md, coluna 'Arranque tipico'. Lei 3: qualquer classe pega em qualquer arma — isto e so o equipamento inicial.",
+    "warrior":   { "main": "longsword", "offhand": "shield" },
+    "sorcerer":  { "main": "staff",     "offhand": null },
+    "tank":      { "main": "longsword", "offhand": "shield" },
+    "assassin":  { "main": "dagger",    "offhand": null },
+    "berserker": { "main": "greataxe",  "offhand": null },
+    "paladin":   { "main": "longsword", "offhand": "shield" }
+  },
+
+  "test_loadouts": {
+    "_nota": "Ciclo de armas em jogo ([ e ]) — demonstra a Lei 3 sem menu, e deixa provar que uma arma abaixo do requisito ainda funciona (dano x0,6).",
+    "order": [
+      { "main": "longsword", "offhand": "shield" },
+      { "main": "dagger",    "offhand": "shield" },
+      { "main": "dagger",    "offhand": null },
+      { "main": "greataxe",  "offhand": null },
+      { "main": "staff",     "offhand": null },
+      { "main": "longsword", "offhand": null }
+    ]
+  }
+}
