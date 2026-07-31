@@ -14,6 +14,12 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 |---|---|---|---|---|
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |
 | WP1B | `spec/25-controlo.md` | Claude | 31-07 | 🔨 em curso |
+| WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 em curso — branch `claude/game-spec-completa-81xz3g` |
+| WP2 | `spec/11-formulas.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP3 | `spec/12-classes.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP4 | `spec/13-magia.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP5 | `spec/14-equipamento.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP12 | `spec/21-arte-render.md` | Fable | 31-07 | 🔨 em curso — mesmo branch (animações, efeitos e som, pedido do Rico 31-07) |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
