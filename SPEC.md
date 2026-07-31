@@ -45,6 +45,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
+| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas de sessão, sintomas→onde mexer, teste de fora, desempenho quente (WP15B) | 🟢 método fechado — só pede a pessoa de fora |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
