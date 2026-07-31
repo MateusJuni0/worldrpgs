@@ -16,6 +16,12 @@ Ordem inversa: **o mais recente primeiro.**
 - ⚠️ **Toda a habilidade diz como se activa, na mesma linha.** Armaduras → passivas ou condicionais; armas → uma tecla partilhada de arte de arma
 - **Substitui:** nada. Acrescenta uma regra de processo que vale para trás — o WP3, WP4 e WP5 têm de ser revistos contra ela
 
+### Os quatro casos das almas → [`spec/33-morte-e-almas.md`](spec/33-morte-e-almas.md) §4
+- **Um ressuscitado a tempo:** não perde nada · **um morre e o minuto passa:** almas ficam onde caiu · **os dois morrem:** duas manchas separadas, uma por cada · **solo:** igual ao segundo caso
+- Recuperar = voltar e apanhar. **Morrer outra vez antes de apanhar perde-as de vez**
+- ⚠️ Se os dois morrerem na arena do chefe, as manchas ficam lá dentro com o chefe vivo. **É tensão de propósito — ninguém conserte isto**
+- **Substitui:** a linha vaga de que as almas "ficam no corpo"
+
 ### Ressurreição afinada → [`spec/34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md) §3
 - Canalização passa a **5–7 s** (era 5 fixo)
 - **Quem morre larga itens**, não só almas

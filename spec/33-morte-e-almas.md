@@ -115,10 +115,31 @@ Isso transforma a ressurreição naquilo que deve ser: **uma jogada, não um bot
 
 - **Interrompe?** Levar dano durante a canalização cancela? `[CLAUDE]` propõe: **sim** — senão o risco desaparece e volta a ser botão
 - **Vida ao ressuscitar:** proposta `[CLAUDE]` — **metade**, e frascos como estavam. Ressuscitar não é um segundo fôlego completo
-- **As almas do morto:** ficam no corpo. Se for ressuscitado, recupera-as; se o minuto passar, ficam no chão para ir buscar
+- **As almas do morto:** ver a matriz dos quatro casos abaixo — está toda definida
 - **Itens largados** `[DECIDIDO]` (31-07): além das almas, quem morre larga itens que o parceiro pode apanhar. O corpo passa a ser um **sítio de decisão** — arriscar os 5–7 s para ressuscitar, ou pegar no que caiu e continuar sozinho? Ver [`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §3
 - **A barra do minuto** vê-se? `[CLAUDE]` propõe: o morto vê o tempo dele; o parceiro vê um indicador no corpo
 - **O chefe reage ao ressuscitador?** É o alvo natural durante os 5 s — decisão do WP7
+
+### Os quatro casos das almas `[DECIDIDO]` (Mateus, 31-07-2026)
+
+Nenhum fica por definir:
+
+| Caso | O que acontece às almas |
+|---|---|
+| **1. Um morre e é ressuscitado** dentro do minuto | **Não perde nada.** As almas voltam com ele — a ressurreição apaga a morte |
+| **2. Um morre, o minuto passa**, o parceiro continua vivo | Renasce no ponto de descanso. As almas **ficam onde caiu**, à espera |
+| **3. Os dois morrem** | Ambos renascem no ponto de descanso. **As almas de cada um ficam onde cada um caiu** — são duas manchas separadas, não uma |
+| **4. A solo** | Igual ao caso 2, sem a hipótese de ressurreição |
+
+**Recuperar é sempre igual:** voltar ao sítio e apanhar. ⚠️ **Morrer outra vez antes de apanhar perde-as de vez** — a mancha nova substitui a antiga.
+
+*Porquê duas manchas separadas no caso 3:* juntar as almas dos dois num sítio só era mais simples de programar, mas apagava a decisão. Separadas, os dois têm de escolher a ordem, e talvez de se defender um ao outro enquanto o primeiro apanha. É co-op a sério.
+
+#### ⚠️ O caso que dá o melhor momento do jogo
+
+Se os dois morrerem **dentro da arena do chefe**, as manchas ficam lá dentro — e o chefe voltou ao princípio. Recuperar as almas significa **entrar outra vez e chegar aonde caíram**, com o chefe vivo.
+
+Isso é tensão de propósito, não bug. É o momento em que o jogo pergunta se as almas valem o risco, e a resposta certa às vezes é *não vale, vamos sem elas*. **Ninguém "conserte" isto mais tarde** — se o WP15B mostrar que é frustrante, o ajuste é na distância do ponto de descanso à arena, nunca em fazer as almas aparecerem à porta.
 
 ### E a solo
 
