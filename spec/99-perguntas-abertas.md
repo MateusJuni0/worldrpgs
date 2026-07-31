@@ -116,9 +116,9 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 21. **Tom, nome do jogo, idioma, e mais 4 perguntas de narrativa** — guião de gravação de ~15 min pronto em [`26-narrativa.md`](26-narrativa.md) §3.
 16. **Lock-on em alvo?** — *respondida no WP1* `[FABLE]`: **sim** — engate a 18 m, quebra a 25 m, strafe, sem re-engate automático. A câmara do lock é do WP1B. → [`01-combate.md`](01-combate.md)
 17. **Engine.** → [`09-tecnico.md`](09-tecnico.md)
-18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** A segunda é a que magoa se for adiada. → [`09-tecnico.md`](09-tecnico.md)
+18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** **→ Proposta escrita (WP10):** ligação directa com porta aberta (plano B: VPN de amigos tipo Tailscale), transporte agnóstico; **autoridade dividida** — anfitrião manda no mundo, cada jogador manda no próprio corpo (i-frames e parry avaliados localmente: entre amigos, a confiança é a compensação de latência). Ver [`19-rede.md`](19-rede.md). A escolha prática A/B é deles. → [`09-tecnico.md`](09-tecnico.md)
 19. **Arte 3D: comprar, gerar ou fazer?** — *respondida em conjunto pelo WP13 + WP12*: modelos e ciclos base de packs CC0 (KayKit/Quaternius), Mixamo fora do repo, e **à mão o que é a alma** — telegrafias, parry, chefe. Fontes e licenças em [`22-assets.md`](22-assets.md); inventário de animações e orçamentos em [`21-arte-render.md`](21-arte-render.md). → [`09-tecnico.md`](09-tecnico.md)
-20. **Fogo amigo em co-op?** → [`07-multiplayer.md`](07-multiplayer.md)
+20. **Fogo amigo em co-op?** **→ Proposta fechada no WP10: sem fogo amigo em nada** — com o círculo de agressão e arenas apertadas, feriria o co-op sem ganho de leitura; a Ruína continua a marcar o chão para o parceiro. Tom final é dos dois. → [`07-multiplayer.md`](07-multiplayer.md), [`19-rede.md`](19-rede.md)
 
 ---
 
