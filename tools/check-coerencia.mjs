@@ -38,6 +38,19 @@ function listarMarkdown(dir, encontrados = []) {
 const ficheiros = listarMarkdown(ROOT);
 const rel = (p) => relative(ROOT, p).split(sep).join('/');
 
+// ------------------------------------------------------------ 0. conflitos ---
+// Marcadores de merge esquecidos num ficheiro. Passou-me uma vez a resolver o
+// PR #1, e o guarda deu verde — por isso passa a estar aqui.
+
+for (const ficheiro of ficheiros) {
+  const linhas = readFileSync(ficheiro, 'utf8').split(/\r?\n/);
+  linhas.forEach((linha, i) => {
+    if (/^(<{7}|={7}|>{7})(\s|$)/.test(linha)) {
+      erro(rel(ficheiro), `marcador de conflito de merge por resolver, linha ${i + 1}`);
+    }
+  });
+}
+
 // ---------------------------------------------------------------- 1. links ---
 // Um link partido numa spec é pior do que nenhum link: manda quem lê para o
 // sítio errado e faz parecer que a resposta existe algures.

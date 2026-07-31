@@ -8,14 +8,28 @@ Tudo o que falta decidir, por ordem de urgência. Serve de guião para a próxim
 
 ## 🔴 Bloqueiam tudo o resto
 
-### 0. Falta a máquina do Rico
-**Metade respondida.** A do Mateus está medida: i7-1255U, Iris Xe integrados, **16 GB em canal duplo** (mais do que os ~12 estimados), SSD NVMe, 1080p @ 60 Hz. Ver [`09-tecnico.md`](09-tecnico.md).
+### 0. ~~As máquinas~~ — RESPONDIDA (31-07-2026)
 
-Falta a do Rico, e **é a que manda** — o orçamento técnico aponta sempre à mais fraca das duas.
+As duas estão medidas. **A do Rico é a mais fraca, e é a que manda** — orçamenta-se sempre para a pior das duas.
 
-Pedir-lhe: `dxdiag` → *Guardar todas as informações*. Ou só os campos da tabela.
+| | Rico ⚠️ *(o alvo)* | Mateus |
+|---|---|---|
+| Processador | Intel Core i5-1334U (13.ª ger.) | Intel Core i7-1255U (12.ª ger.), 10 núcleos / 12 threads |
+| Gráficos | Intel Iris Xe integrados | Intel Iris Xe integrados |
+| RAM | **8 GB** — 2×4 GB, canal duplo | 16 GB — 2×8 GB @ 3200 MT/s, canal duplo |
+| Disco | SSD NVMe 256 GB | SSD NVMe 512 GB |
+| Ecrã | 1920×1080 @ 60 Hz | 1920×1080 @ 60 Hz |
+| Sistema | Windows 11 Home 64 bits | Windows 11 Home 64 bits |
+| Comando | nenhum ligado — teclado e rato | nenhum ligado — teclado e rato |
 
-Enquanto não houver, tudo o que for orçamentado em WP12, WP13 e WP14 é provisório.
+⚠️ **O orçamento aponta aos 8 GB, não aos 16.** Descontando o sistema e a memória que os gráficos integrados tiram — partilham a RAM, não têm memória própria — sobram na ordem de **3 a 4 GB** para o jogo na máquina do Rico. É um tecto apertado, e é o real.
+
+Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenário para gráficos integrados, porque a largura de banda da memória é o estrangulamento principal; as duas têm **SSD NVMe**, o que ajuda a carregar com memória curta; e as duas são **60 Hz**, o que fecha a taxa alvo em 60 fps e evita perseguir mais.
+
+⚠️ Ambas são **chips de portátil da série U**, de baixo consumo. O problema não é o pico, é aguentar: o alvo mede-se **quente**, ao fim de vinte minutos, não ao primeiro. E não há comando ligado em nenhuma — o esquema de controlos parte de teclado e rato.
+
+> Os relatórios `dxdiag` completos ficam **fora do repositório**: trazem nome de máquina e de utilizador, e isto é público. O que interessa está nesta tabela.
+
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 0b. O 3D aguenta-se neste hardware?
@@ -26,6 +40,8 @@ Enquanto não houver, tudo o que for orçamentado em WP12, WP13 e WP14 é provis
 A sessão 1 descreveu mundo aberto grande, 3D, ~61 chefes, 8 classes, dois sistemas de magia, montarias e co-op sincronizado. Isso é anos de trabalho para uma equipa.
 
 A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe e duas classes, isso já era um jogo que vocês queriam jogar?** Se sim, é por aí que se começa e o resto cresce por cima.
+
+**→ Proposta escrita (WP0):** [`10-fatia-1.md`](10-fatia-1.md) — 1 zona + 1 dungeon + 1 chefe, 6 classes (instrução directa do Rico), 5 armas, 3 magias, co-op desde o dia 1. Falta o sim (ou a correcção) dos dois.
 → [`00-visao.md`](00-visao.md) · secção de risco
 
 ### 2. Os biomas são patamares de dificuldade?
@@ -46,10 +62,14 @@ Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecid
 
 ### 5. Como funcionam os drops em co-op?
 O Rico levantou a pergunta às 05:36 e ficou sem resposta (o áudio do Mateus falhou). Três hipóteses: cópia para cada um, filtrado por classe, ou partilhado com negociação.
+
+*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md). A decisão final continua aqui.*
 → [`06-itens-inventario.md`](06-itens-inventario.md)
 
 ### 6. Os chefes ficam mais duros com dois jogadores?
 Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil passa a ser "chamar o outro", e o pilar 1 morre.
+
+*Entretanto, a fatia 1 joga com vida do chefe ×1,8 a dois, provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md).*
 → [`07-multiplayer.md`](07-multiplayer.md)
 
 ### 7. Como se recupera vida?
@@ -62,10 +82,14 @@ Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoraçã
 
 ### 9. Quantas classes no início?
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
+
+**→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md). Falta a palavra do Mateus.
 → [`02-personagem.md`](02-personagem.md)
 
 ### 10. O que acontece quando se morre?
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
+
+*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md). O tom definitivo decide-se aqui.*
 → [`01-combate.md`](01-combate.md)
 
 ---

@@ -27,6 +27,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🟠 sistema complexo em uma frase |
 | 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🟡 esqueleto |
 | 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
+| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟠 proposta `[FABLE]` (WP0), aguarda Mateus + Rico |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
@@ -48,11 +49,11 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 
 ## O que trava
 
-Seis perguntas bloqueiam o resto — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
+Cinco perguntas bloqueiam o resto (a primeira já caiu) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
 
-1. **Falta a máquina do Rico.** A do Mateus está medida; o orçamento aponta à mais fraca das duas
+1. ~~Máquinas~~ ✅ **respondida** — as duas medidas. A do Rico (**8 GB**) é o alvo, por ser a mais fraca
 2. **O 3D aguenta-se neste hardware?** `[TENSÃO]` — quedas de fotogramas atacam o pilar 1
-3. Qual é a fatia mais pequena disto que já é divertida a dois?
+3. Qual é a fatia mais pequena disto que já é divertida a dois? — **proposta escrita em [`spec/10-fatia-1.md`](spec/10-fatia-1.md)**, falta o sim dos dois
 4. Os biomas são patamares de dificuldade? (colide com o pilar 1)
 5. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)
 6. "Mapa grande" é quanto?
