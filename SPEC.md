@@ -41,6 +41,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
 | 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine (Godot, com a medição 0b), sistemas, dados afináveis, saves, ferramentas (WP14) | 🟠 proposta `[FABLE]` — engine aguarda o carimbo dos dois (pergunta 17) |
+| 24 | [Plano de construção](spec/24-plano.md) | M0–M7 com verificação jogável por marco; M1 já medido; riscos com resposta (WP15) | 🟢 pronto para o Opus 5 — é o documento de arranque da construção |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
