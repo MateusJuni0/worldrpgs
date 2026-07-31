@@ -356,8 +356,16 @@ func _speed_for_mode() -> float:
 	return m.get("run_speed", 5.0)
 
 
+var _step_accum := 0.0
+
 func _move(delta: float, speed: float) -> void:
 	var input := _move_input()
+	# Passos: um toque por ~2,1 m andados. O ritmo acelera sozinho com a velocidade.
+	if is_on_floor():
+		_step_accum += Vector2(velocity.x, velocity.z).length() * delta
+		if _step_accum >= 2.1:
+			_step_accum = 0.0
+			Sfx.play("step", null, -6.0, 0.15)
 	var dir := Vector3.ZERO
 	if camera != null and input.length() > 0.05:
 		dir = (camera.right_flat() * input.x + camera.forward_flat() * -input.y).normalized()
@@ -402,6 +410,7 @@ func _start_dodge() -> void:
 	if _fury_time > 0.0:
 		return   # Furia: sem esquiva — o preco da armadura
 	stamina.spend(cfg.get("stamina_cost", 25.0))
+	Sfx.play("dodge", null, -6.0)
 
 	var input := _move_input()
 	if input.length() > 0.15 and camera != null:
@@ -553,6 +562,7 @@ func _start_attack(kind: String) -> void:
 	_atk_active = int(data.get("active", 4))
 	_atk_recovery = int(data.get("recovery", 12))
 	_atk_mv = data.get("mv", 1.0)
+	Sfx.play("swing_heavy" if kind == "heavy" else "swing_light", null, -4.0)
 	_atk_hit = []
 	_charge_frames = 0
 	_charging = bool(data.get("chargeable", false)) and Input.is_action_pressed("attack")
@@ -662,6 +672,7 @@ func _hit_query() -> void:
 		if _facing().angle_to(to.normalized()) > arc * 0.5:
 			continue
 		_atk_hit.append(e)
+		Sfx.play("hit_flesh", e.global_position)
 		_deal_damage_to(e, _atk_mv, _atk_weapon, _atk_kind == "bash")
 
 
@@ -782,6 +793,7 @@ func take_damage(info: DamageInfo) -> void:
 			info.attacker.call("on_parried")
 		# O momento-assinatura do jogo: 10 frames parados, o mais longo de todos.
 		var stop: int = GameData.section("hit_stop").get("parry_success", 10)
+		Sfx.play("parry", null, 2.0, 0.02)
 		_freeze(stop)
 		if info.attacker != null and info.attacker.get("hitstop_frames") != null:
 			info.attacker.set("hitstop_frames", stop)
@@ -805,6 +817,7 @@ func take_damage(info: DamageInfo) -> void:
 		var cost: float = float(b.get("stamina_per_blow", 15.0)) * float(b.get(weight_key, 1.0)) * cost_mult
 		stamina.spend(cost)
 		amount *= (1.0 - absorb)
+		Sfx.play("hit_block")
 		_freeze(GameData.section("hit_stop").get("blocked", 4))
 
 		if stamina.current <= 0.0:
@@ -833,6 +846,7 @@ func take_damage(info: DamageInfo) -> void:
 	if has_hyper_armor():
 		return
 
+	Sfx.play("hit_flesh", null, -1.0, 0.1)
 	_freeze(GameData.section("hit_stop").get("player_hit", 4))
 	_hitstun_frames = int(info.hitstun_seconds(GameData.section("hitstun")) * 60.0)
 	_change_state(State.HITSTUN)
@@ -949,6 +963,7 @@ func _start_ability() -> void:
 		"furia":
 			_ability_cd = float(_ability.get("cooldown_s", 45.0))
 			_fury_time = float(_ability.get("duration_s", 8.0))
+			Sfx.play("fury", null, 1.0)
 		"provocacao":
 			_ability_cd = float(_ability.get("cooldown_s", 30.0))
 			_taunt_all()
@@ -1010,6 +1025,7 @@ func _tick_flask(delta: float) -> void:
 	_move(delta, float(GameData.section("movement").get("walk_speed", 3.0)) * float(fl.get("move_factor", 0.4)))
 	if state_frame >= int(float(fl.get("use_seconds", 1.0)) * 60.0):
 		health = minf(max_health, health + max_health * float(fl.get("heal_fraction", 0.4)))
+		Sfx.play("flask")
 		_change_state(State.FREE)
 
 

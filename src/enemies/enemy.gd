@@ -388,6 +388,8 @@ func _start_next_attack() -> void:
 		return
 	_atk_frame = 0
 	_atk_hit = false
+	# O telegrafo tambem se OUVE — "um chefe le-se de ouvido" (spec/21, WP12).
+	Sfx.play("telegraph", global_position, -4.0)
 	_change_state(State.ATTACK)
 
 
@@ -469,12 +471,14 @@ func take_damage(info: DamageInfo) -> void:
 		_change_state(State.DEAD)
 		collision_layer = 0
 		remove_from_group("enemies")
+		Sfx.play("enemy_death", global_position)
 		died.emit(self)
 		return
 
 	# Postura: so cai quando o inimigo esta a agir ou de pe; o cambaleio devolve o turno.
 	posture = maxf(0.0, posture - info.posture_damage * posture_mult)
 	if posture <= 0.0 and state != State.BROKEN:
+		Sfx.play("posture_break", global_position, -2.0)
 		_change_state(State.STAGGER)
 
 
