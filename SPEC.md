@@ -59,6 +59,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 44 | [**O protótipo: o que já está provado**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, 3 lacunas de comandos, 2 contradições corrigidas, o parry por decidir | 🟢 fecha metade da ressalva do 0b |
 | 43 | [**Estudo: espólio, inventário, segredos e carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços de equipamento, mímicos e paredes falsas, a porta de nevoeiro como barreira de carregamento | 🟢 10 accionáveis |
 | 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | As 4 escolas, o instrumento, espaços e energia, melhoria de feitiços, o catálogo de verbos | 🟢 a classe favorita do Mateus, com travões |
 | 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção, stamina, bloqueio, reforços | 🟢 ficha de família definida |

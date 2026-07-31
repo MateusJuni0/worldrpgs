@@ -1,0 +1,21 @@
+{
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "avg_fps": 377.1,
+  "avg_frame_ms": 2.65,
+  "draw_calls": 12,
+  "frames": 22626,
+  "label": "lei4-2jogadores-3inimigos",
+  "min_fps": 70.6,
+  "p1_low_fps": 206.3,
+  "pct_frames_over_16_67ms": 0.0,
+  "primitives": 22804,
+  "rendering_driver": "vulkan",
+  "rendering_method": "mobile",
+  "resolution": "1920x1080",
+  "scene": "lei4",
+  "seconds_sampled": 60.0,
+  "static_memory_mb": 48.0,
+  "video_mem_mb": 63.3,
+  "vsync": "off",
+  "worst_frame_ms": 14.17
+}

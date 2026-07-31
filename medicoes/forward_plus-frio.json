@@ -1,0 +1,21 @@
+{
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "avg_fps": 234.8,
+  "avg_frame_ms": 4.26,
+  "draw_calls": 20,
+  "frames": 7045,
+  "label": "forward_plus-frio",
+  "min_fps": 151.6,
+  "p1_low_fps": 171.7,
+  "pct_frames_over_16_67ms": 0.0,
+  "primitives": 23620,
+  "rendering_driver": "vulkan",
+  "rendering_method": "forward_plus",
+  "resolution": "1920x1080",
+  "scene": "perf",
+  "seconds_sampled": 30.0,
+  "static_memory_mb": 55.0,
+  "video_mem_mb": 94.7,
+  "vsync": "off",
+  "worst_frame_ms": 6.6
+}

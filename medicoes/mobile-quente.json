@@ -1,0 +1,21 @@
+{
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "avg_fps": 416.2,
+  "avg_frame_ms": 2.4,
+  "draw_calls": 18,
+  "frames": 499452,
+  "label": "mobile-quente-20min",
+  "min_fps": 65.4,
+  "p1_low_fps": 249.9,
+  "pct_frames_over_16_67ms": 0.0,
+  "primitives": 23236,
+  "rendering_driver": "vulkan",
+  "rendering_method": "mobile",
+  "resolution": "1920x1080",
+  "scene": "perf",
+  "seconds_sampled": 1200.0,
+  "static_memory_mb": 61.4,
+  "video_mem_mb": 63.3,
+  "vsync": "off",
+  "worst_frame_ms": 15.28
+}
