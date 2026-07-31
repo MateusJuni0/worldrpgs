@@ -16,6 +16,25 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 | `con_toca_interior` | Interior da Toca, sala típica | `art/concept/toca-interior.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
 | `con_toca_arena` | Arena do Vorgar | `art/concept/toca-arena.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
 
+
+## Conceitos de bioma — volta 1 (gerados 31-07, nano banana)
+
+Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](../spec/49-biomas.md). **Brumal já tinha** ([`con_brumal_vista`](concept/brumal-vista.png)).
+
+| ID | Asset | Caminho | Dim. | Prompt | Estado |
+|---|---|---|---|---|---|
+| `con_bioma_selva_funda` | Selva Funda — selva vertical de copas fechadas, passadicos de vime goblin … | `art/concept/bioma-selva-funda.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_campas_cinzentas` | Campas Cinzentas — pantano de arvores mortas e lapides tortas meio afundadas, a… | `art/concept/bioma-campas-cinzentas.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_fojo` | Fojo — desfiladeiro ocre estreito com andaimes e roldanas kobold, b… | `art/concept/bioma-fojo.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_costa_quebrada` | Costa Quebrada — falesias de basalto sob chuva fina, esqueletos de navios esp… | `art/concept/bioma-costa-quebrada.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_cimeira` | Cimeira — encosta nevada acima das nuvens, ceu limpo azul-gelo, escada… | `art/concept/bioma-cimeira.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_fornalha` | Fornalha — monte negro de obsidiana com rios de lava, fumo a subir de c… | `art/concept/bioma-fornalha.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_fulgor` | Fulgor — planalto seco e rachado sob um tecto de nuvens violeta em ro… | `art/concept/bioma-fulgor.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_raizama` | Raizama — caverna colossal de raizes entrancadas e cogumelos-torre, es… | `art/concept/bioma-raizama.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_cidade_afogada` | Cidade Afogada — cidade de marmore mergulhada em agua verde-clara ate aos tel… | `art/concept/bioma-cidade-afogada.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_santuario_branco` | Santuario Branco — templo de marmore branco de brilho excessivo, ouro baco, mil… | `art/concept/bioma-santuario-branco.png` | 1536×1024 | volta 1 | ✅ |
+| `con_bioma_raiz` | A Raiz — abismo de pedra negra onde rios de bruma palida correm para … | `art/concept/bioma-raiz.png` | 1536×1024 | volta 1 | ✅ |
+
 ## Conceitos de personagens — as 6 classes da fatia
 
 | ID | Asset | Caminho | Dim. | Prompt | Estado |
