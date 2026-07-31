@@ -21,7 +21,7 @@ Seis na fatia 1; Batedor e Mago do mal ficam com as condições de entrada escri
 | **Berserker** | 11 | 12 | 9 | 14 | 8 | 8 | machadão | dano bruto sem escudo, stamina no limite | ✅ |
 | **Paladino** | 11 | 10 | 10 | 11 | 9 | 11 | espada + escudo | o híbrido — ferro e "um pouco de raio" (08:39) | ✅ |
 | Batedor | — | — | — | — | — | — | arco | entra com o arco (fatia 2, regras já no WP1) | ⬜ |
-| Mago do mal | — | — | — | — | — | — | cajado | entra com a mecânica bem/mal (pergunta 8 → proposta no [`13-magia.md`](13-magia.md)) | ⬜ |
+| Mago do mal | — | — | — | — | — | — | cajado | entra com a mecânica bem/mal (pergunta 8 do [`99-perguntas-abertas.md`](99-perguntas-abertas.md); o WP4 propõe) | ⬜ |
 
 Verificação contra os requisitos do WP2: o Berserker cumpre o machadão **exactamente** (For 14) — é o único que o usa de fábrica; o Assassino sobra na adaga (Des 14 > 10); o Feiticeiro com Sab 14 arranca com **7 cargas** (4+⌊14/4⌋). Um Guerreiro que pegue no machadão (For 12 < 14) leva ×0,6 sem escala — pode, e sente porquê. Lei 3 em números. ✅
 
