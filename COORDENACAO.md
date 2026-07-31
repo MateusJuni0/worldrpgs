@@ -10,6 +10,8 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 
 ## Reservas
 
+> **Desde 31-07: reserva-se por MARCO (M0…M7) ou por sistema, não por pacote de spec.** Os 20 pacotes estão escritos — ver [`spec/32-construcao.md`](spec/32-construcao.md).
+
 | Pacote | Documento | Quem | Desde | Estado |
 |---|---|---|---|---|
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |

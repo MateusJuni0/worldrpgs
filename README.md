@@ -2,15 +2,15 @@
 
 RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
 
-> **Este repositório é de especificação, não de código.** Aqui desenha-se o jogo. A construção vem depois, a partir do que estiver escrito.
+> **Especificação primeiro, código depois — e o depois é agora.** Os 20 pacotes de spec estão escritos (31-07-2026) e a construção arrancou. A spec continua a mandar: código que diverja dela obriga a mudar a spec no mesmo PR.
 
 ## Estado
 
 | | |
 |---|---|
-| Fase | **Especificação** — sessão 1 de N |
+| Fase | **Construção** — spec completa, 20/20 pacotes |
 | Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada |
-| Código | Nenhum, por decisão — constrói o Opus 5, depois da spec |
+| Código | **A arrancar** (31-07) — ver [`spec/32-construcao.md`](spec/32-construcao.md) |
 | Engine | Por decidir |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 

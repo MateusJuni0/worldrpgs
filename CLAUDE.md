@@ -6,7 +6,9 @@ Lê isto antes de responder ou de rever seja o que for. É daqui que vem o conte
 
 **WorldRPGs** — RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
 
-**É um repositório de especificação. Não tem código, e é de propósito.** A spec cresce a partir de conversas gravadas entre os dois; a construção vem depois, com o Opus 5.
+**Era um repositório só de especificação. Desde 31-07-2026 também tem código** — os 20 pacotes de spec estão escritos e a construção arrancou. Regras da fase de construção em [`spec/32-construcao.md`](spec/32-construcao.md).
+
+A spec continua a mandar: se o código e a spec discordarem, **muda-se a spec primeiro**, no mesmo PR.
 
 Fluxo: eles falam numa chamada → o OBS grava → transcrição → o que ficou decidido entra em `spec/` com o timestamp de origem → o que ficou por decidir entra em `spec/99-perguntas-abertas.md`.
 
@@ -48,7 +50,7 @@ Por ordem de gravidade:
 4. **Decidiu sozinho uma `[TENSÃO]`?** Não é dele para decidir. Tem de propor e recomendar.
 5. **Adjectivos onde deviam estar números?** "Combate responsivo" não é spec. "0,60 s, invencibilidade dos 0,08 aos 0,38" é.
 6. **Falta a coluna `Fatia 1?`** nos catálogos? É o que trava o escopo.
-7. **Escreveu código?** Não é para escrever código neste repositório.
+7. **O código corresponde à spec?** Desde 31-07 escreve-se código aqui. Se ele diverge do que está escrito, o PR tem de trazer a mudança da spec junto — nunca só o código.
 8. **Actualizou o `SPEC.md` e o `99-perguntas-abertas.md`?** Devem ir no mesmo PR.
 
 ## O que não fazer

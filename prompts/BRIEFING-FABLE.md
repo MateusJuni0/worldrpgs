@@ -12,7 +12,15 @@ Cola isto como instrução inicial ao Fable, apontado ao repositório `MateusJun
 
 O teu trabalho é **transformar uma spec de intenções numa spec de execução**. O que existe hoje veio de uma conversa gravada de 13 minutos: dá as direcções, não dá os números. Tu escreves os números, os catálogos, as fórmulas e os processos, ao ponto de outro agente conseguir implementar sem te perguntar nada.
 
-**Não escreves código.** Escreves documentos e fazes commit deles neste repositório. A construção vem depois, e quem constrói é o **Opus 5**, a ler o que tu deixaste.
+> ### ⚠️ Isto mudou a 31-07-2026
+>
+> **A fase de spec acabou** — os 20 pacotes estão escritos. `[DECIDIDO]` (Mateus, 31-07): **passas a escrever código.**
+>
+> A regra antiga era *"não escreves código, escreves documentos"*. Já não é. **Lê [`../spec/32-construcao.md`](../spec/32-construcao.md) antes da primeira linha** — é onde estão as regras da fase nova.
+>
+> O que continua igual: a spec manda. Se o código e a spec discordarem, **muda-se a spec primeiro**, no mesmo PR. Um jogo que não corresponde ao que está escrito é um jogo sem spec.
+
+Escreveste documentos e fizeste commit deles neste repositório. Isso está feito.
 
 ### O que isso muda para ti
 

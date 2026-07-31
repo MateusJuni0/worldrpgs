@@ -2,6 +2,8 @@
 
 RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Índice mestre.
 
+> **Fase: construção.** Os 20 pacotes de spec estão escritos (31-07-2026). Regras da fase nova em [`spec/32-construcao.md`](spec/32-construcao.md); o plano é o [`spec/24-plano.md`](spec/24-plano.md), M0 a M7.
+
 > Cada afirmação nos documentos abaixo traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
 
 ## Etiquetas
@@ -55,6 +57,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 32 | [**Construção**](spec/32-construcao.md) | **A fase nova** — regras de código, o que muda no fluxo | 🟢 arrancou 31-07 |
 | 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
 | 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
 | 31 | [Referências](spec/31-referencias.md) | Como usar o Dark Souls: o que estudar, e a linha que não se atravessa | 🟢 protocolo definido |
