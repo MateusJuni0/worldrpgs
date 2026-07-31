@@ -13,7 +13,7 @@ extends CharacterBody3D
 signal died
 signal state_changed(state: int)
 
-enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD }
+enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM }
 
 # Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
 var _buffer_life := 24        # 400 ms
@@ -27,6 +27,8 @@ var state_frame := 0
 var health := 420.0
 var max_health := 420.0
 var defense := 20.0
+var flask_uses := 3
+var flask_max := 3
 var attrs: Dictionary = {}
 var class_id := "warrior"
 
@@ -91,6 +93,8 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	stamina.configure(GameData.section("stamina"), GameData.max_stamina_for(int(attrs.get("stamina", 8))))
 	max_charges = GameData.max_charges_for(int(attrs.get("sabedoria", 8)))
 	charges = max_charges
+	flask_max = int(GameData.section("flask").get("uses", 3))
+	flask_uses = flask_max
 
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
 	main_weapon = loadout.get("main", "longsword")
@@ -202,6 +206,8 @@ func _read_input() -> void:
 		_buffer("parry")
 	if Input.is_action_just_pressed("cast"):
 		_buffer("cast")
+	if Input.is_action_just_pressed("use_item"):
+		_buffer("flask")
 	if Input.is_action_just_pressed("lock_on"):
 		lock_on.toggle()
 	if Input.is_action_just_pressed("next_spell"):
@@ -273,6 +279,7 @@ func _tick_state(delta: float) -> void:
 		State.PARRY:     _tick_parry(delta)
 		State.CASTING:   _tick_casting(delta)
 		State.RIPOSTE:   _tick_riposte(delta)
+		State.USING_ITEM: _tick_flask(delta)
 		State.HITSTUN:   _tick_locked(delta, _hitstun_frames)
 		State.GUARD_BREAK:
 			_tick_locked(delta, int(GameData.section("block").get("guard_break_duration", 1.5) * 60.0))
@@ -294,6 +301,7 @@ func _tick_free(delta: float) -> void:
 		"dodge":  _start_dodge()
 		"parry":  _start_parry()
 		"cast":   _start_cast()
+		"flask":  _start_flask()
 
 
 func _tick_block(delta: float) -> void:
@@ -896,4 +904,30 @@ func state_name() -> String:
 		State.GUARD_BREAK: return "guarda quebrada"
 		State.RIPOSTE: return "riposte"
 		State.DEAD: return "morto"
+		State.USING_ITEM: return "a beber"
 	return "?"
+
+
+# --- Frasco (cura) [PROTO] ----------------------------------------------------
+# A pergunta 7 da spec (como se recupera vida) continua dos donos. Ate la:
+# frasco recarregavel no renascimento; beber demora 1,0 s a 40% de velocidade e
+# interrompe-se com dano — curar a meio de um duelo e uma aposta, como no genero.
+# O gole gasta-se ao COMECAR: interrompido = perdido (a regra da magia, igual).
+
+func _start_flask() -> void:
+	if flask_uses <= 0 or health >= max_health:
+		return
+	flask_uses -= 1
+	_change_state(State.USING_ITEM)
+
+
+func _tick_flask(delta: float) -> void:
+	var fl := GameData.section("flask")
+	_move(delta, float(GameData.section("movement").get("walk_speed", 3.0)) * float(fl.get("move_factor", 0.4)))
+	if state_frame >= int(float(fl.get("use_seconds", 1.0)) * 60.0):
+		health = minf(max_health, health + max_health * float(fl.get("heal_fraction", 0.4)))
+		_change_state(State.FREE)
+
+
+func flask_refill() -> void:
+	flask_uses = flask_max

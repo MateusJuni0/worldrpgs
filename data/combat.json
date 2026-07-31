@@ -150,6 +150,14 @@
     "_proto_capsula": "altura 1,8 m e raio 0,35 m sao [PROTO] — a spec nao os cobre. Ver DECISOES-PROTOTIPO.md D1."
   },
 
+  "flask": {
+    "_fonte": "[PROTO] — a pergunta 7 da spec (como se recupera vida) continua dos donos. Frasco recarregavel no renascimento; beber interrompe-se e o gole perde-se (regra da magia).",
+    "uses": 3,
+    "heal_fraction": 0.40,
+    "use_seconds": 1.0,
+    "move_factor": 0.40
+  },
+
   "death": {
     "_fonte": "spec/01-combate.md seccao Morte + spec/10-fatia-1.md",
     "lose_nothing": true,

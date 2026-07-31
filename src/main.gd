@@ -175,6 +175,7 @@ func _on_player_died() -> void:
 ## O alvo da spec e nova tentativa em menos de 30 s — aqui e ~1,2 s.
 func _respawn() -> void:
 	player.respawn_at(_respawn_point)
+	player.flask_refill()
 	for node in get_children():
 		var e := node as Enemy
 		if e != null:
