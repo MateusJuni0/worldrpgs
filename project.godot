@@ -37,7 +37,10 @@ common/physics_jitter_fix=0.0
 
 [rendering]
 
-renderer/rendering_method="forward_plus"
+; Renderer escolhido por MEDICAO, nao por gosto — ver PERF.md.
+; "mobile" ganhou: melhor 1% low (250,9 vs 171,7) e -33% de VRAM que o Forward+,
+; o que numa maquina de 8 GB com graficos a partilhar a RAM conta a dobrar.
+renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="mobile"
 anti_aliasing/quality/msaa_3d=0
 anti_aliasing/quality/screen_space_aa=0

@@ -1,0 +1,48 @@
+{
+  "_fonte": "spec/09-tecnico.md — Intel Iris Xe integrados, 8 GB partilhados com os graficos, 1080p @ 60 Hz.",
+  "_lei_4": "Se for preciso escolher entre bonito e 60 fps, escolhe-se 60 fps. Estes presets sao o botao que faz essa escolha.",
+  "_nota": "A nevoa nao e so estetica: encurta a distancia de visao e esconde o corte do mundo. E a aliada do desempenho (spec/10-fatia-1.md).",
+
+  "default": "medio",
+
+  "presets": {
+    "alto": {
+      "shadows": true, "shadow_size": 2048, "shadow_distance": 45.0,
+      "fog_density": 0.030, "view_distance": 95.0,
+      "tree_count": 280, "rock_count": 90,
+      "msaa": 0, "render_scale": 1.0
+    },
+    "medio": {
+      "shadows": true, "shadow_size": 1024, "shadow_distance": 30.0,
+      "fog_density": 0.045, "view_distance": 70.0,
+      "tree_count": 200, "rock_count": 60,
+      "msaa": 0, "render_scale": 1.0
+    },
+    "baixo": {
+      "shadows": false, "shadow_size": 512, "shadow_distance": 20.0,
+      "fog_density": 0.060, "view_distance": 52.0,
+      "tree_count": 140, "rock_count": 40,
+      "msaa": 0, "render_scale": 0.85
+    }
+  },
+
+  "palette": {
+    "_nota": "Cores por ESTADO, nao por beleza. Legibilidade acima de tudo (spec: formas simples e legiveis).",
+    "fog": "#8a94a0",
+    "ground": "#4d5347",
+    "trunk": "#3d3428",
+    "canopy": "#37432f",
+    "rock": "#565b60",
+    "player": "#5b8fc7",
+    "enemy_idle_default": "#8fa07a",
+    "enemy_telegraph": "#e8c33a",
+    "enemy_attacking": "#d64545",
+    "enemy_stagger": "#f2f2f2",
+    "enemy_broken_posture": "#ffffff",
+    "player_iframes": "#7fe3ff",
+    "player_blocking": "#4a7ab5",
+    "player_parry_window": "#ffe680",
+    "player_hyper_armor": "#c88bd6",
+    "player_dead": "#3a3a3a"
+  }
+}
