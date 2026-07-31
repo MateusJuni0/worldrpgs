@@ -97,7 +97,7 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 ## 🟡 Precisam de resposta antes de construir
 
 11. **Números do combate** — ~~por escrever~~ **→ proposta completa `[FABLE]` (WP1)**: esquiva 0,60 s com i-frames 0,08–0,38; parry com janela de 150 ms; custos de stamina; frame data das 5 armas da fatia. Está tudo em [`01-combate.md`](01-combate.md). Confirmam-se **a jogar o protótipo** — os números são o ponto de partida medível, não o fim.
-12. **Vida e Constituição fazem o quê, cada um?** Sobrepõem-se como estão. → [`02-personagem.md`](02-personagem.md)
+12. **Vida e Constituição fazem o quê, cada um?** **→ resolvida por proposta `[FABLE]` (WP2)**: Vida = PV; Constituição = defesa física + resistência a estados + carga futura; acrescentados Força/Destreza para a Lei 3 ter requisitos. Ver [`11-formulas.md`](11-formulas.md). Falta o sim dos dois.
 13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
 14. **Existe armadura?** Não foi dita uma única vez. → [`06-itens-inventario.md`](06-itens-inventario.md)
 15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. → [`05-mundo.md`](05-mundo.md)
