@@ -76,6 +76,8 @@ E resolve um problema concreto que a spec tem em aberto: **o mago é frágil ao 
 
 > **Estabilidade: 1 ponto = 1% menos stamina gasta a bloquear. ⚠️ Com 100, bloquear não custa nada.**
 
+⚠️ **CORRIGIDO a 01-08 (auditoria Codex):** eu tinha escrito a fórmula como `dano × (estabilidade/100)`, copiada de uma fonte que usava outra definição. **Estava invertida** — com ela, o broquel de 50 bloqueava melhor do que o escudo grande de 85. A correcta é `dano × (1 − estabilidade/100)`, que é a que corresponde à frase acima.
+
 | | |
 |---|---|
 | Escudos grandes | a estabilidade mais alta — **88 a 90** nos melhores |

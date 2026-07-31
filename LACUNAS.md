@@ -12,7 +12,18 @@
 
 ## 🔴 Travam
 
-*(nenhuma neste momento — nada impede o trabalho de continuar)*
+**Da auditoria independente do Codex** ([`docs/AUDITORIA-CODEX-2026-08-01.md`](docs/AUDITORIA-CODEX-2026-08-01.md), 01-08). ⚠️ **As quatro primeiras são erros meus, não do Fable.**
+
+| | Lacuna | Origem |
+|---|---|---|
+| 🔴 | ⭐ **"Rolar para o lado funciona sempre" dá ao jogo UMA resposta universal.** Centenas de ataques com a mesma solução. Na referência varia por golpe: uns acompanham mais tempo, outros apanham o rolamento antecipado, outros pedem rolar para dentro ou simplesmente andar. **Cada ataque declara o seu vector de fuga; nunca se escreve "funciona sempre"** | [`38`](spec/38-ataques-e-honestidade.md) §2 |
+| 🔴 | ⭐ **A hitbox de 3–6 frames é regra de espada aplicada a tudo.** Não serve investidas, sopros, feixes, poças, lâminas giratórias nem perigos persistentes. **Separar: contacto instantâneo · volume móvel · volume persistente** — cada alvo atingido uma vez por passagem | [`38`](spec/38-ataques-e-honestidade.md) §1 |
+| 🔴 | ⭐ **A fórmula da estabilidade estava invertida** — eu escrevi `dano × (estabilidade/100)`, o que fazia o broquel de 50 bloquear melhor que o escudo grande de 85. ✅ **CORRIGIDO 01-08** para `× (1 − estabilidade/100)` | [`41`](spec/41-estudo-armas-e-golpes.md) §6 |
+| 🔴 | ⭐ **O espelho é mais fácil do que o parry.** Lança em 0,4 s e dura 1,5 s, mas todo o ataque avisa 0,5 s — logo **lança-se sempre depois de ver o aviso, sem timing nenhum**. E escala com o dano do chefe, não com o meu investimento. **Janela activa 0,15–0,20 s, recuperação se falhar, e escala pelo instrumento** | [`52`](spec/52-mago-do-mal.md) §7 |
+| 🔴 | ⚠️ **O intervalo de 0,20 s entre atacantes não chega** — o jogador fica em hit-stun 0,4–0,7 s, portanto o segundo golpe chega durante a recuperação forçada do primeiro. **O intervalo tem de contar o hit-stun, não o relógio** | [`38`](spec/38-ataques-e-honestidade.md) §3 |
+| 🔴 | ⚠️ **Melhoria de armas (+10%/nível) e de feitiços (175%) é exactamente a Lei 2 quebrada** — números, não opções. **A melhoria devia dar postura, arte nova, troca de escala ou conversão elemental; o dano-base varia pouco ou nada** | [`51`](spec/51-familias.md), [`42`](spec/42-estudo-magia.md) §6 |
+| ⏳ | ⭐ **61 chefes = um encontro de chefe a cada 30–40 s de travessia.** O Codex propõe **13 chefes verdadeiros** (um por bioma + o final), 12 subchefes a reusar rigs, e os 36 de campo a virarem **encontros nomeados com elites** — sem barra, sem arena, sem produção exclusiva | auditoria §4.1 |
+| ⏳ | ⭐ **Ordem de corte com menor perda**, se for preciso cortar: 1.ª pessoa → 48 chefes reclassificados → 5 slots de armadura → 6 slots de anel → armas acima de 24 → feitiços acima de 24. **Não cortar:** co-op, esquiva/parry/stamina, as 8 famílias, a identidade dos 12 biomas | auditoria §4 |
 
 ---
 

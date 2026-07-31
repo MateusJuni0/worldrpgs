@@ -148,7 +148,7 @@ E a fórmula da armadura: `dano_recebido = dano_do_outro × (1 − armadura/100)
 
 ## 6. Bloqueio, estabilidade e quebra de guarda
 
-**A fórmula:** `stamina_perdida = dano_de_stamina × (estabilidade / 100)`
+**A fórmula:** `stamina_perdida = dano_de_stamina × (1 − estabilidade/100)`
 
 **A quebra de guarda acontece de duas formas:**
 1. Um golpe próprio de **empurrão** contra quem está a bloquear
