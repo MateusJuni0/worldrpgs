@@ -32,8 +32,8 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 
 → [`09-tecnico.md`](09-tecnico.md)
 
-### 0b. O 3D aguenta-se neste hardware?
-`[TENSÃO]` registada: um souls-like vive de janelas de frames, e quedas de fotogramas não são feias, são **injustas** — atacam directamente o pilar 1. Três caminhos (3D estilizado optimizado / 2.5D / 2D), com recomendação de manter o 3D **e medir cedo**.
+### 0b. O 3D aguenta-se neste hardware? — ✅ medido: aguenta
+**Medido no protótipo local (31-07-2026), na máquina mais fraca:** 60 fps cravados no cenário da fatia com vsync; 416 fps médios em greybox ao fim de **20 minutos quentes, sem degradação térmica**; renderer Mobile escolhido. Ressalvas: sem animação de esqueleto ainda (a incógnita cara), e memória a vigiar. Os três caminhos (3D / 2.5D / 2D) ficam com dados à frente — **falta só o vosso carimbo no caminho A**.
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 1. Qual é a fatia mais pequena disto que já é divertida a dois?

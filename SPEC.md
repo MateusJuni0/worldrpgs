@@ -56,10 +56,10 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 
 ## O que trava
 
-Cinco perguntas bloqueiam o resto (a primeira já caiu) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
+Quatro perguntas bloqueiam o resto (as duas primeiras já caíram) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
 
 1. ~~Máquinas~~ ✅ **respondida** — as duas medidas. A do Rico (**8 GB**) é o alvo, por ser a mais fraca
-2. **O 3D aguenta-se neste hardware?** `[TENSÃO]` — quedas de fotogramas atacam o pilar 1
+2. ~~O 3D aguenta-se?~~ ✅ **medido no protótipo: aguenta** — 60 fps cravados no cenário da fatia, 20 min quentes sem degradação; ressalva: animação de esqueleto por medir (pergunta 0b)
 3. Qual é a fatia mais pequena disto que já é divertida a dois? — **proposta escrita em [`spec/10-fatia-1.md`](spec/10-fatia-1.md)**, falta o sim dos dois
 4. Os biomas são patamares de dificuldade? (colide com o pilar 1)
 5. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)
