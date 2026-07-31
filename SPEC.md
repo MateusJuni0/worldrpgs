@@ -37,6 +37,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de 6 zonas em números, dungeons com a regra das duas pistas, traçado de Brumal, tensões 2 e 4 propostas (WP8) | 🟠 proposta `[FABLE]` — escala e soft gating aguardam os dois |
 | 18 | [Progressão e loot](spec/18-progressao.md) | Curva por zona, loot instanciado, o 40% de quem ajuda, moeda única proposta (WP9) | 🟠 proposta `[FABLE]` — perguntas 5 e 10 continuam dos dois |
 | 19 | [Multiplayer e rede](spec/19-rede.md) | O 12:34 resolvido (dois sacos de estado), transporte, autoridade dividida, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte e fogo amigo aguardam os dois |
+| 20 | [Interface](spec/20-interface.md) | HUD ao pixel, mochila 24, magias 3-visíveis, menus, configurações completas (WP11) | 🟠 proposta `[FABLE]` — resolve o 04:55 das magias no ecrã |
 | 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
