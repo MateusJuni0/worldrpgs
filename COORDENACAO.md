@@ -15,7 +15,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |
 | WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 em curso |
 | WP1B | `spec/25-controlo.md` | Claude | 31-07 | ✅ entregue — números `[CLAUDE]`, afinam-se no protótipo |
-| WP13 | `art/` + `spec/22-assets.md` | Claude | 31-07 | 🔨 parte `art/` entregue (manifesto + 22 prompts); falta `spec/22-assets.md` (modelos 3D, licenças) |
+| WP13 | `art/` + `spec/22-assets.md` | Claude | 31-07 | ✅ entregue — manifesto + 22 prompts + fontes/licenças de modelos, animações e áudio |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 

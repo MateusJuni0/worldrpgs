@@ -14,6 +14,11 @@ design/ideas/
 *.m4a
 design/raw/
 
+# Assets com licenca sem redistribuicao (Mixamo, Sonniss, lojas) — usaveis no
+# jogo, PROIBIDOS num repo publico. Ver spec/22-assets.md.
+art/models/_local/
+art/audio/_local/
+
 # Segredos
 .env
 .env.*
