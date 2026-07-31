@@ -1,4 +1,4 @@
-# Manifesto de assets — fatia 1
+ ✅ | ✅ | ✅ | ✅ |# Manifesto de assets — fatia 1
 
 Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spec e o código o referem) e o seu **caminho canónico** (é aí que o ficheiro vive, com esse nome exacto).
 
