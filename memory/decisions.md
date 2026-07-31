@@ -9,7 +9,7 @@ Formato: `### [DATA] [origem] — decisão`. As decisões de design vivem em `sp
 "não vamos fazer, vamos apenas spec tudo de tudo mesmo do jogo". A construção fica para o Fable do Rico, a partir desta spec.
 
 ### [2026-07-31, 17:41] [Mateus] — O código vive AQUI, neste repositório
-Substitui a decisão de cima. As palavras dele:
+Substitui a decisão de cima. A decisão é do Mateus; a formulação abaixo chegou ao Rico **através do Claude**, e fica marcada como tal — a regra do repositório é não pôr palavras na boca de ninguém:
 
 > "E vive num só sítio: o disco do Rico. O repositório worldrpgs-game foi planeado no WP14/WP15 mas nunca foi criado no GitHub. **Não há cópia, não há histórico partilhado, e eu não consigo rever uma linha do que ele escreveu.**"
 >
