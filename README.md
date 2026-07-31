@@ -70,16 +70,19 @@ Um parry certeiro parte a postura do inimigo (fica branco) — bate logo a segui
 | **Morte** | renasces em ~1,2 s, não se perde nada, os inimigos voltam (o alvo da spec era < 30 s) |
 | **HUD** | vida, stamina, cargas, barra do chefe |
 
+Inclui o **game feel do WP1B**: paragem de impacto (3 f num leve, 6 f num pesado, **10 f num parry**), registo de comandos com a esquiva a ter prioridade, e a câmara nos números da spec (4,0 m / 4,8 m com lock-on, FOV 55°, sem aceleração de rato).
+
 ## O que falta
 
 Por ordem de importância — o detalhe está em [PERGUNTAS.md](PERGUNTAS.md).
 
-1. **Habilidades de classe (WP3)** — as seis classes só se distinguem por números, que é exactamente o que a Lei 2 recusa
+1. **As 6 habilidades de classe** — o WP3 chegou já de madrugada e escreve-as (Ímpeto, Eco, Provocação, Passo Sombra, Fúria, Julgamento). Os atributos já estão implementados; **as habilidades não**. Sem elas, as classes só se distinguem por números — o que a Lei 2 recusa
 2. **Curar** — não há forma nenhuma de recuperar vida sem morrer (pergunta 7 da spec)
-3. **Rede / co-op (WP10)** — fora do escopo desta noite, e `[EM ABERTO]` na spec
-4. **XP e níveis** — a curva do WP2 está nos dados, mas não há progressão
-5. **Arco e Batedor** — fatia 2, por decisão da spec
-6. Animações, som, e uma câmara a sério (WP1B)
+3. **⚠️ Os dois mapas de comandos da spec discordam** — o WP1 põe o parry em `Q`, o WP1B põe-no no toque do `RMB`. Não é meu para decidir; ver P2
+4. **Rede / co-op (WP10)** — fora do escopo desta noite, e `[EM ABERTO]` na spec
+5. **XP e níveis** — a curva do WP2 está nos dados, mas não há progressão
+6. **Arco e Batedor** — fatia 2, por decisão da spec
+7. Animações, som, tremor de ecrã e partículas de impacto (WP12)
 
 ---
 

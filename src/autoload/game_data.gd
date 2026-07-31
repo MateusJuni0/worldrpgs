@@ -278,11 +278,15 @@ func _validate() -> void:
 		_check_hits("vorgar", light_mv, warrior, 45, 70)
 	checks += 1
 
-	# 4. O exemplo resolvido da spec tem de bater certo: Guerreiro nivel 1 = 420 PV, 100 STA, DEF 20.
-	if not warrior.is_empty():
-		_expect(max_health_for(int(warrior.get("vida", 0))), 420.0, "PV do Guerreiro nivel 1")
-		_expect(max_stamina_for(int(warrior.get("stamina", 0))), 100.0, "STA do Guerreiro nivel 1")
-		_expect(defense_for(int(warrior.get("constituicao", 0))), 20.0, "DEF do Guerreiro nivel 1")
+	# 4. As formulas do WP2 no exemplo resolvido (atributo 10 = o caso de referencia).
+	_expect(max_health_for(10), 420.0, "formula de PV com Vida 10")
+	_expect(max_stamina_for(10), 100.0, "formula de STA com Stamina 10")
+	_expect(defense_for(10), 20.0, "formula de DEF com Constituicao 10")
+	# O caso de referencia que o WP4 usa: Feiticeiro com Sab 14 arranca com 7 cargas.
+	var sorcerer := class_attributes("sorcerer")
+	if not sorcerer.is_empty():
+		_expect(float(max_charges_for(int(sorcerer.get("sabedoria", 0)))), 7.0,
+			"cargas de arranque do Feiticeiro")
 	checks += 1
 
 	# 5. Cada classe distribui exactamente +14 pontos sobre a base 8.

@@ -102,6 +102,42 @@
     "_nota": "A janela de encadear abre nos ultimos 40% da recuperacao. A recuperacao de um leve e cancelavel em esquiva ou bloqueio a partir de 60% dela. O pesado nao se cancela (o carregado do machadao pode soltar cedo). Ataque nunca cancela ataque fora da janela de combo."
   },
 
+  "input_buffer": {
+    "_fonte": "spec/25-controlo.md (WP1B), seccao 2. LEI — deixou de ser [PROTO] quando o WP1B chegou.",
+    "_contrato": "O buffer NUNCA cancela nada. So dispara quando a accao corrente ja permite a proxima (os frames de cancelamento sao do WP1). Buffer != cancel.",
+    "life_ms": 400,
+    "parry_life_ms": 80,
+    "capacity": 1,
+    "dodge_has_priority": true,
+    "_nota_parry": "O parry tem a guarda reduzida a 80 ms porque e timing puro — guardar 200 ms seria o jogo a acertar a janela pelo jogador.",
+    "_nota_esquiva": "Esquiva no buffer substitui ataque no buffer, nunca o contrario: o pedido de sobrevivencia vence o pedido de dano."
+  },
+
+  "hit_stop": {
+    "_fonte": "spec/25-controlo.md (WP1B), seccao 4. Frames congelados a 60 fps.",
+    "_nota": "Congela os DOIS envolvidos, nao o mundo. Custo zero em render — o melhor racio sensacao/custo do jogo.",
+    "light_hit": 3,
+    "heavy_hit": 6,
+    "parry_success": 10,
+    "blocked": 4,
+    "killing_blow": 8,
+    "player_hit": 4
+  },
+
+  "camera": {
+    "_fonte": "spec/25-controlo.md (WP1B), seccao 1.",
+    "distance": 4.0,
+    "distance_locked_on": 4.8,
+    "pivot_height": 1.6,
+    "fov": 55.0,
+    "min_distance": 1.2,
+    "collision_radius": 0.25,
+    "follow_smoothing": 0.12,
+    "rotation_smoothing": 0.08,
+    "mouse_acceleration": false,
+    "_nota_fov": "55 graus: FOV alto deforma a percepcao de distancia da esquiva. Nunca ha aceleracao de rato — 'a mentira n1' num jogo de precisao."
+  },
+
   "damage_formula": {
     "_movido": "A formula de dano, os atributos e as curvas dos inimigos passaram para data/attributes.json quando a spec ganhou spec/11-formulas.md (WP2). Este ficheiro (WP1) fixa os MV; o WP2 fixa o resto.",
     "_ver": "data/attributes.json -> damage"

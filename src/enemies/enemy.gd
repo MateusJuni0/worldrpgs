@@ -27,6 +27,7 @@ var posture := 40.0
 var max_posture := 40.0
 var posture_mult := 1.0
 var body_radius := 0.45
+var hitstop_frames := 0
 
 var target: Node3D
 var home := Vector3.ZERO
@@ -138,6 +139,14 @@ func _make_patrol_route() -> void:
 # --- Ciclo --------------------------------------------------------------------
 
 func _physics_process(delta: float) -> void:
+	# Paragem de impacto (spec/25-controlo.md): congela este corpo, nao o mundo.
+	if hitstop_frames > 0:
+		hitstop_frames -= 1
+		velocity.x = 0.0
+		velocity.z = 0.0
+		move_and_slide()
+		return
+
 	_state_frame += 1
 	_state_time += delta
 

@@ -19,13 +19,27 @@ As pequenas, que decidi, estao em [DECISOES-PROTOTIPO.md](DECISOES-PROTOTIPO.md)
 
 ---
 
-## P2 · Falta uma tecla para lancar magia na tabela de comandos
+## P2 · ⚠️ Os dois mapas de comandos da spec nao batem certo
 
-`spec/01-combate.md` lista "Magia seguinte: F" mas **nao tem accao para conjurar**. Com o mapa da spec a letra, um Feiticeiro cicla magias e nunca lanca nenhuma.
+Durante a noite chegou `spec/25-controlo.md` (WP1B, do lado do Mateus). Traz um esquema de comandos **incompativel** com o de `spec/01-combate.md` (WP1, do lado do Rico):
 
-E um buraco numa tabela `[FABLE]`, nao uma tensao — mas mexe na tabela de comandos, que e do WP1B/WP11.
+| Accao | WP1 (`01-combate.md`) | WP1B (`25-controlo.md`) |
+|---|---|---|
+| Parry | `Q` | **`RMB` toque** (mesma tecla do bloqueio, ≤ 150 ms) |
+| Lock-on | `Tab` | **`Q`** ou botao do meio |
+| Interagir | `E` | **`F`** |
+| Pocao / item | `R` | **`E`** |
+| Trocar arma | — | **`R`** |
+| Magias | `F` cicla | **`1`/`2`/`3`** directas |
+| Mochila | `1`–`5` hotbar | **`Tab`** |
 
-**Contornado:** `C` conjura (D4). Uma linha em `data/controls.json` muda isso.
+Nao e um detalhe: **o parry na mesma tecla do bloqueio muda o combate**. O proprio WP1B admite o risco e diz que "tem de ser testado cedo no protótipo — se os testes mostrarem parries engolidos pelo bloqueio, separa-se o parry para tecla propria **antes** de afinar qualquer outro numero, porque contamina todos os testes da Lei 1".
+
+**Isto e para o Mateus e o Rico resolverem** — sao dois documentos da spec a discordar, nao um buraco meu para tapar. E tambem nenhum dos dois tem tecla para **lancar** magia (o WP1 so tem "magia seguinte"; o WP1B tem magias directas em 1/2/3, o que resolve por outro caminho).
+
+**Contornado:** o protótipo usa o mapa do **WP1** (que é o documento do combate) mais `C` para conjurar. Tudo vive em `data/controls.json` — passar para o esquema do WP1B e editar esse ficheiro, sem tocar em codigo.
+
+**Recomendacao:** testem o parry no `RMB` toque cedo. E o unico item desta lista que pode obrigar a refazer numeros.
 
 ---
 
@@ -88,13 +102,22 @@ A pausa e ritmo (padrao) ou e um numero? Assumi ritmo (D15). Se acharem que e nu
 
 ---
 
-## P9 · As seis classes ainda nao tem habilidade especial (WP3)
+## P9 · As habilidades de classe ja estao escritas, mas ainda nao construidas
 
-`spec/02-personagem.md` decide que cada classe tem uma habilidade especial, e `10-fatia-1.md` conta o preco: seis habilidades a desenhar. O WP3 nao existe.
+O **WP3 chegou durante a noite** (`spec/12-classes.md`) e fecha o que faltava — seis habilidades, nenhuma delas um multiplicador passivo:
 
-**Contornado:** as seis classes existem so como distribuicoes de atributos e equipamento de arranque. Diferenciam-se em numeros — que e exactamente o que a **Lei 2** recusa (*"melhorias dao opcoes, nao numeros"*).
+| Classe | Habilidade | Custo / recarga |
+|---|---|---|
+| Guerreiro | **Impeto** — avanco de 6 m que termina em golpe (MV 1,2) | 30 stamina · 15 s |
+| Feiticeiro | **Eco** — repete a ultima magia sem gastar carga | 60 s |
+| Tanque | **Provocacao** — inimigos num raio de 8 m atacam-no 4 s | 30 s |
+| Assassino | **Passo Sombra** — a proxima esquiva atravessa o inimigo; backstab MV 2,0 nos 2 s seguintes | 25 s |
+| Berserker | **Furia** — 8 s de hiper-armadura, mas nao pode bloquear nem esquivar | 45 s |
+| Paladino | **Julgamento** — 10 s com a arma carregada de raio | 40 s |
 
-**Isto e o maior buraco de design que fica.** Com o combate a funcionar, e agora barato testar habilidades; sem elas, "outra vez, mas eu de Assassino?" — o teste verdadeiro da fatia — ainda nao tem resposta a serio.
+**As fichas de atributos ja estao implementadas** (e verificadas contra a tabela do WP3). **As habilidades nao.** Chegaram tarde de mais na noite para as construir com cuidado, e sao seis features novas, nao numeros a alinhar.
+
+**E o que fica em primeiro lugar na lista.** Sem elas, as seis classes ainda so se distinguem por numeros — que e o que a Lei 2 recusa — e "outra vez, mas eu de Assassino?", o teste verdadeiro da fatia, continua sem resposta a serio. A boa noticia e que o combate por baixo ja aguenta: hiper-armadura, i-frames, MV por golpe e recargas sao todos mecanismos que ja existem.
 
 ---
 

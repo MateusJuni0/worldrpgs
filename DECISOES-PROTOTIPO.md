@@ -27,18 +27,20 @@ Jogador: capsula 1,80 m de altura, 0,35 m de raio. Lanceiro 1,90 / 0,45 · bruta
 ### D6 · Andar (3,0 m/s) = segurar `Ctrl`; bloquear tambem move a 3,0
 **Razao:** a spec da tres velocidades a pe (andar 3,0 · correr 5,0 · sprint 7,0) mas o teclado nao tem analogico — sem um modificador, os 3,0 m/s nunca sairiam. Correr continua a ser o passo por defeito, como a spec diz. Bloquear a andar e convencao do genero; a spec nao fixa velocidade a bloquear.
 
-### D7 · Numeros das magias que o WP4 ainda nao escreveu
-A spec fixa **so os tempos de conjuracao** (Dardo 0,8 · Ruina 1,6 · Egide 0,5) e a hiper-armadura da Egide. Custo em cargas, dano base, raio, velocidade e duracao sao `[PROTO]`: Dardo 1 carga / 34 base · Ruina 2 cargas / 60 base / raio 4 m · Egide 1 carga / absorve 90 / 6 s.
-**Razao:** sem isto as magias nao existem. A bolsa de cargas em si **nao** e `[PROTO]` — vem do WP2 (`cargas = 4 + ⌊Sab/4⌋`, totais e partilhadas).
+### ~~D7~~ · Numeros das magias — **SUBSTITUIDA pelo WP4**
+`spec/13-magia.md` chegou durante a noite com o catalogo fechado, e os dados foram alinhados: Dardo 1 carga / 0,8 s / 45 base / 18 m a 20 m/s · Ruina 3 cargas / 1,6 s **parado** / 70 base / raio 4 m ate 12 m / marca 0,5 s antes · Egide 2 cargas / 0,5 s / absorve **120** ou dura **2,5 s**, com hiper-armadura enquanto dura. Acrescentou tambem que **conjurar exige cajado equipado**.
+Ja nao ha nada `[PROTO]` nas magias da fatia.
 
-### D8 · Guarda de entrada (*input buffer*) de 8 frames (~133 ms)
-**Razao:** e territorio do WP1B (que ainda nao existe), mas sem buffer nenhum o jogo e injogavel — carregar em esquiva 2 frames antes da recuperacao acabar nao devia ser um erro do jogador. 8 frames e conservador; se o WP1B decidir outro valor, muda-se a constante.
+### ~~D8~~ · Guarda de entrada — **SUBSTITUIDA pelo WP1B**
+`spec/25-controlo.md` chegou durante a noite e fixa: entrada morre aos **400 ms**, capacidade **1**, a mais recente substitui a anterior, **esquiva tem prioridade** (esquiva no buffer nunca e trocada por ataque), e o **parry guarda-se so 80 ms** — porque guardar 200 ms de parry seria o jogo a acertar a janela pelo jogador. Implementado tal e qual, incluindo o contrato "o buffer nunca cancela nada".
 
 ### D9 · O cajado ocupa as duas maos (nao combina com escudo)
 **Razao:** a spec contradiz-se — a tabela de bloqueio diz "machadao / cajado (duas maos) nao bloqueiam", e a linha seguinte diz "adaga/espada/**cajado** combinam com escudo na outra". Escolhi a tabela (numeros mandam sobre prosa) e o retrato do Feiticeiro em `10-fatia-1.md`: arranque so com cajado, "fragil ao perto", com o plano B a ser a pancada e nao o bloqueio. Ver [PERGUNTAS.md](PERGUNTAS.md) P3.
 
-### D10 · Distribuicao de atributos das seis classes
-O WP3 nao existe. Todas distribuem os +14 do WP2 sobre a base 8. **O Guerreiro nao e invencao**: esta ancorado no exemplo resolvido de `11-formulas.md` (For 12, Vida 10, Con 10, Stamina 10 → 420 PV, DEF 20, STA 100). As outras cinco sao `[PROTO]` ao gosto do papel. Um teste no arranque falha alto se alguma classe nao gastar exactamente +14.
+### ~~D10~~ · Distribuicao de atributos das classes — **SUBSTITUIDA pelo WP3**
+`spec/12-classes.md` chegou durante a noite com as seis fichas fechadas, e os dados foram alinhados a letra (Guerreiro 11/11/10/8/12/10, Feiticeiro 10/10/9/14/9/10, etc.). O auto-teste compara cada ficha com a tabela do WP3.
+
+**O que isto revelou:** o WP2 escreve "contra o jogador nivel 1 (Vida 10 → 420 PV, Con 10 → DEF 20)" e daí tira "o brutamontes mata em 4 golpes". Mas **nenhuma** das seis fichas do WP3 tem esse par — o Guerreiro tem Vida 11 (442 PV) e aguenta 5. Nao e contradicao, e uma ficha de referencia ilustrativa que deixou de existir quando as classes ficaram concretas. O teste verifica as duas coisas em separado.
 
 ### D11 · Curva de saida do rolamento
 A spec da distancia (3,5 m) e duracao (0,60 s) mas nao a curva. Uso *ease-out* quadratica, cujo integral da exactamente 3,5 m.

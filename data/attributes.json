@@ -36,12 +36,13 @@
   "attribute_ids": ["vida", "stamina", "constituicao", "sabedoria", "forca", "destreza"],
 
   "classes": {
-    "_nota": "Base 8 em tudo, +14 pontos por classe. As distribuicoes sao [PROTO] (o WP3 nao existe) EXCEPTO o Guerreiro, que esta ancorado no exemplo resolvido de spec/11-formulas.md (For 12, Vida 10, Con 10, Stamina 10 -> 420 PV, DEF 20, STA 100).",
-    "warrior":   { "display_name": "Guerreiro",  "vida": 10, "stamina": 10, "constituicao": 10, "sabedoria": 10, "forca": 12, "destreza": 10 },
-    "sorcerer":  { "display_name": "Feiticeiro", "vida": 9,  "stamina": 9,  "constituicao": 9,  "sabedoria": 18, "forca": 8,  "destreza": 9 },
-    "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 14, "sabedoria": 8,  "forca": 10, "destreza": 8 },
-    "assassin":  { "display_name": "Assassino",  "vida": 9,  "stamina": 12, "constituicao": 9,  "sabedoria": 9,  "forca": 8,  "destreza": 15 },
-    "berserker": { "display_name": "Berserker",  "vida": 10, "stamina": 11, "constituicao": 9,  "sabedoria": 8,  "forca": 16, "destreza": 8 },
-    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 11, "sabedoria": 10, "forca": 11, "destreza": 9 }
+    "_fonte": "spec/12-classes.md (WP3), tabela das seis fichas. LEI — deixou de ser [PROTO] quando o WP3 chegou.",
+    "_verificacao": "Feiticeiro Sab 14 -> 7 cargas (4+floor(14/4)), que e o caso de referencia que o WP4 usa. Berserker cumpre o machadao exactamente (For 14). Assassino sobra na adaga (Des 14 > 10).",
+    "warrior":   { "display_name": "Guerreiro",  "vida": 11, "stamina": 11, "constituicao": 10, "sabedoria": 8,  "forca": 12, "destreza": 10 },
+    "sorcerer":  { "display_name": "Feiticeiro", "vida": 10, "stamina": 10, "constituicao": 9,  "sabedoria": 14, "forca": 9,  "destreza": 10 },
+    "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 13, "sabedoria": 8,  "forca": 11, "destreza": 8 },
+    "assassin":  { "display_name": "Assassino",  "vida": 10, "stamina": 12, "constituicao": 9,  "sabedoria": 8,  "forca": 9,  "destreza": 14 },
+    "berserker": { "display_name": "Berserker",  "vida": 11, "stamina": 12, "constituicao": 9,  "sabedoria": 8,  "forca": 14, "destreza": 8 },
+    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 10, "sabedoria": 11, "forca": 11, "destreza": 9 }
   }
 }

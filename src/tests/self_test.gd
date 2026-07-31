@@ -22,7 +22,79 @@ func _ready() -> void:
 	_test_time_to_kill()
 	_test_enemy_contract()
 	_test_movement_speeds()
+	_test_spell_catalogue()
+	_test_feel()
 	_report()
+
+
+# --- spec/13-magia.md (WP4) · o catalogo --------------------------------------
+
+func _test_spell_catalogue() -> void:
+	# magia, cargas, tempo, dano base, alcance
+	var table := [
+		["dardo", 1, 0.8, 45, 18.0],
+		["ruina", 3, 1.6, 70, 12.0],
+		["egide", 2, 0.5, 0,  0.0],
+	]
+	for row: Array in table:
+		var s := GameData.spell(String(row[0]))
+		_check(int(s.get("charge_cost")) == int(row[1]), "%s custa %d cargas" % [row[0], row[1]])
+		_check(absf(float(s.get("cast_time")) - float(row[2])) < 0.001,
+			"%s conjura em %.1f s" % [row[0], row[2]])
+		if int(row[3]) > 0:
+			_check(int(s.get("base_damage")) == int(row[3]), "%s: dano base %d" % [row[0], row[3]])
+		if float(row[4]) > 0.0:
+			_check(absf(float(s.get("max_range")) - float(row[4])) < 0.001,
+				"%s: alcance %.0f m" % [row[0], row[4]])
+
+	var egide := GameData.spell("egide")
+	_check(int(egide.get("absorb")) == 120, "Egide absorve 120")
+	_check(absf(float(egide.get("duration")) - 2.5) < 0.001, "Egide dura 2,5 s")
+	_check(bool(egide.get("hyper_armor_while_active")), "Egide da hiper-armadura enquanto dura")
+	_check(bool(GameData.spell("ruina").get("movement_locked")), "Ruina conjura-se parado")
+	_check(absf(float(GameData.spell("ruina").get("telegraph_seconds")) - 0.5) < 0.001,
+		"Ruina marca o chao 0,5 s antes")
+	_check(bool(GameData.spells.get("_rules", {}).get("requires_staff")),
+		"conjurar exige cajado equipado")
+
+	# O bolso unico e o puzzle: Sab 14 = 7 cargas = 7 Dardos ou 2 Ruinas + 1 Dardo.
+	var pool := GameData.max_charges_for(14)
+	_check(pool == 7, "bolso do Feiticeiro: 7 cargas")
+	_check(2 * int(GameData.spell("ruina").get("charge_cost")) + 1 <= pool,
+		"2 Ruinas + 1 Dardo cabem no bolso")
+
+
+# --- spec/25-controlo.md (WP1B) · buffer e impacto ----------------------------
+
+func _test_feel() -> void:
+	var b := GameData.section("input_buffer")
+	_check(int(b.get("life_ms")) == 400, "buffer: entrada morre aos 400 ms")
+	_check(int(b.get("parry_life_ms")) == 80, "buffer: parry guarda-se so 80 ms")
+	_check(int(b.get("capacity")) == 1, "buffer: capacidade 1")
+	_check(bool(b.get("dodge_has_priority")), "buffer: esquiva tem prioridade sobre ataque")
+
+	var hs := GameData.section("hit_stop")
+	_check(int(hs.get("light_hit")) == 3, "hit-stop: golpe leve 3 f")
+	_check(int(hs.get("heavy_hit")) == 6, "hit-stop: golpe pesado 6 f")
+	_check(int(hs.get("parry_success")) == 10, "hit-stop: parry 10 f (o momento-assinatura)")
+	_check(int(hs.get("blocked")) == 4, "hit-stop: bloqueado 4 f")
+	_check(int(hs.get("killing_blow")) == 8, "hit-stop: golpe final 8 f")
+
+	var c := GameData.section("camera")
+	_check(absf(float(c.get("fov")) - 55.0) < 0.001, "camara: FOV 55 graus")
+	_check(absf(float(c.get("distance")) - 4.0) < 0.001, "camara: 4,0 m")
+	_check(absf(float(c.get("distance_locked_on")) - 4.8) < 0.001, "camara: 4,8 m com lock-on")
+	_check(absf(float(c.get("pivot_height")) - 1.6) < 0.001, "camara: pivo aos ombros (1,6 m)")
+	_check(not bool(c.get("mouse_acceleration")), "camara: SEM aceleracao de rato")
+
+	# A esquiva no buffer nunca e substituida por um ataque.
+	var p := _make_player()
+	p._buffer("dodge")
+	p._buffer("light")
+	_check(p._peek_buffer() == "dodge", "esquiva no buffer nao e substituida por ataque")
+	p._buffer("dodge")
+	_check(p._peek_buffer() == "dodge", "esquiva substitui esquiva")
+	p.free()
 
 
 # --- spec/01-combate.md · Esquiva ---------------------------------------------
@@ -161,9 +233,35 @@ func _test_stamina() -> void:
 
 func _test_damage_worked_example() -> void:
 	var warrior := GameData.class_attributes("warrior")
-	_check(GameData.max_health_for(int(warrior.get("vida"))) == 420.0, "Guerreiro nivel 1: 420 PV")
-	_check(GameData.max_stamina_for(int(warrior.get("stamina"))) == 100.0, "Guerreiro nivel 1: 100 STA")
-	_check(GameData.defense_for(int(warrior.get("constituicao"))) == 20.0, "Guerreiro nivel 1: DEF 20")
+	# O exemplo resolvido do WP2 usa o atributo 10 como referencia.
+	_check(GameData.max_health_for(10) == 420.0, "formula de PV: Vida 10 -> 420")
+	_check(GameData.max_stamina_for(10) == 100.0, "formula de STA: Stamina 10 -> 100")
+	_check(GameData.defense_for(10) == 20.0, "formula de DEF: Con 10 -> 20")
+
+	# As fichas do WP3 (spec/12-classes.md), a letra.
+	var sheets := {
+		"warrior":   [11, 11, 10, 8,  12, 10],
+		"sorcerer":  [10, 10, 9,  14, 9,  10],
+		"tank":      [12, 10, 13, 8,  11, 8],
+		"assassin":  [10, 12, 9,  8,  9,  14],
+		"berserker": [11, 12, 9,  8,  14, 8],
+		"paladin":   [11, 10, 10, 11, 11, 9],
+	}
+	var order := ["vida", "stamina", "constituicao", "sabedoria", "forca", "destreza"]
+	for class_id: String in sheets.keys():
+		var c := GameData.class_attributes(class_id)
+		var want: Array = sheets[class_id]
+		var ok := true
+		for i in order.size():
+			if int(c.get(order[i], -1)) != int(want[i]):
+				ok = false
+		_check(ok, "ficha do WP3: %s" % class_id)
+
+	_check(GameData.max_charges_for(14) == 7, "Feiticeiro (Sab 14) arranca com 7 cargas")
+	_check(GameData.meets_requirements("greataxe", GameData.class_attributes("berserker")),
+		"Berserker cumpre o machadao (For 14)")
+	_check(not GameData.meets_requirements("greataxe", warrior),
+		"Guerreiro NAO cumpre o machadao (For 12) — pode pegar, paga x0,6")
 
 	var scale := GameData.attribute_scale(12.0, "medio")
 	_check(absf(scale - 1.036) < 0.001, "escala For 12 / peso medio = 1,036 (deu %.4f)" % scale)
@@ -194,13 +292,22 @@ func _test_time_to_kill() -> void:
 		_check(hits >= int(c[1]) and hits <= int(c[2]),
 			"%s morre em %d leves de espada (spec: %d-%d)" % [c[0], hits, c[1], c[2]])
 
-	# E ao contrario: quantos golpes aguenta o jogador nivel 1.
-	var hp := GameData.max_health_for(int(warrior.get("vida")))
-	var def := GameData.defense_for(int(warrior.get("constituicao")))
-	var brute_hit := GameData.apply_defense(130.0, def)
-	_check(int(ceil(hp / brute_hit)) == 4, "brutamontes mata o nivel 1 em 4 golpes")
-	var spear_hit := GameData.apply_defense(55.0, def)
-	_check(int(ceil(hp / spear_hit)) == 12, "lanceiro mata o nivel 1 em 12 golpes")
+	# E ao contrario: quantos golpes aguenta o jogador. O WP2 escreve estes numeros
+	# sobre a ficha de REFERENCIA (Vida 10 -> 420 PV, Con 10 -> DEF 20), nao sobre
+	# uma classe concreta — nenhuma das seis do WP3 tem exactamente esse par.
+	var hp := GameData.max_health_for(10)
+	var def := GameData.defense_for(10)
+	_check(int(ceil(hp / GameData.apply_defense(130.0, def))) == 4,
+		"brutamontes mata a ficha de referencia em 4 golpes")
+	_check(int(ceil(hp / GameData.apply_defense(55.0, def))) == 12,
+		"lanceiro mata a ficha de referencia em 12 golpes")
+
+	# E o que isso da nas fichas reais do WP3, so para ficar registado.
+	var w_hp := GameData.max_health_for(int(warrior.get("vida")))
+	var w_def := GameData.defense_for(int(warrior.get("constituicao")))
+	var w_brute := int(ceil(w_hp / GameData.apply_defense(130.0, w_def)))
+	_check(w_brute >= 4 and w_brute <= 5,
+		"Guerreiro do WP3 (%d PV) aguenta %d golpes do brutamontes" % [int(w_hp), w_brute])
 
 
 # --- contrato que o WP1 impoe ao WP6 ------------------------------------------

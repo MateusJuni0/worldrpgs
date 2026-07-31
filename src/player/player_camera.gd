@@ -9,9 +9,11 @@ extends Node3D
 const MIN_PITCH := -60.0
 const MAX_PITCH := 32.0
 
+## Numeros de spec/25-controlo.md (WP1B), carregados de data/combat.json -> camera.
 @export var sensitivity := 0.0022
-@export var follow_height := 1.45
-@export var distance := 4.2
+@export var follow_height := 1.6
+@export var distance := 4.0
+@export var distance_locked_on := 4.8
 
 var target: Node3D
 var lock_target: Node3D
@@ -25,16 +27,22 @@ var _camera: Camera3D
 func _ready() -> void:
 	top_level = true
 
+	var cfg := GameData.section("camera")
+	follow_height = cfg.get("pivot_height", 1.6)
+	distance = cfg.get("distance", 4.0)
+	distance_locked_on = cfg.get("distance_locked_on", 4.8)
+
 	_arm = SpringArm3D.new()
 	_arm.spring_length = distance
-	_arm.margin = 0.3
+	_arm.margin = float(cfg.get("collision_radius", 0.25))
 	# So colide com o cenario (camada 1), nunca com o jogador nem com inimigos.
 	_arm.collision_mask = 1
 	add_child(_arm)
 
 	_camera = Camera3D.new()
 	_camera.current = true
-	_camera.fov = 72.0
+	# 55 graus: FOV alto deforma a percepcao de distancia da esquiva.
+	_camera.fov = float(cfg.get("fov", 55.0))
 	_camera.near = 0.08
 	_arm.add_child(_camera)
 
@@ -57,6 +65,10 @@ func _physics_process(delta: float) -> void:
 
 	var focus := target.global_position + Vector3.UP * follow_height
 	global_position = global_position.lerp(focus, clampf(delta * 18.0, 0.0, 1.0))
+
+	# Em combate com alvo engatado a camara recua, para o inimigo caber inteiro.
+	var wanted_arm := distance_locked_on if is_instance_valid(lock_target) else distance
+	_arm.spring_length = lerpf(_arm.spring_length, wanted_arm, clampf(delta * 5.0, 0.0, 1.0))
 
 	if is_instance_valid(lock_target):
 		# Com alvo engatado a camara olha para o meio entre os dois — o duelo fica legivel.

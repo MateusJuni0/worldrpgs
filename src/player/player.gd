@@ -15,7 +15,10 @@ signal state_changed(state: int)
 
 enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD }
 
-const BUFFER_FRAMES := 8   # [PROTO] guarda de entrada ~133 ms — ver DECISOES-PROTOTIPO.md D8
+# Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
+var _buffer_life := 24        # 400 ms
+var _buffer_life_parry := 5   # 80 ms — parry e timing puro, guarda-se quase nada
+var hitstop_frames := 0
 
 # --- Estado -------------------------------------------------------------------
 var state := State.FREE
@@ -93,6 +96,10 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	main_weapon = loadout.get("main", "longsword")
 	offhand_weapon = loadout.get("offhand", "") if loadout.get("offhand") != null else ""
 
+	var buf := GameData.section("input_buffer")
+	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
+	_buffer_life_parry = int(float(buf.get("parry_life_ms", 80)) * 0.06)
+
 	_build_body()
 	_build_children()
 
@@ -149,6 +156,16 @@ func _build_children() -> void:
 
 func _physics_process(delta: float) -> void:
 	_frame += 1
+
+	# Paragem de impacto: congela ESTE corpo, nao o mundo. O frame continua a
+	# desenhar-se, so a logica e que espera — e dai vir a sensacao de peso.
+	if hitstop_frames > 0:
+		hitstop_frames -= 1
+		velocity.x = 0.0
+		velocity.z = 0.0
+		move_and_slide()
+		return
+
 	state_frame += 1
 
 	if state != State.DEAD:
@@ -210,13 +227,25 @@ func _read_input() -> void:
 		_charging = false
 
 
+## Capacidade 1: a entrada mais recente substitui a anterior — EXCEPTO que a
+## esquiva no buffer nunca e substituida por um ataque. O pedido de sobrevivencia
+## vence o pedido de dano (spec/25-controlo.md).
 func _buffer(action: String) -> void:
+	if _peek_buffer() == "dodge" and action != "dodge":
+		return
 	_buffered = action
 	_buffer_at = _frame
 
 
+func _buffer_expired() -> bool:
+	if _buffered == "":
+		return true
+	var life := _buffer_life_parry if _buffered == "parry" else _buffer_life
+	return _frame - _buffer_at > life
+
+
 func _take_buffered() -> String:
-	if _buffered == "" or _frame - _buffer_at > BUFFER_FRAMES:
+	if _buffer_expired():
 		return ""
 	var a := _buffered
 	_buffered = ""
@@ -571,13 +600,14 @@ func _tick_attack(delta: float) -> void:
 
 
 func _peek_buffer() -> String:
-	if _buffered == "" or _frame - _buffer_at > BUFFER_FRAMES:
-		return ""
-	return _buffered
+	return "" if _buffer_expired() else _buffered
 
 
 func has_hyper_armor() -> bool:
 	if state == State.CASTING and bool(_cast_spell.get("hyper_armor_while_casting", false)):
+		return true
+	# A Egide da hiper-armadura enquanto a barreira durar, nao so a conjurar (WP4).
+	if _egide_shield > 0.0 and _egide_time > 0.0:
 		return true
 	if state != State.ATTACK or not bool(_atk.get("chargeable", false)):
 		return false
@@ -619,6 +649,19 @@ func _deal_damage_to(e: Node3D, mv: float, weapon_id: String, is_bash: bool) -> 
 	info.posture_damage = GameData.posture_damage_from_mv(mv, posture_mult)
 	e.call("take_damage", info)
 
+	# Paragem de impacto: o peso do machadao vem daqui, nao do dano.
+	var hs := GameData.section("hit_stop")
+	var frames: int = hs.get("heavy_hit", 6) if info.weight == "heavy" else hs.get("light_hit", 3)
+	if e.has_method("is_alive") and not e.call("is_alive"):
+		frames = hs.get("killing_blow", 8)
+	_freeze(frames)
+	if e.get("hitstop_frames") != null:
+		e.set("hitstop_frames", frames)
+
+
+func _freeze(frames: int) -> void:
+	hitstop_frames = maxi(hitstop_frames, frames)
+
 
 func _broken_posture_target() -> Node3D:
 	for node in get_tree().get_nodes_in_group("enemies"):
@@ -646,6 +689,10 @@ func _start_cast() -> void:
 	var s := GameData.spell(selected_spell)
 	if s.is_empty():
 		return
+	# WP4: conjurar exige cajado equipado — a magia ocupa uma mao, como qualquer arma.
+	if bool(GameData.spells.get("_rules", {}).get("requires_staff", true)) \
+			and not bool(GameData.weapon(main_weapon).get("can_cast", false)):
+		return
 	var cost := int(s.get("charge_cost", 1))
 	if charges < cost:
 		return   # sem cargas: o plano B e a pancada do cajado (Lei 1 nao fica refem)
@@ -656,8 +703,10 @@ func _start_cast() -> void:
 
 
 func _tick_casting(delta: float) -> void:
-	# Conjurar trava o movimento a 40%.
+	# Conjurar trava o movimento a 40% — e a Ruina trava-o por completo (WP4: "1,6 s parado").
 	var mult: float = GameData.spells.get("_rules", {}).get("move_multiplier_while_casting", 0.4)
+	if bool(_cast_spell.get("movement_locked", false)):
+		mult = 0.0
 	_move(delta, _speed_for_mode() * mult)
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
@@ -703,6 +752,11 @@ func take_damage(info: DamageInfo) -> void:
 	if parry_window_open() and info.parryable and _is_in_front(info):
 		if info.attacker != null and info.attacker.has_method("on_parried"):
 			info.attacker.call("on_parried")
+		# O momento-assinatura do jogo: 10 frames parados, o mais longo de todos.
+		var stop: int = GameData.section("hit_stop").get("parry_success", 10)
+		_freeze(stop)
+		if info.attacker != null and info.attacker.get("hitstop_frames") != null:
+			info.attacker.set("hitstop_frames", stop)
 		_change_state(State.FREE)
 		_buffer("light")   # deixa o riposte sair logo a seguir
 		return
@@ -723,6 +777,7 @@ func take_damage(info: DamageInfo) -> void:
 		var cost: float = float(b.get("stamina_per_blow", 15.0)) * float(b.get(weight_key, 1.0)) * cost_mult
 		stamina.spend(cost)
 		amount *= (1.0 - absorb)
+		_freeze(GameData.section("hit_stop").get("blocked", 4))
 
 		if stamina.current <= 0.0:
 			_apply_health_loss(amount)
@@ -750,6 +805,7 @@ func take_damage(info: DamageInfo) -> void:
 	if has_hyper_armor():
 		return
 
+	_freeze(GameData.section("hit_stop").get("player_hit", 4))
 	_hitstun_frames = int(info.hitstun_seconds(GameData.section("hitstun")) * 60.0)
 	_change_state(State.HITSTUN)
 
