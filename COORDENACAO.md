@@ -76,7 +76,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 45 | Claude | controlos configuráveis |
 | 46 | Claude | coerência bioma→raça→item |
 | 47 | Claude | do greybox ao visual |
-| **48+** | **livre** | |
+| 48 | Claude | arcos, bestas e escudos |
+| **49+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 
