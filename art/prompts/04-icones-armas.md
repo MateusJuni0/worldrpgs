@@ -4,7 +4,7 @@ Estes **entram no jogo** — hotbar e mochila. A regra que manda: **legível a 4
 
 **Base comum do prompt** (todas):
 
-> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, subtle grim humor. Game inventory icon, single object centered at a heroic 45-degree angle, bold clear silhouette, soft internal shading, isolated on transparent background, no frame, no border, no text.
+> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, grim and unforgiving, no whimsy. Game inventory icon, single object centered at a heroic 45-degree angle, bold clear silhouette, soft internal shading, isolated on transparent background, no frame, no border, no text.
 
 **Não deve ter (todas):** moldura, sombra projectada no "chão", fundo, texto, mãos ou personagens.
 **Sai bem se (todas):** encolhido a 48×48 continua a distinguir-se dos outros quatro à primeira vista.

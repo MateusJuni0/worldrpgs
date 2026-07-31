@@ -4,7 +4,7 @@ Sessão de geração: uma imagem por classe da fatia 1. Guiam a modelação dos 
 
 **Base comum do prompt** (a frase de estilo + isto, em todas):
 
-> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, subtle grim humor. Full-body character concept, standing pose with personality, plain misty grey background, entire body visible head to feet, game character design sheet quality.
+> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, grim and unforgiving, no whimsy. Full-body character concept, standing pose with personality, plain misty grey background, entire body visible head to feet, game character design sheet quality.
 
 **Não deve ter (todas):** texto, múltiplas poses, fundo detalhado, armadura barroca cheia de micro-detalhe (não sobrevive ao baixo-poligonal).
 **Sai bem se (todas):** a silhueta identifica a classe a 50 metros — teste do género: encolhe a imagem para 100 px de altura; se ainda se distingue das outras cinco, serve.

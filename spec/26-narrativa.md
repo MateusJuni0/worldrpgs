@@ -34,9 +34,9 @@ O que isto implica já: a cura da fatia vem de drops/descanso, não de loja (`�
 
 Ordenadas: as três primeiras mudam trabalho de todos os pacotes seguintes.
 
-1. **Que tom tem este mundo?** Sombrio a sério (Dark Souls), sombrio com piscadela (a a frase de estilo tem "subtle grim humor" — confirmam?), ou leve? Muda a escrita toda, o som, e até as animações.
+1. ~~**Que tom tem este mundo?**~~ ✅ `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **sombrio a sério.** Dark Souls puro: sem piscadelas, sem alívio cómico. A frase de estilo das imagens foi reescrita no mesmo dia (`grim and unforgiving, no whimsy`). Vale para a escrita, o som e as animações.
 2. **O jogo chama-se mesmo WorldRPGs?** É o nome do repositório — serve como nome do jogo, ou é placeholder? E o mundo em si tem nome?
-3. **Idioma do jogo:** português, inglês, ou os dois? (Jogam os dois em PT; inglês só faria sentido se um dia quiserem mostrar a estranhos. Decisão barata agora, cara depois.)
+3. ~~**Idioma do jogo**~~ ✅ `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **português.** Tudo: menus, descrições de item, nomes. Sem versão inglesa, sem preparação para localização (já estava fora de escopo).
 4. **História pessoal dos personagens:** os bonecos são avatares mudos sem passado (recomendação `[CLAUDE]` — alinha com §2), ou têm identidade?
 5. **A quem pertencia a Toca antes dos orcs?** A resposta define a arte das ruínas (`→WP12`) e o que Vorgar guarda.
 6. **Existe um "porquê" para o co-op?** Dois forasteiros por acaso, ou a história assume os dois? (O Dark Souls finge que o co-op é sobrenatural; aqui pode ser simplesmente ignorado.)

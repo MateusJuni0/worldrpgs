@@ -56,22 +56,23 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 
 ## O que trava
 
-**Duas perguntas.** As outras caíram a 31-07-2026, com a aprovação do Mateus e do Rico — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md).
-
-1. Os biomas são patamares de dificuldade? (colide com o pilar 1)
-2. "Mapa grande" é quanto?
-
-### Fechadas a 31-07 ✅
+**Nada.** Todas as perguntas bloqueantes caíram a 31-07-2026, com a aprovação do Mateus e do Rico.
 
 | | |
 |---|---|
 | Máquinas | as duas medidas; o alvo é a do Rico (8 GB) |
-| O 3D aguenta-se? | **caminho A carimbado** — 3D estilizado optimizado. ⚠️ a medição que o sustenta não tem prova no repositório; o marco 1 do WP15 dá-a |
-| A fatia 1 | aprovada como está: 1 zona, 1 dungeon, 1 chefe, 6 classes, 5 armas, 3 magias |
+| O 3D aguenta-se? | **caminho A** — 3D estilizado optimizado. ⚠️ a medição que o sustenta não tem prova no repositório; o marco 1 do WP15 dá-a |
+| A fatia 1 | aprovada: 1 zona, 1 dungeon, 1 chefe, 6 classes, 5 armas, 3 magias |
 | Evoluções de classe | **opção A** — dão opções, não números; sobem por marco, não por nível |
 | Magia do bem e do mal | aprovada — o preço do mal é PV, à vista. A fatia usa as duas escolas |
-| Quantas classes na fatia | seis, com o custo aceite de olhos abertos |
+| Quantas classes na fatia | seis |
 | Sete raças + o Ceifador | aprovadas para o bestiário do WP6 |
+| **Biomas por nível?** | **soft gating** — mapa todo aberto, dificuldade sugerida e não exigida |
+| **Tamanho do mapa** | **~30 min a pé, 10+ biomas.** Fatia 1 continua a ser Brumal sozinha |
+| **Tom** | **sombrio a sério** — sem piscadelas. Frase de estilo das imagens já reescrita |
+| **Idioma** | **português**, tudo |
+
+Continua em aberto, mas **não trava ninguém**: o nome do jogo, a história dos personagens, o que a Toca era, o porquê do co-op, e os nomes provisórios — [`spec/26-narrativa.md`](spec/26-narrativa.md) §3.
 
 ## A construir
 

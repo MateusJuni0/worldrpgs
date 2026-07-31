@@ -4,7 +4,7 @@ As três magias do WP0 são **três verbos diferentes** (Lei 2): Dardo ataca dir
 
 **Base comum** (todas):
 
-> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, subtle grim humor. Game spell icon, single clear magical symbol centered, bold silhouette, soft glow, isolated on transparent background, no frame, no border, no text.
+> Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, grim and unforgiving, no whimsy. Game spell icon, single clear magical symbol centered, bold silhouette, soft glow, isolated on transparent background, no frame, no border, no text.
 
 **Sai bem se (todas):** a 48×48, um jogador novo adivinha o que a magia faz sem ler nada. Forma primeiro, cor depois.
 

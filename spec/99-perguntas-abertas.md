@@ -50,8 +50,8 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 ✅ **APROVADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — a fatia 1 é esta. É a linha que ordena todos os pacotes.
 → [`00-visao.md`](00-visao.md) · secção de risco
 
-### 2. Os biomas são patamares de dificuldade?
-"Por bioma, sei lá, nível, tipo" (12:18) choca de frente com o pilar "sem gating por nível". Ou o mapa tem zonas fechadas até se estar forte, ou pode ir-se a qualquer lado e morrer depressa. Não pode ser as duas.
+### 2. ~~Os biomas são patamares de dificuldade?~~ ✅ RESPONDIDA
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **soft gating.** Mapa todo aberto; dificuldade sugerida, não exigida. Detalhe e o que obriga em [`05-mundo.md`](05-mundo.md).
 → [`05-mundo.md`](05-mundo.md), [`00-visao.md`](00-visao.md)
 
 ### 3. As evoluções de classe dão poder ou dão opções?
@@ -62,8 +62,8 @@ Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar van
 ✅ **DECIDIDA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **opção A: as evoluções dão opções, não números**, e sobem por marco, não por nível. É a Lei 2 aplicada à progressão, e fecha a tensão com a Lei 1.
 → [`02-personagem.md`](02-personagem.md)
 
-### 4. "Mapa grande" é quanto?
-Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecido como comparação — não dá para dimensionar mais nada.
+### 4. ~~"Mapa grande" é quanto?~~ ✅ RESPONDIDA
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **~30 min a pé, 10+ biomas** (escala Elden Ring). A fatia 1 continua a ser Brumal sozinha; o resto cresce zona a zona. O WP8 herda três obrigações: densidade mínima por zona, estratégia de reutilização de peças, e viagem rápida. Ver [`05-mundo.md`](05-mundo.md).
 → [`05-mundo.md`](05-mundo.md)
 
 ---

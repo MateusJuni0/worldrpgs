@@ -32,7 +32,15 @@ O Mateus concordou e acrescentou a peça que fechou a questão:
 > Mateus: "Sim, acho que sim. Mas não tão pequeno também, né?" (10:24)
 > Mateus: "Então o mapa vai ter que ser grande" (12:13)
 
-`[EM ABERTO]` — "Grande" não é número. Sem uma referência concreta (minutos a atravessar a pé, ou comparação com um jogo conhecido) isto não é especificável. É das perguntas mais importantes por responder, porque comanda o custo de tudo.
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **~30 minutos a pé de uma ponta à outra, 10 ou mais biomas.** Escala Elden Ring.
+
+É a maior das três opções postas em cima da mesa, e foi escolhida com o risco à frente: **um mapa grande vazio é pior do que um mapa pequeno cheio.** Fica registado como decisão consciente.
+
+**O que isto obriga**, e o WP8 tem de responder:
+- **A fatia 1 continua a ser uma zona só** (Brumal, 2–3 min de travessia). O mapa de 30 min constrói-se zona a zona por cima dela, nunca de uma vez.
+- **Densidade por zona antes de zona nova**: uma regra escrita de quanto conteúdo mínimo uma zona precisa para entrar no jogo — senão os 10 biomas viram corredor.
+- **Estratégia de reutilização** explícita: kit de peças por bioma, variação por iluminação e disposição. 10 biomas feitos à mão de raiz por duas pessoas não acontece.
+- Viagem rápida deixa de ser opcional a esta escala — entra como pergunta do WP8.
 
 ## Biomas
 
@@ -43,7 +51,16 @@ O Mateus concordou e acrescentou a peça que fechou a questão:
 
 `[SUGERIDO]` (11:37) — selva e floresta foram os únicos cenários nomeados.
 
-`[TENSÃO]` — "por bioma, **sei lá, nível**" (12:18) sugere que os biomas também sejam patamares de dificuldade. Isso é uma forma de gating, e o pilar 1 recusa gating. A conciliação habitual — que ninguém decidiu ainda — é o *soft gating*: podes entrar na zona difícil ao minuto um, e morres, mas se fores bom, passas.
+~~`[TENSÃO]`~~ **RESOLVIDA** — `[DECIDIDO]` (Mateus + Rico, 31-07-2026): **soft gating.**
+
+O mapa está todo aberto desde o minuto um. Nenhuma barreira, nenhuma mensagem de "nível insuficiente", nenhuma zona trancada. As zonas têm **dificuldade sugerida, não exigida**: os inimigos da zona 8 matam um nível 1 em dois golpes — mas se ele souber jogar, passa, e o jogo aplaude em vez de o bloquear.
+
+É a leitura correcta do "por bioma, sei lá, nível" (12:18) que não parte o pilar 1: o nível reduz a margem de erro, nunca abre a porta.
+
+**O que isto obriga**, e o WP8 herda:
+- Os biomas comunicam a dificuldade **pela leitura, não por avisos** — a arte, os inimigos à vista e os restos no chão dizem "isto vai doer" antes do primeiro golpe.
+- Nenhum inimigo verifica nível. Nenhum chefe verifica nível.
+- Um jogador que atravessa uma zona muito acima dele **tem de conseguir fugir** — a regra "correr é grátis e mais rápido que qualquer inimigo em patrulha" (WP1) é o que torna isto justo em vez de cruel.
 
 ## 3D
 

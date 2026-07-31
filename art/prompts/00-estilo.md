@@ -4,17 +4,19 @@ Tudo o que se gera para este jogo começa com a mesma frase. É ela que faz vint
 
 ## A frase (copiar literalmente para o início de cada prompt)
 
-> **Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, subtle grim humor.**
+> **Stylized dark fantasy game art, hand-painted look, muted earthy colors with cold mist accents, simple readable shapes, low-poly-friendly design, no photorealism, grim and unforgiving, no whimsy.**
 
 ## Estado desta escolha
 
-`[CLAUDE]` provisório — o estilo visual é a **pergunta 15** de [`../../spec/99-perguntas-abertas.md`](../../spec/99-perguntas-abertas.md), e é do Mateus e do Rico. A frase serve para gerar já sem bloquear; se eles fecharem outra direcção, regenera-se com a frase nova. Imagens são baratas de refazer — é por isso que isto não espera.
+**Tom `[DECIDIDO]` (Mateus + Rico, 31-07-2026): sombrio a sério.** Sem piscadelas, sem alívio cómico — Dark Souls puro. A frase foi reescrita nos sete ficheiros de prompt no mesmo commit; o que estava lá antes tinha `subtle grim humor` e saiu.
+
+O resto da direcção visual (paleta exacta, referências) continua a ser a **pergunta 15** — se afinarem, a frase muda **aqui** e regenera-se. Imagens são baratas de refazer.
 
 O que a frase respeita do que já está decidido:
 - **"Realista não"** (sessão 1 · 10:24) → `no photorealism`
 - **Selva/floresta com bruma** (11:37 + WP0 Brumal) → `cold mist accents`, paleta terrosa
 - **Lei 4** (gráficos integrados) → `simple readable shapes, low-poly-friendly` — conceitos que um modelo baixo-poligonal consegue seguir
-- **Souls-like** → tom sombrio; o `subtle grim humor` fica como tempero, não como piada
+- **Souls-like + tom decidido** → `grim and unforgiving, no whimsy`
 
 ## Regras para todos os prompts
 
