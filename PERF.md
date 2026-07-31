@@ -95,6 +95,8 @@ Cenário `--scene=lei4`: dois jogadores e três inimigos (dois lanceiros e um br
 
 Com vsync ligado, os **3601 frames** dos 60 segundos saíram todos a 16,67 ms exactos. Não é "60 fps em média" — é 60 fps **sem uma única variação**.
 
+**Medido outra vez depois de entrar o game feel do WP1B** (paragem de impacto, câmara nova, buffer): 60,0 / 60,0 / 60,0, 0,0 % fora do orçamento. A paragem de impacto custa zero em render — é pausa de lógica local, como o WP1B previa.
+
 **O critério 5 passa.** Não pelo mínimo aceitável de 50 com escala dinâmica: passa no alvo cheio, a 1080p nativos, com ~3,4× de folga no 1% low.
 
 ---
