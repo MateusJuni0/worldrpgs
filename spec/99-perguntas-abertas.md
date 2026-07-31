@@ -76,7 +76,9 @@ Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil pass
 
 ### 7. Como se recupera vida?
 Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide toda a tensão da exploração.
-→ [`06-itens-inventario.md`](06-itens-inventario.md)
+
+**→ Proposta escrita (WP5):** Frasco de Bruma — 3 cargas, 40% de vida por gole, 1,2 s a beber, recarrega ao descansar; ampliações escondidas no mundo em vez de stock comprável (poções finitas convidam ao farm, que a Lei 1 proíbe). Ver [`14-equipamento.md`](14-equipamento.md). Falta o sim dos dois.
+→ [`06-itens-inventario.md`](06-itens-inventario.md), [`14-equipamento.md`](14-equipamento.md)
 
 ### 8. O que é que "magia do bem e do mal" faz mecanicamente?
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
@@ -103,7 +105,7 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 11. **Números do combate** — ~~por escrever~~ **→ proposta completa `[FABLE]` (WP1)**: esquiva 0,60 s com i-frames 0,08–0,38; parry com janela de 150 ms; custos de stamina; frame data das 5 armas da fatia. Está tudo em [`01-combate.md`](01-combate.md). Confirmam-se **a jogar o protótipo** — os números são o ponto de partida medível, não o fim.
 12. **Vida e Constituição fazem o quê, cada um?** **→ resolvida por proposta `[FABLE]` (WP2)**: Vida = PV; Constituição = defesa física + resistência a estados + carga futura; acrescentados Força/Destreza para a Lei 3 ter requisitos. Ver [`11-formulas.md`](11-formulas.md). Falta o sim dos dois.
 13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
-14. **Existe armadura?** Não foi dita uma única vez. → [`06-itens-inventario.md`](06-itens-inventario.md)
+14. **Existe armadura?** Não foi dita uma única vez. **→ Posta em formato de proposta no WP5** (A: sem sistema, vestes visuais + talismãs; B: 3 pesos que trocam i-frames por defesa; recomendação A pela Lei 4). Decisão dos dois. → [`14-equipamento.md`](14-equipamento.md)
 15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. → [`05-mundo.md`](05-mundo.md)
 16. **Lock-on em alvo?** **→ proposta `[FABLE]` (WP1): existe** — aquisição 20 m, troca na roda do rato, strafe com lock. Esquema de comandos completo em [`01-combate.md`](01-combate.md). Falta o sim dos dois.
 17. **Engine.** → [`09-tecnico.md`](09-tecnico.md)

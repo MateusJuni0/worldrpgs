@@ -31,6 +31,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 11 | [Fórmulas](spec/11-formulas.md) | Atributos, nível, fórmula de dano, curva dos inimigos, tecto da Lei 1 | 🟢 proposta `[FABLE]` (WP2), aguarda Mateus + Rico |
 | 12 | [Classes](spec/12-classes.md) | As 6 da fatia, habilidades-verbo, skills, tensão das evoluções | 🟢 proposta `[FABLE]` (WP3), aguarda Mateus + Rico |
 | 13 | [Magia](spec/13-magia.md) | Luz/Sombra com duas moedas, catálogo, cargas, encantamentos | 🟢 proposta `[FABLE]` (WP4), aguarda Mateus + Rico — responde à pergunta 8 |
+| 14 | [Equipamento](spec/14-equipamento.md) | Catálogo de armas, Lei 3 com números, frasco de cura, armadura em proposta | 🟢 proposta `[FABLE]` (WP5), aguarda Mateus + Rico |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
