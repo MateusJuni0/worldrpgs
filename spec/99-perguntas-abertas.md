@@ -4,6 +4,8 @@ Tudo o que falta decidir, por ordem de urgência. Serve de guião para a próxim
 
 **Regra:** tudo o que ainda estiver aqui quando a construção começar é uma decisão que vocês entregaram a quem constrói, sem saber.
 
+> **Estado a 31-07-2026:** as perguntas **0, 0b, 1, 2, 3, 4, 8 e 9 fecharam** com a aprovação do Mateus e do Rico — ficam riscadas, com a decisão por baixo, porque o raciocínio continua a valer. **Nada bloqueia nenhum pacote.** O que resta são decisões de tom e de detalhe, e cada uma diz onde é que a spec joga com provisórios até lá.
+
 ---
 
 ## 🔴 Bloqueiam tudo o resto
@@ -32,7 +34,7 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 
 → [`09-tecnico.md`](09-tecnico.md)
 
-### 0b. O 3D aguenta-se neste hardware? — ✅ medido: aguenta
+### 0b. ~~O 3D aguenta-se neste hardware?~~ ✅ DECIDIDA — caminho A
 **Medido no protótipo local (31-07-2026), na máquina mais fraca:** 60 fps cravados no cenário da fatia com vsync; 416 fps médios em greybox ao fim de **20 minutos quentes, sem degradação térmica**; renderer Mobile escolhido. Ressalvas: sem animação de esqueleto ainda (a incógnita cara), e memória a vigiar. Os três caminhos (3D / 2.5D / 2D) ficam com dados à frente.
 
 ✅ **CARIMBADO** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **caminho A: 3D estilizado, optimizado.** A tensão fecha-se.
@@ -40,7 +42,7 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 ⚠️ Uma ressalva que a aprovação não apaga, porque é matéria de facto e não de decisão: **a medição não está sustentada no repositório** — não há protótipo, log nem artefacto que a acompanhe, e o próprio relatório ressalva que falta a animação de esqueleto, que é a parte cara. O caminho está escolhido; a prova de que aguenta com esqueletos animados continua por fazer, e é o marco 1 do WP15 que a dá.
 → [`09-tecnico.md`](09-tecnico.md)
 
-### 1. Qual é a fatia mais pequena disto que já é divertida a dois?
+### 1. ~~Qual é a fatia mais pequena disto que já é divertida a dois?~~ ✅ APROVADA
 A sessão 1 descreveu mundo aberto grande, 3D, ~61 chefes, 8 classes, dois sistemas de magia, montarias e co-op sincronizado. Isso é anos de trabalho para uma equipa.
 
 A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe e duas classes, isso já era um jogo que vocês queriam jogar?** Se sim, é por aí que se começa e o resto cresce por cima.
@@ -54,7 +56,7 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **soft gating.** Mapa todo aberto; dificuldade sugerida, não exigida. Detalhe e o que obriga em [`05-mundo.md`](05-mundo.md).
 → [`05-mundo.md`](05-mundo.md), [`00-visao.md`](00-visao.md)
 
-### 3. As evoluções de classe dão poder ou dão opções?
+### 3. ~~As evoluções de classe dão poder ou dão opções?~~ ✅ DECIDIDA — opção A
 Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar vantagem — que é o que o pilar 1 recusa. O próprio Rico já apontou para o lado certo às 09:21 ("não aumentar o dano, uma magia diferente"). Falta confirmar como regra.
 
 **→ Proposta escrita (WP3):** as duas opções lado a lado, com recomendação **A (opções)** e subida por marco em vez de nível — [`12-classes.md`](12-classes.md).
@@ -86,7 +88,7 @@ Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil pass
 Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide toda a tensão da exploração.
 → [`06-itens-inventario.md`](06-itens-inventario.md)
 
-### 8. O que é que "magia do bem e do mal" faz mecanicamente?
+### 8. ~~O que é que "magia do bem e do mal" faz mecanicamente?~~ ✅ APROVADA
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
 
 **→ Proposta escrita (WP4):** *bem = controlo sem preço; mal = ~1,5× mais forte por carga mas custa 8% dos PV por lançamento; qualquer um usa as duas; mortos-vivos temem o bem.* Detalhe e alternativa descartada em [`13-magia.md`](13-magia.md).
@@ -94,7 +96,7 @@ Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoraçã
 ✅ **APROVADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — o preço da magia do mal é PV, à vista, sem medidor de corrupção. **A fatia 1 passa a poder usar as duas escolas.**
 → [`03-magia.md`](03-magia.md)
 
-### 9. Quantas classes no início?
+### 9. ~~Quantas classes no início?~~ ✅ CONFIRMADA — seis na fatia
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
 
 **→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md).

@@ -90,7 +90,7 @@ A fatia joga-se a um, desenhada para dois. O pilar 2 diz "sempre **disponível**
 |---|---|---|
 | **Arco e flecha** | Decidido no jogo (00:16), fora da fatia: se atacar de longe for seguro, ninguém esquiva nem apara — as duas mecânicas centrais morrem ([`01-combate.md`](01-combate.md)). A magia já cobre "longe" com custo auto-limitado (cargas). O arco entra quando o WP1 tiver o sistema de pressão (munição, tempo de puxar, inimigos que fecham). | WP1 define, fatia 2 constrói |
 | **Batedor** | É a classe do arco — entra com ele. | fatia 2 |
-| **Mago do mal** | A divisão bem/mal ainda não faz nada mecanicamente (pergunta 8). Metê-lo já era decoração — e a regra deles é "cada magia é certinha" (05:04). | WP4 propõe, eles decidem |
+| **Mago do mal** | A pergunta 8 **já foi respondida** (bem/mal aprovado a 31-07), mas a fatia foi aprovada com **seis classes** e esta não é uma delas. Entra na fatia 2. | fatia 2 |
 | **Evoluções de classe** | `[TENSÃO]` aberta com a Lei 1 (pergunta 3). Não se constrói em cima de uma tensão por resolver. | WP3 propõe |
 | **Encantamentos** | Dependem do catálogo de itens; não mudam a pergunta que a fatia responde. | WP5 |
 | **Biomas múltiplos / mapa grande** | A fatia prova a **forma** decidida — zona aberta + dungeon escondida (02:50, 03:12) — à escala mínima. A escala precisa de número (pergunta 4) e a tensão dos biomas (pergunta 2) é deles. | WP8 |
@@ -123,7 +123,7 @@ Nada disto é corte. É ordem.
 
 ## O que a fatia NÃO responde, de propósito
 
-As perguntas 2 (biomas/nível), 3 (evoluções), 4 (mapa grande), 8 (bem/mal), 10 (morte definitiva), 14 (armadura) e 15 (estilo visual) **continuam abertas** no [`99-perguntas-abertas.md`](99-perguntas-abertas.md). A fatia joga com provisórios marcados; não fecha nada à socapa.
+**Actualizado a 31-07:** as perguntas 2 (biomas → soft gating), 3 (evoluções → opção A), 4 (mapa → ~30 min, 10+ biomas) e 8 (bem/mal → aprovado) **fecharam**, com a aprovação dos dois. Continuam abertas: **10** (o que se perde ao morrer — o tom), **14** (existe armadura), **15** (paleta e referências visuais concretas). A fatia joga com provisórios marcados nessas três; não fecha nada à socapa.
 
 ## Ligações
 

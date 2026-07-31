@@ -70,7 +70,9 @@ Em termos de inimigos, isto significa:
 - Nenhum chefe é impossível por falta de estatísticas, só por falta de perícia
 - Não existe conteúdo desenhado para obrigar a *grind*
 
-`[TENSÃO]` — O mapa vai ser dividido por bioma "sei lá, nível, tipo" (12:18), o que é uma forma de gating. Ver [`05-mundo.md`](05-mundo.md). A saída clássica é o *soft gating*: o jogador pode ir a qualquer lado, mas as zonas mais difíceis castigam-no de imediato. Não foi decidido.
+~~`[TENSÃO]`~~ **RESOLVIDA** — `[DECIDIDO]` (Mateus + Rico, 31-07-2026): **soft gating.** O mapa está todo aberto; as zonas têm dificuldade **sugerida, não exigida**. Ver [`05-mundo.md`](05-mundo.md).
+
+O que o bestiário (WP6) herda: **nenhum inimigo verifica nível**, os inimigos de zona alta comunicam o perigo **pela leitura** (aspecto, restos no chão, o que fazem antes de atacar), e **fugir tem de funcionar sempre** — a regra do WP1 de que correr é grátis e mais rápido que qualquer inimigo em patrulha é o que torna o mapa aberto justo em vez de cruel.
 
 ## Inimigos e magia
 

@@ -65,7 +65,7 @@ Para os dois. Não há intenção de vender, publicar ou fazer disto produto. Is
 
 Vem antes de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe. Detalhe e consequências em [`09-tecnico.md`](09-tecnico.md).
 
-Há uma tensão registada entre isto e o 3D, com três caminhos e uma recomendação — está em [`09-tecnico.md`](09-tecnico.md), à espera de decisão dos dois.
+A tensão entre isto e o 3D **fechou**: `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **caminho A, 3D estilizado optimizado**. Detalhe em [`09-tecnico.md`](09-tecnico.md). ⚠️ A medição que sustenta a escolha não tem prova no repositório; o marco 1 do WP15 é que a dá.
 
 Do lado bom: a restrição empurra para 3D estilizado de baixo poligonal, que é **mais barato de produzir e de correr**. Alinha com serem duas pessoas, e com o "realista não" da sessão 1 (10:24).
 

@@ -1,6 +1,6 @@
 # 12 — Classes
 
-> **WP3 · Fable** (31-07-2026). As oito classes nomeadas na sessão 1 (07:13 → 07:57), transformadas em fichas jogáveis sobre os atributos do WP2 ([`11-formulas.md`](11-formulas.md)) e as armas do WP1 ([`01-combate.md`](01-combate.md)). As seis da fatia foram confirmadas pelos dois a 31-07-2026. A `[TENSÃO]` das evoluções **não se decide aqui** — está proposta no fim, no formato de decisão.
+> **WP3 · Fable** (31-07-2026). As oito classes nomeadas na sessão 1 (07:13 → 07:57), transformadas em fichas jogáveis sobre os atributos do WP2 ([`11-formulas.md`](11-formulas.md)) e as armas do WP1 ([`01-combate.md`](01-combate.md)). As seis da fatia foram confirmadas pelos dois a 31-07-2026. A `[TENSÃO]` das evoluções **foi decidida a 31-07: opção A** — ver no fim.
 
 ## As regras que já mandam nas classes
 
@@ -63,7 +63,15 @@ Nenhuma escala com atributos ou nível; custos e tempos fixos. *Teste da Lei 2, 
 
 **Sim, sem restrição.** `[FABLE]` *Razão:* proibir seria um bloqueio artificial — o espírito da Lei 3 aplicado às classes; e o chefe a ×1,8 (fatia 1) é agnóstico à composição. Dois Berserkers em Fúria ao mesmo tempo é uma escolha legítima com o seu próprio castigo embutido. *Alternativa descartada:* forçar diversidade — resolve um problema que ninguém demonstrou existir.
 
-## `[TENSÃO]` Evoluções de classe vs Lei 1 — proposta, não decisão
+## ~~`[TENSÃO]`~~ Evoluções de classe — RESOLVIDA
+
+✅ `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **opção A: as evoluções dão opções, não números.** E sobem **por marco, não por nível**.
+
+Fica escrito o que isto obriga, e o que a proposta abaixo já antecipava: cada patamar desbloqueia **uma variante da habilidade especial** e **uma técnica nova**, zero números. Nenhum patamar mexe em frames, dano, velocidade de lançamento ou resistência — é a Lei 2 aplicada à progressão, e é o que mantém a Lei 1 inteira.
+
+A proposta original fica abaixo como registo do raciocínio.
+
+### A decisão, e a alternativa descartada
 
 **O conflito:** o Rico descreveu patamares que dão poder — "o nível 3, que atira magia mais rápido" (09:37) — e dezasseis segundos antes tinha corrigido o Mateus no sentido contrário: "não aumentar o dano, uma magia diferente" (09:21). O pilar 1 recusa vantagem mecânica por nível. As duas frases dele não cabem juntas; é a pergunta 3 do [`99-perguntas-abertas.md`](99-perguntas-abertas.md).
 

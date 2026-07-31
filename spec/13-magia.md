@@ -90,6 +90,6 @@ Cada uma será desenhada à mão quando entrar ("depois a gente cria várias mag
 
 ## O que continua aberto
 
-- **Pergunta 8** — a proposta bem/mal acima **aguarda o sim (ou o corte) do Mateus e do Rico** na sessão 2. Até lá, a fatia joga só com o bem, e nada trava.
+- ~~**Pergunta 8**~~ ✅ **APROVADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — a proposta bem/mal acima passa tal e qual: o preço da magia do mal é **PV à vista**, sem medidor de corrupção. **A fatia 1 passa a poder usar as duas escolas** (a restrição "só o bem" caiu). O catálogo pode crescer para os dois lados.
 - **Pergunta 7** — o modelo de descanso/cura manda na recuperação de cargas; WP5.
 - **Pergunta 20** — fogo amigo; WP10.
