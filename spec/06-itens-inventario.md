@@ -1,5 +1,13 @@
 # 06 — Itens, equipamento e inventário
 
+> ⚠️ **Este é o registo da sessão 1 — o que eles disseram, com timestamps. NÃO é o estado actual do projeto.**
+>
+> Os `[EM ABERTO]` daqui para baixo foram, na maior parte, **respondidos** pelos pacotes de execução. Este documento fica como fonte histórica: é aqui que se vê o que saiu da boca deles e quando.
+>
+> **Onde está a resposta:** Catálogo, armadura e cura → [`14-equipamento.md`](14-equipamento.md) (WP5) · Morte, almas e frascos → [`33-morte-e-almas.md`](33-morte-e-almas.md)
+>
+> Em caso de divergência, **manda o documento de execução**. E o que estiver decidido pelos donos está em [`../DECISOES.md`](../DECISOES.md).
+
 ## A regra das armas — decisão importante
 
 `[DECIDIDO]` (sessão 1 · 05:44 → 06:17)

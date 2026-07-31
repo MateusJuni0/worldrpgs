@@ -1,5 +1,13 @@
 # 05 — Mundo e mapa
 
+> ⚠️ **Este é o registo da sessão 1 — o que eles disseram, com timestamps. NÃO é o estado actual do projeto.**
+>
+> Os `[EM ABERTO]` daqui para baixo foram, na maior parte, **respondidos** pelos pacotes de execução. Este documento fica como fonte histórica: é aqui que se vê o que saiu da boca deles e quando.
+>
+> **Onde está a resposta:** Rede de zonas, dungeons e traçado → [`17-mundo.md`](17-mundo.md) (WP8)
+>
+> Em caso de divergência, **manda o documento de execução**. E o que estiver decidido pelos donos está em [`../DECISOES.md`](../DECISOES.md).
+
 ## Mundo aberto, não corredor de dungeons
 
 `[DECIDIDO]` (sessão 1 · 02:50 → 03:12)

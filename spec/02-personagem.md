@@ -1,5 +1,13 @@
 # 02 — Personagem
 
+> ⚠️ **Este é o registo da sessão 1 — o que eles disseram, com timestamps. NÃO é o estado actual do projeto.**
+>
+> Os `[EM ABERTO]` daqui para baixo foram, na maior parte, **respondidos** pelos pacotes de execução. Este documento fica como fonte histórica: é aqui que se vê o que saiu da boca deles e quando.
+>
+> **Onde está a resposta:** Atributos e fórmulas → [`11-formulas.md`](11-formulas.md) (WP2) · Classes, habilidades e skills → [`12-classes.md`](12-classes.md) (WP3)
+>
+> Em caso de divergência, **manda o documento de execução**. E o que estiver decidido pelos donos está em [`../DECISOES.md`](../DECISOES.md).
+
 ## Atributos
 
 Modelo Dark Souls: pontos ganhos por nível, distribuídos à escolha. `[DECIDIDO]` (sessão 1 · 06:33)

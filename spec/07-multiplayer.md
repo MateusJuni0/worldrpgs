@@ -1,5 +1,13 @@
 # 07 — Multiplayer
 
+> ⚠️ **Este é o registo da sessão 1 — o que eles disseram, com timestamps. NÃO é o estado actual do projeto.**
+>
+> Os `[EM ABERTO]` daqui para baixo foram, na maior parte, **respondidos** pelos pacotes de execução. Este documento fica como fonte histórica: é aqui que se vê o que saiu da boca deles e quando.
+>
+> **Onde está a resposta:** Sessão, autoridade, transporte → [`19-rede.md`](19-rede.md) (WP10) · Morte e ressurreição em co-op → [`33-morte-e-almas.md`](33-morte-e-almas.md)
+>
+> Em caso de divergência, **manda o documento de execução**. E o que estiver decidido pelos donos está em [`../DECISOES.md`](../DECISOES.md).
+
 O jogo é para dois. Não é um modo extra — é o motivo do projeto existir.
 
 ## Sempre disponível
