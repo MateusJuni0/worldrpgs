@@ -28,6 +28,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP8 | `spec/17-mundo.md` | Fable | 31-07 | ✅ entregue no branch — rede de zonas, dungeons, traçado de Brumal |
 | WP9 | `spec/18-progressao.md` | Fable | 31-07 | ✅ entregue no branch — curva, loot instanciado, recompensa de ajuda a 40% |
 | WP10 | `spec/19-rede.md` | Fable | 31-07 | ✅ entregue no branch — progresso individual resolvido, autoridade dividida, transporte |
+| WP11 | `spec/20-interface.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
