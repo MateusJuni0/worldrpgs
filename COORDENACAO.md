@@ -61,11 +61,11 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 
 ## ⚠️ Reservar NÚMEROS de documento, não só pacotes
 
-**Regra nova (31-07, escrita depois de a quebrar).** A tabela acima reserva **pacotes**. Faltava reservar **números de ficheiro** — e a 31-07 os dois lados criaram um  ao mesmo tempo. O do Fable teve de passar a  no merge.
+**Regra nova (31-07, escrita depois de a quebrar).** A tabela acima reserva **pacotes**. Faltava reservar **números de ficheiro** — e a 31-07 os dois lados criaram um `spec/40-*.md` ao mesmo tempo. O do Fable teve de passar a `44` no merge.
 
 **A culpa foi do lado do Claude:** publicou o 40, 41, 42 e 43 de uma vez sem avisar aqui. Fica a regra:
 
-> **Antes de criar um ficheiro novo em , acrescenta o número a esta lista e faz push imediato.** Um commit de uma linha chega.
+> **Antes de criar um ficheiro novo em `spec/`, acrescenta o número a esta lista e faz push imediato.** Um commit de uma linha chega.
 
 ### Números tomados
 
