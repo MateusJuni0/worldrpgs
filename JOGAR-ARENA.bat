@@ -26,5 +26,7 @@ if not defined GODOT (
   exit /b 1
 )
 
-"!GODOT!" --path "%~dp0" --rendering-method mobile -- --scene=combat
+rem O ponto no fim de "%~dp0." e de proposito — sem ele a barra invertida
+rem final escapa a aspa e o Godot recebe o caminho mal formado.
+"!GODOT!" --path "%~dp0." --rendering-method mobile -- --scene=combat
 if errorlevel 1 pause

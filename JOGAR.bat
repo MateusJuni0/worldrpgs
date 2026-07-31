@@ -40,6 +40,8 @@ if not defined GODOT (
   exit /b 1
 )
 
+rem O ponto no fim de "%~dp0." nao e engano: %~dp0 acaba em barra invertida,
+rem que escaparia a aspa de fecho e engoliria o resto da linha de comandos.
 echo A abrir com: !GODOT!
-"!GODOT!" --path "%~dp0" --rendering-method mobile
+"!GODOT!" --path "%~dp0." --rendering-method mobile
 if errorlevel 1 pause
