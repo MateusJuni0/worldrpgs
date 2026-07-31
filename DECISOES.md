@@ -10,6 +10,20 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### Estudo profundo da referência → [`spec/39-estudo-profundo.md`](spec/39-estudo-profundo.md)
+- ⭐ **PISO DE 30%** — nenhuma defesa reduz um golpe abaixo de 30%. É a **Lei 1 em equação**, e não a tínhamos
+- ⭐ **Soft cap aos ~40** — sem ele o nível 100 ganha jogos. Lá, dos 40 aos 99 ganham-se **10 pontos de stamina**: é a curva que segura a Lei 1, não a boa vontade
+- ⭐ **A carga muda distância e stamina, NUNCA a invencibilidade** (12 vs 13 frames = ruído) — confirma a cláusula 3 do 38 e dá a forma certa de a armadura pesada custar
+- ⭐ **Interrupção + hiper-armadura** — sistema inteiro em falta; sem ele **armas lentas não existem**
+- ⭐ **Um bolo de cargas repartido entre curar e usar** — resolve artes de arma, magia e a Lei 3 de uma vez
+- ⭐ **Contador de mortes por sala** — acaba com o grind e amolece a zona sozinha, sem menu de dificuldade
+- ⭐ **Toda a zona fecha um círculo**; o atalho abre-se **do lado de dentro** · **descanso à vista da porta do chefe** (a corrida de volta é fricção ×2 em co-op)
+- ⭐ **Descrição em todo o objecto, colocado por relevância** — é daqui que vem o *"nunca zera"*
+- Defesa por **curva sobre a razão** + absorção **multiplicativa** · dois eixos de melhoria (reforço/infusão) · parry com **três janelas** · **invencibilidade durante o crítico** (impede o parceiro de interromper) · a loja vende conveniência, **nunca poder**
+- ⚠️ **NÃO copiar:** chefe de co-op só com mais vida (esponja, castiga quem já perde) · inimigos que encadeiam ataques na recuperação · estatística de interrupção que só funciona a atacar
+- **Abre as perguntas 22–25** no `99`
+- **Substitui:** nada — completa o [`spec/35-estudo-referencia.md`](spec/35-estudo-referencia.md)
+
 ### Ataques dos inimigos e o contrato de honestidade → [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md)
 - **5 fases por ataque**; aviso ≥ **0,50 s**; hitbox viva só **3–6 frames**
 - ⚠️ **O CONTRATO, 5 cláusulas:** hitbox nunca >10% do visual · **o seguimento pára antes de a hitbox acender** (é a causa nº1 de "esquivei e levei") · invencibilidade não escala com nada · o que se vê é o que acontece · **teste do rolamento: 10 em 10, sem excepção**
