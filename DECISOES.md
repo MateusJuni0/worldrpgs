@@ -10,6 +10,14 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### Ataques dos inimigos e o contrato de honestidade → [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md)
+- **5 fases por ataque**; aviso ≥ **0,50 s**; hitbox viva só **3–6 frames**
+- ⚠️ **O CONTRATO, 5 cláusulas:** hitbox nunca >10% do visual · **o seguimento pára antes de a hitbox acender** (é a causa nº1 de "esquivei e levei") · invencibilidade não escala com nada · o que se vê é o que acontece · **teste do rolamento: 10 em 10, sem excepção**
+- **3–5 ataques por inimigo**, e os três têm de ser **três perguntas diferentes** — um que se apara, um que só se esquiva, um que obriga a mexer o pé
+- ⚠️ **A coluna "como se escapa" nunca pode dizer "não dá"** — ataque sem escapatória não é difícil, é injusto
+- **Largam o que se vê no corpo deles**
+- **Substitui:** nada — detalha o `arranque/activo/recuperação` do WP1
+
 ### Anéis, elementos e a correcção da queda → [`spec/37-aneis-e-elementos.md`](spec/37-aneis-e-elementos.md)
 - **~70 anéis, até 10 equipados** (um por dedo), ~10 por classe mas usáveis por todas. Criativos, sem repetir; alguns somam-se
 - **Elementos:** fogo, raio, veneno, escuridão, magia do mal — além de físico (corte/contundente/perfuração) e mágico. **Escudos diferem por elemento**
