@@ -52,6 +52,10 @@ Apanha links partidos, documentos que ficaram fora do `SPEC.md`, e `[DECIDIDO]` 
 - **Não ouviu as gravações.** Sabe o que está escrito na spec, e os timestamps apontam para frases reais da conversa.
 - **Não decide.** Nem ele nem o Fable. O jogo é teu e do Mateus.
 
+## Trabalho em paralelo
+
+O Claude do lado do Mateus também escreve na spec — não é só rever. Para os dois lados não fazerem a mesma coisa ao mesmo tempo, existe o [`COORDENACAO.md`](COORDENACAO.md): **o teu Fable reserva o pacote antes de começar**, num commit pequeno. Se o guarda ou a revisão apontarem que um pacote já estava reservado, é isso.
+
 ## Se algo estiver errado na spec
 
 Se vires um `[DECIDIDO]` que para ti não estava decidido, ou um `[SUGERIDO]` que já estava fechado — **diz**. As etiquetas são a leitura que foi feita da gravação, e pode ter-se lido mal. Abre uma issue ou comenta.

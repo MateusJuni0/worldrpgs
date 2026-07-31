@@ -4,7 +4,7 @@
 
 `[DECIDIDO]` (Mateus, 31-07-2026)
 
-> **PC sem placa gráfica dedicada. ~12 GB de RAM.**
+> **PC sem placa gráfica dedicada. O alvo é a máquina mais fraca das duas: 8 GB de RAM.**
 
 Isto não é um detalhe de configuração. É a restrição mais dura do projeto e vem **antes** de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe.
 
@@ -21,7 +21,7 @@ Não estimado. Lido da máquina.
 | Ecrã | 1920 × 1080 @ **60 Hz** |
 | Sistema | Windows 11 Home, build 26200, 64 bits |
 
-**É melhor do que se pensava.** A estimativa inicial falava em ~12 GB; são 16, e em canal duplo. Num gráfico integrado a largura de banda da memória é o estrangulamento principal, por isso o canal duplo vale mais aqui do que valeria numa máquina com placa dedicada. O Iris Xe de um i7 de 12.ª geração está no topo do que os gráficos integrados dão.
+**Melhor do que a estimativa inicial (~12 GB):** são 16, em canal duplo — e num gráfico integrado a largura de banda da memória é o estrangulamento principal. Mas esta é a máquina FORTE das duas.
 
 **O que continua a limitar**, e não se resolve com RAM:
 
@@ -29,13 +29,19 @@ Não estimado. Lido da máquina.
 - Os gráficos **partilham a RAM do sistema**. Não há memória de vídeo à parte; tudo o que a textura ocupa, tira ao jogo.
 - **60 Hz** fecha a questão da taxa alvo: 60 fps, e não faz sentido perseguir mais.
 
-### Máquina 2 — Rico `[EM ABERTO]`
+### Máquina 2 — Rico `[MEDIDO]` (30-07-2026, via WP0) — ⚠️ **é o alvo**
 
-Falta. É a que manda, porque **o orçamento técnico aponta sempre à mais fraca das duas** — não adianta o jogo correr bem num se corre mal no outro.
+| | |
+|---|---|
+| Processador | Intel Core **i5-1334U** (13.ª geração), série U |
+| Gráficos | **Intel Iris Xe**, integrados |
+| RAM | **8 GB** — 2 × 4 GB DDR4-3200, **canal duplo** |
+| Disco | SSD **NVMe** 256 GB |
+| Ecrã | 1920 × 1080 @ **60 Hz** |
+| Sistema | Windows 11 Home, 64 bits |
+| Comando | nenhum — teclado e rato |
 
-Pedir-lhe: `dxdiag` → *Guardar todas as informações*. Ou, mais directo, os mesmos campos da tabela acima.
-
-Enquanto não houver, tudo o que estiver orçamentado é provisório.
+**O orçamento aponta a esta máquina**, por ser a mais fraca — não adianta o jogo correr bem num PC se corre mal no outro. Descontando o sistema e a memória que os gráficos integrados tiram (partilham a RAM), sobram na ordem de **3 a 4 GB para o jogo**. É o tecto real do projeto.
 
 > Os relatórios completos de `dxdiag` ficam **fora deste repositório**: trazem nome da máquina e do utilizador, e o repositório é público. O que interessa está na tabela.
 
@@ -47,7 +53,7 @@ Fica dentro: 3D estilizado de baixa contagem de polígonos, iluminação assada,
 
 **Isto não é má notícia.** Baixo poligonal estilizado é mais barato de produzir *e* de correr — alinha com serem duas pessoas. O que morre é o realismo, e o realismo já tinha sido recusado na sessão 1 ("Realista não", 10:24).
 
-**Alvo, até haver a máquina do Rico:** 1920 × 1080, 60 fps estáveis, medidos com a máquina quente.
+**Alvo:** 1920 × 1080, 60 fps estáveis, medidos na máquina do Rico, quente.
 
 ### `[TENSÃO]` — 3D contra o hardware
 

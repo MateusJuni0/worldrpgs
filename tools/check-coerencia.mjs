@@ -116,6 +116,7 @@ const base = process.argv.includes('--base')
   : null;
 
 let decididosAlterados = [];
+let decididosNovos = [];
 
 if (base) {
   let diff = '';
@@ -132,10 +133,14 @@ if (base) {
   for (const linha of diff.split('\n')) {
     const m = linha.match(/^\+\+\+ b\/(.+)$/);
     if (m) { ficheiroActual = m[1]; continue; }
-    // Só as linhas removidas interessam: acrescentar [DECIDIDO] é normal,
-    // apagar ou reescrever um é que não.
     if (linha.startsWith('-') && !linha.startsWith('---') && linha.includes('[DECIDIDO]')) {
-      decididosAlterados.push({ ficheiro: ficheiroActual, linha: linha.slice(1).trim() });
+      decididosAlterados.push({ ficheiro: ficheiroActual, linha: linha.slice(1).trim(), tipo: 'removido' });
+    }
+    // Promover algo a [DECIDIDO] também merece um olhar. Um agente pode
+    // carimbar a sua própria escolha como decisão dos donos sem má intenção
+    // nenhuma, e a etiqueta perde o significado todo.
+    if (linha.startsWith('+') && !linha.startsWith('+++') && linha.includes('[DECIDIDO]')) {
+      decididosNovos.push({ ficheiro: ficheiroActual, linha: linha.slice(1).trim() });
     }
   }
 }
@@ -144,6 +149,20 @@ if (base) {
 
 console.log('Guarda de coerência da spec\n');
 console.log(`Ficheiros markdown analisados: ${ficheiros.length}`);
+
+if (decididosNovos.length) {
+  console.log(`
+🟠 ${decididosNovos.length} linha(s) promovida(s) a [DECIDIDO]:
+`);
+  for (const d of decididosNovos) {
+    console.log(`   ${d.ficheiro}`);
+    console.log(`   ${d.linha.slice(0, 160)}
+`);
+  }
+  console.log('   [DECIDIDO] é o que o Mateus e o Rico fecharam — não o que quem');
+  console.log('   escreveu o PR concluiu. Cada linha tem de dizer a sua fonte, e');
+  console.log('   se só um dos dois decidiu, tem de ficar marcado que falta o outro.');
+}
 
 if (decididosAlterados.length) {
   console.log(`\n🔴 ${decididosAlterados.length} linha(s) [DECIDIDO] removida(s) ou reescrita(s):\n`);

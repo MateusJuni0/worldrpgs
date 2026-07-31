@@ -30,6 +30,7 @@ A spec cresce a partir das conversas. Nada entra aqui por invenção — cada de
 CLAUDE.md                    contexto para os agentes que trabalham aqui
 PARA-O-RICO.md               o que encontrei na sessao 1 — ler primeiro
 PONTE-CLAUDE.md              guia do Rico para a ponte
+COORDENACAO.md               quem está a fazer o quê — reservar antes de começar
 SPEC.md                      índice mestre, com o estado de cada área
 spec/
   00-visao.md                o que é o jogo, e os pilares que não se negoceiam

@@ -26,9 +26,9 @@ os processos. Ao ponto de o Opus 5 conseguir implementar sem perguntar nada.
 
 Não escreves código. Escreves documentos e fazes commit deles.
 
-São 16 pacotes de trabalho, WP0 a WP15, um branch e um PR cada, pela ordem que
-está no briefing. Começa pelo WP0 — a fatia mínima jogável — porque comanda
-todos os outros.
+São 20 pacotes de trabalho — WP0 a WP15, mais WP1B, WP8B, WP11B e WP15B — um
+branch e um PR cada, pela ordem que está no briefing. Começa pelo WP0 (a fatia
+mínima jogável) porque comanda todos os outros.
 
 Quatro leis que não podes quebrar em silêncio (estão desenvolvidas no briefing):
 
@@ -41,8 +41,8 @@ Quatro leis que não podes quebrar em silêncio (estão desenvolvidas no briefin
 3. Qualquer classe pega em qualquer arma. A diferença vem dos atributos e das
    skills, nunca de um bloqueio.
 
-4. A máquina alvo manda: PC sem placa gráfica dedicada, gráficos Intel Iris Xe,
-   1080p a 60 Hz. Vem antes de qualquer decisão de arte, render ou engine. E liga-se à Lei 1 — num
+4. A máquina alvo manda: a do Rico, que é a mais fraca — 8 GB, gráficos Intel
+   Iris Xe integrados, 1080p a 60 Hz. Vem antes de qualquer decisão de arte, render ou engine. E liga-se à Lei 1 — num
    souls-like, uma queda de fotogramas não é feia, é injusta.
 
 Três coisas sobre como escrever:
@@ -56,11 +56,13 @@ Três coisas sobre como escrever:
 - Todo o catálogo leva uma coluna "Fatia 1?". O que foi descrito na gravação são
   anos de trabalho; nada se corta, mas tudo se ordena.
 
-Uma coisa que ainda não sabes e que bloqueia parte do trabalho: a máquina do
-Mateus está medida e está em spec/09-tecnico.md, mas falta a do Rico — e é essa
-que manda, porque se orçamenta sempre para a mais fraca das duas. Podes fazer
-WP0 a WP11 sem ela. Para WP12, WP13 e WP14 precisas dela: pede ao Rico o
-dxdiag dele quando lá chegares.
+As duas máquinas já estão medidas — estão na pergunta 0 de
+spec/99-perguntas-abertas.md. Orçamenta para a do Rico: 8 GB e gráficos Intel
+Iris Xe integrados, que é a mais fraca das duas.
+
+Não estás sozinho neste repositório: o Claude (lado do Mateus) também escreve
+na spec. Antes de começares qualquer pacote, reserva-o em COORDENACAO.md —
+git pull, vê se está livre, acrescenta a tua linha, commit e push imediatos.
 
 Começa agora pelo WP0. Quando acabares, abre o PR e diz o que decidiste, que
 tensões encontraste, e o que ficou por decidir.

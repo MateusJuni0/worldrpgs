@@ -69,9 +69,9 @@ Foi decidido explicitamente na sessão 1 (05:44 → 06:17), a partir de uma obje
 
 **PC sem placa gráfica dedicada.** É nisto que os dois jogam. Não há hardware melhor à espera.
 
-A máquina do Mateus está medida — i7-1255U, Intel Iris Xe integrados, 16 GB em canal duplo, SSD NVMe, 1920×1080 @ 60 Hz. A do Rico ainda não. **Orçamenta sempre para a mais fraca das duas**, e pede a segunda antes de fechares qualquer número em WP12, WP13 ou WP14.
+As duas estão medidas, e estão na pergunta 0 de [`spec/99-perguntas-abertas.md`](../spec/99-perguntas-abertas.md). **Orçamenta para a do Rico**, que é a mais fraca: i5-1334U, Intel Iris Xe integrados, **8 GB** em canal duplo, SSD NVMe, 1920×1080 @ 60 Hz. Descontando o sistema e a RAM que o gráfico integrado tira, sobram na ordem de **3 a 4 GB** para o jogo.
 
-Dois detalhes que mudam decisões, e que se perdem se só olhares para a tabela: é um chip de portátil de baixo consumo, portanto **o que interessa é o desempenho quente, não o pico** — mede ao fim de vinte minutos, não ao primeiro. E os gráficos partilham a RAM do sistema: cada MB de textura tira memória ao jogo. O ecrã é de 60 Hz, o que fecha a taxa alvo em 60 fps.
+Três detalhes que mudam decisões e que se perdem se só olhares para a tabela. As duas são chips de portátil de baixo consumo, portanto **o que interessa é o desempenho quente, não o pico** — mede ao fim de vinte minutos, não ao primeiro. Os gráficos partilham a RAM do sistema: cada MB de textura tira memória ao jogo. E nenhuma tem comando ligado — o esquema de controlos parte de teclado e rato.
 
 Isto vem **antes** de qualquer decisão de arte, render ou engine. Não é um modo de baixa qualidade a acrescentar no fim — é o alvo.
 
@@ -104,6 +104,21 @@ O repo usa etiquetas. Respeita-as, porque são a diferença entre o que o Mateus
 | `[FABLE]` | Decidido por ti | Tem sempre de trazer justificação |
 
 **Toda a decisão `[FABLE]` leva três linhas:** o que decidiste, porquê, e que alternativa descartaste. Sem isso, quem vier a seguir não sabe se pode mudar.
+
+### `[DECIDIDO]` diz sempre de onde veio
+
+Regra acrescentada depois do WP0, onde `[DECIDIDO]` foi usado para uma instrução directa do Rico. A decisão vale — o problema é a etiqueta passar a ter dois sentidos.
+
+Em todo o resto do repositório, `[DECIDIDO]` quer dizer *"os dois fecharam isto, e há gravação"*. Se acumular também *"um deles disse-me"*, deixa de servir para o que serve.
+
+Por isso: **toda a linha `[DECIDIDO]` indica a fonte**, e quando só um dos dois decidiu, fica marcado que falta o outro.
+
+```
+`[DECIDIDO]` (sessão 1 · 04:23)                    ← os dois, gravado
+`[DECIDIDO]` (Rico, 30-07, instrução directa) ⏳ falta o Mateus
+```
+
+O guarda de coerência assinala em cada PR as linhas promovidas a `[DECIDIDO]`. Não é acusação — é para ninguém carimbar sem dar por isso.
 
 ### Quando encontrares uma `[TENSÃO]`
 
@@ -160,6 +175,8 @@ A fatia 1 é o mínimo que já é um jogo divertido a dois. Defines isso no prim
 
 **Um pacote = um branch = um PR.** Por esta ordem — cada um assenta no anterior.
 
+São vinte: WP0 a WP15, mais quatro acrescentados depois do WP0 (WP1B, WP8B, WP11B, WP15B), que ficam na posição onde pertencem em vez de irem para o fim.
+
 > Antes de começares um pacote, relê os pilares em [`spec/00-visao.md`](../spec/00-visao.md).
 
 ---
@@ -196,6 +213,42 @@ O coração do jogo. Se este ficar bom, o resto segue.
 - Comandos completos: teclado+rato e comando
 
 Cada número leva o teste da Lei 1.
+
+---
+
+### WP1B — Câmara, controlo e game feel · `spec/25-controlo.md`
+
+**Este pacote faltava na primeira versão do briefing, e é o maior buraco que ela tinha.** Um souls-like em 3D perde-se aqui mais depressa do que em qualquer outro sítio: não por más mecânicas, mas porque a câmara prende numa parede ou porque o botão "não registou".
+
+Liga-se à Lei 1 de forma directa e brutal: **se o jogador carregou e o jogo não respondeu, ele não perdeu por falta de perícia. Perdeu porque o jogo lhe mentiu.**
+
+**Câmara**
+- Distância, altura, campo de visão, suavização de seguimento
+- **Colisão com geometria** — a câmara entalada numa parede num corredor de dungeon estraga o jogo sozinha. Como se resolve: aproxima? atravessa? desvanece a parede?
+- O que muda quando há lock-on: enquadra os dois? roda sozinha?
+- Alvo muito alto ou muito perto (o chefe em cima do jogador é o caso clássico que parte tudo)
+- Sensibilidade, inversão, e o que é configurável
+- Em co-op cada um tem a sua, mas a arena tem de funcionar para as duas ao mesmo tempo
+
+**Registo de comandos** — é aqui que se ganha ou perde a sensação de justiça
+- **Janela de guarda de entrada (*input buffer*):** quantos milissegundos antes de a acção anterior acabar é que uma entrada fica guardada e sai a seguir. É literalmente a diferença entre "o jogo comeu-me o botão" e "eu enganei-me"
+- O que é guardável e o que não é: ataque sim, esquiva sim, poção provavelmente não
+- Quanto tempo vive no buffer antes de ser deitado fora
+- Prioridade quando chegam duas entradas quase juntas
+
+**Orçamento de latência**
+- Entrada → resposta no ecrã, em milissegundos, somando tudo: sondagem do teclado, lógica, render, ecrã
+- Num jogo de janelas de frames, 100 ms de atraso torna o parry impossível de aprender, mesmo com a janela "certa" no papel
+- Diz o alvo, e diz como se mede
+
+**Sensação de impacto**
+- **Paragem de impacto (*hit-stop*):** congelar alguns frames quando o golpe acerta. É o que faz um machadão sentir-se pesado, e é quase de graça em desempenho
+- Tremor de ecrã: quando, quanto, e o limite antes de enjoar
+- Flash de acerto, mudança de cor, o som a acompanhar (WP12)
+- Diferença entre acertar em carne, em escudo e em pedra
+- Como se mostra que o parry saiu, no momento exacto
+
+**Regra final:** quando um jogador disser *"eu carreguei e não fez"*, isso é um defeito deste pacote, nunca falta de perícia dele. Trata-o como bug de justiça.
 
 ---
 
@@ -279,6 +332,25 @@ Foram nomeadas oito: feiticeiro, guerreiro, assassino, batedor, berserker, tanqu
 
 ---
 
+### WP8B — Narrativa, mundo vivo e NPCs · `spec/26-narrativa.md`
+
+**Território virgem: na sessão 1 não se falou disto uma única vez.** Nem história, nem NPCs, nem missões, nem sequer o nome do mundo.
+
+Por isso este pacote é diferente dos outros: **propõe pouco e pergunta muito.** É a área onde é mais fácil escreveres um mundo inteiro que eles nunca pediram, e onde `[FABLE]` sem confirmação vale menos.
+
+- **Que história é esta, e é precisa alguma?** Um souls-like pode viver quase só de ambiente. Diz o mínimo que o jogo precisa para fazer sentido, e para de crescer aí.
+- **Como se conta.** Descrições de item, o próprio cenário, diálogo, nada disso? A escolha muda todo o trabalho de escrita e de arte
+- **NPCs:** existem? vendedores, ferreiro, alguém com quem falar? Ou é o mundo vazio e hostil?
+- **Missões:** existem, ou é tudo exploração?
+- **Lore mínima do que a fatia 1 já tem** — porque é que aquela floresta está assim, quem é o chefe, porque é que está ali. Os nomes provisórios (Brumal, a Toca, Vorgar) precisam de significar alguma coisa ou de ser substituídos
+- **Nome do mundo, e nome próprio do jogo.** "WorldRPGs" é o nome do repositório, não obrigatoriamente o do jogo
+- **Tom.** Na sessão 1 apareceu "um bocado de humor" (10:24, sobre a arte). Isso é uma pista sobre o tom, e é preciso decidir se o mundo é sombrio, se é sombrio com piscadelas, ou se é leve
+- **Idioma do jogo.** Português? Inglês? Os dois? Nunca foi falado, e afecta toda a escrita
+
+Termina com uma lista clara do que ficou por decidir e que precisa de uma sessão gravada só sobre isto.
+
+---
+
 ### WP9 — Progressão, loot e economia · `spec/18-progressao.md`
 
 - Curva de progressão ao longo do jogo
@@ -313,6 +385,22 @@ O sistema mais complexo do jogo, e está descrito numa única frase da gravaçã
 - Menus: principal, pausa, gravar
 - **Configurações completas:** gráficos, áudio, comandos e remapeamento, acessibilidade, opções de rede
 - Esquema de comandos completo, para teclado+rato e para comando
+
+---
+
+### WP11B — Aprender a jogar · `spec/27-aprendizagem.md`
+
+**A Lei 1 obriga a isto, e não é opcional.** Se ganhar depende de perícia, o jogo tem de ensinar essa perícia — senão "habilidade acima de nível" torna-se "sorte acima de nível", que é pior do que grind, porque nem se percebe o que se fez mal.
+
+- **Os primeiros cinco minutos**, batida a batida. O que o jogador faz, o que aprende, por que ordem
+- **Como se ensina a esquiva e o parry sem tutorial escrito.** O WP0 já tem a ideia certa: dois inimigos que são professores — o lanceiro rápido ensina a esquiva, o brutamontes lento e telegrafado ensina o parry. Formaliza isso e leva-o até ao fim
+- **Curva de aprendizagem:** que conceito se introduz em que momento, e como se verifica que ele foi apanhado antes de se introduzir o seguinte
+- **O primeiro erro barato.** O jogador tem de poder falhar cedo, sem custo, e perceber porquê
+- **Como se ensina o co-op** — jogar a dois tem coisas que ninguém descobre sozinho
+- **Onde ver os comandos** a meio do jogo, sem sair do jogo
+- **Recuperação:** o que acontece quando o jogador está preso no mesmo sítio há uma hora. Existe alguma coisa, ou é problema dele?
+
+**O que nunca se faz aqui:** paredes de texto, tirar o controlo ao jogador, marcadores a apontar para onde ir. O género ensina fazendo, e a morte é o professor.
 
 ---
 
@@ -477,7 +565,39 @@ O documento que o Opus 5 vai abrir primeiro, quando começar a construir.
 
 ---
 
+### WP15B — Testar e equilibrar · `spec/28-testes.md`
+
+A Lei 1 é uma afirmação empírica, não uma opinião: *um jogador bom com um personagem fraco vence.* Uma afirmação empírica só vale se houver forma de a testar. Este pacote é essa forma.
+
+- **O protocolo do teste da Lei 1**, escrito ao pormenor: quem joga, com que personagem, quantas tentativas, o que se regista, e a partir de que resultado se declara que o número está errado
+- **O que se mede numa sessão:** tentativas até matar o chefe, tempo por tentativa, onde morreu, que ataque o matou, quanta stamina lhe sobrava. Sem isto, equilibrar é palpite
+- **Que ferramentas o jogo precisa de ter para se medir a si próprio** — registo de mortes, marcação de tempo, sobreposição de hitboxes, comando para saltar direito ao chefe. Isto é trabalho de construção e tem de estar no plano do WP15
+- **Quando um número está errado, como se sabe.** Para cada mecânica principal, diz o sintoma que denuncia o desequilíbrio
+- **O teste com alguém de fora.** O Mateus e o Rico vão conhecer este jogo de cor — são os piores juízes possíveis da curva de aprendizagem. Uma pessoa que nunca o viu a jogar meia hora vale mais do que dez sessões deles. Diz quando fazer isso e o que observar
+- **Teste de desempenho:** o que se mede, com que ferramenta, nas duas máquinas, e **quente** — o valor mínimo abaixo do qual se pára o conteúdo e se optimiza
+- **Ordem de afinação:** que números se mexem primeiro quando algo está mal, para não se andar a mexer em tudo ao mesmo tempo
+
+---
+
+## O que fica fora deste projeto, sempre
+
+Não gastes um parágrafo com nada disto, e se aparecer numa proposta tua, corta:
+
+- Localização e traduções — jogam os dois, em português
+- Anti-cheat, segurança de rede contra abuso, moderação — são dois amigos
+- Monetização, loja, passes, publicação, páginas de loja
+- Consolas, telemóvel, esteira de portáteis
+- Multijogador acima de dois, a não ser que eles o peçam
+- Analítica, telemetria de utilizadores, testes A/B
+- Acessibilidade de mercado — o que faz falta a eles é bem-vindo em WP11; conformidade formal não é objectivo
+
+Isto não é desleixo: é o que os liberta para gastar o esforço todo no combate.
+
+---
+
 ## Fluxo de trabalho
+
+**Antes de começares qualquer pacote, reserva-o em [`COORDENACAO.md`](../COORDENACAO.md)** — `git pull`, confirma que está livre, acrescenta a tua linha, commit e push imediatos. Há dois agentes a escrever nesta spec (tu e o Claude, do lado do Mateus), e a reserva é o que evita os dois fazerem o mesmo pacote sem saber um do outro.
 
 ```bash
 git checkout -b wp0-fatia-1

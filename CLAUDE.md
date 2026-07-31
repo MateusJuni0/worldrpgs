@@ -26,13 +26,13 @@ Estão desenvolvidas em [`spec/00-visao.md`](spec/00-visao.md) e em [`prompts/BR
 1. **Ganha-se com habilidade, não com nível.** O nível reduz a margem de erro, nunca abre uma porta. Nada de gating, nada de grind obrigatório.
 2. **As melhorias dão opções, não números.**
 3. **Qualquer classe pega em qualquer arma.** Diferenciação por atributos e skills, nunca por bloqueio.
-4. **A máquina alvo manda:** PC sem placa gráfica dedicada, ~12 GB de RAM. E queda de fotogramas num souls-like não é feio, é injusto — ataca a lei 1.
+4. **A máquina alvo manda:** as duas medidas — **a do Rico é o alvo (8 GB, Iris Xe integrados, 1080p @ 60 Hz)**, por ser a mais fraca. E queda de fotogramas num souls-like não é feio, é injusto — ataca a lei 1.
 
 ## As etiquetas
 
 | | | |
 |---|---|---|
-| `[DECIDIDO]` | Fechado pelo Mateus e pelo Rico numa gravação | **Ninguém mexe** sem uma decisão nova, registada |
+| `[DECIDIDO]` | Fechado pelo Mateus e pelo Rico numa gravação | **Ninguém mexe** sem uma decisão nova, registada. **Indica sempre a fonte**; se só um dos dois decidiu, fica marcado ⏳ até o outro confirmar |
 | `[SUGERIDO]` | Dito, não confirmado | Pode ser adoptado, virando `[FABLE]` |
 | `[EM ABERTO]` | Por decidir | É trabalho a fazer |
 | `[TENSÃO]` | Duas decisões que não encaixam | Propõe-se, **não se decide** |
@@ -44,7 +44,7 @@ Por ordem de gravidade:
 
 1. **Mexeu num `[DECIDIDO]`?** É o mais grave. Corre `node tools/check-coerencia.mjs --base origin/main`. Se mexeu, o PR tem de dizer qual foi a decisão nova que o substitui. Se não disser, é motivo para não entrar.
 2. **Contradiz alguma das quatro leis?** Sobretudo a 1 e a 4, que são as fáceis de quebrar sem dar por isso.
-3. **Inventou coisas como se fossem deles?** Tudo o que vem do Fable é `[FABLE]`, com justificação. Se aparecer como `[DECIDIDO]` sem timestamp de gravação, está errado.
+3. **Inventou coisas como se fossem deles?** Tudo o que vem do Fable é `[FABLE]`, com justificação. Um `[DECIDIDO]` novo tem de dizer a fonte — e se só um dos dois decidiu, tem de estar marcado que falta o outro. O guarda assinala as linhas promovidas a `[DECIDIDO]` em cada PR.
 4. **Decidiu sozinho uma `[TENSÃO]`?** Não é dele para decidir. Tem de propor e recomendar.
 5. **Adjectivos onde deviam estar números?** "Combate responsivo" não é spec. "0,60 s, invencibilidade dos 0,08 aos 0,38" é.
 6. **Falta a coluna `Fatia 1?`** nos catálogos? É o que trava o escopo.
@@ -57,6 +57,10 @@ Por ordem de gravidade:
 - **Não reescrevas a spec ao rever.** Aponta, não corrijas por cima.
 - **Não trates o Rico por Dioner.**
 
+## Coordenação entre agentes
+
+Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus). **Antes de começar um pacote, reserva-o em [`COORDENACAO.md`](COORDENACAO.md)** com um commit pequeno e imediato; antes de reservar, `git pull` e vê se já está reservado. O desempate é a ordem de chegada à `main`. Numa revisão, um PR que faz um pacote reservado por outro merece esse reparo.
+
 ## Documentos importantes
 
 | | |
@@ -67,3 +71,4 @@ Por ordem de gravidade:
 | [`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) | A raiz do projeto — o que o Fable tem de fazer |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) | As tensões e o risco de escopo |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) | Como o Rico usa isto |
+| [`COORDENACAO.md`](COORDENACAO.md) | Quem está a fazer o quê — reservar antes de começar |

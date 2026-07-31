@@ -61,7 +61,7 @@ Para os dois. Não há intenção de vender, publicar ou fazer disto produto. Is
 
 ## ⚠️ A restrição de hardware
 
-`[DECIDIDO]` (Mateus, 31-07-2026) — **PC sem placa gráfica dedicada.** A máquina do Mateus está medida (i7-1255U, Iris Xe, 16 GB em canal duplo, 1080p @ 60 Hz); **falta a do Rico, e é a que manda** — o orçamento aponta à mais fraca das duas.
+`[DECIDIDO]` (Mateus, 31-07-2026) — **PC sem placa gráfica dedicada.** As duas máquinas estão medidas; **o alvo é a do Rico (8 GB, Iris Xe, 1080p @ 60 Hz)**, por ser a mais fraca. Tabela completa na pergunta 0 de [`99-perguntas-abertas.md`](99-perguntas-abertas.md).
 
 Vem antes de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe. Detalhe e consequências em [`09-tecnico.md`](09-tecnico.md).
 
