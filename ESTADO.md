@@ -29,6 +29,30 @@ O plano antigo ([`spec/23-tecnico.md`](spec/23-tecnico.md), [`spec/24-plano.md`]
 
 ---
 
+### ✅ Feito — e verificado por mim, não pela palavra de ninguém
+
+O código está em [](game/) desde 31-07 (PR #13), com os 8 commits originais preservados por  — confirmei um a um que são ancestrais da .
+
+\
+## 1b. ⭐ O que temos, em números
+
+**Esta tabela é o retrato do projecto.** O que falta não é arquitectura — é **conteúdo**.
+
+| | Temos | A spec promete | Falta |
+|---|---|---|---|
+| Documentos de spec | 47 · 6330 linhas | — | — |
+| Código | 46 ficheiros · 4033 linhas · 717 de dados | — | — |
+| Testes | **130, todos a passar** | — | — |
+| Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
+| **Armas** | **5** | ~120 | **115** |
+| **Armaduras** | **0** | ~30 | **30** |
+| **Anéis** | **0** | ~70 | **70** |
+| **Feitiços** | **3** | catálogo largo | quase tudo |
+| **Inimigos** | **3** | 7 raças + ~61 chefes | quase tudo |
+| Habilidades de classe | 6 | 6 | ✅ |
+
+⭐ **E a instrução que daí sai:** o motor é data-driven —  recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em  **e** em , no mesmo PR.
+
 ## 2. O que está decidido e ainda não está na spec de execução
 
 **~35 decisões, das quais estas são as que mais mudam trabalho já escrito.** A lista completa e por ordem está no [`DECISOES.md`](DECISOES.md).
