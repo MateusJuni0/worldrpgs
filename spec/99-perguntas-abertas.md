@@ -69,7 +69,9 @@ Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecid
 ### 5. Como funcionam os drops em co-op?
 O Rico levantou a pergunta às 05:36 e ficou sem resposta (o áudio do Mateus falhou). Três hipóteses: cópia para cada um, filtrado por classe, ou partilhado com negociação.
 
-*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md). A decisão final continua aqui.*
+*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md).*
+
+**→ Proposta escrita (WP9):** instanciado escolhido e justificado (é a leitura directa do 05:29; filtrar por classe contradiz a Lei 3; partilhado é atrito sem ganho), e o "recompensa menor" do 12:34 em números: quem ajuda no que já matou ganha 40% do XP e só materiais. Ver [`18-progressao.md`](18-progressao.md). **A resposta perdida do Mateus (05:40) tem precedência se for recuperada.**
 → [`06-itens-inventario.md`](06-itens-inventario.md)
 
 ### 6. Os chefes ficam mais duros com dois jogadores?
