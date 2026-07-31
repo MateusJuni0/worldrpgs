@@ -90,7 +90,10 @@ Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil pass
 *Entretanto, a fatia 1 joga com vida do chefe ×1,8 a dois, provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md).*
 → [`07-multiplayer.md`](07-multiplayer.md)
 
-### 7. Como se recupera vida?
+### 7. ~~Como se recupera vida?~~ ✅ RESPONDIDA
+`[DECIDIDO]` (Mateus, 31-07-2026) — **frascos, recarregados nos pontos de descanso.** Não se compram; o custo é o tempo de beber, não dinheiro. Detalhe em [`33-morte-e-almas.md`](33-morte-e-almas.md).
+
+*(a pergunta original, para registo:)*
 Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide toda a tensão da exploração.
 
 **→ Proposta escrita (WP5):** Frasco de Bruma — 3 cargas, 40% de vida por gole, 1,2 s a beber, recarrega ao descansar; ampliações escondidas no mundo em vez de stock comprável (poções finitas convidam ao farm, que a Lei 1 proíbe). Ver [`14-equipamento.md`](14-equipamento.md). Falta o sim dos dois.
@@ -112,7 +115,10 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 ✅ **CONFIRMADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — seis classes na fatia, com o custo aceite de olhos abertos (6 habilidades + 5 conjuntos de animação).
 → [`02-personagem.md`](02-personagem.md)
 
-### 10. O que acontece quando se morre?
+### 10. ~~O que acontece quando se morre?~~ ✅ RESPONDIDA
+`[DECIDIDO]` (Mateus, 31-07-2026) — **perdem-se as almas** (a moeda e a experiência ao mesmo tempo), que ficam no sítio onde se morreu; morrer outra vez antes de as apanhar perde-as de vez. Renasce-se no último ponto de descanso. **Em co-op**: ficas no mundo do parceiro e ele tem **1 minuto** para te ressuscitar, ficando **5 segundos** em cima do corpo. Detalhe em [`33-morte-e-almas.md`](33-morte-e-almas.md).
+
+*(a pergunta original, para registo:)*
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
 
 *Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md), formalizado no WP1 ([`01-combate.md`](01-combate.md), secção Morte, incluindo morte em co-op). O tom definitivo decide-se aqui.*

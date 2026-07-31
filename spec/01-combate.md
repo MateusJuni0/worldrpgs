@@ -184,9 +184,9 @@ O risco conhecido ([`00-visao.md`](00-visao.md)): se atacar de longe for seguro,
 Formaliza o provisório da fatia 1 ([`10-fatia-1.md`](10-fatia-1.md)):
 
 - Renasces na **entrada de Brumal**; depois de descoberta, a **boca da Toca** é o ponto de renascimento (descobrir = checkpoint, sem fogueira nem menu).
-- **Não se perde nada.** Vida, stamina e cargas restauradas; inimigos normais renascem; o chefe faz reset total.
+- ⚠️ **ACTUALIZADO 31-07:** ~~não se perde nada~~ → **perdem-se as almas**, que ficam no sítio onde se morreu. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md), que substitui esta linha. Vida, stamina e cargas continuam restauradas; inimigos normais renascem; o chefe faz reset total.
 - Morrer no Vorgar → nova tentativa em **< 30 s**, também em co-op (critério 4 da fatia).
-- Em co-op: um jogador morto **fica morto até o combate actual acabar** (chefe: até a tentativa acabar; mundo: até o parceiro sair de combate) e renasce ao lado do parceiro. `[FABLE]` *Razão:* reviver a meio do chefe transformava o ×1,8 de vida em corrida de revezamento. *Alternativa descartada:* ressuscitar o parceiro no local — é a pergunta certa para o WP10 revisitar com a rede à frente.
+- ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro fica 5 s em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4, que substitui o provisório de que um jogador morto (chefe: até a tentativa acabar; mundo: até o parceiro sair de combate) e renasce ao lado do parceiro. `[FABLE]` *Razão:* reviver a meio do chefe transformava o ×1,8 de vida em corrida de revezamento. *Alternativa descartada:* ressuscitar o parceiro no local — é a pergunta certa para o WP10 revisitar com a rede à frente.
 
 A **pergunta 10** (perde-se alguma coisa ao morrer — o tom do jogo) **continua deles**. Quando decidirem, muda aqui e o resto da spec herda.
 

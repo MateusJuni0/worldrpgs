@@ -57,6 +57,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 33 | [**Morte e almas**](spec/33-morte-e-almas.md) | Almas, frascos, armadura, ressurreição em co-op | 🟢 fecha as perguntas 7, 10 e 14 |
 | 32 | [**Construção**](spec/32-construcao.md) | **A fase nova** — regras de código, o que muda no fluxo | 🟢 arrancou 31-07 |
 | 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
 | 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
