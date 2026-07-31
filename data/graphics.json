@@ -8,19 +8,19 @@
   "presets": {
     "alto": {
       "shadows": true, "shadow_size": 2048, "shadow_distance": 45.0,
-      "fog_density": 0.030, "view_distance": 95.0,
+      "fog_density": 0.024, "view_distance": 95.0,
       "tree_count": 280, "rock_count": 90,
       "msaa": 0, "render_scale": 1.0
     },
     "medio": {
       "shadows": true, "shadow_size": 1024, "shadow_distance": 30.0,
-      "fog_density": 0.045, "view_distance": 70.0,
+      "fog_density": 0.032, "view_distance": 70.0,
       "tree_count": 200, "rock_count": 60,
       "msaa": 0, "render_scale": 1.0
     },
     "baixo": {
       "shadows": false, "shadow_size": 512, "shadow_distance": 20.0,
-      "fog_density": 0.060, "view_distance": 52.0,
+      "fog_density": 0.048, "view_distance": 52.0,
       "tree_count": 140, "rock_count": 40,
       "msaa": 0, "render_scale": 0.85
     }
@@ -28,11 +28,11 @@
 
   "palette": {
     "_nota": "Cores por ESTADO, nao por beleza. Legibilidade acima de tudo (spec: formas simples e legiveis).",
-    "fog": "#8a94a0",
-    "ground": "#4d5347",
-    "trunk": "#3d3428",
-    "canopy": "#37432f",
-    "rock": "#565b60",
+    "fog": "#8b96a3",
+    "ground": "#535f3e",
+    "trunk": "#4a3b2a",
+    "canopy": "#3f5230",
+    "rock": "#5c6166",
     "player": "#5b8fc7",
     "enemy_idle_default": "#8fa07a",
     "enemy_telegraph": "#e8c33a",

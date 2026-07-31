@@ -121,9 +121,57 @@ func _build_body() -> void:
 	nose.material_override = _material
 	add_child(nose)
 
+	if is_boss:
+		_dress_boss(height, body_radius)
+
 	collision_layer = 4
 	collision_mask = 1
 	add_to_group("enemies")
+
+
+## Silhueta de chefe: chifres, ombreiras e o machadao. Material proprio e escuro
+## que NAO muda com o estado — o corpo continua a ser o semaforo, a silhueta e
+## so identidade. Um chefe tem de se reconhecer em contraluz (regra souls).
+func _dress_boss(height: float, radius: float) -> void:
+	var dark := StandardMaterial3D.new()
+	dark.albedo_color = Color(0.16, 0.14, 0.13)
+	dark.roughness = 1.0
+	dark.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+
+	for side in [-1.0, 1.0]:
+		var horn := MeshInstance3D.new()
+		var hm := BoxMesh.new()
+		hm.size = Vector3(0.16, 0.75, 0.16)
+		horn.mesh = hm
+		horn.position = Vector3(0.34 * side, height + 0.28, 0)
+		horn.rotation_degrees = Vector3(0, 0, -24.0 * side)
+		horn.material_override = dark
+		add_child(horn)
+
+		var pauldron := MeshInstance3D.new()
+		var pm := BoxMesh.new()
+		pm.size = Vector3(0.55, 0.28, 0.72)
+		pauldron.mesh = pm
+		pauldron.position = Vector3((radius + 0.18) * side, height * 0.78, 0)
+		pauldron.material_override = dark
+		add_child(pauldron)
+
+	var haft := MeshInstance3D.new()
+	var haft_m := BoxMesh.new()
+	haft_m.size = Vector3(0.12, 2.1, 0.12)
+	haft.mesh = haft_m
+	haft.position = Vector3(radius + 0.45, height * 0.55, 0.1)
+	haft.rotation_degrees = Vector3(0, 0, 12)
+	haft.material_override = dark
+	add_child(haft)
+
+	var head_blade := MeshInstance3D.new()
+	var blade_m := BoxMesh.new()
+	blade_m.size = Vector3(0.55, 0.6, 0.14)
+	head_blade.mesh = blade_m
+	head_blade.position = Vector3(radius + 0.68, height * 0.55 + 0.95, 0.1)
+	head_blade.material_override = dark
+	add_child(head_blade)
 
 
 func _make_patrol_route() -> void:

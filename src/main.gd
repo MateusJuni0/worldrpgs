@@ -31,6 +31,12 @@ func _ready() -> void:
 	_build_hud()
 	_populate()
 
+	if "--photos" in OS.get_cmdline_user_args():
+		var tour: Node = load("res://src/tools/photo_tour.gd").new()
+		add_child(tour)
+		tour.run(self)
+		return
+
 	if not Bench.is_benchmarking():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:

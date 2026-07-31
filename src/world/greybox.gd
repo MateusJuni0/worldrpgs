@@ -41,19 +41,32 @@ func _build_environment() -> void:
 	var env := Environment.new()
 	var fog_colour := _colour("fog")
 
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = fog_colour
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = fog_colour.lightened(0.05)
-	env.ambient_light_energy = 0.55
+	# Ceu em gradiente (ProceduralSky e quase gratis): horizonte claro a fundir
+	# com a nevoa, zenite escuro — profundidade sem custar um shader proprio.
+	var sky_mat := ProceduralSkyMaterial.new()
+	sky_mat.sky_top_color = Color("#2c3644")
+	sky_mat.sky_horizon_color = fog_colour.lightened(0.10)
+	sky_mat.ground_bottom_color = Color("#39402f")
+	sky_mat.ground_horizon_color = fog_colour
+	sky_mat.sun_angle_max = 25.0
+	sky_mat.sun_curve = 0.12
+	var sky := Sky.new()
+	sky.sky_material = sky_mat
+	env.background_mode = Environment.BG_SKY
+	env.sky = sky
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_energy = 0.75
 
 	# Nevoa de profundidade simples. NAO volumetrica — a volumetrica e cara de mais
 	# para graficos integrados e nao acrescenta nada a leitura do combate.
+	# aerial_perspective funde a distancia com o CEU em vez de com uma cor
+	# chapada — e o que separa "nevoa de jogo antigo" de atmosfera.
 	env.fog_enabled = true
 	env.fog_light_color = fog_colour
 	env.fog_light_energy = 1.0
 	env.fog_density = float(preset.get("fog_density", 0.045))
-	env.fog_sky_affect = 0.0
+	env.fog_aerial_perspective = 0.72
+	env.fog_sky_affect = 0.18
 
 	# Tudo o que e caro fica desligado, explicitamente.
 	env.ssao_enabled = false
@@ -71,9 +84,11 @@ func _build_environment() -> void:
 func _build_light() -> void:
 	var sun := DirectionalLight3D.new()
 	sun.name = "Sun"
-	sun.rotation_degrees = Vector3(-52, 38, 0)
-	sun.light_energy = 0.9
-	sun.light_color = Color(1.0, 0.97, 0.92)
+	# Sol baixo e quente (fim de tarde) contra nevoa fria — o contraste de
+	# temperatura e o truque de atmosfera mais barato que existe.
+	sun.rotation_degrees = Vector3(-38, 42, 0)
+	sun.light_energy = 1.15
+	sun.light_color = Color(1.0, 0.92, 0.80)
 	sun.shadow_enabled = bool(preset.get("shadows", true))
 	sun.directional_shadow_max_distance = float(preset.get("shadow_distance", 30.0))
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL  # 1 cascata = o mais barato
@@ -141,19 +156,32 @@ func _add_block(centre: Vector3, size: Vector3, colour_key: String, shadows := t
 
 
 ## Muitas copias da mesma malha num so draw call.
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], colour_key: String, shadows: bool) -> void:
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], colour_key: String, shadows: bool, variation := 0.0) -> void:
 	if transforms.is_empty():
 		return
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = mesh
+	mm.use_colors = variation > 0.0
 	mm.instance_count = transforms.size()
 	for i in transforms.size():
 		mm.set_instance_transform(i, transforms[i])
+		if variation > 0.0:
+			# Tinta por instancia (gratis no MultiMesh): quebra o "carimbo" de
+			# 200 arvores iguais sem acrescentar um unico poligono.
+			var v := 1.0 + _rng.randf_range(-variation, variation)
+			mm.set_instance_color(i, Color(
+				v * (1.0 + _rng.randf_range(-0.05, 0.05)),
+				v,
+				v * (1.0 + _rng.randf_range(-0.04, 0.04))))
+
+	var mat := _material(colour_key)
+	if variation > 0.0:
+		mat.vertex_color_use_as_albedo = true
 
 	var mmi := MultiMeshInstance3D.new()
 	mmi.multimesh = mm
-	mmi.material_override = _material(colour_key)
+	mmi.material_override = mat
 	mmi.cast_shadow = (GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadows
 		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 	add_child(mmi)
@@ -270,9 +298,9 @@ func _scatter_forest() -> void:
 
 	add_child(trunk_bodies)
 	# As copas nao lancam sombra: e a maior poupanca da cena e quase nao se nota com nevoa.
-	_add_multimesh(trunk_mesh, trunks, "trunk", bool(preset.get("shadows", true)))
-	_add_multimesh(canopy_mesh, canopies, "canopy", false)
-	_add_multimesh(rock_mesh, rocks, "rock", false)
+	_add_multimesh(trunk_mesh, trunks, "trunk", bool(preset.get("shadows", true)), 0.14)
+	_add_multimesh(canopy_mesh, canopies, "canopy", false, 0.22)
+	_add_multimesh(rock_mesh, rocks, "rock", false, 0.12)
 
 
 ## A Toca: entrada escondida + 3 salas + arena, tudo em blocos.
@@ -301,3 +329,45 @@ func _build_lair() -> void:
 		var a := TAU * float(i) / 20.0
 		_add_block(c + Vector3(sin(a) * radius, 2.5, cos(a) * radius),
 			Vector3(5.5, 5, 2.0).rotated(Vector3.UP, -a).abs(), "rock")
+
+	# Tochas: 4 na arena + 1 na fenda de entrada. Luz quente pontual contra a
+	# nevoa fria — mood de souls por 5 luzes omni sem sombra (barato em Iris Xe).
+	# A da entrada tambem GUIA: luz chama o jogador, nao setas.
+	var torch_spots: Array[Vector3] = [
+		c + Vector3(9, 0, 9), c + Vector3(-9, 0, 9),
+		c + Vector3(9, 0, -9), c + Vector3(-9, 0, -9),
+		e + Vector3(-1.2, 0, 0.8),
+	]
+	for spot in torch_spots:
+		_add_torch(spot)
+
+
+func _add_torch(at: Vector3) -> void:
+	var post := MeshInstance3D.new()
+	var pm := BoxMesh.new()
+	pm.size = Vector3(0.16, 2.2, 0.16)
+	post.mesh = pm
+	post.position = at + Vector3(0, 1.1, 0)
+	post.material_override = _material("trunk")
+	add_child(post)
+
+	var flame := MeshInstance3D.new()
+	var fm := BoxMesh.new()
+	fm.size = Vector3(0.30, 0.42, 0.30)
+	flame.mesh = fm
+	var fmat := StandardMaterial3D.new()
+	fmat.emission_enabled = true
+	fmat.emission = Color(1.0, 0.62, 0.22)
+	fmat.emission_energy_multiplier = 2.6
+	fmat.albedo_color = Color(1.0, 0.75, 0.35)
+	flame.material_override = fmat
+	flame.position = at + Vector3(0, 2.4, 0)
+	add_child(flame)
+
+	var light := OmniLight3D.new()
+	light.light_color = Color(1.0, 0.66, 0.30)
+	light.light_energy = 2.4
+	light.omni_range = 11.0
+	light.shadow_enabled = false  # sombras de omni sao caras; a luz chega
+	light.position = at + Vector3(0, 2.5, 0)
+	add_child(light)

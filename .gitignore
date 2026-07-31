@@ -20,3 +20,6 @@ desktop.ini
 
 # Resultados brutos de benchmark (o resumo fica em PERF.md, que vai para git)
 perf-raw/
+
+# Capturas do modo fotografia — os olhos do loop, nao vao para o git
+captures/
