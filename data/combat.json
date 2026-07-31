@@ -1,0 +1,127 @@
+{
+  "_fonte": "spec/01-combate.md (WP1). Todos os valores sao lei. Nao alterar sem mudar a spec primeiro.",
+  "_nota_frames": "Tempos em segundos derivam de 60 fps de referencia. A logica de combate corre em _physics_process a 60 Hz fixos, por isso frame == tick de fisica.",
+
+  "reference_fps": 60,
+
+  "movement": {
+    "walk_speed": 3.0,
+    "run_speed": 5.0,
+    "sprint_speed": 7.0,
+    "sprint_stamina_per_second": 8.0,
+    "strafe_speed": 4.0,
+    "cast_move_multiplier": 0.40,
+    "_nota": "Correr e gratis e mais rapido que qualquer inimigo comum em patrulha (tecto 5.0 m/s no WP6). Teste da Lei 1."
+  },
+
+  "dodge": {
+    "duration": 0.60,
+    "duration_frames": 36,
+    "iframe_start": 0.08,
+    "iframe_end": 0.38,
+    "iframe_start_frame": 5,
+    "iframe_end_frame": 23,
+    "stamina_cost": 25.0,
+    "distance": 3.5,
+    "directions": 8,
+    "cancel_from": 0.45,
+    "cancel_from_frame": 27,
+    "cancel_into": ["light_attack", "block", "dodge"]
+  },
+
+  "parry": {
+    "startup_frames": 4,
+    "active_frames": 8,
+    "whiff_recovery_frames": 40,
+    "stamina_cost": 10.0,
+    "broken_posture_duration": 2.0,
+    "riposte_mv": 2.5,
+    "riposte_duration": 0.9,
+    "riposte_has_iframes": true,
+    "weapons_that_parry": ["dagger", "shield"],
+    "_nota": "133 ms de janela contra 667 ms de castigo. Nao escala com nada."
+  },
+
+  "block": {
+    "shield_physical_absorb": 1.0,
+    "shield_magic_absorb": 0.5,
+    "onehand_absorb": 0.5,
+    "onehand_cost_multiplier": 1.5,
+    "stamina_per_blow": 15.0,
+    "blow_weight_light": 1.0,
+    "blow_weight_heavy": 1.8,
+    "regen_while_blocking": 10.0,
+    "guard_break_duration": 1.5
+  },
+
+  "stamina": {
+    "_nota_wp2": "base 100 e a referencia do WP1 e bate certo com o WP2: STA = 80 + 2 x Stamina, com Stamina 10 = 100. Em jogo o maximo vem dos atributos.",
+    "base": 100.0,
+    "regen_per_second": 40.0,
+    "regen_delay": 0.8,
+    "regen_while_blocking": 10.0,
+    "hysteresis": 15.0,
+    "_nota": "A zero: sem accoes ofensivas/defensivas ate recuperar 15. Andar e correr sempre possiveis; sprint nao."
+  },
+
+  "hitstun": {
+    "light": 0.4,
+    "heavy": 0.7
+  },
+
+  "poise": {
+    "player_poise": 0.0,
+    "posture_damage_per_mv": 10.0,
+    "shield_bash_posture_multiplier": 2.0,
+    "stagger_duration": 1.2,
+    "_nota": "Jogador: poise zero por defeito. Excepcoes: i-frames (esquiva, riposte) e hiper-armadura (pesado do machadao, Egide)."
+  },
+
+  "lock_on": {
+    "engage_range": 18.0,
+    "break_range": 25.0,
+    "los_grace": 1.5,
+    "auto_reacquire": false
+  },
+
+  "state_machine": {
+    "max_stuck_duration": 1.5,
+    "interrupt_priority": ["death", "guard_break", "stagger", "hitstun", "other"],
+    "_nota": "O jogador nunca fica preso num estado por mais de 1,5 s."
+  },
+
+  "anti_kite": {
+    "seconds_without_reaching": 4.0
+  },
+
+  "attack_rules": {
+    "combo_window_fraction_of_recovery": 0.40,
+    "cancel_threshold_fraction_of_recovery": 0.60,
+    "heavy_cancelable": false,
+    "light_cancel_into": ["dodge", "block"],
+    "_nota": "A janela de encadear abre nos ultimos 40% da recuperacao. A recuperacao de um leve e cancelavel em esquiva ou bloqueio a partir de 60% dela. O pesado nao se cancela (o carregado do machadao pode soltar cedo). Ataque nunca cancela ataque fora da janela de combo."
+  },
+
+  "damage_formula": {
+    "_movido": "A formula de dano, os atributos e as curvas dos inimigos passaram para data/attributes.json quando a spec ganhou spec/11-formulas.md (WP2). Este ficheiro (WP1) fixa os MV; o WP2 fixa o resto.",
+    "_ver": "data/attributes.json -> damage"
+  },
+
+  "player": {
+    "_nota": "PV, stamina maxima e DEF do jogador derivam dos atributos (WP2). O Guerreiro nivel 1 da 420 PV / 100 STA / DEF 20 — o exemplo resolvido da spec.",
+    "capsule_height": 1.8,
+    "capsule_radius": 0.35,
+    "_proto_capsula": "altura 1,8 m e raio 0,35 m sao [PROTO] — a spec nao os cobre. Ver DECISOES-PROTOTIPO.md D1."
+  },
+
+  "death": {
+    "_fonte": "spec/01-combate.md seccao Morte + spec/10-fatia-1.md",
+    "lose_nothing": true,
+    "restore_health": true,
+    "restore_stamina": true,
+    "restore_charges": true,
+    "boss_full_reset": true,
+    "respawn_fade_seconds": 1.2,
+    "_alvo": "nova tentativa no chefe em < 30 s"
+  }
+}

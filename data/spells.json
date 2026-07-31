@@ -1,0 +1,63 @@
+{
+  "_fonte": "spec/01-combate.md (Combate a distancia — tempos de conjuracao) + spec/10-fatia-1.md (3 magias na fatia) + spec/11-formulas.md (cargas TOTAIS = 4 + floor(Sab/4), escala pela Sabedoria, peso forte).",
+  "_lei_2": "Tres verbos diferentes, nao tres escaloes de dano: projectil, area, barreira.",
+
+  "_rules": {
+    "move_multiplier_while_casting": 0.40,
+    "interrupt_spends_charge": true,
+    "charges_regen_in_combat": false,
+    "charges_restored_on_death": true,
+    "shared_charge_pool": true,
+    "scaling_attribute": "sabedoria",
+    "scale_weight": "forte",
+    "_nota": "Levar dano durante a conjuracao interrompe E gasta a carga. Conjurar na cara de um inimigo tem de ser uma aposta.",
+    "_nota_pool": "O WP2 diz 'cargas de magia TOTAIS' — uma bolsa so, partilhada pelas tres magias. Cada magia gasta charge_cost dessa bolsa."
+  },
+
+  "dardo": {
+    "display_name": "Dardo",
+    "verb": "projectil",
+    "cast_time": 0.8,
+    "charge_cost": 1,
+    "type": "projectile",
+    "mv": 1.0,
+    "base_damage": 34,
+    "damage_type": "magico",
+    "speed": 22.0,
+    "max_range": 30.0,
+    "weight": "light",
+    "_proto": "charge_cost, base_damage e speed sao [PROTO] — a spec so fixa o tempo de conjuracao (0,8 s). Ver DECISOES-PROTOTIPO.md D7."
+  },
+
+  "ruina": {
+    "display_name": "Ruina",
+    "verb": "area",
+    "cast_time": 1.6,
+    "charge_cost": 2,
+    "type": "aoe",
+    "mv": 1.0,
+    "base_damage": 60,
+    "damage_type": "magico",
+    "radius": 4.0,
+    "max_range": 14.0,
+    "telegraph_seconds": 0.6,
+    "weight": "heavy",
+    "_proto": "charge_cost, base_damage e raio sao [PROTO] — a spec so fixa 1,6 s. Ver DECISOES-PROTOTIPO.md D7."
+  },
+
+  "egide": {
+    "display_name": "Egide",
+    "verb": "barreira",
+    "cast_time": 0.5,
+    "charge_cost": 1,
+    "type": "barrier",
+    "mv": 0.0,
+    "base_damage": 0,
+    "duration": 6.0,
+    "absorb": 90,
+    "hyper_armor_while_casting": true,
+    "_proto": "charge_cost, duracao e absorcao sao [PROTO] — a spec fixa 0,5 s e a hiper-armadura. Ver DECISOES-PROTOTIPO.md D7."
+  },
+
+  "order": ["dardo", "ruina", "egide"]
+}

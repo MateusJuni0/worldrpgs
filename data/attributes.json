@@ -1,0 +1,47 @@
+{
+  "_fonte": "spec/11-formulas.md (WP2). Lei.",
+  "_lei_1": "A regeneracao de stamina, as janelas de esquiva/parry e a velocidade NUNCA escalam com atributos. O nivel compra margem (PV, STA, defesa, cargas), nunca compra as ferramentas.",
+
+  "base_value": 8,
+  "class_bonus_points": 14,
+  "max_per_attribute": 50,
+  "soft_cap": 30,
+
+  "level": {
+    "points_per_level": 1,
+    "max_level": 100,
+    "slice_range": [1, 10],
+    "xp_formula": "XP = 80 + 20*n",
+    "xp_base": 80,
+    "xp_per_level": 20
+  },
+
+  "formulas": {
+    "health":  { "_f": "PV = 200 + 22*Vida (acima do soft cap: +8/ponto)", "base": 200, "per_point": 22, "per_point_after_soft_cap": 8 },
+    "stamina": { "_f": "STA = 80 + 2*Stamina", "base": 80, "per_point": 2, "regen_scales": false },
+    "defense": { "_f": "DEF = 2*Constituicao, nunca acima de 40% do dano do golpe", "per_point": 2, "max_fraction_of_damage": 0.40 },
+    "charges": { "_f": "cargas TOTAIS = 4 + floor(Sabedoria/4)", "base": 4, "points_per_charge": 4 }
+  },
+
+  "damage": {
+    "_f": "dano = MV * dano_base_da_arma * escala - DEF_do_alvo",
+    "_f_escala": "escala = 1 + 0.015 * (atributo_relevante - 8) * peso_da_escala",
+    "scale_coefficient": 0.015,
+    "scale_weights": { "forte": 1.0, "medio": 0.6, "fraco": 0.3 },
+    "min_damage_fraction_after_defense": 0.60,
+    "below_requirement_damage_multiplier": 0.60,
+    "below_requirement_scale": 1.0
+  },
+
+  "attribute_ids": ["vida", "stamina", "constituicao", "sabedoria", "forca", "destreza"],
+
+  "classes": {
+    "_nota": "Base 8 em tudo, +14 pontos por classe. As distribuicoes sao [PROTO] (o WP3 nao existe) EXCEPTO o Guerreiro, que esta ancorado no exemplo resolvido de spec/11-formulas.md (For 12, Vida 10, Con 10, Stamina 10 -> 420 PV, DEF 20, STA 100).",
+    "warrior":   { "display_name": "Guerreiro",  "vida": 10, "stamina": 10, "constituicao": 10, "sabedoria": 10, "forca": 12, "destreza": 10 },
+    "sorcerer":  { "display_name": "Feiticeiro", "vida": 9,  "stamina": 9,  "constituicao": 9,  "sabedoria": 18, "forca": 8,  "destreza": 9 },
+    "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 14, "sabedoria": 8,  "forca": 10, "destreza": 8 },
+    "assassin":  { "display_name": "Assassino",  "vida": 9,  "stamina": 12, "constituicao": 9,  "sabedoria": 9,  "forca": 8,  "destreza": 15 },
+    "berserker": { "display_name": "Berserker",  "vida": 10, "stamina": 11, "constituicao": 9,  "sabedoria": 8,  "forca": 16, "destreza": 8 },
+    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 11, "sabedoria": 10, "forca": 11, "destreza": 9 }
+  }
+}
