@@ -29,6 +29,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
 | 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟠 proposta `[FABLE]` (WP0), aguarda Mateus + Rico |
 | 11 | [Fórmulas](spec/11-formulas.md) | Atributos, nível, fórmula de dano, curva dos inimigos, tecto da Lei 1 | 🟢 proposta `[FABLE]` (WP2), aguarda Mateus + Rico |
+| 12 | [Classes](spec/12-classes.md) | As 6 da fatia, habilidades-verbo, skills, tensão das evoluções | 🟢 proposta `[FABLE]` (WP3), aguarda Mateus + Rico |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado

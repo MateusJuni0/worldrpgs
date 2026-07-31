@@ -50,7 +50,9 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 
 ### 3. As evoluções de classe dão poder ou dão opções?
 Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar vantagem — que é o que o pilar 1 recusa. O próprio Rico já apontou para o lado certo às 09:21 ("não aumentar o dano, uma magia diferente"). Falta confirmar como regra.
-→ [`02-personagem.md`](02-personagem.md)
+
+*Formalizada como `[TENSÃO]` com duas opções e recomendação (A: verbos por feito, não números por nível) em [`12-classes.md`](12-classes.md) (WP3). A decisão continua a ser dos dois.*
+→ [`02-personagem.md`](02-personagem.md), [`12-classes.md`](12-classes.md)
 
 ### 4. "Mapa grande" é quanto?
 Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecido como comparação — não dá para dimensionar mais nada.
