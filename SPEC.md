@@ -18,7 +18,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
 | 00 | [Visão](spec/00-visao.md) | Pitch, os três pilares, referências, risco de escopo | 🟢 base sólida |
-| 01 | [Combate](spec/01-combate.md) | Esquiva, parry, stamina, armas | 🟡 direcção clara, números por decidir |
+| 01 | [Combate](spec/01-combate.md) | Esquiva, parry, stamina, armas | 🟢 números completos `[FABLE]` (WP1), aguarda Mateus + Rico |
 | 02 | [Personagem](spec/02-personagem.md) | Atributos, classes, evoluções, skills | 🟡 muito nomeado, pouco definido |
 | 03 | [Magia](spec/03-magia.md) | Bem e mal, usos, encantamentos | 🟡 conceito sem mecânica |
 | 04 | [Inimigos e chefes](spec/04-inimigos-chefes.md) | Raças, hierarquia de chefes | 🟡 quantidades por acertar |
