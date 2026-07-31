@@ -24,11 +24,46 @@ Adoptamos a estrutura de cinco fases da referência, que é mais precisa do que 
 
 A referência usa ≥ 340 ms. **Nós usamos 500 ms**, e de propósito: a reacção humana é ~250 ms de processamento, e um jogo que dá 340 ms exige quase perfeição. Meio segundo dá margem para **ler, decidir e agir** — que é o que a Lei 1 promete.
 
-**Regra B — a hitbox vive 3 a 6 frames.** Nunca mais.
+**Regra B — a hitbox vive 3 a 6 frames.** ⚠️ **CORRIGIDA a 01-08 — ver §1b.**
 
 Com a esquiva a dar **300 ms de invencibilidade** (WP1), uma janela de golpe de 50–100 ms cabe folgadamente lá dentro. **Isto é o que torna a esquiva verdadeira:** um rolamento bem cronometrado cobre o golpe inteiro com margem de 3×.
 
-⚠️ **Hitboxes que ficam vivas 20 frames são a causa nº1 de "eu esquivei e levei na mesma"** — a hitbox continua lá depois de a invencibilidade acabar. Nenhum ataque deste jogo faz isso.
+⚠️ **Hitboxes que ficam vivas 20 frames são a causa nº1 de "eu esquivei e levei na mesma"** — a hitbox continua lá depois de a invencibilidade acabar. **Isto continua verdadeiro para golpes de arma.**
+
+---
+
+## 1b. ⚠️ CORRECÇÃO (01-08) — a regra B era regra de espada aplicada a tudo
+
+**Origem:** [auditoria independente do Codex](../docs/AUDITORIA-CODEX-2026-08-01.md), erro 2. **É erro meu.**
+
+Escrevi *"3 a 6 frames, nunca mais"* a pensar em golpes de arma. ⚠️ **E isso não serve para investidas, sopros, feixes, poças, lâminas giratórias nem perigos persistentes.** Um sopro de fogo de 2 segundos com hitbox de 4 frames obriga a **fingir que o fogo desapareceu enquanto se vê que continua lá** — que é exactamente a mentira que este documento existe para proibir.
+
+### ⭐ A regra nova, e é mais honesta do que a antiga
+
+> **A hitbox vive exactamente enquanto o efeito se vê. Nem mais, nem menos.**
+
+**Três tipos de contacto, e cada ataque declara o seu:**
+
+| Tipo | O que é | Quanto tempo viva | Regra que a mantém justa |
+|---|---|---|---|
+| ⭐ **Instantâneo** | um golpe de arma, um tiro | **3–6 frames** *(a regra antiga, agora com âmbito)* | cabe dentro dos 300 ms de esquiva |
+| ⭐ **Volume móvel** | uma investida, um corpo a rolar, um salto | **enquanto se move** | ⚠️ **cada alvo é atingido uma vez por passagem** — nunca duas |
+| ⭐ **Volume persistente** | uma poça, um sopro, um feixe, chão a arder | **enquanto se vê** | ⚠️ **dano por intervalos declarados** (ex.: 1×/0,5 s), e **entrar ou sair é escolha do jogador** |
+
+### ⭐ Porque é que isto é melhor e não pior
+
+**A regra antiga protegia o jogador por proibição. A nova protege-o por transparência.**
+
+| | Regra antiga | ⭐ Regra nova |
+|---|---|---|
+| Um sopro de 2 s | impossível de fazer honestamente | **existe, e vê-se onde está** |
+| Como se escapa | rolar | ⭐ **sair da área — e a área vê-se** |
+| Pode apanhar-te duas vezes? | — | **não sem avisar: o intervalo é declarado** |
+| A invencibilidade da esquiva chega? | sim, sempre | ⚠️ **não, e é de propósito** — de um sopro **anda-se para fora**, não se rola para dentro |
+
+⚠️ **A linha da última coluna é a decisão importante:** um volume persistente **não se resolve com esquiva**. Isso é bom — é o que impede a esquiva de ser a resposta a tudo, que era o outro erro que a auditoria apanhou (§2b).
+
+`→WP6`/`→WP7` — **coluna obrigatória em toda a ficha de ataque: o tipo de contacto.**
 
 ---
 
@@ -59,7 +94,47 @@ Muitos jogos deixam o inimigo **rodar em direcção ao jogador durante o ataque*
 | 3 — Golpe | **0°/s** — **comprometido, ponto final** |
 | 4–5 | 0°/s até ao fim do regresso |
 
-**A partir do fim da fase 1, o ataque está comprometido com a direcção.** Rolar para o lado funciona **sempre**, porque o golpe já não te pode seguir.
+**A partir do fim da fase 1, o ataque está comprometido com a direcção.** ⚠️ **A frase que estava aqui — *"rolar para o lado funciona sempre"* — foi RETIRADA. Ver §2b.**
+
+---
+
+### 2b. ⚠️ CORRECÇÃO (01-08) — "funciona sempre" dava ao jogo uma resposta universal
+
+**Origem:** [auditoria do Codex](../docs/AUDITORIA-CODEX-2026-08-01.md), erro 1. **É erro meu, e é o pior deste documento.**
+
+Escrevi *"rolar para o lado funciona sempre"* a querer garantir justiça. ⚠️ **O efeito é o contrário do que eu queria:** transforma **centenas de ataques numa pergunta com uma única resposta**. Se a mesma tecla resolve tudo, o combate deixa de ser leitura e passa a ser reflexo.
+
+E a referência **não faz isso**: uns ataques acompanham mais tempo, outros apanham quem rola cedo, outros pedem rolar **para dentro**, outros pedem **afastar-se**, outros pedem só **andar**.
+
+### ⭐ A regra nova
+
+> **Cada ataque declara três coisas: o momento de compromisso, a curva de seguimento, e o vector de fuga.**
+>
+> ⚠️ **Nunca se escreve "funciona sempre" para uma direcção.**
+
+**Os vectores de fuga possíveis** — cada ataque escolhe **um ou dois**, nunca *"qualquer"*:
+
+| Vector | Quando é a resposta | Exemplo de ataque |
+|---|---|---|
+| **Sair da linha** | golpe recto, projéctil | estocada · dardo |
+| ⭐ **Rolar para dentro** | varrimento largo com centro seguro | ceifada de foice |
+| **Rolar para fora** | ataque em área centrado nele | pisada · nova |
+| ⭐ **Afastar-se** | golpe de alcance curto e muito dano | agarrão · pancada |
+| ⭐ **Aproximar-se** | ataque desenhado para média distância | investida · tiro |
+| ⭐ **Quebrar a visão** | ⚠️ **perseguidores** — não se sai da linha ([`55`](55-formas-de-feitico.md) §4) | feitiço que segue |
+| **Sair da área** | volume persistente (§1b) | sopro · poça |
+| **Aparar** | golpe único, telegrafado, de arma | golpe pesado |
+| **Bloquear e aguentar** | golpe rápido em cadeia | sequência de leves |
+
+### ⭐ E a regra que impede isto de virar adivinhação
+
+> ⚠️ **O vector de fuga tem de ser legível na animação.** Um varrimento largo diz *"sai"*. Um golpe descendente diz *"passa ao lado"*. Um agarrão diz *"afasta-te"*.
+
+**Se o jogador não consegue inferir o vector olhando para a pose, o ataque está mal animado — não está difícil.** É a cláusula 4 aplicada ao movimento.
+
+⭐ **E é assim que se ganha profundidade sem ganhar injustiça:** continuam a existir 0,50 s de aviso e continua a haver **sempre** uma resposta que funciona. **O que muda é que o jogador tem de descobrir qual é** — e isso é o jogo.
+
+`→WP6`/`→WP7` — **a coluna "como se escapa" passa a nomear o vector**, e continua a nunca poder dizer *"não dá"*.
 
 ### Cláusula 3 — a invencibilidade não escala com nada
 
@@ -133,7 +208,15 @@ O molde: **um que se apara, um que só se esquiva, e um que obriga a mexer o pé
 
 O **círculo de agressão** do WP6 (máximo 2 a atacar) já resolve a maior parte. Duas regras a acrescentar:
 
-- **Dois inimigos nunca entram na fase 3 no mesmo frame.** Há sempre ≥ 0,20 s entre golpes activos — senão é impossível de esquivar, e impossível não é difícil
+- **Dois inimigos nunca entram na fase 3 no mesmo frame.** ⚠️ **O intervalo de 0,20 s estava mal medido — ver abaixo**
+
+⚠️ **CORRECÇÃO (01-08, [auditoria](../docs/AUDITORIA-CODEX-2026-08-01.md) erro 3):** eu contei o intervalo a partir de um **relógio global**. Mas o jogador que leva um golpe fica em **hit-stun 0,4 a 0,7 s** — logo **o segundo golpe chega durante a recuperação forçada do primeiro**, e não há nada a fazer. Isso é *stunlock*, e é a definição de impossível.
+
+> ⭐ **A regra nova: o intervalo conta-se a partir do momento em que o jogador PODE AGIR outra vez**, não do relógio.
+>
+> Ou seja: o segundo inimigo só entra na fase 3 quando o primeiro golpe já libertou o jogador **e passaram ≥ 0,20 s**.
+
+⚠️ **E a segunda parte, que também é da auditoria:** com um tecto de dois atacantes, os outros **ficam a orbitar à espera da vez** — e vê-se, e parece uma fila. **A correcção não é deixar atacar mais; é deixá-los pressionar sem atacar** — fechar ângulos, avançar, ameaçar. **O que se garante é uma rota de fuga**, não um número de agressores. `→WP6`
 - **Ataques de fora do ecrã anunciam-se por som** ([`29-perspectiva.md`](29-perspectiva.md)) — em primeira pessoa não há visão periférica
 
 ---
