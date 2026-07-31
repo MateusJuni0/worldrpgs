@@ -2,7 +2,7 @@
 
 > **Fable, 31-07-2026.** Este documento existe por uma razão registada na spec: o `99` diz, sobre a pergunta 0b, que *"a medição não está sustentada no repositório — não há protótipo, log nem artefacto que a acompanhe"*. A ressalva era justa. **Os artefactos estão agora em [`medicoes/`](../medicoes/)** — os JSON crus que a ferramenta escreveu, sem edição.
 >
-> O protótipo em si continua **fora deste repositório**, por decisão do Mateus (aqui não entra código). Vive local, em `worldrpgs-game`, com o seu próprio historial. O que sobe aqui são **dados e conclusões**.
+> ~~O protótipo em si continua **fora deste repositório**~~ — **superado a 31-07, 17:41.** O Mateus reverteu a decisão do "zero código", e com razão: *"não há cópia, não há histórico partilhado, e eu não consigo rever uma linha do que ele escreveu"*. **O protótipo vive agora em [`game/`](../game/)**, com os 8 commits originais preservados. Ver [`memory/decisions.md`](../memory/decisions.md).
 
 ## 1. As medições, com prova
 

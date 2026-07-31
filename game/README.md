@@ -1,6 +1,6 @@
 # WorldRPGs — protótipo da fatia 1
 
-Protótipo jogável do combate e da zona descritos em [`worldrpgs/spec`](../OneDrive/Área%20de%20Trabalho/Nova%20claude/worldrpgs).
+Protótipo jogável do combate e da zona descritos em [`spec/`](../spec).
 Construído numa noite. **Isto é código; a spec é lei** — todos os números vêm de lá.
 
 > **Motor:** Godot **4.7.1-stable** (oficial, `winget install --id=GodotEngine.GodotEngine`)

@@ -1,7 +1,7 @@
 # PERF — a Lei 4 com números
 
 > Este ficheiro responde à pergunta mais cara da spec, a `[TENSÃO]` **0b** de
-> [`spec/09-tecnico.md`](../OneDrive/Área%20de%20Trabalho/Nova%20claude/worldrpgs/spec/09-tecnico.md):
+> [`spec/09-tecnico.md`](../spec/09-tecnico.md):
 > *o 3D aguenta-se neste hardware?*
 >
 > A spec pedia que se decidisse **com dados, não por palpite**. Aqui estão os dados.
