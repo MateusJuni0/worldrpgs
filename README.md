@@ -28,6 +28,7 @@ A spec cresce a partir das conversas. Nada entra aqui por invenção — cada de
 
 ```
 CLAUDE.md                    contexto para os agentes que trabalham aqui
+DECISOES.md                  registo de decisoes, por ordem, com o que substituem
 PARA-O-RICO.md               o que encontrei na sessao 1 — ler primeiro
 PONTE-CLAUDE.md              guia do Rico para a ponte
 COORDENACAO.md               quem está a fazer o quê — reservar antes de começar

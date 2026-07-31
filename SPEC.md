@@ -2,6 +2,8 @@
 
 RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Índice mestre.
 
+> 📋 **Todas as decisões dos donos, por ordem, em [`DECISOES.md`](DECISOES.md)** — é contra essa lista que se compara trabalho feito antes delas.
+
 > **Fase: construção.** Os 20 pacotes de spec estão escritos (31-07-2026). Regras da fase nova em [`spec/32-construcao.md`](spec/32-construcao.md); o plano é o [`spec/24-plano.md`](spec/24-plano.md), M0 a M7.
 
 > Cada afirmação nos documentos abaixo traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
@@ -57,6 +59,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 34 | [**Catálogo e comandos**](spec/34-catalogo-e-comandos.md) | 30 armaduras, ~20 armas/classe, e a regra de que toda a habilidade diz como se activa | 🟢 escala e regra fixadas |
 | 33 | [**Morte e almas**](spec/33-morte-e-almas.md) | Almas, frascos, armadura, ressurreição em co-op | 🟢 fecha as perguntas 7, 10 e 14 |
 | 32 | [**Construção**](spec/32-construcao.md) | **A fase nova** — regras de código, o que muda no fluxo | 🟢 arrancou 31-07 |
 | 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |

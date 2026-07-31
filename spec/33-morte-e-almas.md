@@ -99,23 +99,24 @@ Armadura que dá defesa é **exactamente** a "parede de estatísticas" que a Lei
 | Quando morres em casa alheia | **ficas no mundo dele** — não és expulso, não voltas ao teu jogo |
 | O que és | um corpo caído no sítio onde morreste, visível para o parceiro |
 | Janela de ressurreição | **1 minuto** |
-| Como se ressuscita | o parceiro fica **5 segundos em cima do corpo**, sem interrupção |
+| Como se ressuscita | o parceiro fica **5 a 7 segundos** em cima do corpo, sem interrupção (faixa a afinar no WP15B) |
 | Se o minuto passar | acordas no último ponto de descanso; a sessão continua |
 | Enfrentar o mesmo chefe | **sim, juntos** — a luta não acaba porque um caiu |
 
-### Porque é que os 5 segundos são a peça inteligente
+### Porque é que estes segundos são a peça inteligente
 
 O Fable tinha escrito que ressuscitar a meio de um chefe *"transformava o ×1,8 de vida numa corrida de revezamento"* — e tinha razão **se a ressurreição fosse gratuita.**
 
-**Não é.** Ficar 5 segundos parado em cima de um corpo, no meio de uma arena com um chefe vivo, é o risco mais alto do jogo. O parceiro tem de **criar a janela** — afastar o chefe, esperar o fim de um ataque longo, contar o tempo. Falhar significa dois corpos no chão.
+**Não é.** Ficar 5 a 7 segundos parado em cima de um corpo, no meio de uma arena com um chefe vivo, é o risco mais alto do jogo. O parceiro tem de **criar a janela** — afastar o chefe, esperar o fim de um ataque longo, contar o tempo. Falhar significa dois corpos no chão.
 
 Isso transforma a ressurreição naquilo que deve ser: **uma jogada, não um botão.** E é a única mecânica da spec que exige coordenação verbal a sério entre os dois — o que é o ponto do co-op.
 
 ### Detalhes que o WP10 tem de fechar
 
-- **Interrompe?** Levar dano durante os 5 s cancela? `[CLAUDE]` propõe: **sim** — senão o risco desaparece e volta a ser botão
+- **Interrompe?** Levar dano durante a canalização cancela? `[CLAUDE]` propõe: **sim** — senão o risco desaparece e volta a ser botão
 - **Vida ao ressuscitar:** proposta `[CLAUDE]` — **metade**, e frascos como estavam. Ressuscitar não é um segundo fôlego completo
 - **As almas do morto:** ficam no corpo. Se for ressuscitado, recupera-as; se o minuto passar, ficam no chão para ir buscar
+- **Itens largados** `[DECIDIDO]` (31-07): além das almas, quem morre larga itens que o parceiro pode apanhar. O corpo passa a ser um **sítio de decisão** — arriscar os 5–7 s para ressuscitar, ou pegar no que caiu e continuar sozinho? Ver [`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §3
 - **A barra do minuto** vê-se? `[CLAUDE]` propõe: o morto vê o tempo dele; o parceiro vê um indicador no corpo
 - **O chefe reage ao ressuscitador?** É o alvo natural durante os 5 s — decisão do WP7
 

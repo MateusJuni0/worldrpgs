@@ -73,6 +73,6 @@ Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus
 | [`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) | A raiz do projeto — o que o Fable tem de fazer |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) | As tensões e o risco de escopo |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) | Como o Rico usa isto |
-| [`prompts/PROXIMOS-PACOTES.md`](prompts/PROXIMOS-PACOTES.md) | **A fila de trabalho** — os 11 pacotes que faltam |
+| [`DECISOES.md`](DECISOES.md) | **Registo de decisões** — o que foi decidido, por ordem, e o que substitui. Comparar trabalho antigo contra isto |
 | [`spec/31-referencias.md`](spec/31-referencias.md) | Como usar o Dark Souls, e a linha que não se atravessa |
 | [`COORDENACAO.md`](COORDENACAO.md) | Quem está a fazer o quê — reservar antes de começar |
