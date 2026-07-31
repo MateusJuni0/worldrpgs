@@ -13,9 +13,9 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Pacote | Documento | Quem | Desde | Estado |
 |---|---|---|---|---|
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |
-| WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 escrito local, PR de manhã |
+| WP1 | `spec/01-combate.md` | Fable | 31-07 | 🔨 PR aberto |
 | WP1B | `spec/25-controlo.md` | Claude | 31-07 | 🔨 em curso |
-| WP2 | `spec/11-formulas.md` | Fable | 31-07 | 🔨 escrito local, PR de manhã |
+| WP2 | `spec/11-formulas.md` | Fable | 31-07 | 🔨 PR aberto |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 

@@ -13,7 +13,19 @@
 > Mateus: "pode ser umas raças padrão, tipo, os orc, bagulho assim, né?" (02:25)
 > Rico: "Ah, coisa de orc pode. Coisa de orc pode." (02:37)
 
-`[EM ABERTO]` — Que outras raças. "Raças padrão" sugere o repertório habitual (goblins, esqueletos, trolls, mortos-vivos), mas só orcs foi dito.
+`[DECIDIDO]` (Rico, 31-07-2026, instrução directa) ⏳ falta o Mateus — **sete raças para espalhar pelo mapa**, com as notas dele e o gancho que cada uma já tem na spec:
+
+| Raça | A nota do Rico | Gancho na spec | Fatia 1? |
+|---|---|---|---|
+| Goblin | pequeno, verde ou cinza, ataca em grupos | grupos são o primeiro inimigo que castiga o lock-on preso num alvo só ([`01-combate.md`](01-combate.md)) | ⬜ |
+| Kobold | pequeno réptil covarde que gosta de armadilhas | foge e arma o terreno — par natural das dungeons ([`05-mundo.md`](05-mundo.md)) | ⬜ |
+| Esqueleto | resto mortal reanimado por magia fraca | candidato óbvio a fraqueza clara — "a magia certa no inimigo certo" (05:04) | ⬜ |
+| Zumbi | cadáver lento que resiste a dano comum | resistir a físico obriga a trocar de ferramenta — a Lei 2 do lado do inimigo | ⬜ |
+| Orc | guerreiro tribal feroz e musculoso | já era `[DECIDIDO]` da sessão 1 (02:25) — é a raça da fatia | ✅ lanceiro, brutamontes, Vorgar |
+| Minotauro | homem com cabeça de touro que vive em labirintos | pede uma dungeon-labirinto própria — candidato a subchefe com arena dedicada | ⬜ |
+| Mímico | monstro que se disfarça de baú de tesouro | vive do loot: castiga a ganância; pede baús no mundo ([`06-itens-inventario.md`](06-itens-inventario.md)) | ⬜ |
+
+Nenhuma destas entra na fatia 1 — a fatia continua com os 2 orcs + Vorgar ([`10-fatia-1.md`](10-fatia-1.md)). Entram no bestiário completo do WP6, por esta ordem de afinidade com o que já existe.
 
 ## Hierarquia de chefes
 
@@ -36,6 +48,18 @@ A razão dada foi tempo de jogo: "uma hierarquia bastante pra gente ter bastante
 `[EM ABERTO]` — **61 chefes é o maior risco de escopo do projeto.** Ver a secção de risco em [`00-visao.md`](00-visao.md). A pergunta útil não é "quantos chefes" mas "quantos chefes no primeiro jogável".
 
 `[EM ABERTO]` — A hierarquia é de **dificuldade** ou de **narrativa**? Um chefe da quarta camada é um capanga do subchefe, ou apenas um chefe mais fraco noutro sítio do mapa? Muda completamente o design do mundo.
+
+### O Ceifador — candidato a subchefe
+
+`[DECIDIDO]` (Rico, 31-07-2026, instrução directa: *"adiciona como um boss ou subchefe, achei ele legal"*) ⏳ falta o Mateus. A camada exacta fica com a pergunta 13.
+
+Referência visual enviada pelo Rico: figura alta encapuzada, armadura escura ornamentada, manto esfarrapado, **foice de lâmina de osso serrado**. A imagem de referência é arte de outro jogo e **não entra no repositório** (isto é público) — fica esta descrição; a arte final é nossa, feita no pipeline do WP13 ao estilo da referência.
+
+Ganchos de design `[FABLE]`, para o WP7 desenvolver:
+
+- A foice ataca em **arcos largos e varridos** — o espaço seguro é *dentro* do arco, colado ao corpo dele. É o subchefe que ensina a esquivar **para a frente**: o anti-instinto que separa quem lê o inimigo de quem só reage.
+- Varridos: `só esquiva`. O golpe descendente (overhead): `aparável` — a única janela de parry dele, lenta e bem telegrafada.
+- Par temático natural: esqueletos e zumbis como inimigos da zona dele — a raça morta-viva ganha o seu senhor.
 
 ## Como se chega aos chefes
 
