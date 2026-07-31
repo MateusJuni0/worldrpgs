@@ -59,6 +59,22 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 
 **Quem faz o merge actualiza a linha desta tabela no mesmo acto.** A tabela ficou quatro pacotes atrasada a 31-07 e deu a impressão de que havia trabalho por entrar quando estava tudo dentro. Uma tabela de estado errada é pior do que não ter tabela nenhuma.
 
+## ⚠️ Reservar NÚMEROS de documento, não só pacotes
+
+**Regra nova (31-07, escrita depois de a quebrar).** A tabela acima reserva **pacotes**. Faltava reservar **números de ficheiro** — e a 31-07 os dois lados criaram um  ao mesmo tempo. O do Fable teve de passar a  no merge.
+
+**A culpa foi do lado do Claude:** publicou o 40, 41, 42 e 43 de uma vez sem avisar aqui. Fica a regra:
+
+> **Antes de criar um ficheiro novo em , acrescenta o número a esta lista e faz push imediato.** Um commit de uma linha chega.
+
+### Números tomados
+
+| Nº | Quem | O quê |
+|---|---|---|
+| 32–43 | Claude | construção, referências, morte, catálogo, estudos, física, anéis, ataques, decisões |
+| 44 | Fable | protótipo |
+| **45+** | **livre** | |
+
 ## Quem trata das entregas
 
 O **Claude** (lado do Mateus) verifica o repositório em ciclo: PRs novos são revistos e, com a autorização permanente do Mateus (31-07), integrados quando estão bem. Não é preciso esperar por ninguém para entregar — abre o PR e ele será visto.
