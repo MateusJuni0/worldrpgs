@@ -59,6 +59,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 40 | [**O protótipo: o que já está provado**](spec/40-prototipo.md) | Medições com artefactos, o que já se joga, 3 lacunas de comandos, 2 contradições corrigidas, o parry por decidir | 🟢 fecha metade da ressalva do 0b |
 | 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, melhoria, frascos, mundo, agressão, co-op, almas, descoberta | 🟢 18 accionáveis, 4 perguntas novas |
 | 38 | [**Ataques e honestidade**](spec/38-ataques-e-honestidade.md) | As 5 fases, o contrato que faz a esquiva ser verdadeira, 3–5 ataques por inimigo | 🟢 contrato fixado, fichas por escrever |
 | 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, escudos por elemento, dano de queda corrigido | 🟠 escala fixada, catálogo por escrever |

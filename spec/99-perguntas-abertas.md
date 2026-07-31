@@ -40,6 +40,8 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 ✅ **CARIMBADO** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **caminho A: 3D estilizado, optimizado.** A tensão fecha-se.
 
 ⚠️ Uma ressalva que a aprovação não apaga, porque é matéria de facto e não de decisão: **a medição não está sustentada no repositório** — não há protótipo, log nem artefacto que a acompanhe, e o próprio relatório ressalva que falta a animação de esqueleto, que é a parte cara. O caminho está escolhido; a prova de que aguenta com esqueletos animados continua por fazer, e é o marco 1 do WP15 que a dá.
+
+✅ **Metade da ressalva fechada (31-07):** os artefactos crus estão agora em [`medicoes/`](../medicoes/) — 8 ficheiros JSON escritos pela ferramenta, sem edição, com o resumo em [`40-prototipo.md`](40-prototipo.md). **A outra metade mantém-se inteira e é a que importa:** continua a ser greybox **sem animação de esqueleto**. O M1 continua a ser quem dá a prova completa.
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 1. ~~Qual é a fatia mais pequena disto que já é divertida a dois?~~ ✅ APROVADA

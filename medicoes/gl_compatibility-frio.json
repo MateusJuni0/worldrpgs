@@ -1,0 +1,21 @@
+{
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "avg_fps": 414.6,
+  "avg_frame_ms": 2.41,
+  "draw_calls": 20,
+  "frames": 12439,
+  "label": "gl_compatibility-frio",
+  "min_fps": 77.0,
+  "p1_low_fps": 142.7,
+  "pct_frames_over_16_67ms": 0.0,
+  "primitives": 23620,
+  "rendering_driver": "opengl3",
+  "rendering_method": "gl_compatibility",
+  "resolution": "1920x1080",
+  "scene": "perf",
+  "seconds_sampled": 30.0,
+  "static_memory_mb": 40.1,
+  "video_mem_mb": 31.9,
+  "vsync": "off",
+  "worst_frame_ms": 12.99
+}
