@@ -56,13 +56,28 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 | `ui_menu_fundo` | Fundo do menu principal | `art/ui/menus/menu-fundo.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 | `sky_brumal` | Céu de Brumal (entardecer enevoado) | `art/sky/brumal-ceu.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 
-**Total: 25 assets — todos gerados.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+**Total: 32 assets — todos gerados.** (25 da fatia 1 + 7 do bestiário) Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
 > **Modelo:** `nano_banana_pro` (Nano Banana Pro — o modelo de imagem do Gemini) via Higgsfield CLI, 2 créditos cada. **Todas as 25 saíram do mesmo gerador**, que é o que mantém a consistência de pé. Os 5 cenários foram primeiro feitos com gpt-image pelo browser e depois regenerados aqui, por decisão do Mateus — não misturar.
 >
 > **Ícones:** gerados com fundo cinzento chapado e depois passados pelo removedor de fundo do Higgsfield (1 crédito cada) — ficam RGBA com transparência real, que é o que a hotbar precisa.
+
+
+## Bestiário — as 7 raças do WP6 (fatia 2+)
+
+> Geradas a 31-07 depois do bestiário entrar ([`../spec/15-inimigos.md`](../spec/15-inimigos.md)). Nenhuma entra na fatia 1 — a fatia continua com os 2 orcs + Vorgar.
+
+| ID | Asset | Caminho | Dim. | Estado |
+|---|---|---|---|---|
+| `con_raca_goblin` | Goblin — o cerco | `art/concept/raca-goblin.png` | 1024×1536 | ✅ |
+| `con_raca_kobold` | Kobold — o terreno e as armadilhas | `art/concept/raca-kobold.png` | 1024×1536 | ✅ |
+| `con_raca_esqueleto` | Esqueleto — seco e quebradiço | `art/concept/raca-esqueleto.png` | 1024×1536 | ✅ |
+| `con_raca_zumbi` | Zumbi — lento e resistente a corte | `art/concept/raca-zumbi.png` | 1024×1536 | ✅ |
+| `con_raca_minotauro` | Minotauro — subchefe de labirinto | `art/concept/raca-minotauro.png` | 1024×1536 | ✅ |
+| `con_raca_mimico` | Mímico — o castigo da ganância | `art/concept/raca-mimico.png` | 1024×1536 | ✅ |
+| `con_ceifador` | O Ceifador — subchefe (ideia do Rico) | `art/concept/ceifador.png` | 1536×1024 | ✅ |
 
 ## O que este manifesto NÃO cobre — e é de propósito
 
