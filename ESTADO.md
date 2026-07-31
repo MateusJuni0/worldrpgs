@@ -31,9 +31,13 @@ O plano antigo ([`spec/23-tecnico.md`](spec/23-tecnico.md), [`spec/24-plano.md`]
 
 ### ✅ Feito — e verificado por mim, não pela palavra de ninguém
 
-O código está em [](game/) desde 31-07 (PR #13), com os 8 commits originais preservados por  — confirmei um a um que são ancestrais da .
+O código está em [`game/`](game/) desde 31-07 (PR #13), com os 8 commits originais preservados por `git subtree` — confirmei um a um que são ancestrais da `main`.
 
-\
+```
+$ godot --headless --path game/ scenes/selftest.tscn
+=== 130 passaram, 0 falharam ===
+```
+
 ## 1b. ⭐ O que temos, em números
 
 **Esta tabela é o retrato do projecto.** O que falta não é arquitectura — é **conteúdo**.
@@ -51,7 +55,7 @@ O código está em [](game/) desde 31-07 (PR #13), com os 8 commits originais pr
 | **Inimigos** | **3** | 7 raças + ~61 chefes | quase tudo |
 | Habilidades de classe | 6 | 6 | ✅ |
 
-⭐ **E a instrução que daí sai:** o motor é data-driven —  recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em  **e** em , no mesmo PR.
+⭐ **E a instrução que daí sai:** o motor é data-driven — o `game_data.gd` recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em `spec/` **e** em `game/data/*.json`, no mesmo PR.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 
