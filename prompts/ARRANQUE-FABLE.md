@@ -41,8 +41,8 @@ Quatro leis que não podes quebrar em silêncio (estão desenvolvidas no briefin
 3. Qualquer classe pega em qualquer arma. A diferença vem dos atributos e das
    skills, nunca de um bloqueio.
 
-4. A máquina alvo manda: PC sem placa gráfica dedicada, ~12 GB de RAM. Vem antes
-   de qualquer decisão de arte, render ou engine. E liga-se à Lei 1 — num
+4. A máquina alvo manda: PC sem placa gráfica dedicada, gráficos Intel Iris Xe,
+   1080p a 60 Hz. Vem antes de qualquer decisão de arte, render ou engine. E liga-se à Lei 1 — num
    souls-like, uma queda de fotogramas não é feia, é injusta.
 
 Três coisas sobre como escrever:
@@ -56,11 +56,11 @@ Três coisas sobre como escrever:
 - Todo o catálogo leva uma coluna "Fatia 1?". O que foi descrito na gravação são
   anos de trabalho; nada se corta, mas tudo se ordena.
 
-Uma coisa que ainda não sabes e que bloqueia parte do trabalho: faltam as
-especificações reais das duas máquinas (processador, gráficos integrados, RAM e
-se é canal simples ou duplo, disco, ecrã). Está como pergunta 0 em
-spec/99-perguntas-abertas.md. Podes fazer WP0 a WP11 sem isso. Para WP12, WP13
-e WP14 precisas dos números — pede-os quando lá chegares.
+Uma coisa que ainda não sabes e que bloqueia parte do trabalho: a máquina do
+Mateus está medida e está em spec/09-tecnico.md, mas falta a do Rico — e é essa
+que manda, porque se orçamenta sempre para a mais fraca das duas. Podes fazer
+WP0 a WP11 sem ela. Para WP12, WP13 e WP14 precisas dela: pede ao Rico o
+dxdiag dele quando lá chegares.
 
 Começa agora pelo WP0. Quando acabares, abre o PR e diz o que decidiste, que
 tensões encontraste, e o que ficou por decidir.

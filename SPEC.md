@@ -44,13 +44,13 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 9. Magia do bem e do mal, com usos limitados, magias desenhadas à mão
 10. Mundo aberto grande, por biomas, com dungeons escondidas em pontos do mapa
 11. Hotbar no fundo do ecrã + mochila de capacidade limitada
-12. **A máquina alvo é PC sem placa gráfica dedicada, ~12 GB de RAM.** Manda em toda a arte, render e escolha de engine
+12. **A máquina alvo é PC sem placa gráfica dedicada** — Iris Xe integrados, 1080p @ 60 Hz. Manda em toda a arte, render e escolha de engine
 
 ## O que trava
 
 Seis perguntas bloqueiam o resto — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
 
-1. **Quais são as máquinas, ao certo?** Sem os números reais não há orçamento técnico possível
+1. **Falta a máquina do Rico.** A do Mateus está medida; o orçamento aponta à mais fraca das duas
 2. **O 3D aguenta-se neste hardware?** `[TENSÃO]` — quedas de fotogramas atacam o pilar 1
 3. Qual é a fatia mais pequena disto que já é divertida a dois?
 4. Os biomas são patamares de dificuldade? (colide com o pilar 1)

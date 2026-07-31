@@ -61,7 +61,7 @@ Para os dois. Não há intenção de vender, publicar ou fazer disto produto. Is
 
 ## ⚠️ A restrição de hardware
 
-`[DECIDIDO]` (Mateus, 31-07-2026) — **PC sem placa gráfica dedicada, ~12 GB de RAM.**
+`[DECIDIDO]` (Mateus, 31-07-2026) — **PC sem placa gráfica dedicada.** A máquina do Mateus está medida (i7-1255U, Iris Xe, 16 GB em canal duplo, 1080p @ 60 Hz); **falta a do Rico, e é a que manda** — o orçamento aponta à mais fraca das duas.
 
 Vem antes de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe. Detalhe e consequências em [`09-tecnico.md`](09-tecnico.md).
 

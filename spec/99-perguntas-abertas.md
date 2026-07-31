@@ -8,14 +8,14 @@ Tudo o que falta decidir, por ordem de urgência. Serve de guião para a próxim
 
 ## 🔴 Bloqueiam tudo o resto
 
-### 0. Quais são as máquinas, ao certo?
-`[DECIDIDO]` que é PC sem placa gráfica dedicada e ~12 GB de RAM. Mas "ou assim" não dá para orçamentar nada — nem polígonos, nem texturas, nem engine.
+### 0. Falta a máquina do Rico
+**Metade respondida.** A do Mateus está medida: i7-1255U, Iris Xe integrados, **16 GB em canal duplo** (mais do que os ~12 estimados), SSD NVMe, 1080p @ 60 Hz. Ver [`09-tecnico.md`](09-tecnico.md).
 
-De **cada uma das duas máquinas**: processador, gráficos integrados (modelo exacto), RAM e se é canal simples ou duplo, SSD ou disco mecânico, resolução do ecrã, sistema operativo.
+Falta a do Rico, e **é a que manda** — o orçamento técnico aponta sempre à mais fraca das duas.
 
-No Windows: `dxdiag` → *Guardar todas as informações*.
+Pedir-lhe: `dxdiag` → *Guardar todas as informações*. Ou só os campos da tabela.
 
-**É a primeira pergunta a responder de toda a lista.** Tudo em WP12, WP13 e WP14 depende disto.
+Enquanto não houver, tudo o que for orçamentado em WP12, WP13 e WP14 é provisório.
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 0b. O 3D aguenta-se neste hardware?

@@ -67,7 +67,11 @@ Foi decidido explicitamente na sessão 1 (05:44 → 06:17), a partir de uma obje
 
 ### Lei 4 — A máquina alvo manda
 
-**PC sem placa gráfica dedicada. ~12 GB de RAM.** É nisto que os dois jogam. Não há hardware melhor à espera.
+**PC sem placa gráfica dedicada.** É nisto que os dois jogam. Não há hardware melhor à espera.
+
+A máquina do Mateus está medida — i7-1255U, Intel Iris Xe integrados, 16 GB em canal duplo, SSD NVMe, 1920×1080 @ 60 Hz. A do Rico ainda não. **Orçamenta sempre para a mais fraca das duas**, e pede a segunda antes de fechares qualquer número em WP12, WP13 ou WP14.
+
+Dois detalhes que mudam decisões, e que se perdem se só olhares para a tabela: é um chip de portátil de baixo consumo, portanto **o que interessa é o desempenho quente, não o pico** — mede ao fim de vinte minutos, não ao primeiro. E os gráficos partilham a RAM do sistema: cada MB de textura tira memória ao jogo. O ecrã é de 60 Hz, o que fecha a taxa alvo em 60 fps.
 
 Isto vem **antes** de qualquer decisão de arte, render ou engine. Não é um modo de baixa qualidade a acrescentar no fim — é o alvo.
 

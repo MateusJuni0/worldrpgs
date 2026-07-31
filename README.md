@@ -9,7 +9,7 @@ RPG 3D em terceira pessoa, **souls-like**, co-op para dois. Projeto hobby do **M
 | | |
 |---|---|
 | Fase | **Especificação** — sessão 1 de N |
-| Máquina alvo | **PC sem placa gráfica dedicada, ~12 GB RAM** |
+| Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada |
 | Código | Nenhum, por decisão — constrói o Opus 5, depois da spec |
 | Engine | Por decidir |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |

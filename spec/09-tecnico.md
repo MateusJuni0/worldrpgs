@@ -8,28 +8,46 @@
 
 Isto não é um detalhe de configuração. É a restrição mais dura do projeto e vem **antes** de qualquer decisão de arte, render ou engine. O jogo tem de correr bem nas máquinas deles, ou não existe.
 
-`[EM ABERTO]` — **Faltam os números reais.** "12 de RAM ou assim" não chega para orçamentar. É preciso, de cada uma das duas máquinas:
+### Máquina 1 — Mateus `[MEDIDO]` (31-07-2026)
 
-- Processador (modelo exacto)
-- Gráficos integrados (modelo — Intel UHD 620? Iris Xe? AMD Vega 8?)
-- RAM: quantidade **e** se é canal simples ou duplo (num gráfico integrado, canal duplo chega a duplicar o desempenho)
-- Disco: SSD ou disco mecânico
-- Ecrã: resolução e taxa de actualização
-- Sistema operativo
+Não estimado. Lido da máquina.
 
-No Windows: `dxdiag` → *Guardar todas as informações*. Ambos.
+| | |
+|---|---|
+| Processador | Intel Core **i7-1255U** (12.ª geração) — 10 núcleos, 12 threads, série U de baixo consumo |
+| Gráficos | **Intel Iris Xe**, integrados · 2 GB reservados · driver 32.0.101.7082 |
+| RAM | **16 GB** (15,73 utilizáveis) — 2 × 8 GB @ 3200 MT/s, **canal duplo** |
+| Disco | SSD **NVMe** 512 GB |
+| Ecrã | 1920 × 1080 @ **60 Hz** |
+| Sistema | Windows 11 Home, build 26200, 64 bits |
 
-Sem isto, qualquer orçamento técnico é adivinhação.
+**É melhor do que se pensava.** A estimativa inicial falava em ~12 GB; são 16, e em canal duplo. Num gráfico integrado a largura de banda da memória é o estrangulamento principal, por isso o canal duplo vale mais aqui do que valeria numa máquina com placa dedicada. O Iris Xe de um i7 de 12.ª geração está no topo do que os gráficos integrados dão.
 
-### O que a restrição implica, de imediato
+**O que continua a limitar**, e não se resolve com RAM:
 
-Um gráfico integrado tem tipicamente entre 3% e 10% da capacidade de uma placa dedicada de gama média, e **partilha a RAM do sistema** — dos 12 GB, 1 a 2 GB vão para o vídeo, e o sistema operativo come mais 3 a 4. Sobram talvez 6 GB para o jogo.
+- É um chip de portátil da **série U**, de baixo consumo. O problema não é o pico — é aguentar. Ao fim de vinte minutos de jogo, com o portátil quente, a velocidade cai. **O alvo de desempenho tem de ser medido quente, não frio.**
+- Os gráficos **partilham a RAM do sistema**. Não há memória de vídeo à parte; tudo o que a textura ocupa, tira ao jogo.
+- **60 Hz** fecha a questão da taxa alvo: 60 fps, e não faz sentido perseguir mais.
+
+### Máquina 2 — Rico `[EM ABERTO]`
+
+Falta. É a que manda, porque **o orçamento técnico aponta sempre à mais fraca das duas** — não adianta o jogo correr bem num se corre mal no outro.
+
+Pedir-lhe: `dxdiag` → *Guardar todas as informações*. Ou, mais directo, os mesmos campos da tabela acima.
+
+Enquanto não houver, tudo o que estiver orçamentado é provisório.
+
+> Os relatórios completos de `dxdiag` ficam **fora deste repositório**: trazem nome da máquina e do utilizador, e o repositório é público. O que interessa está na tabela.
+
+### O que isto implica
 
 Fica praticamente fora de questão: iluminação global em tempo real, sombras dinâmicas em quantidade, pós-processamento pesado, texturas 4K, malhas de alta densidade, render diferido, e as engines que assumem tudo isto por defeito.
 
 Fica dentro: 3D estilizado de baixa contagem de polígonos, iluminação assada, poucas luzes dinâmicas, texturas pequenas, render *forward*, distância de visão curta com névoa a esconder o corte.
 
 **Isto não é má notícia.** Baixo poligonal estilizado é mais barato de produzir *e* de correr — alinha com serem duas pessoas. O que morre é o realismo, e o realismo já tinha sido recusado na sessão 1 ("Realista não", 10:24).
+
+**Alvo, até haver a máquina do Rico:** 1920 × 1080, 60 fps estáveis, medidos com a máquina quente.
 
 ### `[TENSÃO]` — 3D contra o hardware
 
