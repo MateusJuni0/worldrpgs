@@ -1,4 +1,4 @@
- ✅ | ✅ | ✅ | ✅ |# Manifesto de assets — fatia 1
+# Manifesto de assets — fatia 1
 
 Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spec e o código o referem) e o seu **caminho canónico** (é aí que o ficheiro vive, com esse nome exacto).
 
@@ -10,10 +10,10 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 
 | ID | Asset | Caminho | Dim. | Prompt | Estado |
 |---|---|---|---|---|---|
-| `con_brumal_vista` | Brumal, vista geral da floresta com bruma | `art/concept/brumal-vista.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ⬜ |
-| `con_brumal_caminho` | Caminho dentro de Brumal, escala humana | `art/concept/brumal-caminho.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ⬜ |
-| `con_toca_entrada` | Entrada escondida da Toca (fenda + árvore morta) | `art/concept/toca-entrada.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ⬜ |
-| `con_toca_interior` | Interior da Toca, sala típica | `art/concept/toca-interior.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ⬜ |
+| `con_brumal_vista` | Brumal, vista geral da floresta com bruma | `art/concept/brumal-vista.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
+| `con_brumal_caminho` | Caminho dentro de Brumal, escala humana | `art/concept/brumal-caminho.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
+| `con_toca_entrada` | Entrada escondida da Toca (fenda + árvore morta) | `art/concept/toca-entrada.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
+| `con_toca_interior` | Interior da Toca, sala típica | `art/concept/toca-interior.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ✅ |
 | `con_toca_arena` | Arena do Vorgar | `art/concept/toca-arena.png` | 1536×1024 | [01](prompts/01-concept-mundo.md) | ⬜ |
 
 ## Conceitos de personagens — as 6 classes da fatia
