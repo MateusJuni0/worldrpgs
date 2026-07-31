@@ -27,7 +27,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🟠 sistema complexo em uma frase |
 | 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🟡 esqueleto |
 | 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
-| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟠 proposta `[FABLE]` (WP0), aguarda Mateus + Rico |
+| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟢 **aprovada pelos dois** (31-07) |
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Os 6 atributos, fórmula de dano, curvas dos inimigos da fatia | 🟠 números de partida `[FABLE]` (WP2) — validam-se no protótipo |
 | 12 | [Classes](spec/12-classes.md) | As 8 fichas, habilidades especiais, skills, e a tensão das evoluções proposta | 🟠 `[FABLE]` (WP3) — evoluções aguardam decisão A/B dos dois |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Bem/mal com mecânica proposta, catálogo, cargas, pergaminhos, encantamentos | 🟠 `[FABLE]` (WP4) — bem/mal aguarda o sim dos dois (pergunta 8) |
@@ -56,14 +56,22 @@ Doze coisas estão fechadas — onze da sessão 1, mais a restrição de hardwar
 
 ## O que trava
 
-Quatro perguntas bloqueiam o resto (as duas primeiras já caíram) — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md):
+**Duas perguntas.** As outras caíram a 31-07-2026, com a aprovação do Mateus e do Rico — detalhe em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md).
 
-1. ~~Máquinas~~ ✅ **respondida** — as duas medidas. A do Rico (**8 GB**) é o alvo, por ser a mais fraca
-2. ~~O 3D aguenta-se?~~ ✅ **medido no protótipo: aguenta** — 60 fps cravados no cenário da fatia, 20 min quentes sem degradação; ressalva: animação de esqueleto por medir (pergunta 0b)
-3. Qual é a fatia mais pequena disto que já é divertida a dois? — **proposta escrita em [`spec/10-fatia-1.md`](spec/10-fatia-1.md)**, falta o sim dos dois
-4. Os biomas são patamares de dificuldade? (colide com o pilar 1)
-5. As evoluções de classe dão poder ou dão opções? (colide com o pilar 1)
-6. "Mapa grande" é quanto?
+1. Os biomas são patamares de dificuldade? (colide com o pilar 1)
+2. "Mapa grande" é quanto?
+
+### Fechadas a 31-07 ✅
+
+| | |
+|---|---|
+| Máquinas | as duas medidas; o alvo é a do Rico (8 GB) |
+| O 3D aguenta-se? | **caminho A carimbado** — 3D estilizado optimizado. ⚠️ a medição que o sustenta não tem prova no repositório; o marco 1 do WP15 dá-a |
+| A fatia 1 | aprovada como está: 1 zona, 1 dungeon, 1 chefe, 6 classes, 5 armas, 3 magias |
+| Evoluções de classe | **opção A** — dão opções, não números; sobem por marco, não por nível |
+| Magia do bem e do mal | aprovada — o preço do mal é PV, à vista. A fatia usa as duas escolas |
+| Quantas classes na fatia | seis, com o custo aceite de olhos abertos |
+| Sete raças + o Ceifador | aprovadas para o bestiário do WP6 |
 
 ## A construir
 

@@ -13,7 +13,7 @@
 > Mateus: "pode ser umas raças padrão, tipo, os orc, bagulho assim, né?" (02:25)
 > Rico: "Ah, coisa de orc pode. Coisa de orc pode." (02:37)
 
-`[DECIDIDO]` (Rico, 31-07-2026, instrução directa) ⏳ falta o Mateus — **sete raças para espalhar pelo mapa**, com as notas dele e o gancho que cada uma já tem na spec:
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **sete raças para espalhar pelo mapa**, com as notas dele e o gancho que cada uma já tem na spec:
 
 | Raça | A nota do Rico | Gancho na spec | Fatia 1? |
 |---|---|---|---|
@@ -51,7 +51,7 @@ A razão dada foi tempo de jogo: "uma hierarquia bastante pra gente ter bastante
 
 ### O Ceifador — candidato a subchefe
 
-`[DECIDIDO]` (Rico, 31-07-2026, instrução directa: *"adiciona como um boss ou subchefe, achei ele legal"*) ⏳ falta o Mateus. A camada exacta fica com a pergunta 13.
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — entra como chefe ou subchefe. *(Ideia do Rico: "adiciona como um boss ou subchefe, achei ele legal"; confirmado pelos dois a 31-07.)* A camada exacta fica com a pergunta 13.
 
 Referência visual enviada pelo Rico: figura alta encapuzada, armadura escura ornamentada, manto esfarrapado, **foice de lâmina de osso serrado**. A imagem de referência é arte de outro jogo e **não entra no repositório** (isto é público) — fica esta descrição; a arte final é nossa, feita no pipeline do WP13 ao estilo da referência.
 

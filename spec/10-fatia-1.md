@@ -46,7 +46,7 @@ Os nomes — Brumal, a Toca, Vorgar — são `[FABLE]` provisórios, para este d
 
 ## As seis classes
 
-`[DECIDIDO]` (Rico, 30-07-2026, instrução directa ao Fable) — **a fatia 1 leva seis classes**, não duas.
+`[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **a fatia 1 leva seis classes**, não duas. *(Proposto pelo Rico a 30-07 por instrução directa; confirmado pelos dois a 31-07.)*
 
 Das oito nomeadas na gravação (07:13 → 07:57), entram as seis mais distintas entre si:
 

@@ -33,7 +33,11 @@ Do lado bom, três coisas: as duas têm **canal duplo**, que é o melhor cenári
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 0b. O 3D aguenta-se neste hardware? — ✅ medido: aguenta
-**Medido no protótipo local (31-07-2026), na máquina mais fraca:** 60 fps cravados no cenário da fatia com vsync; 416 fps médios em greybox ao fim de **20 minutos quentes, sem degradação térmica**; renderer Mobile escolhido. Ressalvas: sem animação de esqueleto ainda (a incógnita cara), e memória a vigiar. Os três caminhos (3D / 2.5D / 2D) ficam com dados à frente — **falta só o vosso carimbo no caminho A**.
+**Medido no protótipo local (31-07-2026), na máquina mais fraca:** 60 fps cravados no cenário da fatia com vsync; 416 fps médios em greybox ao fim de **20 minutos quentes, sem degradação térmica**; renderer Mobile escolhido. Ressalvas: sem animação de esqueleto ainda (a incógnita cara), e memória a vigiar. Os três caminhos (3D / 2.5D / 2D) ficam com dados à frente.
+
+✅ **CARIMBADO** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **caminho A: 3D estilizado, optimizado.** A tensão fecha-se.
+
+⚠️ Uma ressalva que a aprovação não apaga, porque é matéria de facto e não de decisão: **a medição não está sustentada no repositório** — não há protótipo, log nem artefacto que a acompanhe, e o próprio relatório ressalva que falta a animação de esqueleto, que é a parte cara. O caminho está escolhido; a prova de que aguenta com esqueletos animados continua por fazer, e é o marco 1 do WP15 que a dá.
 → [`09-tecnico.md`](09-tecnico.md)
 
 ### 1. Qual é a fatia mais pequena disto que já é divertida a dois?
@@ -41,7 +45,9 @@ A sessão 1 descreveu mundo aberto grande, 3D, ~61 chefes, 8 classes, dois siste
 
 A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe e duas classes, isso já era um jogo que vocês queriam jogar?** Se sim, é por aí que se começa e o resto cresce por cima.
 
-**→ Proposta escrita (WP0):** [`10-fatia-1.md`](10-fatia-1.md) — 1 zona + 1 dungeon + 1 chefe, 6 classes (instrução directa do Rico), 5 armas, 3 magias, co-op desde o dia 1. Falta o sim (ou a correcção) dos dois.
+**→ Proposta escrita (WP0):** [`10-fatia-1.md`](10-fatia-1.md) — 1 zona + 1 dungeon + 1 chefe, 6 classes (instrução directa do Rico), 5 armas, 3 magias, co-op desde o dia 1.
+
+✅ **APROVADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — a fatia 1 é esta. É a linha que ordena todos os pacotes.
 → [`00-visao.md`](00-visao.md) · secção de risco
 
 ### 2. Os biomas são patamares de dificuldade?
@@ -51,7 +57,9 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 ### 3. As evoluções de classe dão poder ou dão opções?
 Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar vantagem — que é o que o pilar 1 recusa. O próprio Rico já apontou para o lado certo às 09:21 ("não aumentar o dano, uma magia diferente"). Falta confirmar como regra.
 
-**→ Proposta escrita (WP3):** as duas opções lado a lado, com recomendação **A (opções)** e subida por marco em vez de nível — [`12-classes.md`](12-classes.md). A fatia 1 não tem evoluções, portanto nada trava até decidirem.
+**→ Proposta escrita (WP3):** as duas opções lado a lado, com recomendação **A (opções)** e subida por marco em vez de nível — [`12-classes.md`](12-classes.md).
+
+✅ **DECIDIDA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **opção A: as evoluções dão opções, não números**, e sobem por marco, não por nível. É a Lei 2 aplicada à progressão, e fecha a tensão com a Lei 1.
 → [`02-personagem.md`](02-personagem.md)
 
 ### 4. "Mapa grande" é quanto?
@@ -81,13 +89,17 @@ Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide t
 ### 8. O que é que "magia do bem e do mal" faz mecanicamente?
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
 
-**→ Proposta escrita (WP4):** *bem = controlo sem preço; mal = ~1,5× mais forte por carga mas custa 8% dos PV por lançamento; qualquer um usa as duas; mortos-vivos temem o bem.* Detalhe e alternativa descartada em [`13-magia.md`](13-magia.md). **Falta o sim dos dois** — a fatia joga só com o bem até lá.
+**→ Proposta escrita (WP4):** *bem = controlo sem preço; mal = ~1,5× mais forte por carga mas custa 8% dos PV por lançamento; qualquer um usa as duas; mortos-vivos temem o bem.* Detalhe e alternativa descartada em [`13-magia.md`](13-magia.md).
+
+✅ **APROVADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — o preço da magia do mal é PV, à vista, sem medidor de corrupção. **A fatia 1 passa a poder usar as duas escolas.**
 → [`03-magia.md`](03-magia.md)
 
 ### 9. Quantas classes no início?
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
 
-**→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md). Falta a palavra do Mateus.
+**→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md).
+
+✅ **CONFIRMADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — seis classes na fatia, com o custo aceite de olhos abertos (6 habilidades + 5 conjuntos de animação).
 → [`02-personagem.md`](02-personagem.md)
 
 ### 10. O que acontece quando se morre?

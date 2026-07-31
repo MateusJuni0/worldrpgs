@@ -1,6 +1,6 @@
 # 12 — Classes
 
-> **WP3 · Fable** (31-07-2026). As oito classes nomeadas na sessão 1 (07:13 → 07:57), transformadas em fichas jogáveis sobre os atributos do WP2 ([`11-formulas.md`](11-formulas.md)) e as armas do WP1 ([`01-combate.md`](01-combate.md)). As seis da fatia vêm da instrução directa do Rico (30-07) `⏳ falta o Mateus`. A `[TENSÃO]` das evoluções **não se decide aqui** — está proposta no fim, no formato de decisão.
+> **WP3 · Fable** (31-07-2026). As oito classes nomeadas na sessão 1 (07:13 → 07:57), transformadas em fichas jogáveis sobre os atributos do WP2 ([`11-formulas.md`](11-formulas.md)) e as armas do WP1 ([`01-combate.md`](01-combate.md)). As seis da fatia foram confirmadas pelos dois a 31-07-2026. A `[TENSÃO]` das evoluções **não se decide aqui** — está proposta no fim, no formato de decisão.
 
 ## As regras que já mandam nas classes
 
