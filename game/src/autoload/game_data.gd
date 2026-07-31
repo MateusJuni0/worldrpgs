@@ -16,6 +16,7 @@ var spells: Dictionary = {}
 var controls: Dictionary = {}
 var attributes: Dictionary = {}
 var abilities: Dictionary = {}
+var biomes: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -28,6 +29,7 @@ func _ready() -> void:
 	controls = _load_json("controls.json")
 	attributes = _load_json("attributes.json")
 	abilities = _load_json("abilities.json")
+	biomes = _load_json("biomes.json")
 	_build_input_map()
 	_validate()
 
@@ -306,6 +308,34 @@ func _validate() -> void:
 			_fail("[SPEC] classe '%s' distribui %d pontos (a spec da %d)" % [class_id, spent, bonus])
 	checks += 1
 
+	# 6. As 12 fichas de bioma (spec/49-biomas.md): 8 linhas cada, paleta de 3
+	# cores hex, e exactamente UMA na fatia 1 (Brumal). A ficha e a fonte da
+	# luz e da nevoa — um campo em falta e um bioma que nao se consegue construir.
+	const BIOME_FIELDS: Array[String] = ["nome", "elemento", "eficaz_contra_nativos",
+		"material", "paleta", "racas", "colheita", "ameaca", "historia",
+		"descricao_visual", "fatia_1"]
+	var ids_b := biome_ids()
+	if ids_b.size() != 12:
+		_fail("[SPEC] %d biomas em biomes.json (a spec/49 diz 12)" % ids_b.size())
+	var in_slice := 0
+	for biome_id in ids_b:
+		var b := biome(biome_id)
+		for field in BIOME_FIELDS:
+			if not b.has(field):
+				_fail("[SPEC] bioma '%s' sem o campo '%s' (spec/49 §3)" % [biome_id, field])
+		var pal: Dictionary = b.get("paleta", {}) as Dictionary
+		for colour_key: String in ["luz", "nevoa", "acento"]:
+			var c := String(pal.get(colour_key, ""))
+			if not c.is_valid_html_color():
+				_fail("[SPEC] bioma '%s': cor '%s' invalida ('%s')" % [biome_id, colour_key, c])
+		if String((b.get("racas", {}) as Dictionary).get("dominante", "")) == "":
+			_fail("[SPEC] bioma '%s' sem raca dominante (spec/46 §2)" % biome_id)
+		if bool(b.get("fatia_1", false)):
+			in_slice += 1
+	if in_slice != 1:
+		_fail("[SPEC] %d biomas na fatia 1 (a spec/10 diz 1 — Brumal)" % in_slice)
+	checks += 1
+
 	if load_errors.is_empty():
 		print("[GameData] dados carregados — %d grupos de verificacoes contra a spec passaram" % checks)
 	else:
@@ -330,3 +360,16 @@ func _expect(got: float, want: float, what: String) -> void:
 
 func ability(class_id: String) -> Dictionary:
 	return abilities.get(class_id, {}) as Dictionary
+
+
+func biome(id: String) -> Dictionary:
+	return biomes.get(id, {}) as Dictionary
+
+
+## Ids reais dos biomas (ignora as chaves "_meta" do JSON).
+func biome_ids() -> Array[String]:
+	var out: Array[String] = []
+	for k: String in biomes.keys():
+		if not k.begins_with("_"):
+			out.append(k)
+	return out

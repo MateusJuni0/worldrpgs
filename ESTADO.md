@@ -52,8 +52,9 @@ $ godot --headless --path game/ scenes/selftest.tscn
 | **Armaduras** | **0** | ~30 | **30** |
 | **Anéis** | **0** | ~70 | **70** |
 | **Feitiços** | **3** | catálogo largo | quase tudo |
-| **Inimigos** | **3** | 7 raças + ~61 chefes | quase tudo |
+| **Inimigos** | **3** | 12 raças + 61 chefes | quase tudo |
 | Habilidades de classe | 6 | 6 | ✅ |
+| **Biomas** | **12 fichas** ([`49`](spec/49-biomas.md) + `game/data/biomes.json`) | 12 | ✅ volta 1 |
 
 ⭐ **E a instrução que daí sai:** o motor é data-driven — o `game_data.gd` recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em `spec/` **e** em `game/data/*.json`, no mesmo PR.
 
@@ -95,8 +96,8 @@ $ godot --headless --path game/ scenes/selftest.tscn
 ```
 0. ✅ O código veio para o repositório               (feito, PR #13)
         ▼
-1. AS 24 FICHAS  ── 12 de bioma + 12 de raça, 8 linhas cada
-        │           ~meio dia. É delas que sai TUDO o resto
+1. AS 24 FICHAS  ── 12 de bioma ✅ (volta 1, spec/49) + 12 de raça 🔨
+        │           é delas que sai TUDO o resto
         ▼
 2. Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
         │           cada item = intersecção de uma ficha de bioma

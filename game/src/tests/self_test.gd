@@ -24,7 +24,73 @@ func _ready() -> void:
 	_test_movement_speeds()
 	_test_spell_catalogue()
 	_test_feel()
+	_test_biomes()
 	_report()
+
+
+# --- spec/49-biomas.md (volta 1) · as 12 fichas de bioma ----------------------
+
+func _test_biomes() -> void:
+	var ids := GameData.biome_ids()
+	_check(ids.size() == 12, "12 biomas em biomes.json (spec/49 §1)")
+
+	# Exactamente UM bioma na fatia 1, e e Brumal.
+	var slice: Array[String] = []
+	for id in ids:
+		if bool(GameData.biome(id).get("fatia_1", false)):
+			slice.append(id)
+	_check(slice.size() == 1 and slice[0] == "brumal", "fatia 1 = so Brumal")
+
+	# As ordens sao 1..12, sem repeticao — a fila de construcao e inequivoca.
+	var orders: Array[int] = []
+	for id in ids:
+		orders.append(int(GameData.biome(id).get("ordem", 0)))
+	orders.sort()
+	var orders_ok := orders.size() == 12
+	for i in range(orders.size()):
+		if orders[i] != i + 1:
+			orders_ok = false
+	_check(orders_ok, "ordens 1..12 unicas")
+
+	# Nenhum elemento eficaz e orfao: existe como elemento de outro bioma
+	# ou como escola de magia (luz/sombra) — spec/49 §4.
+	var elements: Array[String] = []
+	for id in ids:
+		elements.append(String(GameData.biome(id).get("elemento", "")))
+	for id in ids:
+		var eff := String(GameData.biome(id).get("eficaz_contra_nativos", ""))
+		_check(eff in elements or eff in ["luz", "sombra"],
+			"'%s' (eficaz em %s) existe no mapa ou e escola" % [eff, id])
+
+	# 12 colheitas distintas — cada bioma da um material proprio (spec/46 §2).
+	var crops := {}
+	for id in ids:
+		crops[String(GameData.biome(id).get("colheita", ""))] = true
+	_check(crops.size() == 12, "12 colheitas distintas")
+
+	# A alavanca do 46 §7 com o travao proposto: nenhuma raca dominante ou
+	# secundaria aparece em mais de 3 biomas.
+	var race_count := {}
+	for id in ids:
+		var r: Dictionary = GameData.biome(id).get("racas", {}) as Dictionary
+		var all_races: Array = [String(r.get("dominante", ""))]
+		all_races.append_array(r.get("secundarias", []) as Array)
+		for race: Variant in all_races:
+			race_count[race] = int(race_count.get(race, 0)) + 1
+	for race: Variant in race_count.keys():
+		_check(int(race_count[race]) <= 3, "raca '%s' em <= 3 biomas" % race)
+
+	# A ficha de Brumal FORMALIZA o que o prototipo ja mostra: a nevoa da ficha
+	# e a mesma do palette de estados que as medicoes de PERF.md viram no ecra.
+	var brumal_fog := String((GameData.biome("brumal").get("paleta", {}) as Dictionary).get("nevoa", ""))
+	var state_fog := _graphics_fog()
+	_check(brumal_fog == state_fog, "nevoa de Brumal = a do prototipo medido (%s)" % state_fog)
+
+
+func _graphics_fog() -> String:
+	var graphics: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/graphics.json"))
+	return String(((graphics as Dictionary).get("palette", {}) as Dictionary).get("fog", ""))
 
 
 # --- spec/13-magia.md (WP4) · o catalogo --------------------------------------

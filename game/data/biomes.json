@@ -1,0 +1,185 @@
+{
+  "_fonte": "spec/49-biomas.md — as 12 fichas de bioma (volta 1). Cada entrada e uma ficha inteira; se divergir da spec, e o JSON que esta errado.",
+  "_regra_paleta": "luz = DirectionalLight3D.light_color · nevoa = fog_light_color + horizonte do ceu · acento = emissivos/particulas/UI (spec/49 §2).",
+  "_lei_4": "Mudar cor de luz e nevoa custa zero fotogramas (spec/47 §3). Tudo o que for alem disso (particulas de acento, etc.) mede-se antes de entrar.",
+
+  "brumal": {
+    "nome": "Brumal",
+    "ordem": 1,
+    "elemento": "bruma",
+    "eficaz_contra_nativos": "fogo",
+    "material": "carvalho-negro, ferro rude, couro de javali",
+    "paleta": { "luz": "#ffebcc", "nevoa": "#8b96a3", "acento": "#d9a441" },
+    "racas": { "dominante": "orcs", "secundarias": ["goblins"] },
+    "colheita": "limalha de ferro",
+    "ameaca": "a bruma densa das bordas: 3 s la dentro e estas virado para tras",
+    "historia": "A bruma subiu da terra no dia em que a Raiz foi aberta — e nunca mais baixou.",
+    "descricao_visual": "floresta de carvalhos negros afogada em bruma verde-cinzenta, luz ambar de fim de tarde coada entre troncos, arco de pedra partido ao fundo",
+    "fatia_1": true
+  },
+
+  "selva_funda": {
+    "nome": "Selva Funda",
+    "ordem": 2,
+    "elemento": "veneno",
+    "eficaz_contra_nativos": "fogo",
+    "material": "vime trancado, espinho de aves gigantes, seda crua",
+    "paleta": { "luz": "#a8c46a", "nevoa": "#24422e", "acento": "#c92f6b" },
+    "racas": { "dominante": "goblins", "secundarias": ["teceloes_NOVA_volta2", "kobolds"] },
+    "colheita": "seiva-peconha",
+    "ameaca": "a queda: o chao fica 40 m abaixo das copas; os passadicos rangem antes de ceder",
+    "historia": "Os goblins vivem nas copas porque o chao da Selva nunca foi deles.",
+    "descricao_visual": "selva vertical de copas fechadas, passadicos de vime goblin a 40 m do chao escuro, feixes de luz verde a cair como cordas",
+    "fatia_1": false
+  },
+
+  "campas_cinzentas": {
+    "nome": "Campas Cinzentas",
+    "ordem": 3,
+    "elemento": "morte",
+    "eficaz_contra_nativos": "luz",
+    "material": "osso, madeira encharcada, ferro comido de ferrugem",
+    "paleta": { "luz": "#beb5a3", "nevoa": "#6f7468", "acento": "#43c39b" },
+    "racas": { "dominante": "esqueletos", "secundarias": ["zumbis"] },
+    "colheita": "cinza de ossario",
+    "ameaca": "o lodo agarra: na agua parada anda-se a metade, e o que vive na agua so ataca ai",
+    "historia": "Uma batalha acabou aqui sem vencedor; os mortos ainda esperam ordens.",
+    "descricao_visual": "pantano de arvores mortas e lapides tortas meio afundadas, agua parada cinzenta, fogos-fatuos verde-agua ao longe",
+    "fatia_1": false
+  },
+
+  "fojo": {
+    "nome": "Fojo",
+    "ordem": 4,
+    "elemento": "terra",
+    "eficaz_contra_nativos": "raio",
+    "material": "granito, ferro em bruto, corda e roldana",
+    "paleta": { "luz": "#e0a35c", "nevoa": "#55463a", "acento": "#d94f2a" },
+    "racas": { "dominante": "kobolds", "secundarias": ["mimicos", "minotauros"] },
+    "colheita": "ferro em bruto",
+    "ameaca": "as armadilhas kobold — todas com gatilho visivel: punem a pressa, nunca o azar",
+    "historia": "Os kobolds nao cavaram as minas — mudaram-se para o que encontraram aberto.",
+    "descricao_visual": "desfiladeiro ocre estreito com andaimes e roldanas kobold, bocas de mina iluminadas a tocha, poeira suspensa na luz",
+    "fatia_1": false
+  },
+
+  "costa_quebrada": {
+    "nome": "Costa Quebrada",
+    "ordem": 5,
+    "elemento": "tempestade",
+    "eficaz_contra_nativos": "raio",
+    "material": "madeira de naufragio, bronze verde de azinhavre, sal",
+    "paleta": { "luz": "#b7c3cd", "nevoa": "#7d8fa0", "acento": "#55a58a" },
+    "racas": { "dominante": "orcs", "secundarias": ["mimicos", "submersos_NOVA_volta2", "ventaneiras_NOVA_volta2"] },
+    "colheita": "bronze-do-mar",
+    "ameaca": "as rajadas: o vento empurra e assobia 1 s antes de bater; junto a borda, e a queda",
+    "historia": "Uma frota inteira quebrou numa so noite, e o mar nunca devolveu um unico corpo.",
+    "descricao_visual": "falesias de basalto sob chuva fina, esqueletos de navios espetados nas rochas, bronze coberto de azinhavre",
+    "fatia_1": false
+  },
+
+  "cimeira": {
+    "nome": "Cimeira",
+    "ordem": 6,
+    "elemento": "gelo",
+    "eficaz_contra_nativos": "fogo",
+    "material": "aco temperado a frio, pele de cabra-das-neves, gelo-azul",
+    "paleta": { "luz": "#eef4fc", "nevoa": "#c3d4e6", "acento": "#4f7fd9" },
+    "racas": { "dominante": "ventaneiras_NOVA_volta2", "secundarias": ["minotauros"] },
+    "colheita": "flor-de-gelo",
+    "ameaca": "o frio roi a stamina maxima ao ar livre; abrigos e fogueiras devolvem-na",
+    "historia": "Quem subiu a Cimeira foi para vigiar uma coisa ao longe — e ainda esta de vigia.",
+    "descricao_visual": "encosta nevada acima das nuvens, ceu limpo azul-gelo, escadaria de pedra a desaparecer na neve — o unico bioma sem bruma",
+    "fatia_1": false
+  },
+
+  "fornalha": {
+    "nome": "Fornalha",
+    "ordem": 7,
+    "elemento": "fogo",
+    "eficaz_contra_nativos": "gelo",
+    "material": "obsidiana, bronze fundido, couro curtido",
+    "paleta": { "luz": "#ff8a4a", "nevoa": "#40302c", "acento": "#ffb347" },
+    "racas": { "dominante": "borralheiros_NOVA_volta2", "secundarias": ["orcs"] },
+    "colheita": "obsidiana",
+    "ameaca": "o chao mente: crosta escura aguenta, crosta rubra cede — a cor e a telegrafia",
+    "historia": "A forja ainda esta acesa; ninguem a alimenta ha cem anos.",
+    "descricao_visual": "monte negro de obsidiana com rios de lava, fumo a subir de chamines de pedra, forjas abandonadas ainda acesas",
+    "fatia_1": false
+  },
+
+  "fulgor": {
+    "nome": "Fulgor",
+    "ordem": 8,
+    "elemento": "raio",
+    "eficaz_contra_nativos": "terra",
+    "material": "fulgurite, couro seco, osso polido pelo vento",
+    "paleta": { "luz": "#d8cfa8", "nevoa": "#8a836b", "acento": "#a37fe8" },
+    "racas": { "dominante": "minotauros", "secundarias": ["kobolds"] },
+    "colheita": "fulgurite",
+    "ameaca": "os relampagos caem onde o chao brilha 1 s antes — telegrafia vinda do ceu",
+    "historia": "A tempestade nao passa — esta presa, a rodar o mesmo monte desde que alguem a prendeu.",
+    "descricao_visual": "planalto seco e rachado sob um tecto de nuvens violeta em rotacao lenta, relampagos a cravar-se em torres de vidro fulgurite",
+    "fatia_1": false
+  },
+
+  "raizama": {
+    "nome": "Raizama",
+    "ordem": 9,
+    "elemento": "esporos",
+    "eficaz_contra_nativos": "fogo",
+    "material": "quitina, madeira-cogumelo, seda de teia",
+    "paleta": { "luz": "#3f5c8f", "nevoa": "#1c2740", "acento": "#64e0c8" },
+    "racas": { "dominante": "teceloes_NOVA_volta2", "secundarias": ["goblins"] },
+    "colheita": "esporo-lumen",
+    "ameaca": "as nuvens de esporos — visiveis, envenenam quem as atravessa; rebenta-las a distancia limpa o caminho",
+    "historia": "Tudo aqui cresce sobre a carcaca de algo enorme; os cogumelos sao a sua flor.",
+    "descricao_visual": "caverna colossal de raizes entrancadas e cogumelos-torre, escuro azul cortado por esporos ciano a flutuar",
+    "fatia_1": false
+  },
+
+  "cidade_afogada": {
+    "nome": "Cidade Afogada",
+    "ordem": 10,
+    "elemento": "agua",
+    "eficaz_contra_nativos": "raio",
+    "material": "marmore afogado, prata escurecida, vidro",
+    "paleta": { "luz": "#6fa39b", "nevoa": "#3a5a60", "acento": "#c9d2da" },
+    "racas": { "dominante": "submersos_NOVA_volta2", "secundarias": ["zumbis"] },
+    "colheita": "prata afogada",
+    "ameaca": "a agua profunda: a nadar nao se ataca nem se esquiva — e o que nada por baixo caca o que faz barulho",
+    "historia": "A agua subiu num unico dia e parou a altura dos sinos — que ainda tocam.",
+    "descricao_visual": "cidade de marmore mergulhada em agua verde-clara ate aos telhados, campanarios a tona, prata a luzir por baixo da superficie",
+    "fatia_1": false
+  },
+
+  "santuario_branco": {
+    "nome": "Santuario Branco",
+    "ordem": 11,
+    "elemento": "luz",
+    "eficaz_contra_nativos": "sombra",
+    "material": "marmore branco, ouro baco, cera",
+    "paleta": { "luz": "#f7ecca", "nevoa": "#ded0ac", "acento": "#8a2f2f" },
+    "racas": { "dominante": "penitentes_NOVA_volta2", "secundarias": ["esqueletos"] },
+    "colheita": "cera benta",
+    "ameaca": "a luz cega: encarar as zonas de brilho queima a visao por segundos — os Penitentes nao tem olhos",
+    "historia": "Rezaram ate a luz responder; o que respondeu nao era o que chamavam.",
+    "descricao_visual": "templo de marmore branco de brilho excessivo, ouro baco, milhares de velas acesas, sombras cortadas a preto",
+    "fatia_1": false
+  },
+
+  "raiz": {
+    "nome": "A Raiz",
+    "ordem": 12,
+    "elemento": "sombra",
+    "eficaz_contra_nativos": "luz",
+    "material": "pedra negra, raiz petrificada, prata baca",
+    "paleta": { "luz": "#4a4260", "nevoa": "#151221", "acento": "#b8b2d9" },
+    "racas": { "dominante": "sem_rosto_NOVA_volta2", "secundarias": ["esqueletos"] },
+    "colheita": "lagrima de bruma",
+    "ameaca": "o escuro absoluto: a lanterna ocupa a mao do escudo — ver ou defender, nunca os dois",
+    "historia": "Foi daqui que a bruma saiu, pela porta que alguem deixou aberta.",
+    "descricao_visual": "abismo de pedra negra onde rios de bruma palida correm para cima, escuro quase total, raizes petrificadas do tamanho de torres",
+    "fatia_1": false
+  }
+}

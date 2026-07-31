@@ -13,6 +13,10 @@ const SEED := 20260731  # fixo: duas medicoes de desempenho tem de ver o mesmo m
 
 var preset: Dictionary = {}
 var palette: Dictionary = {}
+## A ficha do bioma (data/biomes.json ← spec/49-biomas.md). E daqui que vem a
+## cor da luz, da nevoa e do acento — spec/47 §4, passo 1: a paleta da ficha
+## e configuracao do motor, nao decoracao.
+var biome: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
 
 ## Pontos de interesse que o main usa para colocar o jogador e os inimigos.
@@ -22,9 +26,10 @@ var lair_entrance := Vector3.ZERO
 var path_points: Array[Vector3] = []
 
 
-func build(p_preset: Dictionary, p_palette: Dictionary, layout: String) -> void:
+func build(p_preset: Dictionary, p_palette: Dictionary, layout: String, biome_id: String = "brumal") -> void:
 	preset = p_preset
 	palette = p_palette
+	biome = GameData.biome(biome_id)  # a arena tambem vive em Brumal
 	_rng.seed = SEED
 	_build_environment()
 	_build_light()
@@ -39,14 +44,17 @@ func build(p_preset: Dictionary, p_palette: Dictionary, layout: String) -> void:
 
 func _build_environment() -> void:
 	var env := Environment.new()
-	var fog_colour := _colour("fog")
+	# A cor da nevoa vem da FICHA DO BIOMA (spec/49 §2, cor 2); o palette de
+	# estados fica como rede de seguranca se a ficha faltar.
+	var fog_colour := _biome_colour("nevoa", _colour("fog"))
 
 	# Ceu em gradiente (ProceduralSky e quase gratis): horizonte claro a fundir
 	# com a nevoa, zenite escuro — profundidade sem custar um shader proprio.
+	# Zenite e chao DERIVAM da nevoa e do chao — nada de cor chapada em codigo.
 	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color("#2c3644")
+	sky_mat.sky_top_color = fog_colour.darkened(0.62)
 	sky_mat.sky_horizon_color = fog_colour.lightened(0.10)
-	sky_mat.ground_bottom_color = Color("#39402f")
+	sky_mat.ground_bottom_color = _colour("ground").darkened(0.32)
 	sky_mat.ground_horizon_color = fog_colour
 	sky_mat.sun_angle_max = 25.0
 	sky_mat.sun_curve = 0.12
@@ -88,7 +96,7 @@ func _build_light() -> void:
 	# temperatura e o truque de atmosfera mais barato que existe.
 	sun.rotation_degrees = Vector3(-38, 42, 0)
 	sun.light_energy = 1.15
-	sun.light_color = Color(1.0, 0.92, 0.80)
+	sun.light_color = _biome_colour("luz", Color(1.0, 0.92, 0.80))  # cor 1 da ficha (spec/49 §2)
 	sun.shadow_enabled = bool(preset.get("shadows", true))
 	sun.directional_shadow_max_distance = float(preset.get("shadow_distance", 30.0))
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL  # 1 cascata = o mais barato
@@ -99,6 +107,13 @@ func _build_light() -> void:
 
 func _colour(key: String) -> Color:
 	return Color(String(palette.get(key, "#ff00ff")))
+
+
+## Cor da paleta do bioma (luz / nevoa / acento — spec/49 §2), com recurso.
+func _biome_colour(key: String, fallback: Color) -> Color:
+	var pal: Dictionary = biome.get("paleta", {}) as Dictionary
+	var c := String(pal.get(key, ""))
+	return Color(c) if c.is_valid_html_color() else fallback
 
 
 func _material(key: String) -> StandardMaterial3D:
@@ -355,17 +370,20 @@ func _add_torch(at: Vector3) -> void:
 	var fm := BoxMesh.new()
 	fm.size = Vector3(0.30, 0.42, 0.30)
 	flame.mesh = fm
+	# A chama e a luz da tocha sao o ACENTO do bioma (spec/49 §2, cor 3) —
+	# em Brumal, o ambar das tochas e a assinatura da zona.
+	var accent := _biome_colour("acento", Color(1.0, 0.66, 0.30))
 	var fmat := StandardMaterial3D.new()
 	fmat.emission_enabled = true
-	fmat.emission = Color(1.0, 0.62, 0.22)
+	fmat.emission = accent
 	fmat.emission_energy_multiplier = 2.6
-	fmat.albedo_color = Color(1.0, 0.75, 0.35)
+	fmat.albedo_color = accent.lightened(0.20)
 	flame.material_override = fmat
 	flame.position = at + Vector3(0, 2.4, 0)
 	add_child(flame)
 
 	var light := OmniLight3D.new()
-	light.light_color = Color(1.0, 0.66, 0.30)
+	light.light_color = accent
 	light.light_energy = 2.4
 	light.omni_range = 11.0
 	light.shadow_enabled = false  # sombras de omni sao caras; a luz chega

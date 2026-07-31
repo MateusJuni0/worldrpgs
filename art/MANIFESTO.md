@@ -56,7 +56,25 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 | `ui_menu_fundo` | Fundo do menu principal | `art/ui/menus/menu-fundo.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 | `sky_brumal` | Céu de Brumal (entardecer enevoado) | `art/sky/brumal-ceu.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 
-**Total: 32 assets — todos gerados.** (25 da fatia 1 + 7 do bestiário) Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+## Conceitos de bioma — volta 1 ([`../spec/49-biomas.md`](../spec/49-biomas.md))
+
+> A `descrição visual` de cada um está na ficha (spec/49 §3) e em `game/data/biomes.json`. Brumal já tem cenário (`con_brumal_vista`) — estes são os 11 que faltam. **Nenhum é da fatia 1**: geram-se quando o orçamento de créditos deixar, por ordem de zona.
+
+| ID | Asset | Caminho | Dim. | Prompt | Estado |
+|---|---|---|---|---|---|
+| `con_bioma_selva_funda` | Selva Funda (selva vertical, passadiços goblin) | `art/concept/bioma-selva-funda.png` | 1536×1024 | ficha §3.2 | ⬜ |
+| `con_bioma_campas` | Campas Cinzentas (pântano dos mortos) | `art/concept/bioma-campas.png` | 1536×1024 | ficha §3.3 | ⬜ |
+| `con_bioma_fojo` | Fojo (desfiladeiros e minas kobold) | `art/concept/bioma-fojo.png` | 1536×1024 | ficha §3.4 | ⬜ |
+| `con_bioma_costa` | Costa Quebrada (falésias dos naufrágios) | `art/concept/bioma-costa.png` | 1536×1024 | ficha §3.5 | ⬜ |
+| `con_bioma_cimeira` | Cimeira (a montanha limpa, sem bruma) | `art/concept/bioma-cimeira.png` | 1536×1024 | ficha §3.6 | ⬜ |
+| `con_bioma_fornalha` | Fornalha (o monte-forja) | `art/concept/bioma-fornalha.png` | 1536×1024 | ficha §3.7 | ⬜ |
+| `con_bioma_fulgor` | Fulgor (planalto da tempestade presa) | `art/concept/bioma-fulgor.png` | 1536×1024 | ficha §3.8 | ⬜ |
+| `con_bioma_raizama` | Raizama (caverna do grande morto) | `art/concept/bioma-raizama.png` | 1536×1024 | ficha §3.9 | ⬜ |
+| `con_bioma_cidade_afogada` | Cidade Afogada (ruínas na água parada) | `art/concept/bioma-cidade-afogada.png` | 1536×1024 | ficha §3.10 | ⬜ |
+| `con_bioma_santuario` | Santuário Branco (o templo que rezou de mais) | `art/concept/bioma-santuario.png` | 1536×1024 | ficha §3.11 | ⬜ |
+| `con_bioma_raiz` | A Raiz (o abismo de onde a bruma sai) | `art/concept/bioma-raiz.png` | 1536×1024 | ficha §3.12 | ⬜ |
+
+**Total: 32 assets gerados + 11 conceitos de bioma por gerar.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
