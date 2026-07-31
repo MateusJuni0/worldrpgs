@@ -65,4 +65,4 @@ Seis perguntas bloqueiam o resto — detalhe em [`spec/99-perguntas-abertas.md`]
 
 | # | Data | Duração | Transcrição | Ideias |
 |---|---|---|---|---|
-| 1 | 30-07-2026 | 13m13s | [transcrição](design/transcripts/) | [ideias](design/ideas/) |
+| 1 | 30-07-2026 | 13m13s | local | local |

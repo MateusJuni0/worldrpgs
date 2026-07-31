@@ -1,3 +1,9 @@
+# Transcrições — fora do repo até haver decisão sobre publicar uma conversa
+# privada num repositório público. Isto está aqui em vez de se confiar em
+# alguém lembrar-se de as excluir a cada commit.
+design/transcripts/
+design/ideas/
+
 # Gravações de sessão — ficam locais, nunca no repo (centenas de MB cada)
 *.mkv
 *.mp4
