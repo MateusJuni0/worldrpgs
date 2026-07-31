@@ -78,6 +78,69 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 47 | Claude | do greybox ao visual |
 | **48+** | **livre** | |
 
+## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
+
+`[DECIDIDO]` (Mateus, 31-07-2026) — *"conforme ele vai fazendo ele vai comitando, e tu vais vendo, aprovando, e daí ele vai pro próximo. Nesse meio tempo tu aprovas o commit que ele fez e pensas em mais gaps pra ele resolver."*
+
+**Não é uma entrega grande no fim. São voltas pequenas, e os dois trabalham ao mesmo tempo.**
+
+```
+   FABLE                              CLAUDE
+     │                                   │
+  1. reserva o pacote aqui  ──────────►  │
+     │  (push imediato)                  │
+  2. escreve spec + game/data            │
+  3. abre PR + avisa na issue #3 ─────►  4. revê contra as 4 leis e o DECISOES
+     │                                   5. aprova e faz merge
+     │                                   │
+  7. pega no próximo  ◄──────────────── 6. comenta no PR:
+     │                                      (a) o veredito
+     │                                      (b) as IMAGENS que o pacote desbloqueou
+     │                                      (c) os GAPS novos para o próximo
+     ▼                                   │
+  (volta ao 1)                           │  ⭐ enquanto ele escreve o seguinte,
+                                         │  o Claude gera as imagens do anterior
+                                         │  e procura lacunas
+```
+
+⭐ **O paralelismo é o ponto.** Enquanto o Fable escreve o pacote N+1, o Claude está a **gerar as imagens do pacote N** e a **caçar lacunas**. Ninguém espera por ninguém.
+
+### As regras do ciclo
+
+| | |
+|---|---|
+| **Um pacote por PR** | o #11 trouxe 1333 linhas e 11 pacotes, e o conflito foi feio |
+| **Spec + `game/data` no mesmo PR** | o motor é data-driven: escrever o catálogo **é** construir o jogo |
+| **Avisar na issue #3** | uma linha — *"pacote X pronto, PR #N"*. É o sino |
+| **O Claude não trava** | se o PR está bom, entra. Reparos vão no comentário, não bloqueiam |
+| ⚠️ **O Claude comenta sempre com os gaps do próximo** | é o que faz a volta seguinte arrancar sem esperar pelo Mateus |
+| **Não decidir `[TENSÃO]`** | propõe-se; decidem o Mateus e o Rico |
+
+### A fila — 10 voltas até à spec completa
+
+| # | Pacote | O que desbloqueia |
+|---|---|---|
+| **1** | **12 fichas de bioma** ([`spec/46`](spec/46-coerencia-bioma-raca-item.md) §2) | paletas, luz e névoa · **fecha as perguntas 4 e 13** |
+| **2** | **12 fichas de raça** (§5) — 6 novas | descrições de tudo · inimigos |
+| **3** | **WP5 camada 1** — 8 famílias de arma + 9 peças de armadura | 🖼️ **17 imagens** |
+| **4** | **WP4 magia** — escolas + grelha de verbos + melhoria | 🖼️ ícones de feitiço |
+| **5** | **WP6 bestiário** — fichas de inimigo + baralhos de espólio | 🖼️ retratos |
+| **6** | **WP5 camada 2** — instâncias da fatia 1, com `descrição visual` | 🖼️ ícones de item |
+| **7** | **WP7 chefes** — subchefes, guardiões, fichas de ataque | |
+| **8** | **Sistemas** — interrupção, contra-ataque, soft caps, piso de 30% | |
+| **9** | **WP8 mundo** — círculos, atalhos, 12 biomas | |
+| **10** | **Alinhamento** dos 11 documentos antigos | |
+
+⚠️ **A ordem não é negociável nas três primeiras.** As fichas de bioma e raça são o motor que gera todas as descrições ([`spec/46`](spec/46-coerencia-bioma-raca-item.md) §5) — feitas ao contrário, cada descrição é inventada de novo e nada combina.
+
+### 🖼️ As imagens
+
+O caminho completo está em [`art/PIPELINE.md`](art/PIPELINE.md). O resumo:
+
+- **O Fable escreve** a coluna `descrição visual` e a coluna `Fatia 1?`. **Nunca gera imagens**
+- **O Claude gera** com **nano banana** (o mesmo modelo das 32 que existem — não se mistura), remove fundo nos ícones, arquiva e regista
+- ⚠️ **Orçamento real: ~70 imagens.** É a coluna `Fatia 1?` que decide quais
+
 ## Quem trata das entregas
 
 O **Claude** (lado do Mateus) verifica o repositório em ciclo: PRs novos são revistos e, com a autorização permanente do Mateus (31-07), integrados quando estão bem. Não é preciso esperar por ninguém para entregar — abre o PR e ele será visto.

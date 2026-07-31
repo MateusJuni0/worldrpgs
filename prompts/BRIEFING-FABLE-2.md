@@ -313,6 +313,69 @@ Por último — é limpeza, e metade resolve-se ao reescrever os catálogos. A l
 
 ---
 
+# ⭐ Como trabalhamos os dois — o ciclo
+
+`[DECIDIDO]` (Mateus, 31-07) — *"conforme ele vai fazendo ele vai comitando, e tu vais vendo, aprovando, e daí ele vai pro próximo. Nesse meio tempo tu aprovas o commit e pensas em mais gaps."*
+
+**Não é uma entrega grande no fim. São voltas pequenas, e nós os dois trabalhamos ao mesmo tempo.**
+
+```
+   TU                                 EU
+    │                                  │
+ 1. reservas o pacote  ─────────────►  │
+ 2. escreves spec + game/data          │
+ 3. abres PR + avisas na issue #3 ──►  4. revejo contra as 4 leis
+    │                                  5. aprovo e faço merge
+    │                                  │
+ 7. pegas no próximo  ◄─────────────  6. comento com:
+    │                                     (a) o veredito
+    │                                     (b) as IMAGENS que geraste-me
+    │                                     (c) os GAPS do próximo
+    ▼                                  │
+ (volta ao 1)                          │  ⭐ enquanto escreves o seguinte,
+                                       │  eu gero as imagens do anterior
+                                       │  e caço lacunas
+```
+
+⭐ **O paralelismo é o ponto. Ninguém espera por ninguém.**
+
+⚠️ **E não travo nada.** Se o PR está bom, entra. Os reparos vão no comentário e **não bloqueiam** — corriges no PR seguinte se fizer sentido.
+
+## A fila — 10 voltas até à spec completa
+
+| # | Pacote | O que desbloqueia |
+|---|---|---|
+| **1** | **12 fichas de bioma** | paletas, luz, névoa · **fecha as perguntas 4 e 13** |
+| **2** | **12 fichas de raça** — 6 novas são tuas | descrições de tudo · inimigos |
+| **3** | **WP5 camada 1** — 8 famílias + 9 peças | 🖼️ **17 imagens** |
+| **4** | **WP4 magia** — escolas, verbos, melhoria | 🖼️ ícones de feitiço |
+| **5** | **WP6 bestiário** — fichas + baralhos | 🖼️ retratos |
+| **6** | **WP5 camada 2** — instâncias da fatia 1 | 🖼️ ícones de item |
+| **7** | **WP7 chefes** — subchefes e guardiões | |
+| **8** | **Sistemas** — interrupção, contra-ataque, soft caps, piso de 30% | |
+| **9** | **WP8 mundo** — círculos, atalhos, 12 biomas | |
+| **10** | **Alinhamento** dos 11 documentos antigos | |
+
+⚠️ **As três primeiras não se trocam de ordem.** As fichas são o motor que gera todas as descrições — feitas ao contrário, cada uma é inventada de novo e nada combina.
+
+## 🖼️ As imagens — e é o que tira o jogo do cinzento
+
+O Mateus foi directo: *"não quero esses gráficos quadrados, por isso vamos gerar as imagens."*
+
+**Caminho completo em [`../art/PIPELINE.md`](../art/PIPELINE.md).** O que te toca:
+
+| | |
+|---|---|
+| **Tu escreves** | a coluna **`descrição visual`** e a coluna **`Fatia 1?`** |
+| **Tu nunca geras imagens** | a consistência depende de **um só modelo** — é decisão fechada |
+| **Eu gero** | com **nano banana**, o mesmo das 32 que existem. Removo fundo nos ícones, arquivo e registo |
+
+⚠️ **Orçamento real: ~70 imagens** (143,75 créditos, 2 por imagem). Não chega para 120 armas + 30 armaduras + 70 anéis. **É a coluna `Fatia 1?` que decide quais** — sem ela, ou gero 300 (impossível) ou nenhuma.
+
+⚠️ **E a descrição visual usa o material do bioma** ([`../spec/46-coerencia-bioma-raca-item.md`](../spec/46-coerencia-bioma-raca-item.md)). Um machado orc do bioma de fogo é de **obsidiana**, e isso escreve-se — não se deixa ao acaso do gerador.
+
+---
+
 # Como entregar
 
 | | |
