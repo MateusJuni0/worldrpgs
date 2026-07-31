@@ -15,6 +15,7 @@ var enemies: Dictionary = {}
 var spells: Dictionary = {}
 var controls: Dictionary = {}
 var attributes: Dictionary = {}
+var abilities: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -26,6 +27,7 @@ func _ready() -> void:
 	spells = _load_json("spells.json")
 	controls = _load_json("controls.json")
 	attributes = _load_json("attributes.json")
+	abilities = _load_json("abilities.json")
 	_build_input_map()
 	_validate()
 
@@ -215,6 +217,11 @@ func _keycode_from_name(n: String) -> Key:
 			return (KEY_A + (c - 65)) as Key
 		if c >= 48 and c <= 57:
 			return (KEY_0 + (c - 48)) as Key
+	# F1..F12, genericamente — para nao voltar a faltar um F6.
+	if n.length() >= 2 and n[0] == "F" and n.substr(1).is_valid_int():
+		var fn := n.substr(1).to_int()
+		if fn >= 1 and fn <= 12:
+			return (KEY_F1 + (fn - 1)) as Key
 	match n:
 		"Space": return KEY_SPACE
 		"Shift": return KEY_SHIFT
@@ -225,11 +232,6 @@ func _keycode_from_name(n: String) -> Key:
 		"Enter", "Return": return KEY_ENTER
 		"BracketLeft": return KEY_BRACKETLEFT
 		"BracketRight": return KEY_BRACKETRIGHT
-		"F1": return KEY_F1
-		"F2": return KEY_F2
-		"F3": return KEY_F3
-		"F4": return KEY_F4
-		"F5": return KEY_F5
 	return KEY_NONE
 
 
@@ -324,3 +326,7 @@ func _check_hits(enemy_id: String, mv: float, attrs: Dictionary, lo: int, hi: in
 func _expect(got: float, want: float, what: String) -> void:
 	if absf(got - want) > 0.01:
 		_fail("[SPEC] %s deu %.1f, a spec diz %.1f" % [what, got, want])
+
+
+func ability(class_id: String) -> Dictionary:
+	return abilities.get(class_id, {}) as Dictionary

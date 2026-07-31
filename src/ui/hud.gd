@@ -112,11 +112,12 @@ func _process(delta: float) -> void:
 	_stamina.color = Color(0.85, 0.35, 0.3) if player.stamina.locked_out else Color(0.45, 0.78, 0.35)
 
 	var spell_name: String = GameData.spell(player.selected_spell).get("display_name", "?")
-	_info.text = "%d/%d PV   %d/%d STA   cargas %d/%d   frasco %d/%d   magia: %s   %s   [%s]" % [
+	_info.text = "%d/%d PV   %d/%d STA   cargas %d/%d   frasco %d/%d   hab: %s   magia: %s   %s   [%s]" % [
 		int(player.health), int(player.max_health),
 		int(player.stamina.current), int(player.stamina.maximum),
 		player.charges, player.max_charges,
 		player.flask_uses, player.flask_max,
+		player.ability_label(),
 		spell_name, player.loadout_label(), player.state_name()]
 
 	_update_boss()

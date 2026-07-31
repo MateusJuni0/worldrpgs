@@ -546,3 +546,13 @@ func telegraphing_parryable() -> int:
 
 func display_name() -> String:
 	return String(data.get("display_name", enemy_id))
+
+
+## Provocacao do Tanque (WP3): atencao forcada no provocador. A solo acorda
+## quem patrulha; em co-op sera a fixacao de alvo. Simples e legivel.
+func taunt(by: Node3D, _seconds: float) -> void:
+	if state == State.DEAD:
+		return
+	target = by
+	if state == State.IDLE or state == State.PATROL:
+		state = State.CHASE

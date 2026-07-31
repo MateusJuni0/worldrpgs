@@ -13,7 +13,7 @@ extends CharacterBody3D
 signal died
 signal state_changed(state: int)
 
-enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM }
+enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY }
 
 # Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
 var _buffer_life := 24        # 400 ms
@@ -29,6 +29,9 @@ var max_health := 420.0
 var defense := 20.0
 var flask_uses := 3
 var flask_max := 3
+var _ability: Dictionary = {}
+var _ability_cd := 0.0
+var _fury_time := 0.0
 var attrs: Dictionary = {}
 var class_id := "warrior"
 
@@ -95,6 +98,9 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	charges = max_charges
 	flask_max = int(GameData.section("flask").get("uses", 3))
 	flask_uses = flask_max
+	_ability = GameData.ability(class_id)
+	_ability_cd = 0.0
+	_fury_time = 0.0
 
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
 	main_weapon = loadout.get("main", "longsword")
@@ -176,6 +182,10 @@ func _physics_process(delta: float) -> void:
 		_read_input()
 		lock_on.tick(delta)
 		stamina.tick(delta, state == State.BLOCK)
+		if _ability_cd > 0.0:
+			_ability_cd = maxf(0.0, _ability_cd - delta)
+		if _fury_time > 0.0:
+			_fury_time = maxf(0.0, _fury_time - delta)
 		if _egide_time > 0.0:
 			_egide_time -= delta
 			if _egide_time <= 0.0:
@@ -208,6 +218,8 @@ func _read_input() -> void:
 		_buffer("cast")
 	if Input.is_action_just_pressed("use_item"):
 		_buffer("flask")
+	if Input.is_action_just_pressed("ability"):
+		_buffer("ability")
 	if Input.is_action_just_pressed("lock_on"):
 		lock_on.toggle()
 	if Input.is_action_just_pressed("next_spell"):
@@ -280,6 +292,7 @@ func _tick_state(delta: float) -> void:
 		State.CASTING:   _tick_casting(delta)
 		State.RIPOSTE:   _tick_riposte(delta)
 		State.USING_ITEM: _tick_flask(delta)
+		State.ABILITY:   _tick_ability(delta)
 		State.HITSTUN:   _tick_locked(delta, _hitstun_frames)
 		State.GUARD_BREAK:
 			_tick_locked(delta, int(GameData.section("block").get("guard_break_duration", 1.5) * 60.0))
@@ -302,6 +315,7 @@ func _tick_free(delta: float) -> void:
 		"parry":  _start_parry()
 		"cast":   _start_cast()
 		"flask":  _start_flask()
+		"ability": _start_ability()
 
 
 func _tick_block(delta: float) -> void:
@@ -385,6 +399,8 @@ func _start_dodge() -> void:
 	if not stamina.can_act():
 		return
 	var cfg := GameData.section("dodge")
+	if _fury_time > 0.0:
+		return   # Furia: sem esquiva — o preco da armadura
 	stamina.spend(cfg.get("stamina_cost", 25.0))
 
 	var input := _move_input()
@@ -504,7 +520,7 @@ func _block_source() -> String:
 
 
 func _can_block() -> bool:
-	return _block_source() != ""
+	return _block_source() != "" and _fury_time <= 0.0
 
 
 # --- Ataques ------------------------------------------------------------------
@@ -616,6 +632,10 @@ func has_hyper_armor() -> bool:
 		return true
 	# A Egide da hiper-armadura enquanto a barreira durar, nao so a conjurar (WP4).
 	if _egide_shield > 0.0 and _egide_time > 0.0:
+		return true
+	# Furia (Berserker, WP3): hiper-armadura em tudo enquanto durar — o preco e
+	# nao poder bloquear nem esquivar. Troca defesa por avanco, nao da numeros.
+	if _fury_time > 0.0:
 		return true
 	if state != State.ATTACK or not bool(_atk.get("chargeable", false)):
 		return false
@@ -905,7 +925,71 @@ func state_name() -> String:
 		State.RIPOSTE: return "riposte"
 		State.DEAD: return "morto"
 		State.USING_ITEM: return "a beber"
+		State.ABILITY: return "habilidade"
 	return "?"
+
+
+# --- Habilidade especial (WP3) [tecla V = PROTO] -------------------------------
+# spec/12-classes.md: verbos novos, nao numeros. Cooldown fixo, nada escala.
+# Implementadas: Impeto (warrior), Furia (berserker), Provocacao (tank).
+# Eco, Passo Sombra e Julgamento: registadas nos dados, entram por iteracao.
+
+func _start_ability() -> void:
+	if _ability.is_empty() or _ability_cd > 0.0:
+		return
+	match String(_ability.get("id", "")):
+		"impeto":
+			if not stamina.can_act():
+				return
+			stamina.spend(float(_ability.get("stamina_cost", 30.0)))
+			_ability_cd = float(_ability.get("cooldown_s", 15.0))
+			if is_instance_valid(lock_on.target):
+				_face(_to_target())
+			_change_state(State.ABILITY)
+		"furia":
+			_ability_cd = float(_ability.get("cooldown_s", 45.0))
+			_fury_time = float(_ability.get("duration_s", 8.0))
+		"provocacao":
+			_ability_cd = float(_ability.get("cooldown_s", 30.0))
+			_taunt_all()
+		_:
+			pass  # por implementar — fica sem efeito em vez de fingir
+
+
+## Impeto: avanco em linha que termina num golpe leve com MV proprio (1,2).
+func _tick_ability(_delta: float) -> void:
+	var dash_frames := int(float(_ability.get("dash_seconds", 0.35)) * 60.0)
+	var speed := float(_ability.get("dash_m", 6.0)) / maxf(float(_ability.get("dash_seconds", 0.35)), 0.05)
+	var dir := _facing()
+	velocity.x = dir.x * speed
+	velocity.z = dir.z * speed
+	if state_frame >= dash_frames:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		_change_state(State.FREE)
+		_start_attack("light")
+		if state == State.ATTACK:
+			_atk_mv = float(_ability.get("strike_mv", 1.2))
+
+
+## Provocacao: inimigos num raio ficam com atencao no Tanque (a ferramenta de
+## co-op "segura o brutamontes"; a solo, acorda os que patrulham longe).
+func _taunt_all() -> void:
+	var radius := float(_ability.get("radius_m", 8.0))
+	var secs := float(_ability.get("duration_s", 4.0))
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var e := node as Node3D
+		if e != null and e.global_position.distance_to(global_position) <= radius and e.has_method("taunt"):
+			e.call("taunt", self, secs)
+
+
+func ability_label() -> String:
+	if _ability.is_empty():
+		return "-"
+	var n := String(_ability.get("display_name", "?"))
+	if String(_ability.get("id", "")) == "furia" and _fury_time > 0.0:
+		return "%s %.0fs!" % [n, ceilf(_fury_time)]
+	return "%s ok" % n if _ability_cd <= 0.0 else "%s %ds" % [n, ceili(_ability_cd)]
 
 
 # --- Frasco (cura) [PROTO] ----------------------------------------------------

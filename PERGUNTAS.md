@@ -126,3 +126,8 @@ O **WP3 chegou durante a noite** (`spec/12-classes.md`) e fecha o que faltava �
 O WP2 escreve a curva (`XP = 80 + 20n`, lanceiro 25 · brutamontes 45 · Vorgar 400) e a fatia vai do nivel 1 ao 10.
 
 **Contornado:** o jogador e sempre nivel 1 com a distribuicao da classe. Nao e perda para o que a noite tinha de responder — o criterio 3 da fatia e **precisamente** "nivel 1, zero pontos, mata o Vorgar", e e nisso que o prototipo esta. Mas quem quiser sentir a progressao ainda nao pode.
+
+### P4 — Tecla da habilidade especial nao existe na spec
+A tabela de comandos do WP1 (spec/01-combate.md) nao reservou tecla para a
+habilidade especial de classe (WP3). O prototipo usa V [PROTO]. O WP1/WP1B
+devem fechar isto — e a tecla mais usada a seguir ao ataque.

@@ -19,7 +19,9 @@
     "next_spell":     [{ "type": "key", "key": "F" }],
     "cast":           [{ "type": "key", "key": "C" }],
     "use_item":       [{ "type": "key", "key": "R" }],
+    "ability":        [{ "type": "key", "key": "V" }],
     "interact":       [{ "type": "key", "key": "E" }],
+    "debug_class_next": [{ "type": "key", "key": "F6" }],
 
     "hotbar_1":       [{ "type": "key", "key": "1" }],
     "hotbar_2":       [{ "type": "key", "key": "2" }],

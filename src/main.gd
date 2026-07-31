@@ -193,6 +193,9 @@ func _on_boss_died(_e: Enemy) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_pressed():
 		return
+	if InputMap.has_action("debug_class_next") and Input.is_action_just_pressed("debug_class_next"):
+		_cycle_class()
+		return
 	if InputMap.has_action("quit_game") and Input.is_action_just_pressed("quit_game"):
 		get_tree().quit()
 	elif InputMap.has_action("toggle_mouse") and Input.is_action_just_pressed("toggle_mouse"):
@@ -223,3 +226,35 @@ func _process(delta: float) -> void:
 	player.global_position = centre + Vector3(sin(angle) * 12.0, 0.6, cos(angle) * 12.0)
 	if player.camera != null:
 		player.camera.rotation.y = angle + PI
+
+
+# --- Troca de classe (F6, ferramenta de teste) ---------------------------------
+# Para o Rico sentir as 6 classes sem menu (o menu de escolha vem com o WP11).
+
+const CLASSES: Array[String] = ["warrior", "tank", "berserker", "sorcerer", "assassin", "paladin"]
+var _class_index := 0
+
+
+func _cycle_class() -> void:
+	_class_index = (_class_index + 1) % CLASSES.size()
+	var class_id := CLASSES[_class_index]
+	var pos := player.global_position
+	var cam := player.camera
+	player.died.disconnect(_on_player_died)
+	player.queue_free()
+
+	player = Player.new()
+	player.name = "Player"
+	add_child(player)
+	player.setup(class_id, _palette)
+	player.global_position = pos
+	player.camera = cam
+	cam.target = player
+	player.died.connect(_on_player_died)
+	hud.player = player
+	for node in get_children():
+		var e := node as Enemy
+		if e != null:
+			e.target = player
+	var display: String = GameData.class_attributes(class_id).get("display_name", class_id)
+	hud.toast("Classe: %s (F6 troca)" % display, 2.5)
