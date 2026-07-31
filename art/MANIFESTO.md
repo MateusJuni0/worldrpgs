@@ -60,7 +60,7 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
-> **Modelos usados:** os 5 cenários saíram do gpt-image (browser, plano ChatGPT); os outros 20 do `nano_banana_pro` (Google) via Higgsfield CLI, 2 créditos cada. A mistura é visível se procurares: os 5 primeiros são mais escuros e menos pincelados. Se incomodar, regeneram-se por 10 créditos.
+> **Modelo:** `nano_banana_pro` (Nano Banana Pro — o modelo de imagem do Gemini) via Higgsfield CLI, 2 créditos cada. **Todas as 25 saíram do mesmo gerador**, que é o que mantém a consistência de pé. Os 5 cenários foram primeiro feitos com gpt-image pelo browser e depois regenerados aqui, por decisão do Mateus — não misturar.
 >
 > **Ícones:** gerados com fundo cinzento chapado e depois passados pelo removedor de fundo do Higgsfield (1 crédito cada) — ficam RGBA com transparência real, que é o que a hotbar precisa.
 
