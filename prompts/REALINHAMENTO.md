@@ -38,6 +38,26 @@ Todas de 31-07, todas depois de ele ter começado. Estão no [`../DECISOES.md`](
 - **~30 armaduras** com habilidade própria · **~20 armas por classe** (≈120), em famílias que partilham conjunto de movimentos
 - ⚠️ **Toda a habilidade diz como se activa, na mesma linha.** Armaduras → passivas ou condicionais. Armas → **uma tecla partilhada** de arte de arma. Detalhe em [`../spec/34-catalogo-e-comandos.md`](../spec/34-catalogo-e-comandos.md)
 
+## A2b. A segunda conversa de 31-07 — quinze decisões e três estudos
+
+Tudo em [`../spec/40-decisoes-espolio-magia-inventario.md`](../spec/40-decisoes-espolio-magia-inventario.md), com os estudos que as sustentam nos [`41`](../spec/41-estudo-armas-e-golpes.md), [`42`](../spec/42-estudo-magia.md) e [`43`](../spec/43-estudo-espolio-inventario-mundo.md).
+
+⚠️ **A regra de processo vem primeiro, e é do Mateus:** *"é melhor estudar primeiro completo como funciona o jogo, cada funcionalidade e mecanismo, e depois implementar. A gente não quer o jogo superficial."* **Nenhum sistema entra por analogia ou de memória — estuda-se, escreve-se com números e com fonte, e só depois se decide o nosso.**
+
+O que muda no trabalho do Fable:
+
+| Decisão | O que obriga |
+|---|---|
+| **Garantia de espólio** (baralho de 10 sem reposição) | o bestiário do WP6 precisa de **coluna de baralho** por inimigo |
+| **10 reaparições, descanso recarrega o mapa** | WP9 tem de somar **quantas almas existem por zona**, ao todo |
+| **Cada arma bate diferente** | WP5 refaz o catálogo com a **ficha de família** do [`41`](../spec/41-estudo-armas-e-golpes.md) §9 — 11 golpes, onde é boa **e onde é má** |
+| ⭐ **Magia vasta + melhoria de feitiços** | WP4 é o maior pacote que falta: 4 escolas, grelha de verbos, tabela de 6 níveis por feitiço |
+| **Feitiços únicos** | proíbe a duplicação para ganhar lançamentos — os lançamentos vêm da melhoria |
+| **Inventário sem limite** | WP11 tira gestão de espaço e põe **filtros e favoritos** |
+| **Carregamento por área** | WP14 + WP8 desenham-se **juntos**: o traçado das zonas é o orçamento de memória |
+
+**E uma instrução directa do Mateus ao Fable** (§16 do [`40`](../spec/40-decisoes-espolio-magia-inventario.md)): *"temos que instruir o do Rico a fazer isso nos colaboradores, porque daí a gente consegue muita coisa nesse jogo."*
+
 ## A3. O que continua por fazer na spec, independentemente do que ele commitou
 
 **Reparos que já lhe foram apontados e ficaram por fazer:**

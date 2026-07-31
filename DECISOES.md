@@ -10,6 +10,22 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### Espólio garantido, magia, inventário e carregamento → [`spec/40-decisoes-espolio-magia-inventario.md`](spec/40-decisoes-espolio-magia-inventario.md)
+**Regra de processo, e vale para todos:** nenhum sistema entra nesta spec por analogia ou de memória. **Estuda-se o mecanismo, escreve-se com números e com fonte, e só depois se decide o nosso.**
+- **Descanso recarrega o mapa todo** (chefes não) · tecto de **10 reaparições** por inimigo — não se farma
+- **Almas variam por inimigo** — e com o tecto, cada zona passa a ter um orçamento fixo de almas
+- ⭐ **GARANTIA DE ESPÓLIO:** em 10 mortes o inimigo larga **todas as peças que se vêem nele + a arma + o feitiço**. Chefe larga tudo de uma vez. ⚠️ Aleatório dá **32%** de sair o conjunto — por isso o mecanismo é um **baralho de 10 sem reposição**, não um dado
+- **Armadura pesada**: rolamento mais lento e curto — ⚠️ **nunca menos invencibilidade**
+- **Atributos:** vida, stamina, magia, inteligência, slots de magia, carga
+- ⭐ **O MAGO é a classe mais vasta** — cura, dano, buffs, elementos, **magia do mal**. ⚠️ `[TENSÃO]` registada: sem travões quebra a Lei 3
+- **Espadachim = destreza**, capricho nas **katanas** e nas espadas
+- ⭐ **Cada arma bate diferente — "nada é uma animação, tudo é calculado"**: se duas armas só diferem em números, uma não devia existir
+- **Inventário SEM LIMITE** — só o equipado pesa (70%) · **baús** · **carregamento por área** · **mundo vasto**
+- ⭐ **Feitiços NUNCA repetem** (armas podem) · ⭐ **melhoria de feitiços** em 3 eixos: força, **área**, **lançamentos**
+- ⭐ **Espólio enviesado pela classe** — só nas cartas de enchimento; a promessa nunca muda
+- **Abre as perguntas 26–29** no `99`
+- **Substitui:** nada — os estudos que a sustentam são o [`41`](spec/41-estudo-armas-e-golpes.md), [`42`](spec/42-estudo-magia.md) e [`43`](spec/43-estudo-espolio-inventario-mundo.md)
+
 ### Estudo profundo da referência → [`spec/39-estudo-profundo.md`](spec/39-estudo-profundo.md)
 - ⭐ **PISO DE 30%** — nenhuma defesa reduz um golpe abaixo de 30%. É a **Lei 1 em equação**, e não a tínhamos
 - ⭐ **Soft cap aos ~40** — sem ele o nível 100 ganha jogos. Lá, dos 40 aos 99 ganham-se **10 pontos de stamina**: é a curva que segura a Lei 1, não a boa vontade

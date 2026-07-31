@@ -59,6 +59,10 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
 | 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
 | 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
+| 43 | [**Estudo: espólio, inventário, segredos e carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços de equipamento, mímicos e paredes falsas, a porta de nevoeiro como barreira de carregamento | 🟢 10 accionáveis |
+| 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | As 4 escolas, o instrumento, espaços e energia, melhoria de feitiços, o catálogo de verbos | 🟢 a classe favorita do Mateus, com travões |
+| 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção, stamina, bloqueio, reforços | 🟢 ficha de família definida |
+| 40 | [**Decisões: espólio, magia, inventário**](spec/40-decisoes-espolio-magia-inventario.md) | 15 decisões do Mateus — garantia de espólio, mago, inventário sem limite, carregamento por área | 🟢 registo, 4 perguntas novas |
 | 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, melhoria, frascos, mundo, agressão, co-op, almas, descoberta | 🟢 18 accionáveis, 4 perguntas novas |
 | 38 | [**Ataques e honestidade**](spec/38-ataques-e-honestidade.md) | As 5 fases, o contrato que faz a esquiva ser verdadeira, 3–5 ataques por inimigo | 🟢 contrato fixado, fichas por escrever |
 | 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, escudos por elemento, dano de queda corrigido | 🟠 escala fixada, catálogo por escrever |
