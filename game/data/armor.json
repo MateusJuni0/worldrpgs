@@ -1,0 +1,84 @@
+{
+  "_fonte": "spec/51-familias.md §4-§5 — os 9 slots, as 3 classes de carga, e as 10 pecas dos kits iniciais (instrucao do Rico, 31-07).",
+  "_estado": "por implementar — os dados validam desde ja; o ecra de equipar e do WP11, a mecanica entra no M2.",
+  "_regra": "A armadura muda COMO se joga, nunca quanto se aguenta de graca: peso e resistencias por tipo, com tecto por peca. Nada de defesa plana.",
+
+  "slots": ["cabeca", "rosto", "ombros", "peito", "maos", "cintura", "pernas", "pes", "capa"],
+
+  "carga": {
+    "_fonte": "spec/51 §4. Os i-frames NUNCA mudam (Lei 1) — o peso paga-se na recuperacao e na regeneracao.",
+    "limite_base": 50,
+    "leve":   { "max_fraccao": 0.30, "recuperacao_esquiva_frames": 0, "regen_stamina_mult": 1.0 },
+    "medio":  { "max_fraccao": 0.70, "recuperacao_esquiva_frames": 4, "regen_stamina_mult": 0.9 },
+    "pesado": { "max_fraccao": 1.00, "recuperacao_esquiva_frames": 8, "regen_stamina_mult": 0.8 }
+  },
+
+  "pieces": {
+    "couro_peitoral": {
+      "nome": "Peitoral de couro fervido", "slot": "peito", "peso": 6,
+      "material": "couro de javali (Brumal)", "resistencias": { "corte": 12 },
+      "descricao_visual": "peitoral de couro fervido castanho-escuro, costuras grossas, marcas de uso",
+      "fatia_1": true
+    },
+    "couro_botas": {
+      "nome": "Botas de couro", "slot": "pes", "peso": 2,
+      "material": "couro de javali (Brumal)", "resistencias": { "corte": 4 },
+      "descricao_visual": "botas de couro castanho ate meia perna, sola gasta, atacadores de tira",
+      "fatia_1": true
+    },
+    "ferro_elmo": {
+      "nome": "Elmo de ferro rude", "slot": "cabeca", "peso": 5,
+      "material": "ferro rude (Brumal)", "resistencias": { "contusao": 10 },
+      "descricao_visual": "elmo de ferro martelado sem polimento, fenda em T, rebites a vista",
+      "fatia_1": true
+    },
+    "ferro_peitoral": {
+      "nome": "Peitoral de ferro rude", "slot": "peito", "peso": 12,
+      "material": "ferro rude (Brumal)", "resistencias": { "corte": 18, "contusao": 10 },
+      "descricao_visual": "peitoral de placas de ferro baco rebitadas sobre couro, ombros reforcados",
+      "fatia_1": true
+    },
+    "ferro_peitoral_polido": {
+      "nome": "Peitoral de ferro polido", "slot": "peito", "peso": 12,
+      "material": "ferro rude polido (Brumal)", "resistencias": { "corte": 16, "luz": 6 },
+      "descricao_visual": "peitoral de ferro polido a espelho com relevo de raio no peito, correias claras",
+      "fatia_1": true
+    },
+    "pano_mascara": {
+      "nome": "Mascara de pano escuro", "slot": "rosto", "peso": 0.5,
+      "material": "pano (neutro)", "resistencias": {},
+      "descricao_visual": "mascara de pano cinza-escuro que cobre nariz e boca, no atras da cabeca",
+      "fatia_1": true
+    },
+    "pano_botas": {
+      "nome": "Botas de pano", "slot": "pes", "peso": 1,
+      "material": "pano (neutro)", "resistencias": {},
+      "descricao_visual": "botas macias de pano escuro de sola fina — feitas para nao fazer barulho",
+      "fatia_1": true
+    },
+    "couro_ombreiras": {
+      "nome": "Ombreiras de couro com pelo", "slot": "ombros", "peso": 3,
+      "material": "couro e pelo de javali (Brumal)", "resistencias": { "corte": 6 },
+      "descricao_visual": "ombreiras de couro cru com pelo de javali por cima, tiras cruzadas no peito nu",
+      "fatia_1": true
+    },
+    "la_capa": {
+      "nome": "Capa de la encerada", "slot": "capa", "peso": 2,
+      "material": "la encerada (neutro)", "resistencias": { "bruma": 8 },
+      "descricao_visual": "capa de la grossa cor de carvao, encerada contra a humidade, capuz fundo",
+      "fatia_1": true
+    },
+    "la_capa_clara": {
+      "nome": "Capa de la clara", "slot": "capa", "peso": 2,
+      "material": "la (neutro)", "resistencias": { "sombra": 8 },
+      "descricao_visual": "capa de la crua quase branca com debrum dourado gasto, capuz para tras",
+      "fatia_1": true
+    },
+    "couro_cinto": {
+      "nome": "Cinto de bolsas", "slot": "cintura", "peso": 1,
+      "material": "couro (Brumal)", "resistencias": {},
+      "descricao_visual": "cinto largo de couro com quatro bolsas de tamanhos diferentes, rolhas de cortica a espreitar",
+      "fatia_1": true
+    }
+  }
+}

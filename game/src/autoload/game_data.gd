@@ -17,6 +17,8 @@ var controls: Dictionary = {}
 var attributes: Dictionary = {}
 var abilities: Dictionary = {}
 var biomes: Dictionary = {}
+var races: Dictionary = {}
+var armor: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -30,6 +32,8 @@ func _ready() -> void:
 	attributes = _load_json("attributes.json")
 	abilities = _load_json("abilities.json")
 	biomes = _load_json("biomes.json")
+	races = _load_json("races.json")
+	armor = _load_json("armor.json")
 	_build_input_map()
 	_validate()
 
@@ -336,6 +340,117 @@ func _validate() -> void:
 		_fail("[SPEC] %d biomas na fatia 1 (a spec/10 diz 1 — Brumal)" % in_slice)
 	checks += 1
 
+	# 7. O laco bioma <-> raca, nos dois sentidos (spec/50 + spec/46 §4).
+	# Toda a raca que um bioma aloja existe em races.json E declara esse bioma;
+	# todo o bioma que uma raca habita existe em biomes.json E lista essa raca.
+	# E a regra anti-mistura em codigo: um boneco sem casa nao arranca o jogo.
+	const RACE_FIELDS: Array[String] = ["nome", "tipo", "papel", "origem", "quer",
+		"biomas", "relacoes", "mortos", "veste", "segredo", "descricao_visual", "fatia_1"]
+	const VALID_ROLES: Array[String] = ["rapido", "pesado", "distancia", "grupo", "armadilha"]
+	var true_races := 0
+	for race_id in race_ids():
+		var r := race(race_id)
+		for field in RACE_FIELDS:
+			if not r.has(field):
+				_fail("[SPEC] raca '%s' sem o campo '%s' (spec/50)" % [race_id, field])
+		if String(r.get("tipo", "")) == "raca":
+			true_races += 1
+		if String(r.get("papel", "")) not in VALID_ROLES:
+			_fail("[SPEC] raca '%s' com papel '%s' fora do spec/38 §6" % [race_id, r.get("papel", "")])
+		var homes: Dictionary = r.get("biomas", {}) as Dictionary
+		if homes.is_empty():
+			_fail("[SPEC] raca '%s' sem bioma nenhum (spec/46 §5)" % race_id)
+		for home: String in homes.keys():
+			if biome(home).is_empty():
+				_fail("[SPEC] raca '%s' habita bioma inexistente '%s'" % [race_id, home])
+			else:
+				var housed: Dictionary = biome(home).get("racas", {}) as Dictionary
+				var listed: Array = [String(housed.get("dominante", ""))]
+				listed.append_array(housed.get("secundarias", []) as Array)
+				if race_id not in listed:
+					_fail("[SPEC] raca '%s' diz viver em '%s', mas o bioma nao a lista" % [race_id, home])
+	if true_races != 12:
+		_fail("[SPEC] %d racas verdadeiras (a spec/50 diz 12; pragas nao contam)" % true_races)
+	for biome_id in biome_ids():
+		var housed_b: Dictionary = biome(biome_id).get("racas", {}) as Dictionary
+		var all_listed: Array = [String(housed_b.get("dominante", ""))]
+		all_listed.append_array(housed_b.get("secundarias", []) as Array)
+		for listed_race: Variant in all_listed:
+			var rr := race(String(listed_race))
+			if rr.is_empty():
+				_fail("[SPEC] bioma '%s' aloja raca inexistente '%s'" % [biome_id, listed_race])
+			elif not (rr.get("biomas", {}) as Dictionary).has(biome_id):
+				_fail("[SPEC] bioma '%s' lista '%s', mas a raca nao declara esse bioma" % [biome_id, listed_race])
+	checks += 1
+
+	# 8. WP5 camada 1 (spec/51-familias.md): familias, kits e armadura.
+	# A regra do 41 §2: uma familia sem a frase "onde e ma" esta listada, nao
+	# desenhada — e aqui isso e um erro, nao uma opiniao.
+	var fams: Dictionary = weapons.get("familias", {}) as Dictionary
+	var fam_ids: Array[String] = []
+	for f: String in fams.keys():
+		if not f.begins_with("_"):
+			fam_ids.append(f)
+	if fam_ids.size() != 8:
+		_fail("[SPEC] %d familias de arma (a spec/51 §2 diz 8)" % fam_ids.size())
+	for fam_id in fam_ids:
+		var fam: Dictionary = fams[fam_id]
+		for field: String in ["nome", "onde_boa", "onde_ma", "interrupcao", "fatia_1"]:
+			if not fam.has(field):
+				_fail("[SPEC] familia '%s' sem '%s' (spec/51 §2)" % [fam_id, field])
+		if String(fam.get("onde_ma", "")) == "":
+			_fail("[SPEC] familia '%s' sem a frase 'onde e ma' — esta listada, nao desenhada" % fam_id)
+
+	# Toda a arma da fatia declara a familia a que pertence, e ela existe.
+	for w_id: String in weapons.keys():
+		if w_id.begins_with("_") or w_id in ["familias", "familias_escudo", "loadouts",
+				"test_loadouts", "golpes_universais"]:
+			continue
+		var w: Dictionary = weapons[w_id]
+		if w.has("familia"):
+			if not fams.has(String(w.get("familia"))):
+				_fail("[SPEC] arma '%s' aponta a familia inexistente '%s'" % [w_id, w.get("familia")])
+		elif not w.has("familia_escudo"):
+			_fail("[SPEC] arma '%s' sem familia (spec/51 §2)" % w_id)
+
+	# Escudos: o tecto de estabilidade e rigido — sem ele bloquear e gratis.
+	var shields: Dictionary = weapons.get("familias_escudo", {}) as Dictionary
+	var stab_max: float = shields.get("estabilidade_maxima", 85.0)
+	for s_id: String in shields.keys():
+		if s_id.begins_with("_") or typeof(shields[s_id]) != TYPE_DICTIONARY:
+			continue
+		if float((shields[s_id] as Dictionary).get("estabilidade", 0.0)) > stab_max:
+			_fail("[SPEC] escudo '%s' passa o tecto de estabilidade %.0f (spec/51 §3)" % [s_id, stab_max])
+
+	# Kits: nenhuma referencia fantasma, e a carga e uma das tres.
+	var pieces: Dictionary = armor.get("pieces", {}) as Dictionary
+	var loads: Dictionary = weapons.get("loadouts", {}) as Dictionary
+	for class_id: String in loads.keys():
+		if class_id.begins_with("_"):
+			continue
+		var kit: Dictionary = loads[class_id]
+		for slot_key: String in ["main", "offhand"]:
+			var wid: Variant = kit.get(slot_key, null)
+			if wid != null and String(wid) != "" and not weapons.has(String(wid)):
+				_fail("[SPEC] kit '%s': arma '%s' nao existe" % [class_id, wid])
+		for piece: Variant in kit.get("pecas", []):
+			if not pieces.has(String(piece)):
+				_fail("[SPEC] kit '%s': peca '%s' nao existe em armor.json" % [class_id, piece])
+		if String(kit.get("carga", "")) not in ["leve", "medio", "pesado"]:
+			_fail("[SPEC] kit '%s' com carga '%s' fora das tres classes" % [class_id, kit.get("carga", "")])
+		if not kit.has("pecas") or (kit.get("pecas", []) as Array).is_empty():
+			_fail("[SPEC] kit '%s' sem pecas (instrucao do Rico, spec/51 §5)" % class_id)
+
+	# Os i-frames NUNCA mudam com o peso (Lei 1, spec/51 §4).
+	var carga: Dictionary = armor.get("carga", {}) as Dictionary
+	for load_name: String in ["leve", "medio", "pesado"]:
+		var c: Dictionary = carga.get(load_name, {}) as Dictionary
+		if c.is_empty():
+			_fail("[SPEC] classe de carga '%s' em falta (spec/51 §4)" % load_name)
+		elif c.has("iframe_start_frame") or c.has("iframe_end_frame"):
+			_fail("[SPEC] carga '%s' mexe nos i-frames — a Lei 1 nao deixa (spec/51 §4)" % load_name)
+	checks += 1
+
 	if load_errors.is_empty():
 		print("[GameData] dados carregados — %d grupos de verificacoes contra a spec passaram" % checks)
 	else:
@@ -370,6 +485,19 @@ func biome(id: String) -> Dictionary:
 func biome_ids() -> Array[String]:
 	var out: Array[String] = []
 	for k: String in biomes.keys():
+		if not k.begins_with("_"):
+			out.append(k)
+	return out
+
+
+func race(id: String) -> Dictionary:
+	return races.get(id, {}) as Dictionary
+
+
+## Ids reais das racas (ignora as chaves "_meta" do JSON).
+func race_ids() -> Array[String]:
+	var out: Array[String] = []
+	for k: String in races.keys():
 		if not k.begins_with("_"):
 			out.append(k)
 	return out

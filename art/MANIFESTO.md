@@ -93,7 +93,38 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 | `con_bioma_santuario` | Santuário Branco (o templo que rezou de mais) | `art/concept/bioma-santuario.png` | 1536×1024 | ficha §3.11 | ⬜ |
 | `con_bioma_raiz` | A Raiz (o abismo de onde a bruma sai) | `art/concept/bioma-raiz.png` | 1536×1024 | ficha §3.12 | ⬜ |
 
-**Total: 32 assets gerados + 11 conceitos de bioma por gerar.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+## Conceitos das raças novas — volta 2 ([`../spec/50-racas.md`](../spec/50-racas.md))
+
+> As 6 raças `[FABLE]` da volta 2. A `descrição visual` está na ficha (spec/50) e em `game/data/races.json`. As 7 raças aprovadas já têm retrato. **Nenhuma é da fatia 1.**
+
+| ID | Asset | Caminho | Dim. | Prompt | Estado |
+|---|---|---|---|---|---|
+| `con_raca_tecelao` | Tecelão (aranha-povo da Raizama) | `art/concept/raca-tecelao.png` | 1024×1536 | ficha §7 | ⬜ |
+| `con_raca_ventaneira` | Ventaneira (vigia alada da Cimeira) | `art/concept/raca-ventaneira.png` | 1024×1536 | ficha §8 | ⬜ |
+| `con_raca_borralheiro` | Borralheiro (povo da forja) | `art/concept/raca-borralheiro.png` | 1024×1536 | ficha §9 | ⬜ |
+| `con_raca_submerso` | Submerso (afogado da Cidade) | `art/concept/raca-submerso.png` | 1024×1536 | ficha §10 | ⬜ |
+| `con_raca_penitente` | Penitente (o cego do Santuário) | `art/concept/raca-penitente.png` | 1024×1536 | ficha §11 | ⬜ |
+| `con_raca_sem_rosto` | Sem-Rosto (o guarda da Raiz) | `art/concept/raca-sem-rosto.png` | 1024×1536 | ficha §12 | ⬜ |
+
+## Ícones de armadura — volta 3, **fatia 1** ([`../spec/51-familias.md`](../spec/51-familias.md) §5)
+
+> ⭐ **São as primeiras armaduras do jogo** — as 11 peças dos kits iniciais das 6 classes. Todas `Fatia 1 ✅`, todas com `descrição visual` em `game/data/armor.json`. **Prioridade sobre os conceitos de bioma e raça:** são a primeira coisa que 100% dos jogadores vê no ecrã de criação.
+
+| ID | Asset | Caminho | Dim. | Classe(s) | Estado |
+|---|---|---|---|---|---|
+| `ico_arm_couro_peitoral` | Peitoral de couro fervido | `art/ui/icons/armor/couro-peitoral.png` | 512×512 | Guerreiro | ⬜ |
+| `ico_arm_couro_botas` | Botas de couro | `art/ui/icons/armor/couro-botas.png` | 512×512 | Guerreiro | ⬜ |
+| `ico_arm_ferro_elmo` | Elmo de ferro rude | `art/ui/icons/armor/ferro-elmo.png` | 512×512 | Tanque | ⬜ |
+| `ico_arm_ferro_peitoral` | Peitoral de ferro rude | `art/ui/icons/armor/ferro-peitoral.png` | 512×512 | Tanque | ⬜ |
+| `ico_arm_ferro_peitoral_polido` | Peitoral de ferro polido | `art/ui/icons/armor/ferro-peitoral-polido.png` | 512×512 | Paladino | ⬜ |
+| `ico_arm_pano_mascara` | Máscara de pano escuro | `art/ui/icons/armor/pano-mascara.png` | 512×512 | Assassino | ⬜ |
+| `ico_arm_pano_botas` | Botas de pano | `art/ui/icons/armor/pano-botas.png` | 512×512 | Assassino | ⬜ |
+| `ico_arm_couro_ombreiras` | Ombreiras de couro com pelo | `art/ui/icons/armor/couro-ombreiras.png` | 512×512 | Berserker | ⬜ |
+| `ico_arm_la_capa` | Capa de lã encerada | `art/ui/icons/armor/la-capa.png` | 512×512 | Feiticeiro | ⬜ |
+| `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 512×512 | Paladino | ⬜ |
+| `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 512×512 | Feiticeiro | ⬜ |
+
+**Total: 32 assets gerados + 11 ícones de armadura (fatia 1) + 11 conceitos de bioma + 6 de raça.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >

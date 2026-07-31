@@ -25,7 +25,116 @@ func _ready() -> void:
 	_test_spell_catalogue()
 	_test_feel()
 	_test_biomes()
+	_test_races()
+	_test_families_and_kits()
 	_report()
+
+
+# --- spec/51-familias.md (volta 3) · familias, escudos, armadura e kits -------
+
+func _test_families_and_kits() -> void:
+	var fams: Dictionary = GameData.weapons.get("familias", {}) as Dictionary
+	var ids: Array[String] = []
+	for f: String in fams.keys():
+		if not f.begins_with("_"):
+			ids.append(f)
+	_check(ids.size() == 8, "8 familias de arma (spec/51 §2)")
+
+	# A regra do 41 §2 — toda a familia diz onde e MA.
+	for id in ids:
+		_check(String((fams[id] as Dictionary).get("onde_ma", "")).length() > 20,
+			"familia '%s' diz onde e ma" % id)
+
+	# A katana e a arma do contra-ataque: tem de bater mais do que a base.
+	var base_counter := int((fams["espada_recta"] as Dictionary).get("contra_ataque_pct", 0))
+	_check(int((fams["katana"] as Dictionary).get("contra_ataque_pct", 0)) > base_counter,
+		"katana: contra-ataque acima da base (a arma do tempo do inimigo)")
+	# A besta e a Lei 3 em objecto: nao escala com nada.
+	_check(String((fams["besta"] as Dictionary).get("escala", "")) == "nenhuma",
+		"besta: zero escala (Lei 3)")
+	# Adaga vs pesada: a ordem de interrupcao do 41 §4 tem de valer.
+	_check(int((fams["adaga"] as Dictionary).get("interrupcao", 99))
+		< int((fams["pesada_corte"] as Dictionary).get("interrupcao", 0)),
+		"adaga interrompe menos que a pesada de corte")
+
+	# Escudos: nenhum passa o tecto de 85, e o grande nao apara.
+	var shields: Dictionary = GameData.weapons.get("familias_escudo", {}) as Dictionary
+	_check(int(shields.get("estabilidade_maxima", 0)) == 85, "tecto de estabilidade = 85")
+	_check((shields["escudo_grande"] as Dictionary).get("parry_delta_frames") == null,
+		"escudo grande nao apara")
+
+	# Os 6 kits: todas as classes servidas, com pecas, e so o tanque em medio.
+	var loads: Dictionary = GameData.weapons.get("loadouts", {}) as Dictionary
+	for class_id: String in ["warrior", "sorcerer", "tank", "assassin", "berserker", "paladin"]:
+		var kit: Dictionary = loads.get(class_id, {}) as Dictionary
+		_check(not kit.is_empty(), "kit inicial de '%s' existe" % class_id)
+		_check((kit.get("pecas", []) as Array).size() >= 1, "kit '%s' traz pecas" % class_id)
+	_check(String((loads["tank"] as Dictionary).get("carga", "")) == "medio",
+		"so o tanque arranca em carga media")
+
+	# Instrucao do Rico (31-07): o assassino comeca com DUAS adagas.
+	var assassin: Dictionary = loads.get("assassin", {}) as Dictionary
+	_check(String(assassin.get("main", "")) == "dagger"
+		and String(assassin.get("offhand", "")) == "dagger",
+		"assassino arranca com duas adagas (instrucao do Rico)")
+	# E continua a poder aparar — a adaga esta na lista do WP1.
+	var parry_list: Array = GameData.section("parry").get("weapons_that_parry", [])
+	_check(parry_list.has("dagger"), "com duas adagas o assassino ainda apara")
+
+	# Armadura: as 9 casas existem, e o peso nao mexe nos i-frames (Lei 1).
+	_check((GameData.armor.get("slots", []) as Array).size() == 9, "9 slots de armadura")
+	var carga: Dictionary = GameData.armor.get("carga", {}) as Dictionary
+	_check(float((carga["pesado"] as Dictionary).get("regen_stamina_mult", 1.0)) < 1.0,
+		"carga pesada custa regeneracao de stamina")
+	_check(int((carga["leve"] as Dictionary).get("recuperacao_esquiva_frames", -1)) == 0,
+		"carga leve nao penaliza a recuperacao da esquiva")
+
+
+# --- spec/50-racas.md (volta 2) · as 12 fichas de raca ------------------------
+
+func _test_races() -> void:
+	var ids := GameData.race_ids()
+
+	# 12 racas verdadeiras + o mimico como praga (spec/50 §0).
+	var true_races: Array[String] = []
+	for id in ids:
+		if String(GameData.race(id).get("tipo", "")) == "raca":
+			true_races.append(id)
+	_check(true_races.size() == 12, "12 racas verdadeiras (10-15 [DECIDIDO])")
+	_check(String(GameData.race("mimicos").get("tipo", "")) == "praga",
+		"o mimico e praga, nao raca")
+
+	# So os orcs estao na fatia 1 (spec/10: lanceiro, brutamontes, Vorgar).
+	var slice: Array[String] = []
+	for id in ids:
+		if bool(GameData.race(id).get("fatia_1", false)):
+			slice.append(id)
+	_check(slice.size() == 1 and slice[0] == "orcs", "fatia 1 = so orcs")
+
+	# Cada bioma tem >= 3 papeis de combate diferentes entre as racas que aloja
+	# + o mimico/chefe — aqui exigimos >= 2 so das racas residentes (o 3.o vem
+	# do chefe ancora, WP7). Spec/38 §6 via spec/50 §13.
+	for biome_id in GameData.biome_ids():
+		var housed: Dictionary = GameData.biome(biome_id).get("racas", {}) as Dictionary
+		var listed: Array = [String(housed.get("dominante", ""))]
+		listed.append_array(housed.get("secundarias", []) as Array)
+		var roles := {}
+		for race_id: Variant in listed:
+			var r := GameData.race(String(race_id))
+			roles[String(r.get("papel", ""))] = true
+			if r.has("papel_secundario"):
+				roles[String(r.get("papel_secundario", ""))] = true
+		_check(roles.size() >= 2, "%s: >= 2 papeis entre residentes (tem %d)" % [biome_id, roles.size()])
+
+	# As 6 novas sao exactamente as semeadas na volta 1 (spec/49 §4).
+	for new_race: String in ["teceloes", "ventaneiras", "borralheiros",
+			"submersos", "penitentes", "sem_rosto"]:
+		_check(not GameData.race(new_race).is_empty(), "raca nova '%s' existe" % new_race)
+
+	# Nenhuma raca sem segredo — a linha 8 e a que faz reler (spec/46 §5).
+	for id in ids:
+		_check(String(GameData.race(id).get("segredo", "")) != "",
+			"'%s' tem a linha 'ninguem sabe'" % id)
 
 
 # --- spec/49-biomas.md (volta 1) · as 12 fichas de bioma ----------------------
