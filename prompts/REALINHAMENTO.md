@@ -42,7 +42,7 @@ Todas de 31-07, todas depois de ele ter começado. Estão no [`../DECISOES.md`](
 
 **Reparos que já lhe foram apontados e ficaram por fazer:**
 
-1. **Nenhum dos 11 documentos do PR #11 passou pelo protocolo de investigação** ([`../spec/31-referencias.md`](../spec/31-referencias.md)) — falta a tabela *eles · nós · diferença* e as fontes citadas. É uma passagem de revisão pelos 11
+1. ✅ **O estudo da referência está feito** — [`../spec/35-estudo-referencia.md`](../spec/35-estudo-referencia.md), com fontes. **Produziu 8 descobertas accionáveis**, três delas obrigam a reescrever trabalho: armas por família e não por classe (WP5), curva de nível linear que devia ser cúbica (WP2/WP9), e a ambiguidade das 30 armaduras. Os 11 documentos ainda precisam de uma passagem contra isto
 2. **Cada ficha do bestiário tem de dizer que som anuncia cada ataque** — a regra da 1.ª pessoa está lá marcada `[CLAUDE]`, por completar
 3. **Melhoria de armas não existe na spec** (WP5)
 4. **Estados alterados** — veneno, sangramento, queimadura — nunca mencionados (WP5)
