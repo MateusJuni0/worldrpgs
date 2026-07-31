@@ -13,6 +13,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Pacote | Documento | Quem | Desde | Estado |
 |---|---|---|---|---|
 | WP0 | `spec/10-fatia-1.md` | Fable | 30-07 | ✅ entregue (`e49e6c1`), reparos na revisão do PR #1 |
+| WP1B | `spec/25-controlo.md` | Claude | 31-07 | 🔨 em curso |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
