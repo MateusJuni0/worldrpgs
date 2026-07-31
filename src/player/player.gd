@@ -437,6 +437,8 @@ func _start_riposte(target: Node3D) -> void:
 	var cfg := GameData.section("parry")
 	_atk_mv = cfg.get("riposte_mv", 2.5)
 	_atk_weapon = main_weapon
+	_atk_kind = "riposte"   # senao herdava o peso do golpe anterior no hit-stun
+	_atk = {}
 	_atk_hit = []
 	if is_instance_valid(target):
 		_face((target.global_position - global_position).normalized())

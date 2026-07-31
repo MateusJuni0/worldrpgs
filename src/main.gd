@@ -113,6 +113,18 @@ func _populate() -> void:
 			_spawn("orc_spearman", p[1] + Vector3(4, 0.5, 0))
 			_spawn("orc_spearman", p[2] + Vector3(-5, 0.5, 2))
 			_spawn("orc_brute", p[3] + Vector3(3, 0.5, -3))
+		"lei4":
+			# O criterio 5 da fatia, a letra: "2 jogadores + 3 inimigos no ecra",
+			# na resolucao nativa. O pior caso de render que a spec exige.
+			var c := world.path_points[2]
+			_spawn("orc_spearman", c + Vector3(6, 0.5, 2))
+			_spawn("orc_spearman", c + Vector3(-4, 0.5, 6))
+			_spawn("orc_brute", c + Vector3(2, 0.5, -6))
+			var partner := Player.new()
+			partner.name = "Parceiro"
+			add_child(partner)
+			partner.setup("sorcerer", _palette)
+			partner.global_position = c + Vector3(2.5, 0.6, 1.0)
 		"combat":
 			_spawn("orc_spearman", Vector3(4, 0.5, -6))
 			_spawn("orc_brute", Vector3(-5, 0.5, -8))
