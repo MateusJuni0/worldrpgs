@@ -55,5 +55,3 @@ Apanha links partidos, documentos que ficaram fora do `SPEC.md`, e `[DECIDIDO]` 
 ## Se algo estiver errado na spec
 
 Se vires um `[DECIDIDO]` que para ti não estava decidido, ou um `[SUGERIDO]` que já estava fechado — **diz**. As etiquetas são a leitura que foi feita da gravação, e pode ter-se lido mal. Abre uma issue ou comenta.
-
-<!-- teste da ponte, removido a seguir -->

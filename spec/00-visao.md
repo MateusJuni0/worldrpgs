@@ -86,4 +86,4 @@ Os três pontos que mais pesam, por ordem:
 ## Ligações
 
 - Perguntas por responder: [`99-perguntas-abertas.md`](99-perguntas-abertas.md)
-- Transcrição da sessão 1: [`../design/transcripts/`](../design/transcripts/)
+- Transcrição da sessão 1: fora do repositório — ver [`../design/README.md`](../design/README.md)
