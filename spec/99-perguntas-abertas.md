@@ -80,6 +80,8 @@ Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide t
 
 ### 8. O que é que "magia do bem e do mal" faz mecanicamente?
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
+
+**→ Proposta escrita (WP4):** *bem = controlo sem preço; mal = ~1,5× mais forte por carga mas custa 8% dos PV por lançamento; qualquer um usa as duas; mortos-vivos temem o bem.* Detalhe e alternativa descartada em [`13-magia.md`](13-magia.md). **Falta o sim dos dois** — a fatia joga só com o bem até lá.
 → [`03-magia.md`](03-magia.md)
 
 ### 9. Quantas classes no início?
