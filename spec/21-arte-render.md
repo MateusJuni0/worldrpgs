@@ -91,7 +91,7 @@ O WP13 estimou "~55 animações" por alto e delegou aqui o detalhe. O inventári
 | Orc brutamontes | 10 — idle, andar, **pancada vertical** (arma acima da cabeça, aviso 0,9 s — todos os golpes dele aparáveis, WP1), varrido (0,6 s), investida, HitStun, Cambaleio, grito, morte ×2 | o professor do parry |
 | Vorgar | 14 — intro, 5 ataques fase 1, 3 novos fase 2, transição (grito 2,5 s, invulnerável), Cambaleio, **Postura Quebrada** (2,0 s — o estado pós-parry, ripostável), morte, idle ×2 | **tudo à mão — o chefe é onde o tempo se gasta** |
 
-**Regra de telegrafia animada** (contrato com WP6): todo o ataque inimigo tem **antecipação ≥ 0,5 s legível na silhueta** — não no rosto, não só na cor. As duas línguas fixas do WP1 são sagradas: arma acima da cabeça = não se apara (ou apara-se caro); brilho vermelho = só esquiva.
+**Regra de telegrafia animada** (contrato com WP6): todo o ataque inimigo tem **antecipação ≥ 0,5 s legível na silhueta** — não no rosto, não só na cor. E uma língua visual fixa para a marca `só esquiva` do WP1: **ataques que não se aparam (agarrões, áreas, projécteis grandes) levam brilho vermelho curto** no inimigo ou marca vermelha no chão; ataques aparáveis telegrafam só com a silhueta, sem vermelho. Uma língua, jogo inteiro.
 
 ## 4 · Render — o pipeline que o Iris Xe aguenta
 
@@ -131,7 +131,7 @@ Regras: **legibilidade vence beleza**; efeitos do jogador ficam **finos e baixos
 | Postura Quebrada (pós-parry) | idem + partículas a cair do inimigo ajoelhado, 2,0 s | parry acertado |
 | Crítico (riposte/backstab) | 1 frame branco no alvo + sangue estilizado (puffs escuros, sem gore) | animação de crítico |
 | Morte de inimigo | dissolve 1,5 s de baixo para cima + 8–12 motas de XP a voar ao jogador | vida a 0 |
-| Telegrafia de agarrão | **brilho vermelho** pulsante no torso, 0,25 s | regra fixa do WP1 |
+| Telegrafia de `só esquiva` (agarrões, áreas) | **brilho vermelho** pulsante no torso, 0,25 s | a língua fixa desta secção, marcada ataque a ataque no WP6 |
 | Marca de área de chefe | anel **vermelho**, contorno 8 px, preenche do centro no tempo do aviso | áreas do Vorgar |
 | Marca da Ruína (jogador) | anel **âmbar** 4 m, 0,5 s antes do impacto — o parceiro lê-a como lê o chefe | WP4 |
 
