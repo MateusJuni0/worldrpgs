@@ -133,6 +133,12 @@ As imagens estão paradas à espera dele: os 32 assets que existem cobrem cenár
 
 ---
 
+## 3b. ⭐ As lacunas vivem num sítio só
+
+⚠️ **Ficheiro novo: [`LACUNAS.md`](LACUNAS.md)** — tudo o que foi identificado como buraco e **ainda não tem dono**, agrupado pela volta em que deve entrar.
+
+**Porque existe:** as lacunas que o Claude encontra a rever viviam em **comentários de PR**. Um comentário lê-se uma vez e desaparece — e uma lacuna esquecida é uma que se descobre no fim, quando custa dez vezes mais. **Encontrou-se uma lacuna, escreve-se lá no mesmo acto.**
+
 ## 4. O que é dos donos, e só deles
 
 Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nenhuma destas trava o trabalho** — todas têm proposta escrita, e o Fable avança com a proposta enquanto elas não fecham.
