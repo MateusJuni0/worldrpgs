@@ -46,6 +46,8 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 
 ### 2. Os biomas são patamares de dificuldade?
 "Por bioma, sei lá, nível, tipo" (12:18) choca de frente com o pilar "sem gating por nível". Ou o mapa tem zonas fechadas até se estar forte, ou pode ir-se a qualquer lado e morrer depressa. Não pode ser as duas.
+
+**→ Proposta escrita (WP8):** soft gating — tudo aberto do minuto 1, a dificuldade sobe por zona (curva do WP2) e por padrões, dentro dos tectos da Lei 1; o gating literal fica listado por honestidade. Recomendação e detalhe em [`17-mundo.md`](17-mundo.md). Decisão dos dois.
 → [`05-mundo.md`](05-mundo.md), [`00-visao.md`](00-visao.md)
 
 ### 3. As evoluções de classe dão poder ou dão opções?
@@ -56,6 +58,8 @@ Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar van
 
 ### 4. "Mapa grande" é quanto?
 Sem uma referência concreta — minutos a atravessar a pé, ou um jogo conhecido como comparação — não dá para dimensionar mais nada.
+
+**→ Proposta escrita (WP8):** grande por zonas, não por hectares — rede de 6 zonas densas de 2–3 min de travessia cada (+ núcleo final), ~35–45 min de travessia total, uma zona + vizinha em memória (Lei 4). A alternativa (contínuo de 10+ km²) fica descrita com os custos à vista. Ver [`17-mundo.md`](17-mundo.md). Decisão dos dois.
 → [`05-mundo.md`](05-mundo.md)
 
 ---

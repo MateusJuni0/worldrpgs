@@ -34,6 +34,7 @@ RPG 3D em terceira pessoa, souls-like, co-op para dois. Índice mestre.
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo completo de armas, Lei 3 em números, frasco de cura, armadura em proposta (WP5) | 🟠 proposta `[FABLE]` — pergunta 7 e 14 aguardam os dois |
 | 15 | [Bestiário](spec/15-inimigos.md) | IA comum, as 7 raças em fichas com telegrafias, encontros da fatia (WP6) | 🟠 proposta `[FABLE]` — raças aguardam o sim do Mateus |
 | 16 | [Chefes](spec/16-chefes.md) | Regras de camada da pirâmide, regras de todo o chefe, ficha completa do Vorgar (WP7) | 🟠 proposta `[FABLE]` — total da pirâmide (pergunta 13) fica com os dois |
+| 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de 6 zonas em números, dungeons com a regra das duas pistas, traçado de Brumal, tensões 2 e 4 propostas (WP8) | 🟠 proposta `[FABLE]` — escala e soft gating aguardam os dois |
 | 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
