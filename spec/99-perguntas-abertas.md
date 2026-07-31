@@ -80,7 +80,9 @@ Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide t
 
 ### 8. O que é que "magia do bem e do mal" faz mecanicamente?
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
-→ [`03-magia.md`](03-magia.md)
+
+**→ Proposta escrita (WP4):** duas moedas — a Luz paga com cargas, a Sombra paga com cargas **e vida** (preço de sangue em % da vida máxima). Catálogo completo em [`13-magia.md`](13-magia.md); a Ruína (Sombra) já vai na fatia 1, por isso testa-se a jogar. Falta o sim dos dois — e é este sim que desbloqueia o Mago do mal.
+→ [`03-magia.md`](03-magia.md), [`13-magia.md`](13-magia.md)
 
 ### 9. Quantas classes no início?
 Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — mas todas custam trabalho.
