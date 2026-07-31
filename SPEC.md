@@ -31,13 +31,35 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Os 6 atributos, fórmula de dano, curvas dos inimigos da fatia | 🟠 números de partida `[FABLE]` (WP2) — validam-se no protótipo |
 | 12 | [Classes](spec/12-classes.md) | As 8 fichas, habilidades especiais, skills, e a tensão das evoluções proposta | 🟠 `[FABLE]` (WP3) — evoluções aguardam decisão A/B dos dois |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Bem/mal com mecânica proposta, catálogo, cargas, pergaminhos, encantamentos | 🟠 `[FABLE]` (WP4) — bem/mal aguarda o sim dos dois (pergunta 8) |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo completo de armas, Lei 3 em números, frasco de cura, armadura em proposta (WP5) | 🟠 proposta `[FABLE]` — pergunta 7 e 14 aguardam os dois |
+| 15 | [Bestiário](spec/15-inimigos.md) | IA comum, as 7 raças em fichas com telegrafias, encontros da fatia (WP6) | 🟠 proposta `[FABLE]` — raças aguardam o sim do Mateus |
+| 16 | [Chefes](spec/16-chefes.md) | Regras de camada da pirâmide, regras de todo o chefe, ficha completa do Vorgar (WP7) | 🟠 proposta `[FABLE]` — total da pirâmide (pergunta 13) fica com os dois |
+| 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de 6 zonas em números, dungeons com a regra das duas pistas, traçado de Brumal, tensões 2 e 4 propostas (WP8) | 🟠 proposta `[FABLE]` — escala e soft gating aguardam os dois |
+| 18 | [Progressão e loot](spec/18-progressao.md) | Curva por zona, loot instanciado, o 40% de quem ajuda, moeda única proposta (WP9) | 🟠 proposta `[FABLE]` — perguntas 5 e 10 continuam dos dois |
+| 19 | [Multiplayer e rede](spec/19-rede.md) | O 12:34 resolvido (dois sacos de estado), transporte, autoridade dividida, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte e fogo amigo aguardam os dois |
+| 20 | [Interface](spec/20-interface.md) | HUD ao pixel, mochila 24, magias 3-visíveis, menus, configurações completas (WP11) | 🟠 proposta `[FABLE]` — resolve o 04:55 das magias no ecrã |
+| 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
+| 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine (Godot, com a medição 0b), sistemas, dados afináveis, saves, ferramentas (WP14) | 🟠 proposta `[FABLE]` — engine aguarda o carimbo dos dois (pergunta 17) |
+| 24 | [Plano de construção](spec/24-plano.md) | M0–M7 com verificação jogável por marco; M1 já medido; riscos com resposta (WP15) | 🟢 pronto para o Opus 5 — é o documento de arranque da construção |
+| 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
+| 14 | [Equipamento](spec/14-equipamento.md) | Armas, armadura, cura, melhoria (WP5) | 🟠 `[FABLE]`, entregue 31-07 |
+| 15 | [Inimigos](spec/15-inimigos.md) | Bestiário das 7 raças, IA comum, encontros (WP6) | 🟠 `[FABLE]`, entregue 31-07 |
+| 16 | [Chefes](spec/16-chefes.md) | Camadas e a ficha completa do Vorgar (WP7) | 🟠 `[FABLE]`, entregue 31-07 |
+| 17 | [Mundo](spec/17-mundo.md) | Rede de zonas, dungeons, traçado de Brumal (WP8) | 🟠 `[FABLE]`, entregue 31-07 |
+| 18 | [Progressão](spec/18-progressao.md) | Curva, loot, economia, morte (WP9) | 🟠 `[FABLE]`, entregue 31-07 |
+| 19 | [Rede](spec/19-rede.md) | Co-op, autoridade, transporte (WP10) | 🟠 `[FABLE]`, entregue 31-07 |
+| 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus, configurações (WP11) | 🟠 `[FABLE]`, entregue 31-07 |
+| 21 | [Arte e render](spec/21-arte-render.md) | Animações, efeitos, som (WP12) | 🟠 `[FABLE]`, entregue 31-07 |
+| 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
+| 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
+| 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
 | 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
 | 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
 | 31 | [Referências](spec/31-referencias.md) | Como usar o Dark Souls: o que estudar, e a linha que não se atravessa | 🟢 protocolo definido |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
-| 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
+| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas de sessão, sintomas→onde mexer, teste de fora, desempenho quente (WP15B) | 🟢 método fechado — só pede a pessoa de fora |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
@@ -83,7 +105,9 @@ Continua em aberto, mas **não trava ninguém**: o nome do jogo, a história dos
 
 ## A construir
 
-[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz. Manda o Fable detalhar isto tudo em 20 pacotes, um PR cada, até ficar implementável sem perguntas. Inclui o catálogo de assets, os prompts de imagem para o Codex/GPT image, e a estrutura de pastas de `art/`.
+[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz: 20 pacotes, do combate ao plano de construção.
+
+**Estado (31-07-2026): os 20 pacotes estão escritos** — ver a tabela acima e as reservas em [`COORDENACAO.md`](COORDENACAO.md). O que falta não é escrita, é decisão: as propostas 🔴/🟠 do [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) esperam o sim (ou o corte) do Mateus e do Rico numa sessão 2 gravada. Depois disso, [`spec/24-plano.md`](spec/24-plano.md) é o ponto de partida do Opus 5.
 
 ## Sessões
 

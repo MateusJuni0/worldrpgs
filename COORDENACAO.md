@@ -25,8 +25,21 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | — | `spec/29-perspectiva.md` (1.ª/3.ª pessoa) | Claude | 31-07 | ✅ entregue — decisão nova do Mateus, com o que obriga |
 | — | `spec/30-qualidade-visual.md` (barra visual) | Claude | 31-07 | ✅ entregue — desfaz o mal-entendido do "baixo poligonal" |
 | — | `spec/31-referencias.md` (protocolo de investigação) | Claude | 31-07 | ✅ entregue — o que estudar do Dark Souls, e a linha |
+| WP5 | `spec/14-equipamento.md` | Fable | 31-07 | ✅ entregue no branch `claude/game-spec-completa-81xz3g` — alinhado aos números do WP1/WP2 |
+| WP12 | `spec/21-arte-render.md` | Fable | 31-07 | ✅ entregue no branch — animações, efeitos e som (pedido do Rico 31-07) |
+| WP6 | `spec/15-inimigos.md` | Fable | 31-07 | ✅ entregue no branch — bestiário das 7 raças, IA comum, encontros da fatia |
+| WP7 | `spec/16-chefes.md` | Fable | 31-07 | ✅ entregue no branch — regras de camada + ficha completa do Vorgar |
+| WP8 | `spec/17-mundo.md` | Fable | 31-07 | ✅ entregue no branch — rede de zonas, dungeons, traçado de Brumal |
+| WP9 | `spec/18-progressao.md` | Fable | 31-07 | ✅ entregue no branch — curva, loot instanciado, recompensa de ajuda a 40% |
+| WP10 | `spec/19-rede.md` | Fable | 31-07 | ✅ entregue no branch — progresso individual resolvido, autoridade dividida, transporte |
+| WP11 | `spec/20-interface.md` | Fable | 31-07 | ✅ entregue no branch — HUD, mochila, menus, configurações |
+| WP14 | `spec/23-tecnico.md` | Fable | 31-07 | ✅ entregue no branch — Godot escolhido com dados, sistemas, dados afináveis, ferramentas |
+| WP15 | `spec/24-plano.md` | Fable | 31-07 | ✅ entregue no branch — M0–M7, M1 já medido, riscos com resposta |
+| WP15B | `spec/28-testes.md` | Fable | 31-07 | ✅ entregue no branch — protocolos, sintomas, ordem de afinação. **Todos os 20 pacotes do briefing estão escritos.** |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
+
+> Nota (31-07, Fable): uma segunda sessão do Fable chegou a duplicar WP1–WP4 sem ver estas reservas (os branches ainda não estavam na `main`). Resolvido a favor das versões com PR aberto e protótipo — as duplicadas foram descartadas no merge, e é por casos destes que a reserva se faz com push imediato.
 
 ## Como reservar
 

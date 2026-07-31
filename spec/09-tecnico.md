@@ -108,7 +108,7 @@ A segunda é a que magoa se for adiada. Num souls-like com esquiva e parry, a au
 
 ## Arte e assets
 
-`[EM ABERTO]` — Ver [`21-arte-render.md`] (a criar pelo Fable, WP12).
+Ver [`21-arte-render.md`](21-arte-render.md) (WP12, escrito — direcção de arte, orçamentos da Lei 4, animações, efeitos e som) e [`22-assets.md`](22-assets.md) (WP13 — fontes e licenças).
 
 Fica já registada uma distinção que é fácil de confundir e cara de descobrir tarde:
 

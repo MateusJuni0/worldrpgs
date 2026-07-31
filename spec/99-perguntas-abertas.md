@@ -54,6 +54,8 @@ A pergunta não é "cortamos o quê". É: **se só existisse uma zona, um chefe 
 
 ### 2. ~~Os biomas são patamares de dificuldade?~~ ✅ RESPONDIDA
 `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **soft gating.** Mapa todo aberto; dificuldade sugerida, não exigida. Detalhe e o que obriga em [`05-mundo.md`](05-mundo.md).
+
+O WP8 desenvolveu-o em [`17-mundo.md`](17-mundo.md): a dificuldade sobe pela curva do WP2 e pelos padrões dos inimigos, dentro dos tectos da Lei 1.
 → [`05-mundo.md`](05-mundo.md), [`00-visao.md`](00-visao.md)
 
 ### 3. ~~As evoluções de classe dão poder ou dão opções?~~ ✅ DECIDIDA — opção A
@@ -66,6 +68,8 @@ Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar van
 
 ### 4. ~~"Mapa grande" é quanto?~~ ✅ RESPONDIDA
 `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **~30 min a pé, 10+ biomas** (escala Elden Ring). A fatia 1 continua a ser Brumal sozinha; o resto cresce zona a zona. O WP8 herda três obrigações: densidade mínima por zona, estratégia de reutilização de peças, e viagem rápida. Ver [`05-mundo.md`](05-mundo.md).
+
+⚠️ **Diferença por acertar:** o WP8 ([`17-mundo.md`](17-mundo.md)) desenhou **6 zonas** de 2–3 min + núcleo final (~35–45 min de travessia). Os minutos batem certo com a decisão; o **número de zonas não** — foram aprovados 10+. Ou o WP8 cresce para 10, ou os donos revêem o número. Não é bloqueio: a fatia 1 é uma zona só.
 → [`05-mundo.md`](05-mundo.md)
 
 ---
@@ -75,7 +79,9 @@ Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar van
 ### 5. Como funcionam os drops em co-op?
 O Rico levantou a pergunta às 05:36 e ficou sem resposta (o áudio do Mateus falhou). Três hipóteses: cópia para cada um, filtrado por classe, ou partilhado com negociação.
 
-*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md). A decisão final continua aqui.*
+*Entretanto, a fatia 1 joga com loot instanciado provisório `[FABLE]` — [`10-fatia-1.md`](10-fatia-1.md).*
+
+**→ Proposta escrita (WP9):** instanciado escolhido e justificado (é a leitura directa do 05:29; filtrar por classe contradiz a Lei 3; partilhado é atrito sem ganho), e o "recompensa menor" do 12:34 em números: quem ajuda no que já matou ganha 40% do XP e só materiais. Ver [`18-progressao.md`](18-progressao.md). **A resposta perdida do Mateus (05:40) tem precedência se for recuperada.**
 → [`06-itens-inventario.md`](06-itens-inventario.md)
 
 ### 6. Os chefes ficam mais duros com dois jogadores?
@@ -86,7 +92,9 @@ Nunca foi mencionado. Se não ficarem, a resposta a qualquer chefe difícil pass
 
 ### 7. Como se recupera vida?
 Frasco recarregável ao descansar, ou poções que se compram e acabam? Decide toda a tensão da exploração.
-→ [`06-itens-inventario.md`](06-itens-inventario.md)
+
+**→ Proposta escrita (WP5):** Frasco de Bruma — 3 cargas, 40% de vida por gole, 1,2 s a beber, recarrega ao descansar; ampliações escondidas no mundo em vez de stock comprável (poções finitas convidam ao farm, que a Lei 1 proíbe). Ver [`14-equipamento.md`](14-equipamento.md). Falta o sim dos dois.
+→ [`06-itens-inventario.md`](06-itens-inventario.md), [`14-equipamento.md`](14-equipamento.md)
 
 ### 8. ~~O que é que "magia do bem e do mal" faz mecanicamente?~~ ✅ APROVADA
 Hoje é só um nome. Pode ser o sistema mais interessante do jogo, ou decoração.
@@ -116,15 +124,15 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 
 11. **Números do combate** — *ponto de partida completo escrito no WP1* `[FABLE]`: esquiva 0,60 s com 300 ms de invencibilidade, parry 133 ms, stamina 100 com custos por acção, frames das 5 armas. **Fecham-se a jogar o protótipo (marco 2)**, como sempre se disse. → [`01-combate.md`](01-combate.md)
 12. **Vida e Constituição fazem o quê, cada um?** — *respondida no WP2* `[FABLE]`: Vida = PV (margem total), Constituição = defesa por golpe (dureza). E entraram Força/Destreza para os requisitos de arma que eles pediram (06:14). → [`11-formulas.md`](11-formulas.md)
-13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
-14. **Existe armadura?** Não foi dita uma única vez. → [`06-itens-inventario.md`](06-itens-inventario.md)
-15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. → [`05-mundo.md`](05-mundo.md)
+13. **Hierarquia de chefes: 1+10+20+30 ou 1+30+20?** Os dois disseram versões diferentes e ficou por acertar (12:05). **→ Arrumada no WP7** ([`16-chefes.md`](16-chefes.md)): as 4 camadas ficam definidas pelo que as distingue (Ultra, subchefes, guardiões, chefes de campo); **o total fica em aberto de propósito** — conta-se quando houver mapa. A decisão continua deles. → [`04-inimigos-chefes.md`](04-inimigos-chefes.md)
+14. **Existe armadura?** Não foi dita uma única vez. **→ Posta em formato de proposta no WP5** (A: sem sistema, vestes visuais + talismãs; B: 3 pesos que trocam i-frames por defesa; recomendação A pela Lei 4). Decisão dos dois. → [`14-equipamento.md`](14-equipamento.md)
+15. **Estilo visual** — "realista não, mas tipo..." (10:24) ficou a meio da frase. **→ Proposta concreta no WP12** ([`21-arte-render.md`](21-arte-render.md): low-poly facetado, proporções 1:6,5, paleta de Brumal, referências Ashen/Absolver/Tunic), coerente com a frase de estilo do WP13. Caminho barato para o sim: gerar 3–4 conceitos com `art/prompts/` e escolherem. → [`05-mundo.md`](05-mundo.md)
 21. **Tom, nome do jogo, idioma, e mais 4 perguntas de narrativa** — guião de gravação de ~15 min pronto em [`26-narrativa.md`](26-narrativa.md) §3.
 16. **Lock-on em alvo?** — *respondida no WP1* `[FABLE]`: **sim** — engate a 18 m, quebra a 25 m, strafe, sem re-engate automático. A câmara do lock é do WP1B. → [`01-combate.md`](01-combate.md)
-17. **Engine.** → [`09-tecnico.md`](09-tecnico.md)
-18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** A segunda é a que magoa se for adiada. → [`09-tecnico.md`](09-tecnico.md)
-19. **Arte 3D: comprar, gerar ou fazer?** Provavelmente o maior custo real. → [`09-tecnico.md`](09-tecnico.md)
-20. **Fogo amigo em co-op?** → [`07-multiplayer.md`](07-multiplayer.md)
+17. **Engine.** **→ Proposta escrita (WP14): Godot 4.x, renderer Mobile** — a única com medição real nas máquinas reais a favor (0b: 60 fps cravados); Unreal descartada pelo caminho feliz proibido pela Lei 4, Unity pelo peso do editor e risco de licença. Tabela completa em [`23-tecnico.md`](23-tecnico.md). Falta o carimbo dos dois — por baixo de números, não de palpite. → [`09-tecnico.md`](09-tecnico.md)
+18. **Rede: P2P, relay ou servidor? E quem tem autoridade sobre o combate?** **→ Proposta escrita (WP10):** ligação directa com porta aberta (plano B: VPN de amigos tipo Tailscale), transporte agnóstico; **autoridade dividida** — anfitrião manda no mundo, cada jogador manda no próprio corpo (i-frames e parry avaliados localmente: entre amigos, a confiança é a compensação de latência). Ver [`19-rede.md`](19-rede.md). A escolha prática A/B é deles. → [`09-tecnico.md`](09-tecnico.md)
+19. **Arte 3D: comprar, gerar ou fazer?** — *respondida em conjunto pelo WP13 + WP12*: modelos e ciclos base de packs CC0 (KayKit/Quaternius), Mixamo fora do repo, e **à mão o que é a alma** — telegrafias, parry, chefe. Fontes e licenças em [`22-assets.md`](22-assets.md); inventário de animações e orçamentos em [`21-arte-render.md`](21-arte-render.md). → [`09-tecnico.md`](09-tecnico.md)
+20. **Fogo amigo em co-op?** **→ Proposta fechada no WP10: sem fogo amigo em nada** — com o círculo de agressão e arenas apertadas, feriria o co-op sem ganho de leitura; a Ruína continua a marcar o chão para o parceiro. Tom final é dos dois. → [`07-multiplayer.md`](07-multiplayer.md), [`19-rede.md`](19-rede.md)
 
 ---
 
