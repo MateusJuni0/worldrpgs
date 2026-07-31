@@ -24,6 +24,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP8B | `spec/26-narrativa.md` | Claude | 31-07 | ✅ entregue — guião de gravação de 7 perguntas para os donos |
 | — | `spec/29-perspectiva.md` (1.ª/3.ª pessoa) | Claude | 31-07 | ✅ entregue — decisão nova do Mateus, com o que obriga |
 | — | `spec/30-qualidade-visual.md` (barra visual) | Claude | 31-07 | ✅ entregue — desfaz o mal-entendido do "baixo poligonal" |
+| — | `spec/31-referencias.md` (protocolo de investigação) | Claude | 31-07 | ✅ entregue — o que estudar do Dark Souls, e a linha |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 

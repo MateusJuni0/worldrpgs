@@ -35,13 +35,14 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
 | 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
 | 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
+| 31 | [Referências](spec/31-referencias.md) | Como usar o Dark Souls: o que estudar, e a linha que não se atravessa | 🟢 protocolo definido |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
 | 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
 
 ## O que está fechado
 
-Quinze coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
+Dezasseis coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
 
 1. RPG de acção 3D para PC, **primeira ou terceira pessoa à escolha do jogador**, souls-like, fantasia medieval
 2. **Ganha-se com habilidade, não com nível.** Sem gating, sem grind obrigatório
@@ -58,6 +59,7 @@ Quinze coisas estão fechadas — onze da sessão 1, mais a restrição de hardw
 13. **Primeira ou terceira pessoa, à escolha do jogador** — ver [`spec/29-perspectiva.md`](spec/29-perspectiva.md)
 14. **Plataforma: PC.** Sem consolas, sem telemóvel
 15. **A barra visual não é PlayStation 1** — 8–15 mil tri por personagem, ver [`spec/30-qualidade-visual.md`](spec/30-qualidade-visual.md)
+16. **Dark Souls 2 é o chão de qualidade aceitável**, e cada pacote investiga a referência antes de escrever — [`spec/31-referencias.md`](spec/31-referencias.md)
 
 ## O que trava
 

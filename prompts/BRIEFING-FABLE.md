@@ -140,6 +140,22 @@ Depois **continua a trabalhar** assumindo a tua recomendação, e deixa marcado 
 
 ---
 
+## Investiga antes de escrever
+
+`[DECIDIDO]` (Mateus, 31-07-2026) — **antes de escreveres um pacote, vais buscar dados reais da referência e comparas.**
+
+O jogo de referência é o Dark Souls; o DS2 é o chão de qualidade aceitável. As regras completas — o que estudar por área, e a linha entre inspirar-se e copiar — estão em [`spec/31-referencias.md`](../spec/31-referencias.md). **Lê-o antes do primeiro pacote.**
+
+O protocolo, em cinco passos:
+
+1. **Recolhe números reais** da referência para a área do teu pacote, de fontes públicas
+2. **Escreve uma tabela de comparação** no documento: *eles · nós · a diferença*
+3. **Nomeia a diferença e diz se é intencional.** É aqui que está o valor: a comparação existe para encontrar **o que não nos ocorreu**, não para nos aproximarmos deles
+4. **Escreve a nossa versão**, que resolve o mesmo problema com as nossas leis
+5. **Cita a fonte** dos números
+
+⚠️ **A linha:** padrões e estruturas, sim. Conteúdo, não. Se conseguires explicar o padrão sem dizer o nome do jogo, é padrão — adopta. Se precisares do nome, é conteúdo — não entra. **Nunca** metas no repositório imagens, modelos, sons, texto ou tabelas extraídas de outro jogo; isto é público.
+
 ## O padrão de qualidade
 
 Este é o ponto onde a maior parte das specs falha. Um agente vai implementar a partir do que escreveres. Se ele tiver de adivinhar, adivinha diferente do que vocês querem.
