@@ -24,7 +24,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP5 | `spec/14-equipamento.md` | Fable | 31-07 | ✅ entregue no branch `claude/game-spec-completa-81xz3g` — alinhado aos números do WP1/WP2 |
 | WP12 | `spec/21-arte-render.md` | Fable | 31-07 | ✅ entregue no branch — animações, efeitos e som (pedido do Rico 31-07) |
 | WP6 | `spec/15-inimigos.md` | Fable | 31-07 | ✅ entregue no branch — bestiário das 7 raças, IA comum, encontros da fatia |
-| WP7 | `spec/16-chefes.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP7 | `spec/16-chefes.md` | Fable | 31-07 | ✅ entregue no branch — regras de camada + ficha completa do Vorgar |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
