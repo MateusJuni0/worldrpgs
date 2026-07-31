@@ -21,7 +21,7 @@ codex
 
 ### 2. Estado do baralho de espólio em co-op
 
-**Problema:** o baralho é por tipo de inimigo, o espólio é instanciado, mas não existe dono, cursor, seed ou regra para quem entra tarde na sessão. [Baralho por tipo]((../spec/43-estudo-espolio-inventario-mundo.md) §45) e [cópia para cada jogador]((../spec/18-progressao.md) §30) não chegam.
+**Problema:** o baralho é por tipo de inimigo, o espólio é instanciado, mas não existe dono, cursor, seed ou regra para quem entra tarde na sessão. [Baralho por tipo](../spec/43-estudo-espolio-inventario-mundo.md) *(linha 45)* e [cópia para cada jogador](../spec/18-progressao.md) *(linha 30)* não chegam.
 
 **Porque importa:** um convidado que entra depois de cinco compras do baralho pode ficar sem cartas obrigatórias; um recomeço de ligação pode repetir uma compra; dois mundos podem discordar sobre o que já saiu.
 
@@ -95,7 +95,7 @@ codex
 
 ### 1. Uma esquiva lateral resolve todo o jogo
 
-**Problema:** a regra declara que, terminado o início da animação, o ataque está comprometido e “rolar para o lado funciona sempre”. O seguimento cai de 180°/s para 30°/s antes da hitbox. [Regras actuais]((../spec/38-ataques-e-honestidade.md) §47).
+**Problema:** a regra declara que, terminado o início da animação, o ataque está comprometido e “rolar para o lado funciona sempre”. O seguimento cai de 180°/s para 30°/s antes da hitbox. [Regras actuais](../spec/38-ataques-e-honestidade.md) *(linha 47)*.
 
 **Porque importa:** transforma centenas de ataques numa pergunta com uma resposta universal. DS2/DS3 variam por golpe: alguns acompanham mais tempo, outros apanham rolamentos antecipados, outros pedem rolar para dentro, afastar ou simplesmente andar.
 
@@ -103,7 +103,7 @@ codex
 
 ### 2. Hitboxes obrigatoriamente vivas apenas 3–6 frames
 
-**Problema:** a regra “nunca mais” aplica-se a tudo. [Contrato actual]((../spec/38-ataques-e-honestidade.md) §17).
+**Problema:** a regra “nunca mais” aplica-se a tudo. [Contrato actual](../spec/38-ataques-e-honestidade.md) *(linha 17)*.
 
 **Porque importa:** não serve para investidas, corpos em movimento, sopros, feixes, poças, lâminas giratórias ou perigos persistentes. Vai obrigar a fingir que o efeito desapareceu enquanto visualmente continua activo.
 
@@ -119,7 +119,7 @@ codex
 
 ### 4. Alternância fixa de alvo nos chefes
 
-**Problema:** o chefe troca de alvo depois de cada sequência e evita repetir certos ataques. [Regra]((../spec/16-chefes.md) §28).
+**Problema:** o chefe troca de alvo depois de cada sequência e evita repetir certos ataques. [Regra](../spec/16-chefes.md) *(linha 28)*.
 
 **Porque importa:** os jogadores aprendem a vez: “agora é contigo, eu bato”. Isso não é leitura do chefe; é explorar o escalonador. DS2/DS3 usam atenção e posição suficientemente previsíveis para haver intenção, mas não uma alternância mecânica.
 
@@ -127,7 +127,7 @@ codex
 
 ### 5. Cinco encontros de chefe em zonas de 2–3 minutos
 
-**Problema:** 12 zonas de 2–3 minutos sustentam 36 chefes de campo, 12 subchefes e 12 guardiões. [Aritmética actual]((../spec/49-biomas.md) §15).
+**Problema:** 12 zonas de 2–3 minutos sustentam 36 chefes de campo, 12 subchefes e 12 guardiões. [Aritmética actual](../spec/49-biomas.md) *(linha 15)*.
 
 **Porque importa:** há um encontro “de chefe” aproximadamente a cada 30–40 segundos de travessia limpa. Perde-se preparação, surpresa, escala e identidade. O descanso à vista de todas as portas elimina ainda a pressão de recursos antes de cada chefe.
 
@@ -135,7 +135,7 @@ codex
 
 ### 6. Reforço de armas e feitiços quebra frontalmente a Lei 2
 
-**Problema:** armas sobem cerca de 10% por nível até +6; feitiços chegam a 175%, mais área, perfuração e lançamentos. [Armas]((../spec/51-familias.md) §217) e [feitiços]((../spec/42-estudo-magia.md) §131).
+**Problema:** armas sobem cerca de 10% por nível até +6; feitiços chegam a 175%, mais área, perfuração e lançamentos. [Armas](../spec/51-familias.md) *(linha 217)* e [feitiços](../spec/42-estudo-magia.md) *(linha 131)*.
 
 **Porque importa:** DS2/DS3 usam reforço numérico, mas este projecto escreveu deliberadamente uma lei diferente. Aqui, uma arma não melhorada passa a ser a arma errada, criando gating por materiais.
 
@@ -143,7 +143,7 @@ codex
 
 ### 7. O mago do mal não está equilibrado; está autorizado a saltar o jogo
 
-**Problema:** chefe portátil, número de invocados dependente apenas do hardware e Voto até +90% de dano. [Decisões]((../spec/52-mago-do-mal.md) §268).
+**Problema:** chefe portátil, número de invocados dependente apenas do hardware e Voto até +90% de dano. [Decisões](../spec/52-mago-do-mal.md) *(linha 268)*.
 
 **Porque importa:** jogar com metade da vida não compensa acrescentar ao grupo um chefe com 60% dos PV, IA e dano. O outro jogador pode receber a atenção enquanto o exército produz dano. +90% é precisamente uma melhoria de números proibida pela Lei 2.
 
@@ -159,7 +159,7 @@ codex
 
 ### 9. A fórmula de estabilidade está invertida
 
-**Problema:** `stamina_perdida = dano_de_stamina × (estabilidade / 100)`. [Fórmula]((../spec/41-estudo-armas-e-golpes.md) §151). Quanto maior a estabilidade, mais stamina se perde.
+**Problema:** `stamina_perdida = dano_de_stamina × (estabilidade / 100)`. [Fórmula](../spec/41-estudo-armas-e-golpes.md) *(linha 151)*. Quanto maior a estabilidade, mais stamina se perde.
 
 **Porque importa:** o broquel de 50 é melhor a bloquear do que o escudo grande de 85. Além disso, o protótipo ainda usa 100% de absorção física, enquanto a regra nova fixa 90%.
 
@@ -167,7 +167,7 @@ codex
 
 ### 10. Dez anéis e nove slots de armadura
 
-**Problema:** até dez dos 70 anéis equipados e nove slots de armadura. [Anéis]((../spec/37-aneis-e-elementos.md) §9) e [armadura]((../spec/51-familias.md) §154).
+**Problema:** até dez dos 70 anéis equipados e nove slots de armadura. [Anéis](../spec/37-aneis-e-elementos.md) *(linha 9)* e [armadura](../spec/51-familias.md) *(linha 154)*.
 
 **Porque importa:** DS2/DS3 usam quatro slots de anel e quatro peças de armadura. Com dez anéis, a oportunidade perdida por equipar um é pequena e a combinatória torna-se impossível de equilibrar. Com 30 peças distribuídas por nove slots há apenas 3,3 escolhas médias por slot; se forem 30 conjuntos, são 270 peças.
 
@@ -207,7 +207,7 @@ codex
 
 ### 15. O protocolo de teste declara certas mortes automaticamente correctas
 
-**Problema:** morrer repetidamente para o mesmo ataque com stamina disponível é classificado como “falha certa; não se mexe em nada”. [Critério]((../spec/28-testes.md) §18).
+**Problema:** morrer repetidamente para o mesmo ataque com stamina disponível é classificado como “falha certa; não se mexe em nada”. [Critério](../spec/28-testes.md) *(linha 18)*.
 
 **Porque importa:** também é exactamente o sintoma de telegrafia ilegível, atraso inconsistente ou resposta mal ensinada.
 
@@ -446,7 +446,7 @@ tokens used
 
 ### 2. Estado do baralho de espólio em co-op
 
-**Problema:** o baralho é por tipo de inimigo, o espólio é instanciado, mas não existe dono, cursor, seed ou regra para quem entra tarde na sessão. [Baralho por tipo]((../spec/43-estudo-espolio-inventario-mundo.md) §45) e [cópia para cada jogador]((../spec/18-progressao.md) §30) não chegam.
+**Problema:** o baralho é por tipo de inimigo, o espólio é instanciado, mas não existe dono, cursor, seed ou regra para quem entra tarde na sessão. [Baralho por tipo](../spec/43-estudo-espolio-inventario-mundo.md) *(linha 45)* e [cópia para cada jogador](../spec/18-progressao.md) *(linha 30)* não chegam.
 
 **Porque importa:** um convidado que entra depois de cinco compras do baralho pode ficar sem cartas obrigatórias; um recomeço de ligação pode repetir uma compra; dois mundos podem discordar sobre o que já saiu.
 
@@ -520,7 +520,7 @@ tokens used
 
 ### 1. Uma esquiva lateral resolve todo o jogo
 
-**Problema:** a regra declara que, terminado o início da animação, o ataque está comprometido e “rolar para o lado funciona sempre”. O seguimento cai de 180°/s para 30°/s antes da hitbox. [Regras actuais]((../spec/38-ataques-e-honestidade.md) §47).
+**Problema:** a regra declara que, terminado o início da animação, o ataque está comprometido e “rolar para o lado funciona sempre”. O seguimento cai de 180°/s para 30°/s antes da hitbox. [Regras actuais](../spec/38-ataques-e-honestidade.md) *(linha 47)*.
 
 **Porque importa:** transforma centenas de ataques numa pergunta com uma resposta universal. DS2/DS3 variam por golpe: alguns acompanham mais tempo, outros apanham rolamentos antecipados, outros pedem rolar para dentro, afastar ou simplesmente andar.
 
@@ -528,7 +528,7 @@ tokens used
 
 ### 2. Hitboxes obrigatoriamente vivas apenas 3–6 frames
 
-**Problema:** a regra “nunca mais” aplica-se a tudo. [Contrato actual]((../spec/38-ataques-e-honestidade.md) §17).
+**Problema:** a regra “nunca mais” aplica-se a tudo. [Contrato actual](../spec/38-ataques-e-honestidade.md) *(linha 17)*.
 
 **Porque importa:** não serve para investidas, corpos em movimento, sopros, feixes, poças, lâminas giratórias ou perigos persistentes. Vai obrigar a fingir que o efeito desapareceu enquanto visualmente continua activo.
 
@@ -544,7 +544,7 @@ tokens used
 
 ### 4. Alternância fixa de alvo nos chefes
 
-**Problema:** o chefe troca de alvo depois de cada sequência e evita repetir certos ataques. [Regra]((../spec/16-chefes.md) §28).
+**Problema:** o chefe troca de alvo depois de cada sequência e evita repetir certos ataques. [Regra](../spec/16-chefes.md) *(linha 28)*.
 
 **Porque importa:** os jogadores aprendem a vez: “agora é contigo, eu bato”. Isso não é leitura do chefe; é explorar o escalonador. DS2/DS3 usam atenção e posição suficientemente previsíveis para haver intenção, mas não uma alternância mecânica.
 
@@ -552,7 +552,7 @@ tokens used
 
 ### 5. Cinco encontros de chefe em zonas de 2–3 minutos
 
-**Problema:** 12 zonas de 2–3 minutos sustentam 36 chefes de campo, 12 subchefes e 12 guardiões. [Aritmética actual]((../spec/49-biomas.md) §15).
+**Problema:** 12 zonas de 2–3 minutos sustentam 36 chefes de campo, 12 subchefes e 12 guardiões. [Aritmética actual](../spec/49-biomas.md) *(linha 15)*.
 
 **Porque importa:** há um encontro “de chefe” aproximadamente a cada 30–40 segundos de travessia limpa. Perde-se preparação, surpresa, escala e identidade. O descanso à vista de todas as portas elimina ainda a pressão de recursos antes de cada chefe.
 
@@ -560,7 +560,7 @@ tokens used
 
 ### 6. Reforço de armas e feitiços quebra frontalmente a Lei 2
 
-**Problema:** armas sobem cerca de 10% por nível até +6; feitiços chegam a 175%, mais área, perfuração e lançamentos. [Armas]((../spec/51-familias.md) §217) e [feitiços]((../spec/42-estudo-magia.md) §131).
+**Problema:** armas sobem cerca de 10% por nível até +6; feitiços chegam a 175%, mais área, perfuração e lançamentos. [Armas](../spec/51-familias.md) *(linha 217)* e [feitiços](../spec/42-estudo-magia.md) *(linha 131)*.
 
 **Porque importa:** DS2/DS3 usam reforço numérico, mas este projecto escreveu deliberadamente uma lei diferente. Aqui, uma arma não melhorada passa a ser a arma errada, criando gating por materiais.
 
@@ -568,7 +568,7 @@ tokens used
 
 ### 7. O mago do mal não está equilibrado; está autorizado a saltar o jogo
 
-**Problema:** chefe portátil, número de invocados dependente apenas do hardware e Voto até +90% de dano. [Decisões]((../spec/52-mago-do-mal.md) §268).
+**Problema:** chefe portátil, número de invocados dependente apenas do hardware e Voto até +90% de dano. [Decisões](../spec/52-mago-do-mal.md) *(linha 268)*.
 
 **Porque importa:** jogar com metade da vida não compensa acrescentar ao grupo um chefe com 60% dos PV, IA e dano. O outro jogador pode receber a atenção enquanto o exército produz dano. +90% é precisamente uma melhoria de números proibida pela Lei 2.
 
@@ -584,7 +584,7 @@ tokens used
 
 ### 9. A fórmula de estabilidade está invertida
 
-**Problema:** `stamina_perdida = dano_de_stamina × (estabilidade / 100)`. [Fórmula]((../spec/41-estudo-armas-e-golpes.md) §151). Quanto maior a estabilidade, mais stamina se perde.
+**Problema:** `stamina_perdida = dano_de_stamina × (estabilidade / 100)`. [Fórmula](../spec/41-estudo-armas-e-golpes.md) *(linha 151)*. Quanto maior a estabilidade, mais stamina se perde.
 
 **Porque importa:** o broquel de 50 é melhor a bloquear do que o escudo grande de 85. Além disso, o protótipo ainda usa 100% de absorção física, enquanto a regra nova fixa 90%.
 
@@ -592,7 +592,7 @@ tokens used
 
 ### 10. Dez anéis e nove slots de armadura
 
-**Problema:** até dez dos 70 anéis equipados e nove slots de armadura. [Anéis]((../spec/37-aneis-e-elementos.md) §9) e [armadura]((../spec/51-familias.md) §154).
+**Problema:** até dez dos 70 anéis equipados e nove slots de armadura. [Anéis](../spec/37-aneis-e-elementos.md) *(linha 9)* e [armadura](../spec/51-familias.md) *(linha 154)*.
 
 **Porque importa:** DS2/DS3 usam quatro slots de anel e quatro peças de armadura. Com dez anéis, a oportunidade perdida por equipar um é pequena e a combinatória torna-se impossível de equilibrar. Com 30 peças distribuídas por nove slots há apenas 3,3 escolhas médias por slot; se forem 30 conjuntos, são 270 peças.
 
@@ -632,7 +632,7 @@ tokens used
 
 ### 15. O protocolo de teste declara certas mortes automaticamente correctas
 
-**Problema:** morrer repetidamente para o mesmo ataque com stamina disponível é classificado como “falha certa; não se mexe em nada”. [Critério]((../spec/28-testes.md) §18).
+**Problema:** morrer repetidamente para o mesmo ataque com stamina disponível é classificado como “falha certa; não se mexe em nada”. [Critério](../spec/28-testes.md) *(linha 18)*.
 
 **Porque importa:** também é exactamente o sintoma de telegrafia ilegível, atraso inconsistente ou resposta mal ensinada.
 
