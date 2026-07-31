@@ -73,6 +73,22 @@ Três caminhos, nenhum decidido:
 
 **Decidem:** Mateus + Rico.
 
+### `[MEDIDO]` — o marco 1 correu antecipado (protótipo local, 31-07-2026)
+
+Protótipo greybox em Godot 4.7.1, medido **na máquina do Rico — a mais fraca**, 1920×1080:
+
+| Cena | Resultado |
+|---|---|
+| Marco 1 (cápsula + 3 inimigos + zona com névoa) | **416 fps médios ao fim de 20 minutos contínuos e quentes** (frio: 412) · 1% low ~250 · pior frame em vinte minutos: 15,3 ms · **0,0% dos frames fora do orçamento de 16,67 ms** |
+| Cenário do critério 5 da fatia (2 jogadores + 3 inimigos) | **60,0 fps cravados com vsync** — 3601 frames a 16,67 ms exactos |
+| Renderers comparados (frio, médias) | Forward+ 235 · **Mobile 412 ✅ escolhido** (melhor 1% low, −33% de VRAM) · Compatibility 415 mas 1% low fraco |
+
+**Sem degradação térmica mensurável** — a preocupação da série U fica fechada para este nível de conteúdo.
+
+**Ressalvas honestas, escritas no próprio relatório de medição:** é um greybox **sem animação de esqueleto** (a incógnita cara que falta medir — WP12); a folga de ~6× é orçamento para o conteúdo, não garantia; e a memória cresceu 14,5 MB em 20 min — a vigiar, que 8 GB não perdoam.
+
+**Leitura:** o caminho A deixa de ser aposta e passa a ser plano com dados. O carimbo formal continua a ser vosso — mas agora é assinar por baixo de números, não de palpite.
+
 ## Engine
 
 `[EM ABERTO]` — Nunca foi mencionada. A escolha decide-se pela restrição de hardware acima, não por gosto nem por popularidade.

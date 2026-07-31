@@ -1,5 +1,7 @@
 # 03 — Magia e encantamentos
 
+> Este é o registo da sessão 1. O documento de execução — mecânica bem/mal proposta, catálogo com números, cargas, aprendizagem — é o [`13-magia.md`](13-magia.md) (WP4).
+
 ## Duas escolas: bem e mal
 
 `[DECIDIDO]` (sessão 1 · 00:40, 05:04)
