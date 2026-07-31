@@ -6,7 +6,7 @@ Lê isto antes de responder ou de rever seja o que for. É daqui que vem o conte
 
 **WorldRPGs** — RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Projeto hobby do **Mateus** e do **Rico**.
 
-**Era um repositório só de especificação. Desde 31-07-2026 também tem código** — os 20 pacotes de spec estão escritos e a construção arrancou. Regras da fase de construção em [`spec/32-construcao.md`](spec/32-construcao.md).
+**Era um repositório só de especificação. Desde 31-07-2026 tem spec e código.** Os 20 pacotes estão escritos, o jogo já se joga, e `[DECIDIDO]` (Mateus, 31-07) **o código vive aqui, em `game/`** — o repositório separado `worldrpgs-game` que o WP14/WP15 planeavam foi abandonado. Razão: a regra do "mesmo PR" (abaixo) é impossível em dois repositórios, e um disco não é uma cópia de segurança. Regras da fase em [`spec/32-construcao.md`](spec/32-construcao.md).
 
 A spec continua a mandar: se o código e a spec discordarem, **muda-se a spec primeiro**, no mesmo PR.
 
@@ -67,6 +67,8 @@ Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus
 
 | | |
 |---|---|
+| ⭐ [`ESTADO.md`](ESTADO.md) | **Lê primeiro.** O que é verdade hoje, o que falta e por que ordem |
+| [`prompts/BRIEFING-FABLE-2.md`](prompts/BRIEFING-FABLE-2.md) | O briefing actual do Fable — cobre tudo |
 | [`SPEC.md`](SPEC.md) | Índice, e o estado de cada área |
 | [`spec/00-visao.md`](spec/00-visao.md) | Os pilares. O documento mais importante. |
 | [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) | O que falta decidir |

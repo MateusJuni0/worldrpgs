@@ -10,6 +10,24 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### O código vem para este repositório → [`ESTADO.md`](ESTADO.md) §1
+`[DECIDIDO]` (Mateus, 31-07-2026) — **o jogo passa a viver em `game/`, ao lado da spec.**
+- ⚠️ **O jogo já existia e vivia num sítio só** — o disco do Rico. Sem cópia, sem revisão possível
+- ⭐ **A regra do "mesmo PR" é impossível em dois repositórios** — se o código e a spec discordam, a spec muda primeiro **no mesmo PR**
+- **Substitui:** o repositório separado `worldrpgs-game` planeado no [`spec/23-tecnico.md`](spec/23-tecnico.md) e [`spec/24-plano.md`](spec/24-plano.md) — foi escrito quando este repo era só de especificação
+
+### Controlos configuráveis dentro do jogo → [`spec/45-controlos-configuraveis.md`](spec/45-controlos-configuraveis.md)
+`[DECIDIDO]` (Mateus, 31-07-2026) — *"tem que dar pra gente escolher os controles no jogo mesmo."*
+- ⭐ **Dissolve a pergunta 30**, que era a mais urgente: o parry fica em `Q` **e** no toque de `RMB`, e cada jogador escolhe
+- ⭐ **E é a Lei 1:** um parry desconfortável faz o jogo parecer injusto, e depois baixa-se a dificuldade para compensar um problema que é de teclado. Com teclas configuráveis, o que sobra a medir é o jogo
+- ⚠️ **Não apaga o mapa de teclas** — alguém decide os **valores de fábrica**, que é o que 100% dos jogadores experimenta primeiro
+- ⚠️ **O jogo mostra a tecla do jogador, nunca a de fábrica** — senão o tutorial passa a mentir
+- **Abre:** comando/`gamepad` fica `[EM ABERTO]`; o sistema nasce agnóstico da fonte
+
+### Liberdade criativa do Fable — sem limites
+`[DECIDIDO]` (Mateus, 31-07-2026) — o Fable inventa à vontade. **Os guardas são contra esquecimentos, não contra ideias:** as **quatro perguntas do fio solto** ([`ESTADO.md`](ESTADO.md) §5) — como se usa · como se prova · de onde vem a arte · quanto custa na máquina do Rico.
+- ⚠️ O risco de escopo foi levantado e o Mateus **reafirmou avançar**. Fica registado, não trava nada
+
 ### Espólio garantido, magia, inventário e carregamento → [`spec/40-decisoes-espolio-magia-inventario.md`](spec/40-decisoes-espolio-magia-inventario.md)
 **Regra de processo, e vale para todos:** nenhum sistema entra nesta spec por analogia ou de memória. **Estuda-se o mecanismo, escreve-se com números e com fonte, e só depois se decide o nosso.**
 - **Descanso recarrega o mapa todo** (chefes não) · tecto de **10 reaparições** por inimigo — não se farma

@@ -2,11 +2,13 @@
 
 RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op para dois. Índice mestre.
 
-> 📋 **Todas as decisões dos donos, por ordem, em [`DECISOES.md`](DECISOES.md)** — é contra essa lista que se compara trabalho feito antes delas.
+> ⭐ **Se só leres um ficheiro, lê o [`ESTADO.md`](ESTADO.md).** É o que está verdadeiro **hoje**, com o que falta e por que ordem. Este índice diz onde as coisas estão; o `ESTADO.md` diz em que pé estão.
 
-> **Fase: construção.** Os 20 pacotes de spec estão escritos (31-07-2026). Regras da fase nova em [`spec/32-construcao.md`](spec/32-construcao.md); o plano é o [`spec/24-plano.md`](spec/24-plano.md), M0 a M7.
+> 📋 Todas as decisões dos donos, por ordem, em [`DECISOES.md`](DECISOES.md) — é contra essa lista que se compara trabalho feito antes delas.
 
-> Cada afirmação nos documentos abaixo traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
+> **Fase: construção.** Os 20 pacotes de spec estão escritos. O jogo já se joga ([`spec/44-prototipo.md`](spec/44-prototipo.md)). Regras da fase em [`spec/32-construcao.md`](spec/32-construcao.md); o plano é o [`spec/24-plano.md`](spec/24-plano.md), M0 a M7.
+
+> Cada afirmação traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
 
 ## Etiquetas
 
@@ -16,118 +18,107 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 | `[SUGERIDO]` | Foi dito, ninguém contrariou, ninguém confirmou. |
 | `[EM ABERTO]` | Falta decidir. Está em [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). |
 | `[TENSÃO]` | Duas coisas decididas que ainda não encaixam. |
+| `[FABLE]` · `[CLAUDE]` | Decidido por um agente. Traz razão e alternativa descartada. |
+| `[PROTO]` | O protótipo assumiu para poder correr. Não é decisão. |
 
 ## Os documentos
+
+⚠️ **na coluna do estado = o Fable tem de lá voltar.** A razão está no [`ESTADO.md`](ESTADO.md).
+
+### Sessão 1 — o registo original (30-07)
+
+São o registo de uma conversa, **não o estado actual**. Em caso de divergência, manda o documento de execução.
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
 | 00 | [Visão](spec/00-visao.md) | Pitch, os três pilares, referências, risco de escopo | 🟢 base sólida |
-| 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, stamina, as 5 armas | 🟠 números de partida `[FABLE]` (WP1) — validam-se no protótipo (marco 2) |
-| 02 | [Personagem](spec/02-personagem.md) | Atributos, classes, evoluções, skills | 🟡 muito nomeado, pouco definido |
-| 03 | [Magia](spec/03-magia.md) | Bem e mal, usos, encantamentos | 🟡 conceito sem mecânica |
-| 04 | [Inimigos e chefes](spec/04-inimigos-chefes.md) | Raças, hierarquia de chefes | 🟡 quantidades por acertar |
-| 05 | [Mundo](spec/05-mundo.md) | Mapa, biomas, dungeons, 3D | 🟢 forma decidida, escala não |
-| 06 | [Itens e inventário](spec/06-itens-inventario.md) | Armas, mochila, montarias, drops | 🟢 a regra das armas está fechada |
-| 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🟠 sistema complexo em uma frase |
-| 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🟡 esqueleto |
-| 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware**, engine, rede | 🟠 restrição fixa, resto por decidir |
-| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável: sistemas completos, conteúdo mínimo, critérios de feito | 🟢 **aprovada pelos dois** (31-07) |
-| 11 | [Atributos e fórmulas](spec/11-formulas.md) | Os 6 atributos, fórmula de dano, curvas dos inimigos da fatia | 🟠 números de partida `[FABLE]` (WP2) — validam-se no protótipo |
-| 12 | [Classes](spec/12-classes.md) | As 8 fichas, habilidades especiais, skills, e a tensão das evoluções proposta | 🟠 `[FABLE]` (WP3) — evoluções aguardam decisão A/B dos dois |
-| 13 | [Magia, por dentro](spec/13-magia.md) | Bem/mal com mecânica proposta, catálogo, cargas, pergaminhos, encantamentos | 🟠 `[FABLE]` (WP4) — bem/mal aguarda o sim dos dois (pergunta 8) |
-| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo completo de armas, Lei 3 em números, frasco de cura, armadura em proposta (WP5) | 🟠 proposta `[FABLE]` — pergunta 7 e 14 aguardam os dois |
-| 15 | [Bestiário](spec/15-inimigos.md) | IA comum, as 7 raças em fichas com telegrafias, encontros da fatia (WP6) | 🟠 proposta `[FABLE]` — raças aguardam o sim do Mateus |
-| 16 | [Chefes](spec/16-chefes.md) | Regras de camada da pirâmide, regras de todo o chefe, ficha completa do Vorgar (WP7) | 🟠 proposta `[FABLE]` — total da pirâmide (pergunta 13) fica com os dois |
-| 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de 6 zonas em números, dungeons com a regra das duas pistas, traçado de Brumal, tensões 2 e 4 propostas (WP8) | 🟠 proposta `[FABLE]` — escala e soft gating aguardam os dois |
-| 18 | [Progressão e loot](spec/18-progressao.md) | Curva por zona, loot instanciado, o 40% de quem ajuda, moeda única proposta (WP9) | 🟠 proposta `[FABLE]` — perguntas 5 e 10 continuam dos dois |
-| 19 | [Multiplayer e rede](spec/19-rede.md) | O 12:34 resolvido (dois sacos de estado), transporte, autoridade dividida, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte e fogo amigo aguardam os dois |
-| 20 | [Interface](spec/20-interface.md) | HUD ao pixel, mochila 24, magias 3-visíveis, menus, configurações completas (WP11) | 🟠 proposta `[FABLE]` — resolve o 04:55 das magias no ecrã |
-| 21 | [Arte, render, animação, efeitos e som](spec/21-arte-render.md) | Direcção de arte, orçamentos da Lei 4, lista de animações, fichas de efeitos, som completo (WP12) | 🟠 proposta `[FABLE]` — estilo (pergunta 15) aguarda os dois |
-| 22 | [Origem dos assets](spec/22-assets.md) | Modelos 3D, animações e áudio — fontes e licenças (WP13) | 🟢 regras fixas; inventário confirma-se no download |
-| 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine (Godot, com a medição 0b), sistemas, dados afináveis, saves, ferramentas (WP14) | 🟠 proposta `[FABLE]` — engine aguarda o carimbo dos dois (pergunta 17) |
-| 24 | [Plano de construção](spec/24-plano.md) | M0–M7 com verificação jogável por marco; M1 já medido; riscos com resposta (WP15) | 🟢 pronto para o Opus 5 — é o documento de arranque da construção |
-| 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, input buffer, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]`, números afinam-se no protótipo |
-| 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + as 7 perguntas que só uma gravação responde (WP8B) | 🟠 guião de gravação pronto, decisões são dos donos |
-| 14 | [Equipamento](spec/14-equipamento.md) | Armas, armadura, cura, melhoria (WP5) | 🟠 `[FABLE]`, entregue 31-07 |
-| 15 | [Inimigos](spec/15-inimigos.md) | Bestiário das 7 raças, IA comum, encontros (WP6) | 🟠 `[FABLE]`, entregue 31-07 |
-| 16 | [Chefes](spec/16-chefes.md) | Camadas e a ficha completa do Vorgar (WP7) | 🟠 `[FABLE]`, entregue 31-07 |
-| 17 | [Mundo](spec/17-mundo.md) | Rede de zonas, dungeons, traçado de Brumal (WP8) | 🟠 `[FABLE]`, entregue 31-07 |
-| 18 | [Progressão](spec/18-progressao.md) | Curva, loot, economia, morte (WP9) | 🟠 `[FABLE]`, entregue 31-07 |
-| 19 | [Rede](spec/19-rede.md) | Co-op, autoridade, transporte (WP10) | 🟠 `[FABLE]`, entregue 31-07 |
-| 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus, configurações (WP11) | 🟠 `[FABLE]`, entregue 31-07 |
-| 21 | [Arte e render](spec/21-arte-render.md) | Animações, efeitos, som (WP12) | 🟠 `[FABLE]`, entregue 31-07 |
-| 23 | [Técnico](spec/23-tecnico.md) | Engine, sistemas, ferramentas (WP14) | 🟠 `[FABLE]`, entregue 31-07 |
-| 24 | [Plano](spec/24-plano.md) | M0–M7, riscos (WP15) | 🟠 `[FABLE]`, entregue 31-07 |
-| 28 | [Testes](spec/28-testes.md) | Protocolos, sintomas, afinação (WP15B) | 🟠 `[FABLE]`, entregue 31-07 |
-| 44 | [**O protótipo: o que já está provado**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, 3 lacunas de comandos, 2 contradições corrigidas, o parry por decidir | 🟢 fecha metade da ressalva do 0b |
-| 43 | [**Estudo: espólio, inventário, segredos e carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços de equipamento, mímicos e paredes falsas, a porta de nevoeiro como barreira de carregamento | 🟢 10 accionáveis |
-| 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | As 4 escolas, o instrumento, espaços e energia, melhoria de feitiços, o catálogo de verbos | 🟢 a classe favorita do Mateus, com travões |
-| 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção, stamina, bloqueio, reforços | 🟢 ficha de família definida |
-| 40 | [**Decisões: espólio, magia, inventário**](spec/40-decisoes-espolio-magia-inventario.md) | 15 decisões do Mateus — garantia de espólio, mago, inventário sem limite, carregamento por área | 🟢 registo, 4 perguntas novas |
-| 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, melhoria, frascos, mundo, agressão, co-op, almas, descoberta | 🟢 18 accionáveis, 4 perguntas novas |
-| 38 | [**Ataques e honestidade**](spec/38-ataques-e-honestidade.md) | As 5 fases, o contrato que faz a esquiva ser verdadeira, 3–5 ataques por inimigo | 🟢 contrato fixado, fichas por escrever |
-| 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, escudos por elemento, dano de queda corrigido | 🟠 escala fixada, catálogo por escrever |
-| 36 | [**Física**](spec/36-fisica.md) | Gravidade, queda, balística das setas, empurrão, colisão | 🟠 constantes propostas, validam-se no M2 |
-| 35 | [**Estudo da referência**](spec/35-estudo-referencia.md) | Números reais do DS2 comparados com os nossos — 8 descobertas accionáveis | 🟢 feito 31-07, com fontes |
-| 34 | [**Catálogo e comandos**](spec/34-catalogo-e-comandos.md) | 30 armaduras, ~20 armas/classe, e a regra de que toda a habilidade diz como se activa | 🟢 escala e regra fixadas |
-| 33 | [**Morte e almas**](spec/33-morte-e-almas.md) | Almas, frascos, armadura, ressurreição em co-op | 🟢 fecha as perguntas 7, 10 e 14 |
-| 32 | [**Construção**](spec/32-construcao.md) | **A fase nova** — regras de código, o que muda no fluxo | 🟢 arrancou 31-07 |
-| 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha — e o que isso obriga | 🟠 decidido; lock-on em 1.ª pessoa em aberto |
-| 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 orçamento fixado |
-| 31 | [Referências](spec/31-referencias.md) | Como usar o Dark Souls: o que estudar, e a linha que não se atravessa | 🟢 protocolo definido |
-| 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos, curva e recuperação (WP11B) | 🟠 proposta `[CLAUDE]`, valida-se com gente de fora |
-| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas de sessão, sintomas→onde mexer, teste de fora, desempenho quente (WP15B) | 🟢 método fechado — só pede a pessoa de fora |
-| 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | Guião para a próxima sessão | — |
+| 02 | [Personagem](spec/02-personagem.md) | Atributos, classes, evoluções, skills | 🔵 substituído pelo 11 e 12 |
+| 03 | [Magia](spec/03-magia.md) | Bem e mal, usos, encantamentos | 🔵 substituído pelo 13 e 42 |
+| 04 | [Inimigos e chefes](spec/04-inimigos-chefes.md) | Raças, hierarquia de chefes | 🔵 substituído pelo 15 e 16 |
+| 05 | [Mundo](spec/05-mundo.md) | Mapa, biomas, dungeons, 3D | 🔵 substituído pelo 17 |
+| 06 | [Itens e inventário](spec/06-itens-inventario.md) | Armas, mochila, montarias, drops | 🔵 substituído pelo 14 e 40 |
+| 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🔵 substituído pelo 19 |
+| 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🔵 substituído pelo 20 |
+| 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware** — as duas máquinas | 🟢 a tabela das máquinas continua a valer |
+| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável, com critérios de feito | 🟢 **aprovada pelos dois** |
+
+### Os 20 pacotes — a spec de execução
+
+| # | Documento | Do que trata | Estado |
+|---|---|---|---|
+| 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | ⚠️ **sem soft caps e sem o piso de 30%** — [`39`](spec/39-estudo-profundo.md) §1–2 |
+| 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | ⚠️ **nenhuma habilidade tem tecla** — [`44`](spec/44-prototipo.md) §3.1 |
+| 13 | [Magia, por dentro](spec/13-magia.md) | Escolas, catálogo, cargas (WP4) | ⚠️ **o maior buraco** — falta tudo o que está no [`42`](spec/42-estudo-magia.md) |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | ⚠️ **por classe, devia ser por família** — [`35`](spec/35-estudo-referencia.md) §1 |
+| 15 | [Bestiário](spec/15-inimigos.md) | IA, as 7 raças, encontros (WP6) | ⚠️ **falta o baralho de espólio e o som por ataque** |
+| 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ **falta a ficha de 11 colunas por ataque** — [`38`](spec/38-ataques-e-honestidade.md) |
+| 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de zonas, dungeons, traçado (WP8) | ⚠️ **6 zonas contra 10+ biomas aprovados** |
+| 18 | [Progressão e loot](spec/18-progressao.md) | Curva, loot, economia (WP9) | ⚠️ **curva linear, devia ser cúbica** · "XP" devia ser "almas" |
+| 19 | [Multiplayer e rede](spec/19-rede.md) | Autoridade, transporte, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte aguarda os dois |
+| 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus (WP11) | ⚠️ **o mapa de teclas tem de fechar de uma vez** — [`45`](spec/45-controlos-configuraveis.md) |
+| 21 | [Arte e render](spec/21-arte-render.md) | Direcção, animações, efeitos, som (WP12) | 🟠 proposta `[FABLE]` |
+| 22 | [Origem dos assets](spec/22-assets.md) | Modelos, animações, áudio: fontes e licenças (WP13) | 🟢 regras fixas |
+| 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine, sistemas, dados, saves (WP14) | ⚠️ **falta o carregamento por área** — [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 |
+| 24 | [Plano de construção](spec/24-plano.md) | M0–M7 com verificação jogável por marco (WP15) | 🟢 é o documento de arranque |
+| 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, buffer de entrada, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]` |
+| 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + 7 perguntas para gravação (WP8B) | 🟠 decisões são dos donos |
+| 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos (WP11B) | 🟠 proposta `[CLAUDE]` |
+| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas, sintomas (WP15B) | ⚠️ **falta o teste do rolamento** — [`38`](spec/38-ataques-e-honestidade.md) §2 |
+| 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
+
+### Decisões e estudos (32–45)
+
+| # | Documento | Do que trata | Estado |
+|---|---|---|---|
+| 45 | [**Controlos configuráveis**](spec/45-controlos-configuraveis.md) | O jogador escolhe as teclas dentro do jogo — dissolve a guerra do parry | 🟢 `[DECIDIDO]` 31-07 |
+| 44 | [**O protótipo**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, lacunas encontradas a construir | 🟢 metade da ressalva do 0b fechada |
+| 43 | [**Estudo: espólio, inventário, segredos, carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços, mímicos, a porta de nevoeiro | 🟢 10 accionáveis |
+| 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | 4 escolas, o instrumento, espaços, melhoria, catálogo de verbos | 🟢 a base do WP4 |
+| 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção | 🟢 a base do WP5 |
+| 40 | [**Decisões: espólio, magia, inventário**](spec/40-decisoes-espolio-magia-inventario.md) | 15 decisões do Mateus | 🟢 registo |
+| 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, mundo, co-op, descoberta | 🟢 18 accionáveis |
+| 38 | [**Ataques e honestidade**](spec/38-ataques-e-honestidade.md) | As 5 fases e o contrato que faz a esquiva ser verdadeira | 🟢 contrato fixado |
+| 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, dano de queda | 🟠 catálogo por escrever |
+| 36 | [**Física**](spec/36-fisica.md) | Gravidade, queda, balística, empurrão, colisão | 🟠 constantes validam-se no M2 |
+| 35 | [**Estudo da referência**](spec/35-estudo-referencia.md) | Números reais comparados com os nossos | 🟢 8 accionáveis |
+| 34 | [**Catálogo e comandos**](spec/34-catalogo-e-comandos.md) | A escala, e a regra de que toda a habilidade diz como se activa | 🟢 regra fixada |
+| 33 | [**Morte e almas**](spec/33-morte-e-almas.md) | Almas, frascos, armadura, ressurreição em co-op | 🟢 |
+| 32 | [**Construção**](spec/32-construcao.md) | Regras de código, o que muda no fluxo | 🟢 |
+| 31 | [**Referências**](spec/31-referencias.md) | Como usar o Dark Souls, e a linha que não se atravessa | 🟢 protocolo |
+| 30 | [Qualidade visual](spec/30-qualidade-visual.md) | A barra: orçamento consciente, **não** PlayStation 1 | 🟢 |
+| 29 | [Perspectiva](spec/29-perspectiva.md) | 1.ª ou 3.ª pessoa à escolha | 🟠 lock-on em 1.ª pessoa em aberto |
+| 99 | [**Perguntas em aberto**](spec/99-perguntas-abertas.md) | O que só os donos decidem | — |
 
 ## O que está fechado
 
-Dezasseis coisas estão fechadas — onze da sessão 1, mais a restrição de hardware:
-
-1. RPG de acção 3D para PC, **primeira ou terceira pessoa à escolha do jogador**, souls-like, fantasia medieval
+1. RPG de acção 3D para PC, **1.ª ou 3.ª pessoa à escolha**, souls-like, fantasia medieval
 2. **Ganha-se com habilidade, não com nível.** Sem gating, sem grind obrigatório
 3. Co-op para dois, sempre disponível
 4. Esquiva e parry no corpo a corpo
-5. Espada, escudo, arco e flecha, magia
-6. **Qualquer classe pega em qualquer arma.** A diferença vem das skills e atributos, não de bloqueios
-7. Atributos ao estilo Dark Souls, distribuídos por nível
-8. Escolha de classe, cada uma com uma habilidade especial
-9. Magia do bem e do mal, com usos limitados, magias desenhadas à mão
-10. Mundo aberto grande, por biomas, com dungeons escondidas em pontos do mapa
-11. Hotbar no fundo do ecrã + mochila de capacidade limitada
-12. **A máquina alvo é PC sem placa gráfica dedicada** — Iris Xe integrados, 1080p @ 60 Hz. Manda em toda a arte, render e escolha de engine
-13. **Primeira ou terceira pessoa, à escolha do jogador** — ver [`spec/29-perspectiva.md`](spec/29-perspectiva.md)
-14. **Plataforma: PC.** Sem consolas, sem telemóvel
-15. **A barra visual não é PlayStation 1** — 8–15 mil tri por personagem, ver [`spec/30-qualidade-visual.md`](spec/30-qualidade-visual.md)
-16. **Dark Souls 2 é o chão de qualidade aceitável**, e cada pacote investiga a referência antes de escrever — [`spec/31-referencias.md`](spec/31-referencias.md)
+5. **Qualquer classe pega em qualquer arma** — a diferença vem de atributos e habilidades
+6. Atributos distribuídos por nível, tecto **100**
+7. Magia do bem e do mal, com usos limitados
+8. **Mundo vasto**, por biomas, ~30 min a pé, **10+ biomas**, dungeons escondidas
+9. **Mochila sem limite** — só o equipado pesa (70%)
+10. **A máquina alvo é a do Rico** — 8 GB, Iris Xe, 1080p @ 60 Hz. Manda em tudo
+11. **A barra visual não é PlayStation 1** — 8–15 mil tri por personagem
+12. **Dark Souls 2 é o chão de qualidade**, e estuda-se a referência antes de escrever
+13. **Tom sombrio a sério** · **português**, tudo
+14. **Espólio garantido:** em 10 mortes o inimigo larga tudo o que se vê nele
+15. **Descanso recarrega o mapa**, tecto de 10 reaparições — não se farma
+16. **Carregamento por área**, não o mundo todo
+17. ⭐ **Os controlos escolhem-se dentro do jogo** — [`45`](spec/45-controlos-configuraveis.md)
+18. ⭐ **O código do jogo vive neste repositório** — decisão de 31-07, ver [`ESTADO.md`](ESTADO.md)
 
 ## O que trava
 
-**Nada.** Todas as perguntas bloqueantes caíram a 31-07-2026, com a aprovação do Mateus e do Rico.
+**Nada trava a construção.** O que falta são decisões que se tomam a jogar, não a escrever — estão no [`99`](spec/99-perguntas-abertas.md) e o [`ESTADO.md`](ESTADO.md) diz quais são mesmo urgentes.
 
-| | |
-|---|---|
-| Máquinas | as duas medidas; o alvo é a do Rico (8 GB) |
-| O 3D aguenta-se? | **caminho A** — 3D estilizado optimizado. ⚠️ a medição que o sustenta não tem prova no repositório; o marco 1 do WP15 dá-a |
-| A fatia 1 | aprovada: 1 zona, 1 dungeon, 1 chefe, 6 classes, 5 armas, 3 magias |
-| Evoluções de classe | **opção A** — dão opções, não números; sobem por marco, não por nível |
-| Magia do bem e do mal | aprovada — o preço do mal é PV, à vista. A fatia usa as duas escolas |
-| Quantas classes na fatia | seis |
-| Sete raças + o Ceifador | aprovadas para o bestiário do WP6 |
-| **Biomas por nível?** | **soft gating** — mapa todo aberto, dificuldade sugerida e não exigida |
-| **Tamanho do mapa** | **~30 min a pé, 10+ biomas.** Fatia 1 continua a ser Brumal sozinha |
-| **Tom** | **sombrio a sério** — sem piscadelas. Frase de estilo das imagens já reescrita |
-| **Idioma** | **português**, tudo |
-
-Continua em aberto, mas **não trava ninguém**: o nome do jogo, a história dos personagens, o que a Toca era, o porquê do co-op, e os nomes provisórios — [`spec/26-narrativa.md`](spec/26-narrativa.md) §3.
-
-## A construir
-
-[`prompts/BRIEFING-FABLE.md`](prompts/BRIEFING-FABLE.md) — o prompt-raiz: 20 pacotes, do combate ao plano de construção.
-
-**Estado (31-07-2026): os 20 pacotes estão escritos** — ver a tabela acima e as reservas em [`COORDENACAO.md`](COORDENACAO.md). O que falta não é escrita, é decisão: as propostas 🔴/🟠 do [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) esperam o sim (ou o corte) do Mateus e do Rico numa sessão 2 gravada. Depois disso, [`spec/24-plano.md`](spec/24-plano.md) é o ponto de partida do Opus 5.
+⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8).
 
 ## Sessões
 
 | # | Data | Duração | Transcrição | Ideias |
 |---|---|---|---|---|
 | 1 | 30-07-2026 | 13m13s | local | local |
+| 2 | 31-07-2026 | conversa escrita | — | [`40`](spec/40-decisoes-espolio-magia-inventario.md) |

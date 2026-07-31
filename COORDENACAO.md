@@ -73,7 +73,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 |---|---|---|
 | 32–43 | Claude | construção, referências, morte, catálogo, estudos, física, anéis, ataques, decisões |
 | 44 | Fable | protótipo |
-| **45+** | **livre** | |
+| 45 | Claude | controlos configuráveis |
+| **46+** | **livre** | |
 
 ## Quem trata das entregas
 
