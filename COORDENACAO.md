@@ -79,7 +79,7 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 47 | Claude | do greybox ao visual |
 | 48 | Claude | arcos, bestas e escudos |
 | 49 | Fable | as 12 fichas de bioma (volta 1) |
-| 50 | Claude | mago do mal (escola vermelha) |
+| 52 | Claude | mago do mal (escola vermelha) |
 | **51+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
