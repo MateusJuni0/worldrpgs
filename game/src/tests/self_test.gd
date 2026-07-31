@@ -25,7 +25,55 @@ func _ready() -> void:
 	_test_spell_catalogue()
 	_test_feel()
 	_test_biomes()
+	_test_races()
 	_report()
+
+
+# --- spec/50-racas.md (volta 2) · as 12 fichas de raca ------------------------
+
+func _test_races() -> void:
+	var ids := GameData.race_ids()
+
+	# 12 racas verdadeiras + o mimico como praga (spec/50 §0).
+	var true_races: Array[String] = []
+	for id in ids:
+		if String(GameData.race(id).get("tipo", "")) == "raca":
+			true_races.append(id)
+	_check(true_races.size() == 12, "12 racas verdadeiras (10-15 [DECIDIDO])")
+	_check(String(GameData.race("mimicos").get("tipo", "")) == "praga",
+		"o mimico e praga, nao raca")
+
+	# So os orcs estao na fatia 1 (spec/10: lanceiro, brutamontes, Vorgar).
+	var slice: Array[String] = []
+	for id in ids:
+		if bool(GameData.race(id).get("fatia_1", false)):
+			slice.append(id)
+	_check(slice.size() == 1 and slice[0] == "orcs", "fatia 1 = so orcs")
+
+	# Cada bioma tem >= 3 papeis de combate diferentes entre as racas que aloja
+	# + o mimico/chefe — aqui exigimos >= 2 so das racas residentes (o 3.o vem
+	# do chefe ancora, WP7). Spec/38 §6 via spec/50 §13.
+	for biome_id in GameData.biome_ids():
+		var housed: Dictionary = GameData.biome(biome_id).get("racas", {}) as Dictionary
+		var listed: Array = [String(housed.get("dominante", ""))]
+		listed.append_array(housed.get("secundarias", []) as Array)
+		var roles := {}
+		for race_id: Variant in listed:
+			var r := GameData.race(String(race_id))
+			roles[String(r.get("papel", ""))] = true
+			if r.has("papel_secundario"):
+				roles[String(r.get("papel_secundario", ""))] = true
+		_check(roles.size() >= 2, "%s: >= 2 papeis entre residentes (tem %d)" % [biome_id, roles.size()])
+
+	# As 6 novas sao exactamente as semeadas na volta 1 (spec/49 §4).
+	for new_race: String in ["teceloes", "ventaneiras", "borralheiros",
+			"submersos", "penitentes", "sem_rosto"]:
+		_check(not GameData.race(new_race).is_empty(), "raca nova '%s' existe" % new_race)
+
+	# Nenhuma raca sem segredo — a linha 8 e a que faz reler (spec/46 §5).
+	for id in ids:
+		_check(String(GameData.race(id).get("segredo", "")) != "",
+			"'%s' tem a linha 'ninguem sabe'" % id)
 
 
 # --- spec/49-biomas.md (volta 1) · as 12 fichas de bioma ----------------------

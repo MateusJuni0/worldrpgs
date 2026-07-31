@@ -17,6 +17,7 @@ var controls: Dictionary = {}
 var attributes: Dictionary = {}
 var abilities: Dictionary = {}
 var biomes: Dictionary = {}
+var races: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -30,6 +31,7 @@ func _ready() -> void:
 	attributes = _load_json("attributes.json")
 	abilities = _load_json("abilities.json")
 	biomes = _load_json("biomes.json")
+	races = _load_json("races.json")
 	_build_input_map()
 	_validate()
 
@@ -336,6 +338,49 @@ func _validate() -> void:
 		_fail("[SPEC] %d biomas na fatia 1 (a spec/10 diz 1 — Brumal)" % in_slice)
 	checks += 1
 
+	# 7. O laco bioma <-> raca, nos dois sentidos (spec/50 + spec/46 §4).
+	# Toda a raca que um bioma aloja existe em races.json E declara esse bioma;
+	# todo o bioma que uma raca habita existe em biomes.json E lista essa raca.
+	# E a regra anti-mistura em codigo: um boneco sem casa nao arranca o jogo.
+	const RACE_FIELDS: Array[String] = ["nome", "tipo", "papel", "origem", "quer",
+		"biomas", "relacoes", "mortos", "veste", "segredo", "descricao_visual", "fatia_1"]
+	const VALID_ROLES: Array[String] = ["rapido", "pesado", "distancia", "grupo", "armadilha"]
+	var true_races := 0
+	for race_id in race_ids():
+		var r := race(race_id)
+		for field in RACE_FIELDS:
+			if not r.has(field):
+				_fail("[SPEC] raca '%s' sem o campo '%s' (spec/50)" % [race_id, field])
+		if String(r.get("tipo", "")) == "raca":
+			true_races += 1
+		if String(r.get("papel", "")) not in VALID_ROLES:
+			_fail("[SPEC] raca '%s' com papel '%s' fora do spec/38 §6" % [race_id, r.get("papel", "")])
+		var homes: Dictionary = r.get("biomas", {}) as Dictionary
+		if homes.is_empty():
+			_fail("[SPEC] raca '%s' sem bioma nenhum (spec/46 §5)" % race_id)
+		for home: String in homes.keys():
+			if biome(home).is_empty():
+				_fail("[SPEC] raca '%s' habita bioma inexistente '%s'" % [race_id, home])
+			else:
+				var housed: Dictionary = biome(home).get("racas", {}) as Dictionary
+				var listed: Array = [String(housed.get("dominante", ""))]
+				listed.append_array(housed.get("secundarias", []) as Array)
+				if race_id not in listed:
+					_fail("[SPEC] raca '%s' diz viver em '%s', mas o bioma nao a lista" % [race_id, home])
+	if true_races != 12:
+		_fail("[SPEC] %d racas verdadeiras (a spec/50 diz 12; pragas nao contam)" % true_races)
+	for biome_id in biome_ids():
+		var housed_b: Dictionary = biome(biome_id).get("racas", {}) as Dictionary
+		var all_listed: Array = [String(housed_b.get("dominante", ""))]
+		all_listed.append_array(housed_b.get("secundarias", []) as Array)
+		for listed_race: Variant in all_listed:
+			var rr := race(String(listed_race))
+			if rr.is_empty():
+				_fail("[SPEC] bioma '%s' aloja raca inexistente '%s'" % [biome_id, listed_race])
+			elif not (rr.get("biomas", {}) as Dictionary).has(biome_id):
+				_fail("[SPEC] bioma '%s' lista '%s', mas a raca nao declara esse bioma" % [biome_id, listed_race])
+	checks += 1
+
 	if load_errors.is_empty():
 		print("[GameData] dados carregados — %d grupos de verificacoes contra a spec passaram" % checks)
 	else:
@@ -370,6 +415,19 @@ func biome(id: String) -> Dictionary:
 func biome_ids() -> Array[String]:
 	var out: Array[String] = []
 	for k: String in biomes.keys():
+		if not k.begins_with("_"):
+			out.append(k)
+	return out
+
+
+func race(id: String) -> Dictionary:
+	return races.get(id, {}) as Dictionary
+
+
+## Ids reais das racas (ignora as chaves "_meta" do JSON).
+func race_ids() -> Array[String]:
+	var out: Array[String] = []
+	for k: String in races.keys():
 		if not k.begins_with("_"):
 			out.append(k)
 	return out

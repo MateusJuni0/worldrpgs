@@ -70,6 +70,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 50 | [**As 12 fichas de raça**](spec/50-racas.md) | A segunda metade do motor: 6 raças aprovadas + 6 novas `[FABLE]`, papéis de combate, o mímico como praga · o laço bioma ↔ raça verificado no arranque | 🟢 volta 2 entregue |
 | 49 | [**As 12 fichas de bioma**](spec/49-biomas.md) | O motor de produção preenchido: 12 fichas de 8 linhas + paleta ligada ao motor (`game/data/biomes.json`) · fecha as perguntas 4 e 13 · semeia as 6 raças novas da volta 2 | 🟢 volta 1 entregue |
 | 48 | [**Arcos, bestas e escudos**](spec/48-arcos-bestas-escudos.md) | As 3 famílias sem cobertura: a munição é metade do arco, a besta é a Lei 3 em objecto, e o tecto de estabilidade que impede bloquear de graça | 🟢 matéria-prima da volta 3 |
 | 47 | [**Do greybox ao visual**](spec/47-do-greybox-ao-visual.md) | O que temos hoje, visto e não suposto; o que faz parecer a referência (luz > polígonos); a ordem da conversão; capturas em todo o marco | 🟢 `[DECIDIDO]` 31-07 |

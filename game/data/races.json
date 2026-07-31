@@ -1,0 +1,241 @@
+{
+  "_fonte": "spec/50-racas.md — as 12 fichas de raca (volta 2). O laco bioma<->raca e verificado no arranque nos DOIS sentidos.",
+  "_nota": "papel: rapido | pesado | distancia | grupo | armadilha (spec/38 §6). 'biomas' mapeia bioma_id -> porque esta la (spec/46 §5).",
+
+  "orcs": {
+    "nome": "Orcs",
+    "tipo": "raca",
+    "papel": "rapido",
+    "papel_secundario": "pesado",
+    "origem": "da Fornalha: descem da gente da forja, de quando a forja precisava de maos",
+    "quer": "provar valor em duelo — um cla mede-se pelo ferro que carrega",
+    "biomas": {
+      "brumal": "a bruma e terreno de caca e rito de passagem",
+      "costa_quebrada": "os expulsos, viraram saqueadores de naufragios",
+      "fornalha": "os que nunca deixaram a forja-mae"
+    },
+    "relacoes": "goblins como batedores tolerados; minotauros respeitam-se de longe; kobolds desprezam-se",
+    "mortos": "pilhas com o ferro em cima — o ferro do morto e de quem provar que o merece",
+    "veste": "ferro rude e couro (Brumal), bronze verde (Costa), obsidiana (Fornalha)",
+    "segredo": "nenhum orc entra na Toca por vontade — Vorgar guarda-a CONTRA eles",
+    "descricao_visual": "guerreiro tribal macico, pele cinzenta-esverdeada, ferro rude e couro de javali",
+    "fatia_1": true
+  },
+
+  "goblins": {
+    "nome": "Goblins",
+    "tipo": "raca",
+    "papel": "grupo",
+    "origem": "da Selva Funda — expulsos do chao para as copas",
+    "quer": "comida e coisas que brilham; sobreviver em numero",
+    "biomas": {
+      "selva_funda": "a casa nas copas",
+      "brumal": "a orla e onde se rouba aos orcs",
+      "raizama": "um bando desceu atras dos esporos e voltou diferente"
+    },
+    "relacoes": "serve os orcs por medo; troca seda com os Teceloes; foge do resto",
+    "mortos": "abandona-os — e volta de noite para levar o que ficou",
+    "veste": "vime e retalhos; na Raizama, quitina",
+    "segredo": "ha um goblin que os outros alimentam e que nunca luta — e nao e o mais fraco",
+    "descricao_visual": "pequeno e curvado, pele verde-acinzentada, olhos grandes, armadura de retalhos de vime, faca curta",
+    "fatia_1": false
+  },
+
+  "kobolds": {
+    "nome": "Kobolds",
+    "tipo": "raca",
+    "papel": "armadilha",
+    "origem": "das minas do Fojo — mudaram-se para o que encontraram aberto",
+    "quer": "que ninguem entre; colecciona mecanismos",
+    "biomas": {
+      "fojo": "a casa",
+      "selva_funda": "os barrancos armam-se bem",
+      "fulgor": "pavor ao raio, mas a fulgurite vale o risco"
+    },
+    "relacoes": "evita todas; deixa tributo a entrada do labirinto do Minotauro",
+    "mortos": "enterra cada um com uma armadilha desarmada — a ferramenta morre com o dono",
+    "veste": "couro, corda, e um sino de aviso ao pescoco — ouve-se um kobold antes de o ver",
+    "segredo": "as armadilhas mais antigas do Fojo nao sao deles — sao copias do que la estava",
+    "descricao_visual": "reptil pequeno de escamas cor de ferrugem, corcunda, sino ao pescoco, olhos de mina grandes e escuros",
+    "fatia_1": false
+  },
+
+  "esqueletos": {
+    "nome": "Esqueletos",
+    "tipo": "raca",
+    "papel": "rapido",
+    "origem": "da guerra das Campas — os que nunca foram enterrados",
+    "quer": "cumprir a ultima ordem que recebeu. So isso",
+    "biomas": {
+      "campas_cinzentas": "o campo de batalha",
+      "santuario_branco": "a guarda dourada, que rezou e ficou",
+      "raiz": "os antigos, de antes da guerra"
+    },
+    "relacoes": "ignora tudo o que nao atravessa o seu posto",
+    "mortos": "recolhe ossos caidos e tenta monta-los — mal",
+    "veste": "o que morreu a vestir: ferro ferrugento nas Campas, ouro baco no Santuario",
+    "segredo": "ainda obedecem a alguem que da ordens — e nao e o Ceifador",
+    "descricao_visual": "osso seco e quebradico, armadura da guerra a cair aos pedacos, postura de sentinela",
+    "fatia_1": false
+  },
+
+  "zumbis": {
+    "nome": "Zumbis",
+    "tipo": "raca",
+    "papel": "pesado",
+    "origem": "dos mesmos mortos da guerra — os que a agua nao deixou secar",
+    "quer": "nada. Anda para onde o corpo se lembra de ir",
+    "biomas": {
+      "campas_cinzentas": "a agua parada",
+      "cidade_afogada": "os que a agua levou no dia em que subiu"
+    },
+    "relacoes": "nem as ve; os esqueletos empurram-nos para fora das formacoes",
+    "mortos": "quando cai de vez, o corpo fica apontado para onde ia — a rota le-se no chao",
+    "veste": "restos inchados de campones; na Cidade, algas e prata que afundou com eles",
+    "segredo": "quando ninguem os ve, os zumbis das Campas andam todos na mesma direccao. Para baixo",
+    "descricao_visual": "cadaver inchado e lento, pele cinzenta esticada, roupa de campones encharcada",
+    "fatia_1": false
+  },
+
+  "minotauros": {
+    "nome": "Minotauros",
+    "tipo": "raca",
+    "papel": "pesado",
+    "origem": "do Fulgor — manadas em migracao eterna debaixo da tempestade",
+    "quer": "caminhar o caminho; um minotauro parado guarda alguma coisa",
+    "biomas": {
+      "fulgor": "a casa; o raio cai-lhes nos chifres e eles seguem",
+      "cimeira": "os postos de neve",
+      "fojo": "um parou, e ganhou um labirinto"
+    },
+    "relacoes": "aceita o tributo dos kobolds sem o entender; os orcs respeitam-no",
+    "mortos": "carrega-lhes os ossos ate ao fim da migracao — os velhos carregam dezenas",
+    "veste": "quase nada: pele de cabra na Cimeira, couro seco no Fulgor. O corpo e a armadura",
+    "segredo": "o labirinto do Fojo nao foi construido para manter ninguem fora",
+    "descricao_visual": "homem com cabeca de touro, 2,6 m, chifres lascados, ossos pendurados no peito",
+    "fatia_1": false
+  },
+
+  "teceloes": {
+    "nome": "Teceloes",
+    "tipo": "raca",
+    "papel": "armadilha",
+    "origem": "da Raizama — nasceram dentro da carcaca do grande morto",
+    "quer": "seda e silencio; tecem tudo o que sabem — a teia e escrita",
+    "biomas": {
+      "raizama": "a casa",
+      "selva_funda": "subiram atras das aves gigantes"
+    },
+    "relacoes": "troca seda com os goblins; embrulha o resto",
+    "mortos": "embrulha-os e pendura-os — a teia a volta diz quem era",
+    "veste": "a propria seda, endurecida em placas",
+    "segredo": "ha uma teia no fundo da Raizama que nenhum Tecelao teceu — e nenhum se aproxima dela",
+    "descricao_visual": "torso humanoide de quitina azul-escura sobre quatro patas, quatro olhos ciano, dedos longos de fiar",
+    "fatia_1": false
+  },
+
+  "ventaneiras": {
+    "nome": "Ventaneiras",
+    "tipo": "raca",
+    "papel": "distancia",
+    "origem": "da Cimeira — as sentinelas que subiram a vigiar, e o vento ficou com elas",
+    "quer": "ver primeiro; coleccionam primeiras-vistas e gritam o que veem",
+    "biomas": {
+      "cimeira": "o posto de vigia",
+      "costa_quebrada": "ninhos nas falesias, pesca nos destrocos"
+    },
+    "relacoes": "grita avisos que ninguem pediu; odeia os Submersos, que lhe levam os ovos",
+    "mortos": "deixa-os ao vento no pico mais alto",
+    "veste": "as proprias penas, e bronze dos naufragios",
+    "segredo": "ha um quadrante do horizonte para onde nenhuma Ventaneira olha",
+    "descricao_visual": "mulher-ave de penas cinza-azuis, envergadura de 4 m, garras com ponteiras de bronze, olhos amarelos",
+    "fatia_1": false
+  },
+
+  "borralheiros": {
+    "nome": "Borralheiros",
+    "tipo": "raca",
+    "papel": "pesado",
+    "origem": "do borralho da Fornalha — o povo que restou quando a forja deixou de precisar de maos",
+    "quer": "servir a forja: alimenta-la, vigia-la, morrer perto dela",
+    "biomas": {
+      "fornalha": "nasceram do borralho dela — a unica raca que nao viaja"
+    },
+    "relacoes": "vende laminas de obsidiana aos orcs do fogo; foge de agua e gelo",
+    "mortos": "devolve-os a forja — todo o Borralheiro volta ao lume de onde saiu",
+    "veste": "avental de couro curtido e placas de obsidiana; a pele cinza-brasa ja e meia armadura",
+    "segredo": "a forja arde sozinha ha cem anos; eles alimentam-na na mesma, porque precisam de acreditar que servem",
+    "descricao_visual": "humanoide atarracado de pele cinza com fendas incandescentes, avental de couro, martelo-lamina de obsidiana",
+    "fatia_1": false
+  },
+
+  "submersos": {
+    "nome": "Submersos",
+    "tipo": "raca",
+    "papel": "rapido",
+    "origem": "da Cidade Afogada — os habitantes que a agua guardou",
+    "quer": "levar para baixo tudo o que faz barulho",
+    "biomas": {
+      "cidade_afogada": "a casa",
+      "costa_quebrada": "a mare traz alguns, e devolve-os"
+    },
+    "relacoes": "nao distingue vivos de coisas; rouba ovos as Ventaneiras — dentro ha um bater",
+    "mortos": "senta-os nas casas de onde eram — a Cidade continua habitada",
+    "veste": "prata escurecida e algas",
+    "segredo": "todos os ciclos deixam prata a porta de uma casa vazia; ninguem sabe de quem era",
+    "descricao_visual": "humanoide magro cinza-esverdeado de olhos brancos, coberto de algas, joias de prata escurecida",
+    "fatia_1": false
+  },
+
+  "penitentes": {
+    "nome": "Penitentes",
+    "tipo": "raca",
+    "papel": "grupo",
+    "origem": "peregrinos que vieram rezar ao Santuario e nunca mais sairam",
+    "quer": "que a luz olhe outra vez para eles — deram os olhos por isso, dizem",
+    "biomas": {
+      "santuario_branco": "a casa; la fora a luz nao responde"
+    },
+    "relacoes": "fala primeiro: tenta converter, e o ataque so vem depois da recusa",
+    "mortos": "cobre-os de cera e acende-os — as velas do Santuario sao os mortos dele",
+    "veste": "habito branco com ouro baco, venda dourada sobre os olhos",
+    "segredo": "debaixo das vendas nao ha cicatrizes. Nasceram assim — todos",
+    "descricao_visual": "figura em habito branco e ouro, venda dourada, pele com brilho de cera, cirio erguido",
+    "fatia_1": false
+  },
+
+  "sem_rosto": {
+    "nome": "Sem-Rosto",
+    "tipo": "raca",
+    "papel": "pesado",
+    "origem": "ninguem sabe — ja la estavam quando a Raiz foi aberta",
+    "quer": "empilhar pedra contra a porta de onde a bruma sai — e a pilha nunca cresce",
+    "biomas": {
+      "raiz": "a casa, se e que casa e a palavra"
+    },
+    "relacoes": "nao reage a nada que nao se aproxime da porta",
+    "mortos": "nao se encontram Sem-Rosto mortos. Nunca",
+    "veste": "placas de pedra negra amarradas com raiz",
+    "segredo": "tem rosto, debaixo das placas. E igual ao teu",
+    "descricao_visual": "silhueta alta de placas de pedra negra sem cabeca visivel, bruma palida a escapar das juntas",
+    "fatia_1": false
+  },
+
+  "mimicos": {
+    "nome": "Mimicos",
+    "tipo": "praga",
+    "papel": "armadilha",
+    "origem": "ninguem sabe onde nasce um mimico — sabe-se onde aparece: onde ha espolio",
+    "quer": "comer quem tem pressa de abrir baus",
+    "biomas": {
+      "fojo": "as galerias com tesouro",
+      "costa_quebrada": "os destrocos com carga"
+    },
+    "relacoes": "nenhuma — nao e um povo, e uma praga",
+    "mortos": "nao deixa mortos; deixa baus vazios",
+    "veste": "a forma do bau que imita",
+    "segredo": "o mimico RESPIRA — e a telegrafia dele, e a regra ja esta no bestiario",
+    "descricao_visual": "bau de madeira e ferro identico aos reais, a respirar devagar; aberto, e dentes e lingua",
+    "fatia_1": false
+  }
+}
