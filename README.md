@@ -47,6 +47,7 @@ spec/
 prompts/
   BRIEFING-FABLE.md          prompt-raiz do agente que detalha a spec
   ARRANQUE-FABLE.md          o que o Rico cola no Fable para arrancar
+  PROXIMOS-PACOTES.md        a fila dos 11 pacotes que faltam
 art/                         assets: manifesto, prompts de imagem, ficheiros
 tools/check-coerencia.mjs    guarda tecnico da spec, corre em cada PR
 design/

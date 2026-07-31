@@ -189,6 +189,8 @@ A fatia 1 é o mínimo que já é um jogo divertido a dois. Defines isso no prim
 
 ## Os pacotes de trabalho
 
+> 📋 **[`PROXIMOS-PACOTES.md`](PROXIMOS-PACOTES.md) — lê isto primeiro.** É a fila dos 11 que faltam, por ordem de valor, com o que cada um tem de investigar, o que herda das decisões de 31-07, e as lacunas já conhecidas. As secções abaixo são a definição de cada pacote; a fila é o que fazer a seguir.
+
 **Um pacote = um branch = um PR.** Por esta ordem — cada um assenta no anterior.
 
 São vinte: WP0 a WP15, mais quatro acrescentados depois do WP0 (WP1B, WP8B, WP11B, WP15B), que ficam na posição onde pertencem em vez de irem para o fim.
