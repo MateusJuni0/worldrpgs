@@ -84,7 +84,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 50 | Fable | as 12 fichas de raça (volta 2) |
 | 51 | Fable | WP5 camada 1 — famílias de arma e peças de armadura (volta 3) |
 | 52 | Claude | mago do mal (escola vermelha) |
-| **53+** | **livre** | |
+| 53 | Claude | chefes, ritmo e o mago forte |
+| **54+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 

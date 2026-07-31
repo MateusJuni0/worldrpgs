@@ -70,6 +70,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 53 | [**13 chefes, o ritmo da travessia, e o mago forte**](spec/53-chefes-ritmo-e-o-mago-forte.md) | Resposta do Mateus à auditoria: 13 verdadeiros + portas de história abertas, travessia de 8–12 min, e o Voto de Sangue a trocar verbos em vez de multiplicar dano | 🟢  01-08 |
 | 52 | [**O mago do mal — a escola vermelha**](spec/52-mago-do-mal.md) | O personagem do Mateus: cor como lei, cadáveres e vida como moeda, ~20 feitiços, levantar o chefe, o espelho | 🟢 proposta detalhada, 6 perguntas para ele |
 | 51 | [**WP5 camada 1: famílias, armadura e kits**](spec/51-familias.md) | 8 famílias de arma (cada uma com onde é MÁ), 3 de escudo com tecto de estabilidade, 9 peças de armadura, os kits iniciais das 6 classes e as regras de espólio do Rico | 🟢 volta 3 entregue |
 | 50 | [**As 12 fichas de raça**](spec/50-racas.md) | A segunda metade do motor: 6 raças aprovadas + 6 novas `[FABLE]`, papéis de combate, o mímico como praga · o laço bioma ↔ raça verificado no arranque | 🟢 volta 2 entregue |
