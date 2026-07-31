@@ -74,6 +74,61 @@ A última coluna é o ponto todo. **Se disser ❌, a habilidade não está pront
 
 ---
 
+## 2b. Artes de arma — uma mão e duas mãos
+
+`[DECIDIDO]` (Mateus, 31-07-2026) — **cada arma dá uma habilidade a uma mão e outra a duas mãos.**
+
+### Como funciona na referência, e porque é que a nossa versão é melhor
+
+Na referência (DS3), a tecla de arte usa a habilidade da **arma da mão esquerda**, ou da arma principal **quando se empunha a duas mãos**. Ou seja: empunhar a duas mãos muda **qual** arma dá a arte, não **que** arte essa arma dá.
+
+A proposta do Mateus é diferente e resolve um problema nosso: **a mesma arma dá artes diferentes conforme as mãos.** `[DECIDIDO]`
+
+**Porque é que isto é a peça certa para nós:** a regra dos comandos (§2) diz que só temos **uma tecla** para artes de arma. Com esta variante, essa tecla passa a dar **duas habilidades por arma** sem gastar tecla nenhuma:
+
+| Famílias | Artes distintas | Teclas gastas |
+|---|---|---|
+| 8 | **16** (8 × 1 mão + 8 × 2 mãos) | **1** |
+
+Empunhar a duas mãos já é uma decisão que o jogador toma em combate — troca defesa por alcance e dano. **Agora essa decisão também escolhe a habilidade**, e isso dá profundidade sem custar nem uma tecla nem uma animação de menu.
+
+### O que cada ficha de arma passa a ter de trazer
+
+| Arma | Arte a **1 mão** | Arte a **2 mãos** | Custo | Tecla |
+|---|---|---|---|---|
+| *exemplo: espada longa* | investida rápida à frente | golpe circular em área | stamina | ✅ partilhada |
+
+`→WP5` — o catálogo cresce nesta coluna, não em teclas.
+
+⚠️ **A regra que protege isto:** as duas artes têm de ser **verbos diferentes**, não a mesma coisa com números diferentes. Se a versão a duas mãos for só "o mesmo mas mais forte", é a Lei 2 quebrada e vale mais não existir.
+
+---
+
+## 2c. Habilidades de armadura — por peça, não por conjunto
+
+`[DECIDIDO]` (Mateus, 31-07-2026) — **a habilidade vive na peça, não no conjunto.** Quem quiser o efeito veste só a peça que o dá.
+
+Isto está confirmado na referência: há perneiras que **cortam o dano de queda e silenciam os passos**, e conjuntos em que **cada peça acumula** o mesmo efeito. Ver [`35-estudo-referencia.md`](35-estudo-referencia.md) §2 e a [fonte](https://darksouls2.wiki.fextralife.com/Armors+with+Special+Effects).
+
+### Porque é que isto é a decisão certa
+
+**Sem bónus de conjunto, misturar peças passa a ser jogabilidade.** O jogador que quer descer penhascos veste as perneiras que cortam a queda com o peito que lhe interessa por outra razão. A personalização deixa de ser cosmética e passa a ser construção — e é grátis: não custa sistema nenhum, só disciplina ao escrever o catálogo.
+
+### O tipo de efeito que faz sentido
+
+Todos **passivos** (§2 — armaduras não gastam teclas):
+
+| Categoria | Exemplos do género |
+|---|---|
+| Movimento e física | menos dano de queda · passos silenciosos · rolamento mais longo |
+| Recursos | mais almas ganhas · stamina regenera mais depressa · mais uma carga de magia |
+| Resistências | veneno, sangramento, fogo — por tipo, nunca defesa plana (Lei 1) |
+| Situacionais | melhor com pouca vida · melhor de noite · melhor sozinho |
+
+⚠️ **Nós não temos anéis.** Na referência, metade destes efeitos vive em anéis e não na armadura. Como a nossa spec não tem sistema de anéis, **a armadura carrega tudo** — o que é mais simples (um sistema em vez de dois) e torna cada peça mais interessante. `[CLAUDE]`, para o WP5 confirmar ou propor anéis.
+
+---
+
 ## 3. Ressurreição — afinação
 
 `[DECIDIDO]` (Mateus, 31-07-2026) — a janela de canalização passa a **5 a 7 segundos**, para o WP15B afinar dentro dessa faixa.

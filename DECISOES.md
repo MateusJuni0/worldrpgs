@@ -10,6 +10,12 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 31-07-2026 · tarde
 
+### Física, artes de arma e armadura por peça → [`spec/36-fisica.md`](spec/36-fisica.md) e [`spec/34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md) §2b/§2c
+- **Cada arma dá arte a 1 mão e outra a 2 mãos** — 8 famílias × 2 = **16 artes com UMA tecla**
+- **Habilidade da armadura vive na PEÇA**, não no conjunto. Sem bónus de conjunto: misturar passa a ser construção
+- **Física escrita de raiz** — era buraco total: gravidade −18 m/s², dano de queda por percentagem (Lei 1), **setas com balística** (a 30 m falha-se se apontar a direito), empurrão que escala com a massa, varrimento de arma obrigatório, **passo fixo a 60 Hz** para as janelas do WP1 não mudarem com engasgos
+- **Substitui:** nada — preenche o que não existia
+
 ### Escala do catálogo e a regra dos comandos → [`spec/34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md)
 - ~**30 armaduras**, cada uma com habilidade ou identidade própria. Nenhuma existe só para dar defesa
 - ~**20 armas por classe** (≈120), em famílias que **partilham conjunto de movimentos**
