@@ -23,6 +23,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP8B | `spec/26-narrativa.md` | Claude | 31-07 | ✅ entregue — guião de gravação de 7 perguntas para os donos |
 | WP5 | `spec/14-equipamento.md` | Fable | 31-07 | 🔨 em curso — branch `claude/game-spec-completa-81xz3g`, alinhado aos números do WP1/WP2 |
 | WP12 | `spec/21-arte-render.md` | Fable | 31-07 | 🔨 em curso — mesmo branch (animações, efeitos e som, pedido do Rico 31-07) |
+| WP6 | `spec/15-inimigos.md` | Fable | 31-07 | 🔨 em curso — mesmo branch, sobre as 7 raças do Rico |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
