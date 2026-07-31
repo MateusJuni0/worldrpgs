@@ -30,6 +30,8 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP10 | `spec/19-rede.md` | Fable | 31-07 | ✅ entregue no branch — progresso individual resolvido, autoridade dividida, transporte |
 | WP11 | `spec/20-interface.md` | Fable | 31-07 | ✅ entregue no branch — HUD, mochila, menus, configurações |
 | WP14 | `spec/23-tecnico.md` | Fable | 31-07 | ✅ entregue no branch — Godot escolhido com dados, sistemas, dados afináveis, ferramentas |
+| WP15 | `spec/24-plano.md` | Fable | 31-07 | 🔨 em curso — mesmo branch |
+| WP15B | `spec/28-testes.md` | Fable | 31-07 | 🔨 em curso — mesmo branch, fecha o ciclo |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
