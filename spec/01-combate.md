@@ -139,9 +139,9 @@ Frames `arranque/activo/recuperação` a 60 fps. Combo: número máximo de leves
 
 Regras transversais:
 
-- **Pesado do machadão é carregável:** segurar até +20 f → MV 3,0. **Hiper-armadura nos frames 30–48**: leva o dano, não é interrompido. É a identidade do Berserker dentro da Lei 3 — qualquer um pega no machadão, mas é preciso ler o inimigo para trocar dano por dano.
+- **Pesado do machadão é carregável:** segurar até +20 f → MV 3,0. **Hiper-armadura do frame 30 até ao fim dos frames activos** — no golpe carregado, prolonga-se com ele (o protótipo apanhou que "frames 30–48" à letra deixava o carregado desprotegido no momento do impacto). Leva o dano, não é interrompido. É a identidade do Berserker dentro da Lei 3.
 - **Cancelamentos:** a recuperação de um **leve** é cancelável em esquiva ou bloqueio a partir de 60% dela. O **pesado** não se cancela — compromisso total (o carregado do machadão pode soltar cedo). Ataque nunca cancela ataque fora da janela de combo.
-- **Duas mãos:** machadão e cajado ocupam as duas; adaga/espada/cajado combinam com escudo na outra.
+- **Duas mãos:** machadão e cajado ocupam as duas; **adaga e espada** combinam com escudo na outra. (Corrige a contradição que o protótipo apanhou: o cajado estava listado nos dois lados; vale a tabela de bloqueio — cajado é a duas mãos e não bloqueia, coerente com a ficha do Feiticeiro no WP3.)
 
 *Teste da Lei 1 — e a restrição que o WP2 herda:* com atributos de nível 1 e zero pontos, a curva de dano do WP2 **tem de satisfazer**: orc lanceiro morre em 3–5 leves de espada; brutamontes em 6–9; Vorgar em 45–70. Se o WP2 produzir números fora disto, está errado o WP2 — o chefe passa a testar paciência. Fica escrito aqui para o teste jogado do critério 3 da fatia (nível 1, zero pontos, mata o Vorgar) ter chão. ✅
 
@@ -208,6 +208,13 @@ Nenhuma das duas máquinas tem comando (pergunta 0) — **teclado+rato é o esqu
 | Usar item activo | R | X |
 | Hotbar | 1–5 | seta ↓ (ciclo) |
 | Interagir | E | A |
+| Conjurar a magia activa | C | Y |
+| Bash de escudo | LMB com bloqueio activo | RB com LB activo |
+| Andar (lento, 3,0 m/s) | Ctrl (segurar) | inclinação leve do stick |
+
+As três últimas linhas vieram do protótipo `[FABLE]` — a tabela original não dava botão a conjurar, ao bash nem ao andar (o teclado não tem analógico).
+
+> ⚠️ **Divergência aberta com o WP1B:** este documento põe o parry em `Q`; o [`25-controlo.md`](25-controlo.md) propõe parry no *toque* de `RMB` (bloqueio no *segurar*). São filosofias diferentes — botão dedicado vs uma só tecla de defesa — e o próprio WP1B avisa que a escolha contamina os testes da Lei 1. **Não se decide no papel: o protótipo tem de testar as duas cedo**, e o resultado fecha as duas specs ao mesmo tempo.
 
 Sensibilidade, remapeamento e afinação são do **WP1B/WP11** — isto é o mapa por defeito.
 
