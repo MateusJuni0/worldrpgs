@@ -48,8 +48,8 @@ $ godot --headless --path game/ scenes/selftest.tscn
 | Código | 46 ficheiros · 4033 linhas · 717 de dados | — | — |
 | Testes | **130, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
-| **Armas** | **5** | ~120 | **115** |
-| **Armaduras** | **0** | ~30 | **30** |
+| **Armas** | 5 instâncias · **8 famílias** ([`51`](spec/51-familias.md)) | ~120 | as instâncias (camada 2) |
+| **Armaduras** | **11 peças** · 9 slots · 3 cargas ([`51`](spec/51-familias.md)) | ~30 | ~19 |
 | **Anéis** | **0** | ~70 | **70** |
 | **Feitiços** | **3** | catálogo largo | quase tudo |
 | **Inimigos** | **3** | 12 raças + 61 chefes | quase tudo |

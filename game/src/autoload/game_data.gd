@@ -18,6 +18,7 @@ var attributes: Dictionary = {}
 var abilities: Dictionary = {}
 var biomes: Dictionary = {}
 var races: Dictionary = {}
+var armor: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -32,6 +33,7 @@ func _ready() -> void:
 	abilities = _load_json("abilities.json")
 	biomes = _load_json("biomes.json")
 	races = _load_json("races.json")
+	armor = _load_json("armor.json")
 	_build_input_map()
 	_validate()
 
@@ -379,6 +381,74 @@ func _validate() -> void:
 				_fail("[SPEC] bioma '%s' aloja raca inexistente '%s'" % [biome_id, listed_race])
 			elif not (rr.get("biomas", {}) as Dictionary).has(biome_id):
 				_fail("[SPEC] bioma '%s' lista '%s', mas a raca nao declara esse bioma" % [biome_id, listed_race])
+	checks += 1
+
+	# 8. WP5 camada 1 (spec/51-familias.md): familias, kits e armadura.
+	# A regra do 41 §2: uma familia sem a frase "onde e ma" esta listada, nao
+	# desenhada — e aqui isso e um erro, nao uma opiniao.
+	var fams: Dictionary = weapons.get("familias", {}) as Dictionary
+	var fam_ids: Array[String] = []
+	for f: String in fams.keys():
+		if not f.begins_with("_"):
+			fam_ids.append(f)
+	if fam_ids.size() != 8:
+		_fail("[SPEC] %d familias de arma (a spec/51 §2 diz 8)" % fam_ids.size())
+	for fam_id in fam_ids:
+		var fam: Dictionary = fams[fam_id]
+		for field: String in ["nome", "onde_boa", "onde_ma", "interrupcao", "fatia_1"]:
+			if not fam.has(field):
+				_fail("[SPEC] familia '%s' sem '%s' (spec/51 §2)" % [fam_id, field])
+		if String(fam.get("onde_ma", "")) == "":
+			_fail("[SPEC] familia '%s' sem a frase 'onde e ma' — esta listada, nao desenhada" % fam_id)
+
+	# Toda a arma da fatia declara a familia a que pertence, e ela existe.
+	for w_id: String in weapons.keys():
+		if w_id.begins_with("_") or w_id in ["familias", "familias_escudo", "loadouts",
+				"test_loadouts", "golpes_universais"]:
+			continue
+		var w: Dictionary = weapons[w_id]
+		if w.has("familia"):
+			if not fams.has(String(w.get("familia"))):
+				_fail("[SPEC] arma '%s' aponta a familia inexistente '%s'" % [w_id, w.get("familia")])
+		elif not w.has("familia_escudo"):
+			_fail("[SPEC] arma '%s' sem familia (spec/51 §2)" % w_id)
+
+	# Escudos: o tecto de estabilidade e rigido — sem ele bloquear e gratis.
+	var shields: Dictionary = weapons.get("familias_escudo", {}) as Dictionary
+	var stab_max: float = shields.get("estabilidade_maxima", 85.0)
+	for s_id: String in shields.keys():
+		if s_id.begins_with("_") or typeof(shields[s_id]) != TYPE_DICTIONARY:
+			continue
+		if float((shields[s_id] as Dictionary).get("estabilidade", 0.0)) > stab_max:
+			_fail("[SPEC] escudo '%s' passa o tecto de estabilidade %.0f (spec/51 §3)" % [s_id, stab_max])
+
+	# Kits: nenhuma referencia fantasma, e a carga e uma das tres.
+	var pieces: Dictionary = armor.get("pieces", {}) as Dictionary
+	var loads: Dictionary = weapons.get("loadouts", {}) as Dictionary
+	for class_id: String in loads.keys():
+		if class_id.begins_with("_"):
+			continue
+		var kit: Dictionary = loads[class_id]
+		for slot_key: String in ["main", "offhand"]:
+			var wid: Variant = kit.get(slot_key, null)
+			if wid != null and String(wid) != "" and not weapons.has(String(wid)):
+				_fail("[SPEC] kit '%s': arma '%s' nao existe" % [class_id, wid])
+		for piece: Variant in kit.get("pecas", []):
+			if not pieces.has(String(piece)):
+				_fail("[SPEC] kit '%s': peca '%s' nao existe em armor.json" % [class_id, piece])
+		if String(kit.get("carga", "")) not in ["leve", "medio", "pesado"]:
+			_fail("[SPEC] kit '%s' com carga '%s' fora das tres classes" % [class_id, kit.get("carga", "")])
+		if not kit.has("pecas") or (kit.get("pecas", []) as Array).is_empty():
+			_fail("[SPEC] kit '%s' sem pecas (instrucao do Rico, spec/51 §5)" % class_id)
+
+	# Os i-frames NUNCA mudam com o peso (Lei 1, spec/51 §4).
+	var carga: Dictionary = armor.get("carga", {}) as Dictionary
+	for load_name: String in ["leve", "medio", "pesado"]:
+		var c: Dictionary = carga.get(load_name, {}) as Dictionary
+		if c.is_empty():
+			_fail("[SPEC] classe de carga '%s' em falta (spec/51 §4)" % load_name)
+		elif c.has("iframe_start_frame") or c.has("iframe_end_frame"):
+			_fail("[SPEC] carga '%s' mexe nos i-frames — a Lei 1 nao deixa (spec/51 §4)" % load_name)
 	checks += 1
 
 	if load_errors.is_empty():

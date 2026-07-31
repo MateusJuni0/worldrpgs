@@ -26,7 +26,68 @@ func _ready() -> void:
 	_test_feel()
 	_test_biomes()
 	_test_races()
+	_test_families_and_kits()
 	_report()
+
+
+# --- spec/51-familias.md (volta 3) · familias, escudos, armadura e kits -------
+
+func _test_families_and_kits() -> void:
+	var fams: Dictionary = GameData.weapons.get("familias", {}) as Dictionary
+	var ids: Array[String] = []
+	for f: String in fams.keys():
+		if not f.begins_with("_"):
+			ids.append(f)
+	_check(ids.size() == 8, "8 familias de arma (spec/51 §2)")
+
+	# A regra do 41 §2 — toda a familia diz onde e MA.
+	for id in ids:
+		_check(String((fams[id] as Dictionary).get("onde_ma", "")).length() > 20,
+			"familia '%s' diz onde e ma" % id)
+
+	# A katana e a arma do contra-ataque: tem de bater mais do que a base.
+	var base_counter := int((fams["espada_recta"] as Dictionary).get("contra_ataque_pct", 0))
+	_check(int((fams["katana"] as Dictionary).get("contra_ataque_pct", 0)) > base_counter,
+		"katana: contra-ataque acima da base (a arma do tempo do inimigo)")
+	# A besta e a Lei 3 em objecto: nao escala com nada.
+	_check(String((fams["besta"] as Dictionary).get("escala", "")) == "nenhuma",
+		"besta: zero escala (Lei 3)")
+	# Adaga vs pesada: a ordem de interrupcao do 41 §4 tem de valer.
+	_check(int((fams["adaga"] as Dictionary).get("interrupcao", 99))
+		< int((fams["pesada_corte"] as Dictionary).get("interrupcao", 0)),
+		"adaga interrompe menos que a pesada de corte")
+
+	# Escudos: nenhum passa o tecto de 85, e o grande nao apara.
+	var shields: Dictionary = GameData.weapons.get("familias_escudo", {}) as Dictionary
+	_check(int(shields.get("estabilidade_maxima", 0)) == 85, "tecto de estabilidade = 85")
+	_check((shields["escudo_grande"] as Dictionary).get("parry_delta_frames") == null,
+		"escudo grande nao apara")
+
+	# Os 6 kits: todas as classes servidas, com pecas, e so o tanque em medio.
+	var loads: Dictionary = GameData.weapons.get("loadouts", {}) as Dictionary
+	for class_id: String in ["warrior", "sorcerer", "tank", "assassin", "berserker", "paladin"]:
+		var kit: Dictionary = loads.get(class_id, {}) as Dictionary
+		_check(not kit.is_empty(), "kit inicial de '%s' existe" % class_id)
+		_check((kit.get("pecas", []) as Array).size() >= 1, "kit '%s' traz pecas" % class_id)
+	_check(String((loads["tank"] as Dictionary).get("carga", "")) == "medio",
+		"so o tanque arranca em carga media")
+
+	# Instrucao do Rico (31-07): o assassino comeca com DUAS adagas.
+	var assassin: Dictionary = loads.get("assassin", {}) as Dictionary
+	_check(String(assassin.get("main", "")) == "dagger"
+		and String(assassin.get("offhand", "")) == "dagger",
+		"assassino arranca com duas adagas (instrucao do Rico)")
+	# E continua a poder aparar — a adaga esta na lista do WP1.
+	var parry_list: Array = GameData.section("parry").get("weapons_that_parry", [])
+	_check(parry_list.has("dagger"), "com duas adagas o assassino ainda apara")
+
+	# Armadura: as 9 casas existem, e o peso nao mexe nos i-frames (Lei 1).
+	_check((GameData.armor.get("slots", []) as Array).size() == 9, "9 slots de armadura")
+	var carga: Dictionary = GameData.armor.get("carga", {}) as Dictionary
+	_check(float((carga["pesado"] as Dictionary).get("regen_stamina_mult", 1.0)) < 1.0,
+		"carga pesada custa regeneracao de stamina")
+	_check(int((carga["leve"] as Dictionary).get("recuperacao_esquiva_frames", -1)) == 0,
+		"carga leve nao penaliza a recuperacao da esquiva")
 
 
 # --- spec/50-racas.md (volta 2) · as 12 fichas de raca ------------------------

@@ -2,9 +2,87 @@
   "_fonte_frames": "spec/01-combate.md (WP1), tabela 'Ataques - as armas da fatia'. Frames arranque/activo/recuperacao a 60 fps.",
   "_fonte_dano": "spec/11-formulas.md (WP2), tabela 'As armas da fatia' — dano base, requisito, escala, peso.",
   "_verificacao_frames": "adaga 12+4+14=30f=0,50s | espada 16+6+18=40f=0,67s | machadao 24+8+26=58f=0,97s | cajado 18+5+20=43f=0,72s | escudo 14+4+16=34f=0,57s",
+  "_fonte_familias": "spec/51-familias.md §1-§3 (volta 3) — a camada 1. Cada familia tem de trazer 'onde e ma'; sem essa frase esta listada, nao desenhada.",
+
+  "golpes_universais": {
+    "_fonte": "spec/51 §1 — os 7 golpes que o 41 §1 dava por declarar. Regra geral; cada familia so declara excepcoes.",
+    "_estado": "por implementar — so leve, pesado e cadeia estao no prototipo (WP1).",
+    "leve_para_pesado": { "corte_arranque_pct": 0.25 },
+    "em_corrida":       { "avanco_m": 2.5, "postura_mult": 1.5, "_nota": "e o que torna a distancia jogavel" },
+    "a_rolar":          { "arranque_delta_frames": -4, "mv_mult": 0.85, "_nota": "faz a esquiva ser ofensiva" },
+    "a_saltar":         { "hyper_armor_nos_activos": true },
+    "de_cima":          { "_fonte": "spec/39 §5 — um dos quatro criticos" },
+    "empurrao":         { "startup": 12, "active": 4, "recovery": 14, "stamina": 20, "mv": 0.05, "quebra_guarda": true },
+    "arte_da_arma":     { "custo": "energia", "repoe_interrupcao_pct": 100 }
+  },
+
+  "familias": {
+    "_fonte": "spec/51 §2 e §3. 'onde_ma' e obrigatorio — o game_data recusa arrancar sem ele.",
+    "espada_recta": {
+      "nome": "Espadas rectas", "onde_boa": "em todo o lado — e a regua contra a qual tudo se mede",
+      "onde_ma": "nunca e a melhor arma numa situacao lida: quem domina uma leitura ganha mais com outra familia",
+      "interrupcao": 14, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "arte_1mao": "estocada perfurante", "arte_2maos": "golpe circular", "fatia_1": true
+    },
+    "adaga": {
+      "nome": "Adagas", "onde_boa": "criticos nas costas e depois do parry — o multiplicador mais alto do jogo",
+      "onde_ma": "de frente contra armadura pesada: interrupcao 10, dez golpes para o que o espadao faz em tres",
+      "interrupcao": 10, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "alto",
+      "arte_1mao": "apunhalar", "arte_2maos": "danca de laminas", "fatia_1": true
+    },
+    "pesada_corte": {
+      "nome": "Pesadas de corte", "onde_boa": "interromper, varrer grupos e trocar no meio do golpe dele",
+      "onde_ma": "contra quem nao falha: 34 f de recuperacao sao meio segundo de janela aberta a cada erro",
+      "interrupcao": 31, "hiper_armadura": true, "contra_ataque_pct": 30, "critico": "normal",
+      "arte_1mao": "salto esmagador", "arte_2maos": "rodopio", "fatia_1": true
+    },
+    "katana": {
+      "nome": "Katanas", "onde_boa": "a bater enquanto ele bate: contra-ataque +45% e o golpe em corrida mais forte",
+      "onde_ma": "nas maos de quem nao le: sem contra-ataques e uma espada recta pior (MV 0,9)",
+      "interrupcao": 13, "hiper_armadura": false, "contra_ataque_pct": 45, "critico": "normal",
+      "arte_1mao": "iai", "arte_2maos": "corte duplo", "fatia_1": false
+    },
+    "haste": {
+      "nome": "Hastes", "onde_boa": "estocar a 2,8 m com o escudo levantado — ataca sem baixar a guarda",
+      "onde_ma": "colada ao corpo: dentro de 1,2 m os golpes falham por dentro",
+      "interrupcao": 14, "hiper_armadura": false, "contra_ataque_pct": 40, "critico": "normal",
+      "arte_1mao": "varrimento baixo", "arte_2maos": "carga de lanca", "fatia_1": false
+    },
+    "cajado": {
+      "nome": "Cajados", "onde_boa": "e o que conjura; a pancada e o plano B sem custo de cargas",
+      "onde_ma": "como arma: MV 0,7, sem critico e sem contra-bonus — um mago encostado a parede tem um pau",
+      "interrupcao": 8, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "arte_1mao": "rajada de bruma", "arte_2maos": "conjuracao firmada", "fatia_1": true
+    },
+    "arco": {
+      "nome": "Arcos", "onde_boa": "abrir o combate, cabecas (critico automatico) e marcar para o parceiro",
+      "onde_ma": "ao perto: a mirar anda-se devagar e nao se dispara em movimento; e cada flecha custa",
+      "interrupcao": 8, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "alto",
+      "municao": ["comum", "pesada", "farpada", "fogo", "gelo", "sinalizadora"],
+      "arte_1mao": "disparo firmado", "arte_2maos": "chuva de flechas", "fatia_1": false,
+      "_fora_da_fatia": "ataque a distancia seguro mata a esquiva e o parry (WP0)"
+    },
+    "besta": {
+      "nome": "Bestas", "onde_boa": "nas maos de toda a gente: requisitos baixos e ZERO escala — a Lei 3 em objecto",
+      "onde_ma": "na cadencia: dois tempos, e a recarga a meio do combate e um convite ao golpe",
+      "interrupcao": 16, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "escala": "nenhuma", "arte_1mao": "tiro rapido", "arte_2maos": "mira ampliada", "fatia_1": false
+    }
+  },
+
+  "familias_escudo": {
+    "_fonte": "spec/51 §3 (do 48 §3). Tecto de estabilidade 85: bloquear custa SEMPRE.",
+    "estabilidade_maxima": 85,
+    "defesa_fisica_maxima_pct": 90,
+    "penalidade_espreitar": true,
+    "broquel":       { "estabilidade": 50, "peso": 1.5, "parry_delta_frames": 2,  "onde_ma": "aguenta mal um pesado — a guarda parte depressa", "fatia_1": false },
+    "escudo_medio":  { "estabilidade": 70, "peso": 5.0, "parry_delta_frames": 0,  "onde_ma": "nao brilha em nada — e o padrao", "fatia_1": true },
+    "escudo_grande": { "estabilidade": 85, "peso": 14.0, "parry_delta_frames": null, "onde_ma": "tira a carga leve E nao apara — a escolha doi dos dois lados", "fatia_1": false }
+  },
 
   "dagger": {
     "display_name": "Adaga",
+    "familia": "adaga",
     "slot": "main",
     "hands": 1,
     "range": 1.4,
@@ -22,6 +100,7 @@
 
   "longsword": {
     "display_name": "Espada longa",
+    "familia": "espada_recta",
     "slot": "main",
     "hands": 1,
     "range": 2.0,
@@ -39,6 +118,7 @@
 
   "greataxe": {
     "display_name": "Machadao",
+    "familia": "pesada_corte",
     "slot": "main",
     "hands": 2,
     "range": 2.3,
@@ -63,6 +143,7 @@
 
   "staff": {
     "display_name": "Cajado",
+    "familia": "cajado",
     "slot": "main",
     "hands": 2,
     "range": 1.8,
@@ -82,6 +163,7 @@
 
   "shield": {
     "display_name": "Escudo de madeira",
+    "familia_escudo": "escudo_medio",
     "slot": "offhand",
     "hands": 1,
     "range": 1.2,
@@ -97,13 +179,15 @@
   },
 
   "loadouts": {
-    "_fonte": "spec/10-fatia-1.md, coluna 'Arranque tipico'. Lei 3: qualquer classe pega em qualquer arma — isto e so o equipamento inicial.",
-    "warrior":   { "main": "longsword", "offhand": "shield" },
-    "sorcerer":  { "main": "staff",     "offhand": null },
-    "tank":      { "main": "longsword", "offhand": "shield" },
-    "assassin":  { "main": "dagger",    "offhand": null },
-    "berserker": { "main": "greataxe",  "offhand": null },
-    "paladin":   { "main": "longsword", "offhand": "shield" }
+    "_fonte": "spec/51-familias.md §5 — os kits iniciais (instrucao do Rico, 31-07). Lei 3: qualquer classe pega em qualquer arma; isto e so o arranque.",
+    "_pecas": "os ids de 'pecas' vivem em armor.json. Todos os kits em carga leve, excepto o tanque (medio — a identidade dele e sentir o peso).",
+    "warrior":   { "main": "longsword", "offhand": "shield",  "pecas": ["couro_peitoral", "couro_botas"],        "carga": "leve" },
+    "sorcerer":  { "main": "staff",     "offhand": null,      "pecas": ["la_capa", "couro_cinto"],               "carga": "leve" },
+    "tank":      { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_elmo", "ferro_peitoral"],         "carga": "medio" },
+    "assassin":  { "main": "dagger",    "offhand": "dagger",  "pecas": ["pano_mascara", "pano_botas"],           "carga": "leve",
+      "_duas_adagas": "instrucao do Rico (31-07): o assassino comeca com DUAS adagas. [PROTO] cosmetico ate o golpe alternado existir — hoje o offhand so tem mecanica de escudo (spec/51 §5)." },
+    "berserker": { "main": "greataxe",  "offhand": null,      "pecas": ["couro_ombreiras"],                      "carga": "leve" },
+    "paladin":   { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_peitoral_polido", "la_capa_clara"], "carga": "leve" }
   },
 
   "test_loadouts": {

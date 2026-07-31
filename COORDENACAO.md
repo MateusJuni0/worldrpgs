@@ -39,7 +39,8 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | WP15 | `spec/24-plano.md` | Fable | 31-07 | ✅ entregue no branch — M0–M7, M1 já medido, riscos com resposta |
 | WP15B | `spec/28-testes.md` | Fable | 31-07 | ✅ entregue no branch — protocolos, sintomas, ordem de afinação. **Todos os 20 pacotes do briefing estão escritos.** |
 | Volta 1 | `spec/49-biomas.md` + `game/data/biomes.json` | Fable | 31-07 | ✅ entregue — PR #14 |
-| Volta 2 | `spec/50-racas.md` + `game/data/races.json` | Fable | 31-07 | ✅ entregue — 12 raças + mímico como praga, laço bioma↔raça testado |
+| Volta 2 | `spec/50-racas.md` + `game/data/races.json` | Fable | 31-07 | ✅ entregue — PR #15 |
+| Volta 3 | `spec/51-familias.md` + `game/data/weapons.json`/`armor.json` | Fable | 31-07 | ✅ entregue — 8 famílias, 3 escudos, 9 slots, 6 kits, espólio do Rico |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
@@ -81,7 +82,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 48 | Claude | arcos, bestas e escudos |
 | 49 | Fable | as 12 fichas de bioma (volta 1) |
 | 50 | Fable | as 12 fichas de raça (volta 2) |
-| **51+** | **livre** | |
+| 51 | Fable | WP5 camada 1 — famílias de arma e peças de armadura (volta 3) |
+| **52+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 

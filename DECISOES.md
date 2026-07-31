@@ -8,6 +8,27 @@ Ordem inversa: **o mais recente primeiro.**
 
 ---
 
+## 31-07-2026 · noite
+
+### Cinco instruções do Rico sobre equipamento e espólio → volta 3 (WP5) e volta 5 (WP6)
+**Instrução directa do Rico (31-07-2026), ⏳ falta a confirmação do Mateus.** As cinco, com as palavras dele e onde cada uma bate:
+
+1. **Kit inicial por classe** — *"quando começar o jogo escolhemos uma classe tem que vim os items de inicio de acordo com a classe."* Cada uma das 6 classes nasce com o seu equipamento. → volta 3 escreve os kits; a fatia já dava a arma, agora dá o conjunto
+2. **Menos almas por chefe repetido em co-op** — *"no modo coop se o player ja tiver matado o boss recebe menos almas."* ⭐ Confirma a direcção da proposta do WP9 ([`spec/18-progressao.md`](spec/18-progressao.md): ajudar no que já se matou paga 40% e só materiais) — o número exacto continua proposta, a direcção passa a ter palavra de dono
+3. **Armadura de chefe cai e equipa-se** — *"as armaduras dos chefes que seram dropadas tem que adcionar uma [forma] de equipar as mesmas."* Chefes largam peças do que vestem, e o jogo precisa do sistema de equipar (slots por peça — casa com a decisão do Mateus de armadura por peças em [`spec/33-morte-e-almas.md`](spec/33-morte-e-almas.md)) → volta 3 (slots) + WP11 (ecrã)
+4. **Aleatório só nos inimigos comuns; chefes e baús são fixos** — *"os itens podem dropar aleatoriamente dos inimigos nao dos chefes e baus."* O baralho de 10 ([`spec/43-estudo-espolio-inventario-mundo.md`](spec/43-estudo-espolio-inventario-mundo.md) §2) fica nos comuns; **chefe e baú têm espólio desenhado, sem sorte** → volta 5 (baralhos) e volta 7 (chefes)
+5. **O aleatório filtra pelo bioma** — *"quando matar inimigos dropa equipamentos aleatórios com base nas disponíveis no qual o cenário esta correndo."* ⭐ É a lei da coerência ([`spec/46-coerencia-bioma-raca-item.md`](spec/46-coerencia-bioma-raca-item.md) §4) dita pelo dono: a pool de drop de uma zona é o que existe naquele bioma
+
+- **Substitui:** nada — as 5 encaixam no que está; a 2 e a 5 dão palavra de dono a propostas que existiam
+- **Registado por:** Fable, no próprio dia; citadas na issue #3 para o Mateus confirmar
+
+### A identidade do Assassino → volta 3 (kit) + WP3 (habilidade)
+**Instrução directa do Rico (31-07-2026), ⏳ falta a confirmação do Mateus** — *"o assassino tera furtividade velocidade e dano de sangramento, cria alguma habilidade especial, a arma de inicio do assassino pode ser duas adagas."*
+- **Kit inicial: duas adagas** → entra já na volta 3 (`weapons.json`, loadout) — ⚠️ a segunda adaga é `[PROTO]` cosmética até o golpe alternado ser implementado (o offhand só tem mecânica de escudo hoje)
+- **Furtividade + velocidade + sangramento** = a identidade da classe → [`spec/12-classes.md`](spec/12-classes.md) (WP3); o sangramento liga ao estado alterado da volta 3 §7 — o Assassino é a classe do sangramento
+- **Habilidade especial nova** → a desenhar pelo Fable a seguir à volta 3 (o Passo Sombra existente está "por implementar" — ou evolui para isto, ou dá lugar)
+- **Substitui:** nada; especifica a classe que o WP3 tinha genérica
+
 ## 31-07-2026 · tarde
 
 ### Do greybox ao visual → [`spec/47-do-greybox-ao-visual.md`](spec/47-do-greybox-ao-visual.md)
