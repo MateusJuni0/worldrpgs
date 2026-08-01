@@ -63,13 +63,14 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, buffer de entrada, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]` |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + 7 perguntas para gravação (WP8B) | 🟠 decisões são dos donos |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos (WP11B) | 🟠 proposta `[CLAUDE]` |
-| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas, sintomas (WP15B) | ⚠️ **falta o teste do rolamento** — [`38`](spec/38-ataques-e-honestidade.md) §2 |
+| 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–62)
+### Decisões e estudos (32–63)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 63 | [**Como se afinam os números: medir, mudar um, provar**](spec/63-como-se-afinam-os-numeros.md) | Inventário · ordem causal · papéis · A/B de uma variável · diagnóstico por sintoma · quando congelar | 🟢 método fechado 01-08; CSV/comandos assumidos pelo 28 não existem no código |
 | 62 | [**Acessibilidade auditiva: a mesma informação por outro canal**](spec/62-acessibilidade-auditiva.md) | Evento único · forma visual por tipo de som · timing/direcção equivalentes · combate, co-op, segredos e estados sem áudio | 🟢 regra fechada 01-08; renderer e migração dos 12 ataques continuam por construir |
 | 61 | [**Arenas de chefe: o espaço também luta**](spec/61-arenas-de-chefe.md) | Tamanho por camada · obstáculos/refúgios · bordo letal legível · nevoeiro como carregamento · ataques para separar e juntar dois jogadores | 🟢 sistema fechado 01-08; 12 fichas de guardião + Ultra são conteúdo do WP7 |
 | 60 | [**O agente que joga**](spec/60-o-agente-que-joga.md) | Banco de ensaio automático: guiões, modo macaco, varrimento de 1728 combinações · ⏳ constrói-se depois do catálogo | 🟢 desenhado 01-08 |

@@ -271,8 +271,8 @@ Máximo **8 sinais informativos activos**, um atlas, formas batched e zero texto
 | Emissor comum `GameplayCue` + renderer visual | código; tem de entrar antes do catálogo WP6 crescer |
 | Migrar os 12 ataques actuais para som/visual próprios | dados + teste de schema; o `telegraph` único é provisório |
 | Roda JUNTAR/ESPERA/AJUDA/OLHA | WP10/WP11, agnóstica de teclado/comando |
-| Afinar tamanho/opacidade | valores de partida acima; medem-se com o método da tarefa 2.3 |
+| Afinar tamanho/opacidade | valores de partida acima; medem-se pelo [`63`](63-como-se-afinam-os-numeros.md) |
 
 ## Ligações
 
-[`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`20-interface.md`](20-interface.md) · [`21-arte-render.md`](21-arte-render.md) · [`29-perspectiva.md`](29-perspectiva.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`56-voz-e-vendedores.md`](56-voz-e-vendedores.md) · [`61-arenas-de-chefe.md`](61-arenas-de-chefe.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)
+[`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`20-interface.md`](20-interface.md) · [`21-arte-render.md`](21-arte-render.md) · [`29-perspectiva.md`](29-perspectiva.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`56-voz-e-vendedores.md`](56-voz-e-vendedores.md) · [`61-arenas-de-chefe.md`](61-arenas-de-chefe.md) · [`63-como-se-afinam-os-numeros.md`](63-como-se-afinam-os-numeros.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)

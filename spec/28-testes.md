@@ -2,6 +2,8 @@
 
 > **WP15B · Fable** (31-07-2026). A Lei 1 é uma afirmação empírica — *um jogador bom com um personagem fraco vence* — e uma afirmação empírica só vale com forma de a testar. Este documento é essa forma: protocolos, métricas, sintomas e a ordem de mexer. Assume as ferramentas do WP14 (consola com `latencia`, overlays, **registo CSV sempre ligado**, salto ao chefe) — sem elas, equilibrar é palpite com opinião. Tudo `[FABLE]`.
 
+> **COMPLETADO 01-08:** o [`63`](63-como-se-afinam-os-numeros.md) é o manual operativo deste pacote: inventaria os valores, separa guardas de conteúdo, atribui papéis, isola uma variável, limita o tamanho da mudança, faz A/B e diz quando congelar. Este `28` continua a mandar nos protocolos, métricas e tectos; não se duplicam lá.
+
 ## O protocolo do teste da Lei 1 — ao pormenor
 
 **Quando:** no fim do M4 (greybox) e outra vez no fim do M7 (com arte) — a arte muda a leitura, o teste repete-se.
@@ -48,7 +50,7 @@ A tabela de diagnóstico, para não se mexer em tudo ao mesmo tempo:
 | Frasco esvaziado sempre | dano ambiente alto de mais | dano dos comuns da zona | cargas (3 é identidade da fatia) |
 | Jogador foge de grupos sempre | grupos ilegíveis | tamanho do grupo no `encontros.json` | o círculo de agressão (2 é a regra de justiça) |
 
-**Ordem geral de afinação** (herdada da ordem de confiança do WP1): 1.º dados de inimigo (PV/dano/postura) → 2.º custos de stamina e valores de frasco → 3.º dano base de armas/magias → **nunca**: janelas de esquiva/parry, i-frames, velocidade — a gramática é fixa do nível 1 ao 100; mexer-lhe é mudar de jogo.
+**Resumo da ordem de afinação:** 1.º correcção técnica → 2.º leitura e resposta executável → 3.º recompensa/custo do erro → 4.º duração/recursos → 5.º co-op → 6.º progressão. A árvore completa e os passos máximos vivem no [`63`](63-como-se-afinam-os-numeros.md) §3–6. **Nunca** se usa janela de esquiva/parry ou i-frames como botão de dificuldade; mexer-lhes é mudar de jogo.
 
 ## O teste com alguém de fora — o antídoto contra os dois
 
@@ -88,6 +90,7 @@ Passa se, às cegas (um dos dois sem saber a latência do dia), o convidado não
 | **WP14** | a lista fechada de ferramentas que os protocolos assumem |
 | **Mateus + Rico** | o teste de fora precisa de uma terceira pessoa — escolher quem, sem lhe mostrar nada antes |
 | **Opus 5** | os "nunca se mexe" desta página são contrato, não sugestão |
+| **Quem afina** | papéis, baseline, hipótese, A/B, artefacto e condição de fecho no [`63`](63-como-se-afinam-os-numeros.md) |
 
 ## O que continua aberto
 
@@ -95,4 +98,4 @@ Passa se, às cegas (um dos dois sem saber a latência do dia), o convidado não
 
 ## Ligações
 
-[`24-plano.md`](24-plano.md) (quando cada teste corre) · [`23-tecnico.md`](23-tecnico.md) (as ferramentas) · [`10-fatia-1.md`](10-fatia-1.md) (os 7 critérios) · [`27-aprendizagem.md`](27-aprendizagem.md) (quem o teste de fora corrige) · [`11-formulas.md`](11-formulas.md) (os tectos que os vereditos protegem)
+[`24-plano.md`](24-plano.md) (quando cada teste corre) · [`23-tecnico.md`](23-tecnico.md) (as ferramentas) · [`10-fatia-1.md`](10-fatia-1.md) (os 7 critérios) · [`27-aprendizagem.md`](27-aprendizagem.md) (quem o teste de fora corrige) · [`11-formulas.md`](11-formulas.md) (os tectos que os vereditos protegem) · [`63-como-se-afinam-os-numeros.md`](63-como-se-afinam-os-numeros.md)

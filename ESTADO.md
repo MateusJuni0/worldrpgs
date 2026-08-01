@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, acessibilidade auditiva.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, método de afinação.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -44,7 +44,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 64 · 10 086 linhas | — | — |
+| Documentos de spec | 65 · 10 379 linhas | — | — |
 | Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
 | Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
@@ -80,6 +80,14 @@ O [`62`](spec/62-acessibilidade-auditiva.md) corrige a tranca criada pelo [`38`]
 **A regra entrou na fundação agora:** a ficha de ataque passa de 11 para **12 colunas**, com `sinal_visual_equivalente`. O áudio pode ir a zero. O perfil é local e a roda JUNTAR/ESPERA/AJUDA/OLHA mantém coordenação mínima sem voz.
 
 ⚠️ **Desenho não é runtime:** o protótipo ainda toca um `telegraph` único e não desenha o novo canal. Emissor comum, renderer e migração dos 12 ataques actuais estão registados no [`LACUNAS`](LACUNAS.md) antes de o catálogo WP6 crescer.
+
+## 1f. ✅ “Valida-se a jogar” já tem método
+
+O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.md) sem o duplicar: separa guardas de valores afináveis, fixa a ordem **técnica → leitura → resposta → recompensa → custo → duração → co-op → progressão**, atribui papéis a Mateus/Rico/agentes, limita a primeira alteração e exige A/B de uma variável com baseline e artefacto.
+
+**Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
+
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 245 auto-testes provam coerência, não feel.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 
