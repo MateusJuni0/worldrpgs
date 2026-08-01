@@ -10,6 +10,42 @@
 
 ---
 
+## 🔒 O gerador do mapa publicava nomes de ficheiros privados — corrigido 01-08
+
+**Encontrado ao investigar um link partido, e é maior do que o link.**
+
+O `MAPA.md` é gerado pelo [`tools/mapa.mjs`](tools/mapa.mjs), que **varria o disco** com uma lista de exclusões escrita à mão. Essa lista **não batia com o `.gitignore`** — e o `.gitignore` exclui `design/transcripts/` e `design/ideas/` **por privacidade**: são conversas privadas dos donos num repositório público.
+
+| | |
+|---|---|
+| **O sintoma** | dois links partidos, e o guarda da spec a falhar para toda a gente, para sempre |
+| ⚠️ **O problema a sério** | o mapa **publicava os nomes e as datas** das transcrições privadas na `main`. Fuga de metadados exactamente daquilo que o `.gitignore` protegia |
+| **A causa** | uma lista de exclusões à mão que diverge do `.gitignore` diverge **sempre**, mais cedo ou mais tarde |
+| ✅ **A correcção** | o gerador passa a perguntar ao git (`git ls-files`) em vez de varrer o disco. Estruturalmente, **não consegue** listar um ficheiro que não está no repositório |
+| **A prova** | criei um ficheiro em `design/transcripts/`, corri o gerador, e ele **não entrou** no mapa |
+
+⭐ **A lição, que vale para outras ferramentas:** qualquer coisa que gere conteúdo para um repositório público a partir do disco tem de perguntar ao git o que é público, não adivinhar.
+
+---
+
+## 🌐 A camada de rede — o que ficou por ligar
+
+**Escrito 01-08 pelo Fable, ao entregar `game/src/net/`.** A camada existe, tem 26 verificações e o orçamento de banda está **medido**. O que falta é **ligá-la ao jogo**, e cada linha aqui precisa de um ficheiro que **tem outro dono** ([`prompts/PARA-O-OPUS-DO-RICO.md`](prompts/PARA-O-OPUS-DO-RICO.md) §3) — por isso está escrito aqui em vez de eu lhe mexer.
+
+| | O que falta | De quem preciso |
+|---|---|---|
+| 🔴 | **O corpo do parceiro não aparece em cena.** A rede transporta a pose e interpola-a; falta alguém instanciar um `Player` remoto e alimentá-lo com `NetSession.partner_body()` a cada frame | dono do `game/src/coop/` |
+| 🔴 | **Os eventos de combate não estão ligados.** O `NetSession.combat_event` dispara com golpes, parries e mortes, e **ninguém o ouve.** O contrato da autoridade está implementado e testado; falta o outro lado do fio | dono do `game/src/coop/` e do combate |
+| 🟠 | ⭐ **A vida do chefe não reescala quando o parceiro cai.** O [`19`](spec/19-rede.md) manda: de ×1,8 para ×1,0 **proporcionalmente ao que falta**. A rede emite `session_ended`/`peer_disconnected`; falta o chefe ouvir | dono do `game/src/enemies/boss*.gd` |
+| 🟠 | **O menu de rede não tem tecla.** O `net_menu.gd` existe e funciona, mas nada o abre — é a pergunta 1 do fio solto por atar, e a tecla vive no mapa de comandos, que não é meu | dono do `data/controls.json` e do `game_shell.gd` |
+| 🟠 | **O aviso de latência vive num `CanvasLayer` próprio** (`net_hud.gd`), porque o `src/ui/hud.gd` tem dono. Quando quiserem absorvê-lo, são dez linhas | dono do `hud.gd` |
+| 🟠 | **O save não sabe de sessões.** O [`19`](spec/19-rede.md) separa o saco *personagem* do saco *mundo*; o `save_system.gd` guarda um só. Quem entra no mundo do outro **não pode** gravar por cima do mundo dele | dono do `save_system.gd` |
+| ⏳ | ⭐ **O transporte é decisão dos donos** — porta aberta no router **ou** VPN de amigos. O código é agnóstico e liga a qualquer endereço, portanto isto **não trava nada**; mas até alguém abrir a porta, ninguém joga a dois | Mateus + Rico |
+
+⚠️ **E o que a camada NÃO prova:** os 26 testes verificam o formato do fio, a interpolação, a tolerância do parry e as regras de autoridade — **sem nunca ligar duas máquinas**. A latência real entre as duas casas só existe quando as duas casas existirem, e é aí que o `< 80 ms` da spec passa de alvo a facto.
+
+---
+
 ## 🔴 Travam
 
 **Da auditoria independente do Codex** ([`docs/AUDITORIA-CODEX-2026-08-01.md`](docs/AUDITORIA-CODEX-2026-08-01.md), 01-08). ⚠️ **As quatro primeiras são erros meus, não do Fable.**

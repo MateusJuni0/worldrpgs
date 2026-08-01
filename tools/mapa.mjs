@@ -5,22 +5,54 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const raiz = process.cwd();
-const ignorar = /^(\.git|\.godot|node_modules|graphify-out|art\/models|art\/audio|art\/textures|medicoes|game\/captures)/;
 
-function listar(dir, acc = []) {
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, e.name);
-    const rel = path.relative(raiz, p).replace(/\\/g, '/');
-    if (ignorar.test(rel)) continue;
-    if (e.isDirectory()) listar(p, acc);
-    else if (e.name.endsWith('.md')) acc.push(rel);
+// ⚠️ CORRIGIDO 01-08-2026. O mapa listava ficheiros do DISCO; passa a listar
+// os que estão MESMO no repositório (`git ls-files`).
+//
+// Porque é que isto importa, e não é arrumação:
+//   1. Havia uma lista de exclusões à mão que não batia com o `.gitignore`.
+//      Quem corresse isto numa máquina com as transcrições locais escrevia-as
+//      no MAPA.md; como nunca são commitadas, o link nascia partido para toda
+//      a gente e o guarda da spec falhava para sempre.
+//   2. ⭐ E pior: `design/transcripts/` e `design/ideas/` estão gitignored
+//      POR PRIVACIDADE — são uma conversa privada num repositório público.
+//      O mapa publicava os NOMES e as DATAS desses ficheiros. Era fuga de
+//      metadados exactamente daquilo que o `.gitignore` protege.
+//
+// Perguntar ao git em vez de manter uma lista fecha as duas de uma vez, e não
+// volta a partir quando alguém acrescentar outra pasta ignorada.
+function listar() {
+  try {
+    const saida = execFileSync('git', ['ls-files', '-z', '*.md'], {
+      cwd: raiz, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
+    });
+    const docs = saida.split('\0').filter(Boolean).map(d => d.replace(/\\/g, '/'));
+    if (docs.length) return docs;
+    throw new Error('git ls-files não devolveu nada');
+  } catch (e) {
+    // Sem git (tarball, CI mínimo) o mapa continua a gerar-se — mas diz que
+    // pode conter ficheiros que não estão no repositório. Falhar em silêncio
+    // era como isto começou.
+    console.warn(`AVISO: ${e.message}. A varrer o disco; o mapa pode listar ficheiros não versionados.`);
+    const ignorar = /^(\.git|\.godot|node_modules|graphify-out|art\/models|art\/audio|art\/textures|medicoes|game\/captures|design\/(transcripts|ideas|raw))/;
+    const acc = [];
+    (function varre(dir) {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        const rel = path.relative(raiz, p).replace(/\\/g, '/');
+        if (ignorar.test(rel)) continue;
+        if (e.isDirectory()) varre(p);
+        else if (e.name.endsWith('.md')) acc.push(rel);
+      }
+    })(raiz);
+    return acc;
   }
-  return acc;
 }
 
-const docs = listar(raiz).sort();
+const docs = listar().sort();
 const titulo = {}, liga = {}, ligado = {}, linhas = {};
 
 for (const d of docs) {

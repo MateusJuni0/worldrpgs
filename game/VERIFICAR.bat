@@ -27,27 +27,31 @@ if not defined GODOT (
 set FALHOU=0
 
 echo.
-echo == 1/6  auto-teste principal (contra a spec e os catalogos) ==
+echo == 1/7  auto-teste principal (contra a spec e os catalogos) ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/selftest.tscn || set FALHOU=1
 
 echo.
-echo == 2/6  audio e icones das familias de armas ==
+echo == 2/7  audio e icones das familias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/audio/delivery_self_test.gd || set FALHOU=1
 
 echo.
-echo == 3/6  abertura jogavel ==
+echo == 3/7  abertura jogavel ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/ui/intro_selftest.gd || set FALHOU=1
 
 echo.
-echo == 4/6  arranque real: criar personagem e entrar no jogo ==
+echo == 4/7  arranque real: criar personagem e entrar no jogo ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/repro-inicio.tscn || set FALHOU=1
 
 echo.
-echo == 5/6  melhorias de armas ==
+echo == 5/7  melhorias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/weapons/weapon_progression_selftest.gd || set FALHOU=1
 
 echo.
-echo == 6/6  guarda da spec (precisa de node) ==
+echo == 6/7  camada de rede (protocolo, interpolacao, latencia) ==
+"%GODOT%" --headless --audio-driver Dummy --path . --script src/net/net_selftest.gd || set FALHOU=1
+
+echo.
+echo == 7/7  guarda da spec (precisa de node) ==
 pushd ..
 node tools/check-coerencia.mjs || set FALHOU=1
 popd
