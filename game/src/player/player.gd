@@ -83,8 +83,7 @@ var _space_held_frames := 0
 var _sprinting := false
 var _hitstun_frames := 0
 
-var _mesh: MeshInstance3D
-var _material: StandardMaterial3D
+var _visual: CharacterVisual
 var _palette: Dictionary = {}
 var _frame := 0
 
@@ -144,28 +143,11 @@ func _build_body() -> void:
 	col.position = Vector3(0, height * 0.5, 0)
 	add_child(col)
 
-	var mesh := CapsuleMesh.new()
-	mesh.height = height
-	mesh.radius = radius
-	mesh.radial_segments = 8
-	mesh.rings = 3
-	_mesh = MeshInstance3D.new()
-	_mesh.mesh = mesh
-	_mesh.position = Vector3(0, height * 0.5, 0)
-	_material = StandardMaterial3D.new()
-	_material.roughness = 1.0
-	_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
-	_mesh.material_override = _material
-	add_child(_mesh)
-
-	# Bico: sem animacoes, e a unica forma de se ver para onde o boneco esta virado.
-	var nose := MeshInstance3D.new()
-	var nose_mesh := BoxMesh.new()
-	nose_mesh.size = Vector3(0.16, 0.16, 0.42)
-	nose.mesh = nose_mesh
-	nose.position = Vector3(0, height * 0.72, -radius - 0.18)
-	nose.material_override = _material
-	add_child(nose)
+	# A capsula acima continua a ser TODA a fisica. O corpo Quaternius e visual,
+	# mede os mesmos 1,8 m e usa animacao sem root motion.
+	_visual = CharacterVisual.new()
+	add_child(_visual)
+	_visual.setup(height)
 
 	collision_layer = 2
 	collision_mask = 1
@@ -212,6 +194,7 @@ func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	move_and_slide()
 	_refresh_colour()
+	_refresh_animation()
 
 	if camera != null:
 		camera.lock_target = lock_on.target
@@ -986,20 +969,48 @@ func loadout_label() -> String:
 # --- Leitura visual -----------------------------------------------------------
 
 func _refresh_colour() -> void:
-	if _material == null:
+	if _visual == null:
 		return
-	var key := "player"
+	var colour := Color.WHITE
 	if state == State.DEAD:
-		key = "player_dead"
+		colour = Color(String(_palette.get("player_dead", "#3a3a3a")))
 	elif has_iframes():
-		key = "player_iframes"
+		colour = Color(String(_palette.get("player_iframes", "#7fe3ff")))
 	elif has_hyper_armor():
-		key = "player_hyper_armor"
+		colour = Color(String(_palette.get("player_hyper_armor", "#c88bd6")))
 	elif parry_window_open():
-		key = "player_parry_window"
+		colour = Color(String(_palette.get("player_parry_window", "#ffe680")))
 	elif state == State.BLOCK:
-		key = "player_blocking"
-	_material.albedo_color = Color(String(_palette.get(key, "#5b8fc7")))
+		colour = Color(String(_palette.get("player_blocking", "#4a7ab5")))
+	_visual.set_tint(colour)
+
+
+func _refresh_animation() -> void:
+	if _visual == null:
+		return
+	match state:
+		State.DEAD:
+			_visual.play_animation("Death01")
+		State.DODGE:
+			_visual.play_animation("Roll")
+		State.ATTACK, State.RIPOSTE:
+			_visual.play_animation("Sword_Attack")
+		State.CASTING:
+			_visual.play_animation("Spell_Simple_Shoot")
+		State.HITSTUN, State.GUARD_BREAK:
+			_visual.play_animation("Hit_Chest")
+		State.BLOCK, State.PARRY:
+			_visual.play_animation("Sword_Idle")
+		State.MEDITATING:
+			_visual.play_animation("Sitting_Idle")
+		State.USING_ITEM, State.ABILITY, State.GRIP_SWITCH:
+			_visual.play_animation("Interact")
+		_:
+			var planar_speed := Vector2(velocity.x, velocity.z).length()
+			if planar_speed > 0.1:
+				_visual.play_animation("Sprint" if _sprinting else "Jog_Fwd")
+			else:
+				_visual.play_animation("Idle")
 
 
 func state_name() -> String:

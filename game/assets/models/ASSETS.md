@@ -17,6 +17,11 @@ Os dois URI de mapas normais do GLTF Quaternius apontavam para nomes que não
 existem no pack (`*_png.png`). A cópia de runtime corrige esses URI para os
 ficheiros CC0 fornecidos, sem alterar a biblioteca em `art/`.
 
+As texturas do corpo usam compressão VRAM e mipmaps; corpo a 1024 px e cabelo
+a 512 px. À distância de jogo preservam a leitura do original e evitam reter
+os cinco mapas 2K sem compressão. O runtime extrai apenas a biblioteca de
+animações do UAL, libertando a malha-manequim incluída no GLB.
+
 ## Limite conhecido
 
 O catálogo de assets (`spec/22-assets.md`) escolhe Quaternius Monsters para o
