@@ -47,6 +47,7 @@ func _shoot_all() -> void:
 			["01-spawn-3a-pessoa", world.spawn_point + Vector3(0, 2.2, 4.5), world.spawn_point + Vector3(0, 1.2, -2)],
 			["02-floresta-caminho", mid + Vector3(2, 1.7, 6), mid + Vector3(0, 1, -4)],
 			["03-floresta-alto", mid + Vector3(0, 14, 18), mid],
+			["03b-clareira-descanso", world.rest_point + Vector3(10, 4.5, 12), world.rest_point + Vector3(0, 1.2, 0)],
 			["04-entrada-toca", world.lair_entrance + Vector3(4, 2.0, 7), world.lair_entrance + Vector3(0, 0.5, 0)],
 			["05-arena-vorgar", world.arena_center + Vector3(0, 8, 14), world.arena_center + Vector3(0, 1, 0)],
 			["06-arena-rasante", world.arena_center + Vector3(5, 1.6, 7), world.arena_center + Vector3(0, 1.5, 0)],

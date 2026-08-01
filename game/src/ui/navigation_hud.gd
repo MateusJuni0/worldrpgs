@@ -114,20 +114,23 @@ func hide_full_map() -> void:
 func reveal_route_for_capture() -> void:
 	if _exploration == null or not is_instance_valid(world):
 		return
-	var points: Array[Vector3] = world.get("path_points")
-	for index: int in points.size() - 1:
-		var from := points[index]
-		var to := points[index + 1]
-		var steps := maxi(1, ceili(from.distance_to(to) / 2.0))
-		for step: int in steps + 1:
-			var at := from.lerp(to, float(step) / float(steps))
-			_exploration.call("reveal", at, float(_config.get("reveal_radius_m", 7.0)))
+	var segments: Array = world.get("map_path_segments")
+	for segment_value: Variant in segments:
+		var points := segment_value as PackedVector3Array
+		for index: int in points.size() - 1:
+			var from := points[index]
+			var to := points[index + 1]
+			var steps := maxi(1, ceili(from.distance_to(to) / 2.0))
+			for step: int in steps + 1:
+				var at := from.lerp(to, float(step) / float(steps))
+				_exploration.call("reveal", at, float(_config.get("reveal_radius_m", 7.0)))
 	for landmark: Dictionary in world.get("map_landmarks"):
 		var landmark_position: Vector3 = landmark.get("position", Vector3.ZERO)
-		for point: Vector3 in points:
-			if point.distance_to(landmark_position) <= float(landmark.get("discover_radius_m", 12.0)):
-				_exploration.call("discover_landmark", String(landmark.get("id", "")))
-				break
+		for segment_value: Variant in segments:
+			for point: Vector3 in segment_value as PackedVector3Array:
+				if point.distance_to(landmark_position) <= float(landmark.get("discover_radius_m", 12.0)):
+					_exploration.call("discover_landmark", String(landmark.get("id", "")))
+					break
 	_refresh_surfaces(true, true)
 
 
@@ -152,7 +155,7 @@ func _build_minimap(bounds: Rect2) -> void:
 	_minimap_surface.offset_bottom = -5.0
 	_minimap_panel.add_child(_minimap_surface)
 	_minimap_surface.call("set_context", _exploration, player, partner, bounds,
-		world.get("path_points"), world.get("map_landmarks"), _config)
+		world.get("map_path_segments"), world.get("map_landmarks"), _config)
 	_minimap_surface.set("north_up", north_up)
 
 
@@ -170,7 +173,7 @@ func _build_full_map(bounds: Rect2) -> void:
 	_full_surface.call("set_mode", 1)
 	_full_overlay.add_child(_full_surface)
 	_full_surface.call("set_context", _exploration, player, partner, bounds,
-		world.get("path_points"), world.get("map_landmarks"), _config)
+		world.get("map_path_segments"), world.get("map_landmarks"), _config)
 
 	_full_title = _map_label(28, HORIZONTAL_ALIGNMENT_CENTER)
 	_full_title.set_anchors_preset(Control.PRESET_TOP_WIDE)

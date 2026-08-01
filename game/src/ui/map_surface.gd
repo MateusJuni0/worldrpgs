@@ -9,7 +9,7 @@ var exploration: RefCounted
 var player: Node3D
 var partner: Node3D
 var map_bounds := Rect2()
-var path_points: Array[Vector3] = []
+var path_segments: Array = []
 var landmarks: Array[Dictionary] = []
 var config: Dictionary = {}
 var north_up := false
@@ -26,13 +26,13 @@ func _ready() -> void:
 
 
 func set_context(p_exploration: RefCounted, p_player: Node3D, p_partner: Node3D,
-		p_bounds: Rect2, p_paths: Array[Vector3], p_landmarks: Array[Dictionary],
+		p_bounds: Rect2, p_paths: Array, p_landmarks: Array[Dictionary],
 		p_config: Dictionary) -> void:
 	exploration = p_exploration
 	player = p_player
 	partner = p_partner
 	map_bounds = p_bounds
-	path_points = p_paths
+	path_segments = p_paths
 	landmarks = p_landmarks
 	config = p_config
 	rebuild_texture()
@@ -222,11 +222,13 @@ func _forward_2d() -> Vector2:
 
 func _distance_to_path(world_position: Vector3) -> float:
 	var best := INF
-	for index: int in path_points.size() - 1:
-		var a := path_points[index]
-		var b := path_points[index + 1]
-		var ab := b - a
-		var t := clampf((world_position - a).dot(ab) /
-			maxf(ab.length_squared(), 0.001), 0.0, 1.0)
-		best = minf(best, world_position.distance_to(a + ab * t))
+	for segment_value: Variant in path_segments:
+		var segment := segment_value as PackedVector3Array
+		for index: int in segment.size() - 1:
+			var a := segment[index]
+			var b := segment[index + 1]
+			var ab := b - a
+			var t := clampf((world_position - a).dot(ab) /
+				maxf(ab.length_squared(), 0.001), 0.0, 1.0)
+			best = minf(best, world_position.distance_to(a + ab * t))
 	return best

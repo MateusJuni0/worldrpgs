@@ -75,6 +75,19 @@
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false
   },
+  "orientation_runtime": {
+    "method": "geometria_do_mundo_sem_marcadores_de_objectivo",
+    "path_width_m": 6.0,
+    "first_five_sequence": [
+      "orla_vazia",
+      "um_lanceiro_de_costas",
+      "dois_lanceiros_de_frente",
+      "brutamontes_no_arco",
+      "descanso_e_bivaque"
+    ],
+    "path_promises": ["desvio_para_descanso", "desvio_para_bivaque"],
+    "distant_landmarks": ["fumo_do_descanso", "arvore_morta_da_toca", "coroa_da_arena"]
+  },
   "world_scale": {
     "target_endpoint_minutes": 30,
     "proof_route": [
