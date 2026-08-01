@@ -162,4 +162,4 @@ exploras ──► encontras o TOMO DAS CINZAS numa dungeon
 
 ## Ligações
 
-[`19-rede.md`](19-rede.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`54-mana-meditacao-e-tracos-de-classe.md`](54-mana-meditacao-e-tracos-de-classe.md) · [`52-mago-do-mal.md`](52-mago-do-mal.md) · [`18-progressao.md`](18-progressao.md) · [`20-interface.md`](20-interface.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)
+[`19-rede.md`](19-rede.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`54-mana-meditacao-e-tracos-de-classe.md`](54-mana-meditacao-e-tracos-de-classe.md) · [`52-mago-do-mal.md`](52-mago-do-mal.md) · [`18-progressao.md`](18-progressao.md) · [`20-interface.md`](20-interface.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)

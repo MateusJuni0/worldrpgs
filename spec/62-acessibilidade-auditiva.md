@@ -260,7 +260,7 @@ As formas são vectores simples num atlas/UI feito no projecto — chevrons, cun
 
 ### 4. Quanto custa na máquina do Rico?
 
-Máximo **8 sinais informativos activos**, um atlas, formas batched e zero texto/layout por frame. A prioridade nunca corta uma telegrafia que pode causar dano; corta primeiro atmosfera e confirmações. Orçamento: **≤ 0,20 ms de CPU e ≤ 2 draw calls** para o overlay no cenário 2 jogadores + 3 inimigos; p99 global continua ≤ 16,7 ms quente. Marcas 3D contam dentro das 300 partículas/4 emissores por personagem do [`21`](21-arte-render.md).
+Máximo **8 sinais informativos activos**, um atlas, formas batched e zero texto/layout por frame. A prioridade nunca corta uma telegrafia que pode causar dano; o [`65`](65-musica-e-ambiente.md) reserva também 8 vozes áudio e corta/baixa primeiro atmosfera. Orçamento: **≤ 0,20 ms de CPU e ≤ 2 draw calls** para o overlay no cenário 2 jogadores + 3 inimigos; p99 global continua ≤ 16,7 ms quente. Marcas 3D contam dentro das 300 partículas/4 emissores por personagem do [`21`](21-arte-render.md).
 
 ---
 
@@ -275,4 +275,4 @@ Máximo **8 sinais informativos activos**, um atlas, formas batched e zero texto
 
 ## Ligações
 
-[`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`20-interface.md`](20-interface.md) · [`21-arte-render.md`](21-arte-render.md) · [`29-perspectiva.md`](29-perspectiva.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`56-voz-e-vendedores.md`](56-voz-e-vendedores.md) · [`61-arenas-de-chefe.md`](61-arenas-de-chefe.md) · [`63-como-se-afinam-os-numeros.md`](63-como-se-afinam-os-numeros.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)
+[`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`20-interface.md`](20-interface.md) · [`21-arte-render.md`](21-arte-render.md) · [`29-perspectiva.md`](29-perspectiva.md) · [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`56-voz-e-vendedores.md`](56-voz-e-vendedores.md) · [`61-arenas-de-chefe.md`](61-arenas-de-chefe.md) · [`63-como-se-afinam-os-numeros.md`](63-como-se-afinam-os-numeros.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)

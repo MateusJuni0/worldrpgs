@@ -155,7 +155,9 @@ Quando o **mal** entrar (pergunta 8): o preço em PV **tem de se ver** — motas
 
 Regra que manda: **um chefe lê-se por áudio ou por visual, sem perder informação.** Cada ataque tem som de antecipação **distinto**; de olhos fechados distingue-se o aparável do não aparável — o não aparável **arrasta grave**, o agarrão **assobia agudo**. O [`62`](62-acessibilidade-auditiva.md) dá a cada um equivalente de forma, direcção e timing: ouvir é pista extra para a Lei 1, nunca requisito físico para a cumprir.
 
-### Música — 6 peças + 3 stingers (~14 min compostos)
+### Música — 6 peças + 3 stingers (~15,5 min de loops compostos)
+
+> **FECHADO PELO [`65`](65-musica-e-ambiente.md):** estas nove peças continuam o orçamento da fatia, mas **nenhuma existe ainda**. O `65` é autoritativo para estados, entrada/saída, inventário real dos 182 `.ogg`, buses, ducking e prova de mascaramento.
 
 | Peça | Duração | Comportamento |
 |---|---|---|
@@ -173,6 +175,8 @@ Regra que manda: **um chefe lê-se por áudio ou por visual, sem perder informa�
 - **Brumal:** vento na copa (base, −18 dB) + folhagem intermitente + corvos distantes (aleatório 20–60 s) + one-shots raros de criatura na bruma, lado aleatório — a bruma tem de parecer habitada.
 - **Toca:** gotas com eco longo + rumble < 60 Hz no limiar + correntes ao longe.
 
+Os packs Kenney existentes não trazem nenhum destes loops; cobrem apenas one-shots (portas, creaks, impactos). O ambiente base continua conteúdo por produzir, não um asset “já descarregado”.
+
 ### Efeitos — o catálogo da fatia
 
 - **Matriz arma × material:** 5 famílias × 4 materiais (carne, madeira, pedra, metal) × 2 variações = **40 impactos**. Whoosh por peso: leve/médio/pesado ×3 variações.
@@ -185,16 +189,16 @@ Regra que manda: **um chefe lê-se por áudio ou por visual, sem perder informa�
 ### Mistura
 
 - **Prioridades (de cima para baixo):** telegrafias de ataque > golpes no jogador > parry/Cambaleio > vozes do jogador > impactos gerais > música > ambiente. Tecto de 24 vozes simultâneas; corta-se de baixo. O corte de uma voz nunca corta o evento visual equivalente.
-- **Ducking:** telegrafia de chefe baixa a música −4 dB por 0,5 s; pausa baixa tudo −8 dB menos UI. Canais separados nas opções (WP11): geral, música, efeitos, ambiente, vozes — todos podem ir a zero porque os sinais do [`62`](62-acessibilidade-auditiva.md) não dependem da mistura.
-- Música em streaming; SFX residentes ≤ **150 MB** (dentro do working set do §2). Licença por ficheiro no manifesto — regras do WP13, sem excepções.
+- **Ducking:** qualquer `GameplayCue` capaz de atingir o jogador baixa **música −8 dB** e **ambiente −6 dB** até ao compromisso, como fecha o [`65`](65-musica-e-ambiente.md). Abrir menu baixa só atmosfera: o mundo não pára e a telegrafia continua normal. Canais separados nas opções (WP11), todos a zero sem apagar o visual do [`62`](62-acessibilidade-auditiva.md).
+- Música/ambiente base em streaming; SFX seleccionados e descodificados ≤ **32 MiB** na fatia. Licença por ficheiro no catálogo — regras do WP13, sem excepções.
 
 ## O que este documento não fecha
 
 - **Estilo visual = pergunta 15, deles** — isto é a proposta concreta; o caminho barato para o sim é gerar 3–4 conceitos com os prompts do WP13 e pôr os dois a escolher
 - **Engine e medições reais** → WP14 / marcos 1–2 do WP15 — as estimativas de custo daqui viram medições lá
 - **Animação de esqueleto medida** — a incógnita declarada na 0b; o teto de 8 personagens animados do §2 é a aposta a validar
-- **Quem compõe a música** — ferramenta e fluxo a decidir com o Mateus (as imagens já têm dono; o som ainda não)
+- **Quem compõe/selecciona a música** — o [`65`](65-musica-e-ambiente.md) recomenda original em stems, mas a escolha continua dos donos (pergunta 34)
 
 ## Ligações
 
-[`09-tecnico.md`](09-tecnico.md) (restrição-mãe + medição 0b) · [`01-combate.md`](01-combate.md) (durações-contrato) · [`13-magia.md`](13-magia.md) · [`22-assets.md`](22-assets.md) (fontes/licenças) · [`25-controlo.md`](25-controlo.md) (hit-stop) · [`10-fatia-1.md`](10-fatia-1.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)
+[`09-tecnico.md`](09-tecnico.md) (restrição-mãe + medição 0b) · [`01-combate.md`](01-combate.md) (durações-contrato) · [`13-magia.md`](13-magia.md) · [`22-assets.md`](22-assets.md) (fontes/licenças) · [`25-controlo.md`](25-controlo.md) (hit-stop) · [`10-fatia-1.md`](10-fatia-1.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)

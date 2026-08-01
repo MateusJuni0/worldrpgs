@@ -47,7 +47,7 @@ Cada zona: bioma próprio, paleta com cor de assinatura (WP12), 1 dungeon escond
 - **Uma por zona no mínimo**, feitas **à mão** (*alternativa descartada:* geração procedimental — barata em quantidade, cara em qualidade de leitura; um souls-like vive de espaços desenhados, e quem desenha aqui são duas pessoas com uma spec — a mão ganha).
 - **Como se descobrem — a regra das duas pistas:** toda a entrada escondida tem **≥ 2 pistas legíveis no terreno** a ≤ 30 m (a árvore morta da Toca + o corvo pousado; trilho de pegadas + arranhões na rocha). Nunca marcador de mapa, nunca brilho flutuante. *Porquê:* "o cara pode **descobrir**" (03:12) — descobrir exige que haja o que ler; pista zero é lotaria, não exploração.
 - **Formato:** 3–6 salas + arena de guardião (camada 3, WP7). Entradas variadas por decisão deles: fenda, poço, porta em ruína, tronco oco.
-- **A Toca** (fatia): fenda na rocha debaixo da árvore morta; sala 1 (descida, 15×10 m, luz da entrada), sala 2 (emboscada, 18×12 m, 2 lanceiros às costas — o som avisa, WP6), sala 3 (12×20 m, brutamontes + 2 lanceiros, tochas), arena de Vorgar (20×16 m, WP7). Tecto ≥ 2,5 m em todo o percurso — regra da câmara do WP1B.
+- **A Toca** (fatia): fenda na rocha debaixo da árvore morta; sala 1 (descida, 15×10 m, luz da entrada), sala 2 (emboscada, 18×12 m, 2 lanceiros às costas — som direccional **e** sinal visual equivalente avisam, [`62`](62-acessibilidade-auditiva.md)), sala 3 (12×20 m, brutamontes + 2 lanceiros, tochas), arena de Vorgar (20×16 m, WP7). Tecto ≥ 2,5 m em todo o percurso — regra da câmara do WP1B.
 
 ## Traçado de Brumal — a zona da fatia, ao metro
 

@@ -98,6 +98,8 @@
 | 🔴 | ⭐ **A infra-estrutura de afinação escrita no `23`/`28` não existe** — sem CSV, `tp arena_vorgar`, `latencia`, overlays ou fixtures A/B; só a semente fixa do greybox existe. Construir `TuningRecorder` antes de chamar qualquer valor “confirmado” | encontrado ao verificar o código para o [`63`](spec/63-como-se-afinam-os-numeros.md) |
 | 🔴 | **O criador não existe** — o greybox só troca classe com F6. Faltam ecrã/slots, `appearance.json`, validação do nome, save v2 + migração v1 e teste 6 origens × armas | encontrado ao escrever o [`64`](spec/64-criacao-de-personagem.md) |
 | 🟠 | **Os corpos Quaternius, classes KayKit e 11 peças não têm retarget/encaixe provado; os 2 conjuntos de voz também não existem** | conteúdo e integração exigidos pelo [`64`](spec/64-criacao-de-personagem.md) |
+| 🔴 | **Áudio sem arquitectura:** os 12 sons sintetizados vão todos para `Master`; faltam `audio_catalog.json`, buses, `AudioDirector`/`MusicDirector`, 8 vozes reservadas e ducking que proteja `GameplayInfo` | encontrado ao escrever o [`65`](spec/65-musica-e-ambiente.md) |
+| 🔴 | **Zero música e zero loop de ambiente.** Os 182 OGG são 181 SFX + 1 preview; faltam 6 peças, 3 stingers, Brumal/Toca, vozes, orcs, carne e magia própria | inventário medido no [`65`](spec/65-musica-e-ambiente.md) |
 | 🟠 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | [`29`](spec/29-perspectiva.md) |
 | 🟠 | **A cura à distância funciona com que latência?** | [`42`](spec/42-estudo-magia.md) |
 
@@ -214,7 +216,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | | Buraco | Porque dói tarde |
 |---|---|---|
 | ✅ | ~~⭐ **Sistema de saves**~~ **ESCRITO E IMPLEMENTADO 01-08** — dois domínios, escrita atómica, backup, checksum, recuperação e migrações | [`59`](spec/59-saves.md) · 19 auto-testes novos |
-| 🔴 | ⭐ **Texturas, modelos 3D e som: ZERO** | os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados. **É o que separa o greybox do jogo**, e nenhuma volta cobre |
+| ✅ | ~~⭐ **Packs CC0 por descarregar**~~ **RESOLVIDO 01-08** — modelos e 182 OGG estão em `art/`; integração no jogo continua nas linhas próprias abaixo/acima | [`CREDITS`](CREDITS.md), [`22`](spec/22-assets.md), [`65`](spec/65-musica-e-ambiente.md) |
 | 🔴 | ⚠️ **O `.gitignore` NÃO trava os binários, ao contrário do que o [`game/CLAUDE.md`](game/CLAUDE.md) afirma.** Ele diz *"Binários: modelos, texturas, áudio, builds — `.gitignore` já os trava"*. **É falso:** o `game/.gitignore` trava `*.zip`, `*.exe`, `*.pck` e mais nada — `.glb`, `.gltf`, `.fbx`, `.obj`, `.png` e `.ogg` passam. O `.gitignore` da raiz só trava `art/models/_local/` e `art/audio/_local/`. **Consequência:** um pack CC0 largado em `art/models/` entra no repositório **público e para sempre** (o git guarda o histórico). Precisa de decisão antes da fase 1.2 — ver abaixo | encontrado 01-08 ao preparar a fase 1.2 |
 | 🟠 | ⭐ **Os packs entraram, mas NENHUM MODELO ESTÁ NO JOGO.** A fase 1.2 tinha três partes: descarregar ✅ · importar em `game/` ⬜ · substituir as cápsulas ⬜. **Só a primeira está feita.** As cápsulas continuam lá, e o jogo continua greybox | fase 1.2, 01-08 |
 | 🔴 | ⭐ **A animação de esqueleto CONTINUA POR MEDIR** — é o único risco técnico real, aberto desde o [`44`](spec/44-prototipo.md) (*"cápsulas não são personagens animados"*). ⭐ **A ferramenta chegou:** a *Universal Animation Library* (CC0, esqueleto partilhado) está em `art/models/`. Falta pôr N personagens animados em cena e medir na Iris Xe. **Sem esse número, a folga de 6× do M1 é orçamento, não garantia** | fase 1.2, 01-08 |
@@ -227,7 +229,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ✅ | ~~⭐ **Quem afina os números**~~ **ESCRITO 01-08** — inventário, ordem causal, papéis, passos máximos, A/B, diagnóstico e critério para congelar sem transformar partidas em finais | [`63`](spec/63-como-se-afinam-os-numeros.md) |
 | ✅ | ~~⚠️ **Desligar a meio de um chefe**~~ **RESOLVIDO 01-08** — sem progresso parcial; commit autoritativo em HP zero; recibo persistente e idempotente para a queda depois da morte | [`59`](spec/59-saves.md) §8 |
 | 🔵 | **Medir p95 da escrita com o mapa completo na máquina do Rico** — a fixture actual tem guarda < 64 KiB; o orçamento cheio é 2 MiB e ainda não existe conteúdo para o medir | [`59`](spec/59-saves.md) §10 |
-| 🟠 | **Música e ambiente** | o [`21`](spec/21-arte-render.md) propõe; existem **12 sons sintetizados** e mais nada |
+| ✅ | ~~**Música e ambiente**~~ **ESCRITO 01-08** — inventário real, mapa de uso, estados/transições, camadas, buses, ducking e prova; produção em falta fica vermelha acima | [`65`](spec/65-musica-e-ambiente.md) |
 | ✅ | ~~⭐ **Acessibilidade auditiva**~~ **ESCRITA 01-08** — cada tipo de som informativo tem equivalente próprio de forma/direcção/timing; sem legendas genéricas e com ficha de ataque alterada já | [`62`](spec/62-acessibilidade-auditiva.md) |
 | 🔵 | **Onde vivem os textos** | português decidido; falta dizer se as strings estão em ficheiro ou no código |
 | 🔵 | **Comando / gamepad** | [`45`](spec/45-controlos-configuraveis.md) §5 propõe nascer agnóstico da fonte; por confirmar |

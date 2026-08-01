@@ -213,7 +213,7 @@ Falhar geometria muda primeiro a planta; falhar leitura muda primeiro sinais/luz
 - **Toca/Vorgar:** `KayKit — Dungeon Pack`; pedra exterior e arenas futuras: `Kenney — Castle Kit`, ambos CC0 já em `art/models/` e no [`CREDITS`](../CREDITS.md).
 - Natureza, campas e variações vêm dos packs CC0 herdados pelo bioma; cada peça que entra no jogo é copiada deliberadamente para `game/`, nunca carregada de `art/` em massa.
 - Impacto de pilar e passos: `Kenney — Impact Sounds`; porta e objectos: `Kenney — RPG Audio`, já em `art/audio/`.
-- Bordo usa material, silhueta e movimento antes do som. Música e ambiente seguem a tarefa 2.5; telegrafia sonora nunca é tapada.
+- Bordo usa material, silhueta e movimento antes do som. Música, ambiente e ducking seguem o [`65`](65-musica-e-ambiente.md); telegrafia sonora nunca é tapada.
 
 ### 4. Quanto custa na máquina do Rico?
 

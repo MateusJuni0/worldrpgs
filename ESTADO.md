@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, criação de personagem.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, música e ambiente.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -44,7 +44,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 66 · 10 637 linhas | — | — |
+| Documentos de spec | 67 · 10 966 linhas | — | — |
 | Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
 | Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
@@ -96,6 +96,14 @@ O [`64`](spec/64-criacao-de-personagem.md) fecha o percurso **classe → aspecto
 O aspecto é finito e baseado no que está em `art/models/`: 2 corpos, 4 tons, 0+6 cabelos, 6 cores, 2 sobrancelhas, 6 acentos e 2 vozes, todos com a mesma cápsula e frames. Nome aceita 1–24 grafemas Unicode seguros e nunca serve de ID.
 
 ⚠️ **Desenho não é runtime:** hoje só existe a troca F6 do greybox. Faltam o ecrã, `appearance.json`, prova de retarget/encaixe dos kits, os dois conjuntos de voz e o **save v2 com migração do v1 aprovado**.
+
+## 1h. ✅ A atmosfera já sabe quando se calar
+
+O [`65`](spec/65-musica-e-ambiente.md) auditou os **182 `.ogg`**: 181 efeitos curtos utilizáveis (77,5 s, 1,68 MiB) + um `Preview.ogg` excluído; **zero música e zero loop de ambiente**. Mapeia cada família Kenney a superfície/material/acção e mantém os 12 sons sintetizados apenas como baseline do protótipo.
+
+A fatia pede 6 peças + 3 stingers. O `MusicDirector` entra por estado autoritativo, não por proximidade; não denuncia emboscadas, sincroniza fases co-op e corta na morte. `GameplayInfo` tem bus e 8 vozes reservadas: cada cue baixa música −8 dB e ambiente −6 dB, enquanto menus baixam só atmosfera porque o mundo não pára.
+
+⚠️ **Desenho não é conteúdo:** `Sfx` ainda envia tudo para `Master`; não há catálogo, buses/directores, música, loops, vozes nem sons próprios por ataque. Os packs são biblioteca em `art/`, não áudio importado em `game/`.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 

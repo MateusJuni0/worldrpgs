@@ -96,7 +96,7 @@ Mantém 1, 3 e 4. O 2 e o 5 saem; entram:
 | **WP8** | o portão de Vorgar como saída da Toca; arenas de camada 2/3 como pedido de traçado |
 | **WP9** | recompensa-verbo por chefe (Investida do Guarda é a primeira) + XP 400 |
 | **WP11** | barra de chefe com nome; em co-op, indicador de quem é o alvo |
-| **WP12** | por chefe: intro, transição no compasso, o assobio do arremesso; Vorgar tem 14 clips orçados |
+| **WP12** | por chefe: intro, transição no compasso, o assobio do arremesso; Vorgar tem 14 clips orçados; estados/mistura no [`65`](65-musica-e-ambiente.md) |
 | **WP15B** | esta ficha é o guião do teste da Lei 1 jogado: as métricas (tentativas, onde morre, que ataque mata) medem-se contra ela |
 
 ## O que continua aberto
@@ -107,4 +107,4 @@ Mantém 1, 3 e 4. O 2 e o 5 saem; entram:
 
 ## Ligações
 
-[`04-inimigos-chefes.md`](04-inimigos-chefes.md) · [`15-inimigos.md`](15-inimigos.md) · [`01-combate.md`](01-combate.md) · [`11-formulas.md`](11-formulas.md) · [`10-fatia-1.md`](10-fatia-1.md) · [`27-aprendizagem.md`](27-aprendizagem.md)
+[`04-inimigos-chefes.md`](04-inimigos-chefes.md) · [`15-inimigos.md`](15-inimigos.md) · [`01-combate.md`](01-combate.md) · [`11-formulas.md`](11-formulas.md) · [`10-fatia-1.md`](10-fatia-1.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`61-arenas-de-chefe.md`](61-arenas-de-chefe.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)

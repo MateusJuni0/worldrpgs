@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–64)
+### Decisões e estudos (32–65)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 65 | [**Música e ambiente: atmosfera que nunca tapa informação**](spec/65-musica-e-ambiente.md) | Inventário dos 182 OGG · mapa por uso · estados/transições · ambiente · buses/ducking · prova de mascaramento | 🟢 sistema fechado 01-08; zero música/loops e audio director por construir |
 | 64 | [**Criação de personagem: escolher um começo, não uma prisão**](spec/64-criacao-de-personagem.md) | Fluxo inicial · seis presets · aspecto finito · nome · save · prova da Lei 3 | 🟢 sistema fechado 01-08; UI, retarget e save v2 por construir |
 | 63 | [**Como se afinam os números: medir, mudar um, provar**](spec/63-como-se-afinam-os-numeros.md) | Inventário · ordem causal · papéis · A/B de uma variável · diagnóstico por sintoma · quando congelar | 🟢 método fechado 01-08; CSV/comandos assumidos pelo 28 não existem no código |
 | 62 | [**Acessibilidade auditiva: a mesma informação por outro canal**](spec/62-acessibilidade-auditiva.md) | Evento único · forma visual por tipo de som · timing/direcção equivalentes · combate, co-op, segredos e estados sem áudio | 🟢 regra fechada 01-08; renderer e migração dos 12 ataques continuam por construir |

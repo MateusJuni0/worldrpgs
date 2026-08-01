@@ -33,7 +33,7 @@ Regra de ouro, herdada dos contratos: **a simulação manda, a apresentação ob
 | **Mundo** | streaming por gargantas (zona + vizinha), pontos de descanso, renascimento | WP8/WP1 |
 | **Gravação** | os dois sacos em disco, escrita atómica | WP10/WP11 |
 | **UI** | HUD e menus do WP11, tempo real | WP11 |
-| **Áudio** | prioridades, ducking, 24 vozes | WP12 |
+| **Áudio** | catálogo, buses, prioridades, ducking, 24 vozes e streaming | [`65`](65-musica-e-ambiente.md) |
 | **VFX** | orçamento de partículas, fichas | WP12 |
 | **Ferramentas** | consola, overlays, registo de combate | WP15B (abaixo) |
 

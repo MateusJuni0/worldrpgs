@@ -62,12 +62,16 @@ Um souls-like **é** animação. A telegrafia do brutamontes, o armar do parry, 
 
 ## Áudio
 
+> **INVENTÁRIO VERIFICADO 01-08 no [`65`](65-musica-e-ambiente.md):** os dois packs Kenney já estão em `art/audio/`: **182 `.ogg`**, dos quais 181 são SFX curtos e 1 é `Preview.ogg` excluído. Há **zero música e zero loop de ambiente**. A tabela abaixo continua a dizer onde procurar o que falta; não descreve assets já existentes.
+
 | Preciso de | Fonte primeira | Licença | Regra |
 |---|---|---|---|
 | Efeitos de combate (aço, carne, madeira, parry) | Kenney Audio, freesound (filtro CC0) | CC0 | Commit ok |
 | Passos por piso, ambiente de floresta/caverna | freesound CC0 · Sonniss GDC packs | CC0 / RF sem redist. | Sonniss → `_local/` |
 | Grunhidos de orc, esforço do jogador | freesound CC0; gravar em casa é opção séria (dois tipos com um telemóvel fazem um orc) | CC0/próprio | Próprio = commit ok |
 | Música (menu, Brumal, Toca, Vorgar ×2 fases) | Kevin MacLeod (CC-BY) · OGA CC0 | CC-BY / CC0 | CC-BY → linha no `CREDITS.md`. **4–5 faixas chegam para a fatia** |
+
+O orçamento final da música é 6 peças + 3 stingers porque Brumal precisa de duas camadas e Vorgar de duas fases; ver estados e transições no [`65`](65-musica-e-ambiente.md). A fonte concreta continua por escolher, sem inventar ficheiros.
 | UI (confirmar, cancelar, subir nível, apanhar item) | Kenney Interface | CC0 | Commit ok |
 
 `→WP12` define a lista fecho-a-fecho de sons. A regra completa é **“um chefe lê-se por áudio ou visual”**: o [`62`](62-acessibilidade-auditiva.md) dá equivalente próprio a todo o som informativo.

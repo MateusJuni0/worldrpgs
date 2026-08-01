@@ -51,7 +51,7 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 **Gráficos:** ecrã inteiro/janela · resolução (nativa por omissão) · escala dinâmica on/off (on) · limite de fps (60) · brilho · **sem presets de qualidade** — o jogo tem um alvo único (Lei 4); *alternativa descartada:* low/medium/high — três combinações a equilibrar e testar para duas máquinas conhecidas é trabalho sem cliente.
 
-**Áudio:** 5 canais separados (geral, música, efeitos, ambiente, vozes — WP12), todos podem ir a **zero**. A telegrafia vive em “efeitos”, mas o evento continua a produzir o equivalente visual do [`62`](62-acessibilidade-auditiva.md); o jogo não bloqueia silêncio nem mostra aviso de dificuldade.
+**Áudio:** 5 canais separados (geral, música, efeitos, ambiente, vozes — WP12), todos podem ir a **zero**. Internamente, “efeitos” separa `GameplayInfo` de impactos para a mistura do [`65`](65-musica-e-ambiente.md) baixar atmosfera sem baixar ataques. O evento continua a produzir o equivalente visual do [`62`](62-acessibilidade-auditiva.md); o jogo não bloqueia silêncio nem mostra aviso de dificuldade.
 
 **Comandos:** remapeamento total de teclado e rato (o mapa do WP1 é a omissão) · sensibilidade do rato · inverter Y · o esquema de comando (WP1) aparece se um comando for ligado.
 
@@ -84,4 +84,4 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 ## Ligações
 
-[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md)
+[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)
