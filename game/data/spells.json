@@ -1,6 +1,7 @@
 {
   "_fonte": "spec/66-catalogo-de-magia.md; herda spec/52 sem reescrever a escola vermelha e aplica spec/54-55",
   "_lei_2": "Cada melhoria abre forma, area ou lancamentos; nenhuma linha e apenas forca.",
+  "_instrument_scope": "[CODEX] o M2 executa apenas cajado, baseline 1,0; sino/talisma/chama/relicario/hibrido saem das fichas ate os donos responderem a 56.",
   "_schools": {
     "feiticaria": {
       "nome": "Feitiçaria",
@@ -14,8 +15,7 @@
       "nome": "Milagre",
       "scaling": "fe",
       "instrumentos": [
-        "sino",
-        "talisma"
+        "cajado"
       ],
       "cor": "dourado"
     },
@@ -23,7 +23,7 @@
       "nome": "Piromancia",
       "scaling": "media_int_fe",
       "instrumentos": [
-        "chama"
+        "cajado"
       ],
       "cor": "laranja"
     },
@@ -31,9 +31,7 @@
       "nome": "Escola vermelha",
       "scaling": "menor_int_fe",
       "instrumentos": [
-        "cajado",
-        "relicario",
-        "instrumento_hibrido"
+        "cajado"
       ],
       "cor": "vermelho"
     }
@@ -52,6 +50,20 @@
     "onda_sem_dano",
     "isco"
   ],
+  "_delivery_contracts": {
+    "projectil_simples": {"speed_m_s": 18.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.18, "lifetime_s": 1.5, "hit_policy": "first_body_or_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "perfurante": {"speed_m_s": 20.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.16, "lifetime_s": 1.4, "hit_policy": "up_to_3_bodies_then_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "perseguidor": {"speed_m_s": 10.0, "turn_deg_s": 120.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.22, "lifetime_s": 2.0, "hit_policy": "first_body_or_solid_los_breaks", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "orbitante": {"speed_m_s": 0.0, "turn_deg_s": 180.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.28, "lifetime_s": 2.5, "hit_policy": "once_per_target", "count": 3, "cadence_s": 0.0, "pulse_s": 0.20},
+    "feixe": {"speed_m_s": 0.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.20, "lifetime_s": 0.60, "hit_policy": "pulse_visible_line_until_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.20},
+    "feixe_rasteiro": {"speed_m_s": 0.0, "turn_deg_s": 90.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.40, "lifetime_s": 1.0, "hit_policy": "pulse_ground_line_until_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.20},
+    "barragem_cone": {"speed_m_s": 18.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.14, "lifetime_s": 1.2, "hit_policy": "first_body_or_solid_each", "count": 5, "cadence_s": 0.12, "pulse_s": 0.0, "arc_deg": 40.0},
+    "chuva": {"speed_m_s": 16.0, "turn_deg_s": 0.0, "gravity_m_s2": 9.8, "collision_radius_m": 0.18, "lifetime_s": 3.2, "hit_policy": "first_body_or_ground_each", "count": 20, "cadence_s": 0.12, "pulse_s": 0.40, "area_radius_m": 4.5},
+    "forma_arma": {"speed_m_s": 0.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.32, "lifetime_s": 0.60, "hit_policy": "once_per_swing", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "portador": {"speed_m_s": 8.0, "turn_deg_s": 90.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.30, "lifetime_s": 2.0, "hit_policy": "first_body_or_solid_each", "count": 3, "cadence_s": 0.50, "pulse_s": 0.0},
+    "onda_sem_dano": {"speed_m_s": 9.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.15, "lifetime_s": 0.80, "hit_policy": "once_per_target_no_damage", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "isco": {"speed_m_s": 0.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.35, "lifetime_s": 8.0, "hit_policy": "no_damage_periodic_lure", "count": 1, "cadence_s": 0.0, "pulse_s": 1.0}
+  },
   "_escape_vectors": [
     "sair_da_linha",
     "rolar_para_dentro",
@@ -72,6 +84,13 @@
     "mana_shared_across_schools": true,
     "requires_declared_instrument": true,
     "favorite_limit": 8,
+    "upgrades": {
+      "implementation_state": "blocked_owner_q41",
+      "available_levels": [0],
+      "future_levels": [1, 2, 3, 4, 5],
+      "proposals_are_non_executable": true,
+      "reason": "[TENSÃO] força/área/lançamentos versus Lei 2; proposta e recomendação estão na pergunta 41"
+    },
     "default_favorites": [
       "dardo",
       "ruina",
@@ -104,7 +123,7 @@
     "invalid_where": "atrás de cobertura ou contra grupos dispersos",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha depois do brilho azul estreitar",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 20,
     "range_m": 18,
     "has_drop": false,
@@ -221,7 +240,7 @@
     "school": "feiticaria",
     "question": "preciso de comprar dois segundos para ler",
     "verb": "placas orbitantes absorvem 120 de dano ou duram 2,5 s",
-    "formula": "0 dano; efeito declarado não escala em força",
+    "formula": "0 dano base; reflexo = instrument_spell_power × 1,0",
     "mana_cost": 25,
     "cast_time": 0.5,
     "interruptible": true,
@@ -415,6 +434,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "coop_target_mark",
+    "effect": {"duration_s": 8.0, "max_targets": 1, "visible_to": "partner", "visible_through_walls_after_hit": true, "ends_on_target_death": true, "stack_policy": "replace"},
+    "tuning_state": "[CODEX] baseline; validar duração e legibilidade no M2",
     "upgrades": [
       {
         "level": 0,
@@ -471,6 +493,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "light_and_contour_reveal",
+    "effect": {"duration_s": 30.0, "light_radius_m": 8.0, "contour_radius_m": 8.0, "max_active": 1, "disabled_in_bright_light": true},
+    "tuning_state": "[CODEX] baseline; validar duração, contraste e custo GPU no M2",
     "upgrades": [
       {
         "level": 0,
@@ -684,7 +709,7 @@
     "invalid_where": "contra criaturas de tempestade ou grupos espalhados",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha antes de o sino tocar a segunda vez",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 30,
     "range_m": 28,
     "has_drop": false,
@@ -751,6 +776,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "self_heal",
+    "effect": {"target": "self", "heal_max_health_fraction": 0.30, "application": "on_commit", "overheal": false},
+    "tuning_state": "[CODEX] 30% alinha com Elo Curador sem o superar; validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -876,6 +904,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "area_heal_over_time",
+    "effect": {"duration_s": 8.0, "area_radius_m": 4.5, "pulse_s": 1.0, "heal_max_health_fraction_per_pulse": 0.04, "targets": "self_and_partner", "overheal": false},
+    "tuning_state": "[CODEX] 32% total exige permanecer oito pulsos na área; validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -913,6 +944,9 @@
     "school": "milagre",
     "question": "preciso de aguentar um golpe sem aumentar dano",
     "verb": "troca mobilidade por defesa até a primeira esquiva",
+    "effect_type": "physical_defense_mobility_trade",
+    "effect": {"max_duration_s": 20.0, "physical_damage_taken_multiplier": 0.70, "walk_run_multiplier": 0.60, "ends_on_first_dodge": true, "changes_iframes": false, "stack_policy": "replace"},
+    "tuning_state": "[CODEX] troca 30% de absorção por 40% de mobilidade; validar no M2",
     "formula": "0 dano; efeito declarado não escala em força",
     "mana_cost": 28,
     "cast_time": 0.9,
@@ -969,6 +1003,9 @@
     "school": "milagre",
     "question": "o grupo gastou stamina e precisa de voltar a agir",
     "verb": "onda restaura stamina mas não vida nem mana",
+    "effect_type": "stamina_restore_wave",
+    "effect": {"stamina_restore": 40.0, "radius_m": 7.0, "targets": "self_and_partner", "restores_health": false, "restores_mana": false, "can_overfill": false},
+    "tuning_state": "[CODEX] um segundo de regeneração base (40 stamina); validar no M2",
     "formula": "0 dano; efeito declarado não escala em força",
     "mana_cost": 24,
     "cast_time": 0.7,
@@ -1025,6 +1062,9 @@
     "school": "milagre",
     "question": "preciso de velocidade para reposicionar, não de dano",
     "verb": "aumenta velocidade de marcha e corrida; não altera i-frames",
+    "effect_type": "walk_run_speed_buff",
+    "effect": {"duration_s": 8.0, "walk_speed_multiplier": 1.25, "run_speed_multiplier": 1.15, "sprint_speed_multiplier": 1.0, "changes_iframes": false, "stack_policy": "replace"},
+    "tuning_state": "[CODEX] reposicionamento curto sem mexer em sprint/i-frames; validar no M2",
     "formula": "0 dano; efeito declarado não escala em força",
     "mana_cost": 30,
     "cast_time": 0.8,
@@ -1137,6 +1177,9 @@
     "school": "milagre",
     "question": "preciso de absorver exactamente um golpe",
     "verb": "absorve um golpe e desfaz-se, qualquer que seja a força",
+    "effect_type": "single_direct_hit_barrier",
+    "effect": {"duration_s": 10.0, "charges": 1, "absorb_fraction": 1.0, "accepted_contact_types": ["instantaneo", "volume_movel"], "excluded": ["volume_persistente", "veneno", "queda"], "stack_policy": "replace"},
+    "tuning_state": "[CODEX] dez segundos preservam a leitura de um único golpe; validar no M2",
     "formula": "0 dano; efeito declarado não escala em força",
     "mana_cost": 48,
     "cast_time": 1.6,
@@ -1201,7 +1244,7 @@
     "invalid_where": "contra alvos rápidos ou resistentes a fogo",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha antes de a obsidiana largar a mão",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 24,
     "range_m": 22,
     "has_drop": true,
@@ -1705,7 +1748,7 @@
     "invalid_where": "espaço aberto onde os inimigos se dispersam",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha; atrás do primeiro alvo continua perigoso",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 30,
     "range_m": 28,
     "has_drop": false,
@@ -1761,7 +1804,7 @@
     "invalid_where": "grupos ou cobertura cerrada",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha no estalo de ferro",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 24,
     "range_m": 22,
     "has_drop": false,
@@ -2097,7 +2140,7 @@
     "invalid_where": "alvos que removem queimadura ou não ficam vivos até o medidor encher",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha do selo antes de ele tocar",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 24,
     "range_m": 22,
     "has_drop": false,
@@ -2200,8 +2243,7 @@
     "display_name": "Chama Faminta",
     "school": "mal",
     "question": "preciso de queimar e pressionar a postura ou guarda do mesmo alvo",
-    "verb": "feixe curto que queima; a conversao do antigo roubo de stamina em postura/guarda ainda nao tem magnitude executavel",
-    "_lacuna_revisao_1": "spec/70 revoga stamina inimiga; faltam posture_damage_base e regra de retorno antes de implementar esta metade do verbo",
+    "verb": "feixe curto que queima e pressiona postura ou guarda sem roubar recurso",
     "formula": "1.44 × força_do_instrumento − 40",
     "mana_cost": 44,
     "cast_time": 1.2,
@@ -2221,6 +2263,9 @@
     "type": "catalog_only",
     "mv": 1,
     "base_damage": 79,
+    "effect_type": "damage_burn_posture_beam",
+    "effect": {"posture_damage_base": 35.0, "guard_stamina_damage_base": 35.0, "burn_buildup_per_pulse": 25.0, "resource_return": "none", "pulse_s": 0.20},
+    "tuning_state": "[CODEX] 35 iguala uma pancada de pressão sem reintroduzir stamina inimiga; validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -2660,7 +2705,7 @@
     "invalid_where": "contra inimigos que não vão morrer antes da marca expirar",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha do selo; depois matar o conjurador não remove a marca",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 24,
     "range_m": 22,
     "has_drop": false,
@@ -2671,6 +2716,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "soul_reward_mark",
+    "effect": {"duration_s": 30.0, "soul_reward_multiplier": 1.10, "max_targets": 1, "stack_policy": "replace", "pays_only_on_rewarded_defeat": true},
+    "tuning_state": "[CODEX] +10% só numa derrota ainda recompensada preserva a torneira anti-grind; validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -2715,7 +2763,7 @@
     "delivery_form": "orbitante",
     "invalid_where": "contra veneno, queimadura, área ou queda",
     "escape_vector": "nao_aplicavel",
-    "escape_method": "não atacar durante a janela vermelha de 1,5 s",
+    "escape_method": "não atacar durante a janela vermelha de 0,25 s",
     "contact_type": "nenhum",
     "speed_mps": 18,
     "range_m": 8,
@@ -2727,6 +2775,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "single_direct_hit_reflect",
+    "effect": {"window_s": 0.25, "reflected_damage_formula": "instrument_spell_power * 1.0", "absorbs_original_hit": true, "failure_recovery_s": 0.6, "lights_target_s": 4.0, "next_spell_free_window_s": 5.0, "accepted_contact_types": ["instantaneo", "volume_movel"], "excluded": ["volume_persistente", "veneno", "queimadura", "queda"]},
+    "tuning_state": "[DECIDIDO] janela de 0,25 s, recuperação de 0,6 s e escala pelo instrumento vêm da spec 53; [CODEX] luz por 4 s e janela de 5 s para gastar o feitiço grátis, validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -2783,6 +2834,9 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "movement_and_dodge_suppression",
+    "effect": {"duration_s": 5.0, "move_distance_multiplier": 0.70, "dodge_distance_multiplier": 0.70, "changes_iframes": false, "stack_policy": "replace"},
+    "tuning_state": "[CODEX] encurta 30% sem alterar i-frames; validar no M2",
     "upgrades": [
       {
         "level": 0,
@@ -2828,7 +2882,7 @@
     "invalid_where": "contra criaturas sem visão ou chefes que não perdem engate",
     "escape_vector": "sair_da_linha",
     "escape_method": "sair da linha da agulha escura",
-    "contact_type": "instantaneo",
+    "contact_type": "volume_movel",
     "speed_mps": 24,
     "range_m": 22,
     "has_drop": false,

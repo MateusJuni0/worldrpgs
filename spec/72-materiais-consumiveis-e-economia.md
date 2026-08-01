@@ -1,6 +1,6 @@
 # 72 — Materiais, consumíveis e a transacção de espólio
 
-`[CODEX]` — fecha materiais, consumíveis e a transacção de WP9 para os 330 cartões do [`67`](67-catalogo-do-bestiario.md), ligando derrota, baralho, inventário, almas, recibo e save sem decidir a `[TENSÃO]` de propriedade em co-op. ⚠️ A Revisão 1 encontrou cinco payloads obrigatórios `acessorio:*` fora deste catálogo; continuam `🔴`, não resolvidos por esta economia.
+`[CODEX]` — fecha materiais, consumíveis e a transacção de WP9 para os 330 cartões do [`67`](67-catalogo-do-bestiario.md), ligando derrota, baralho, inventário, almas, recibo e save sem decidir a `[TENSÃO]` de propriedade em co-op. A Tarefa 5 migrou os cinco `acessorio:*` para IDs catalogados; a economia já não carrega essa excepção.
 
 O catálogo executável é [`game/data/economy.json`](../game/data/economy.json). O fluxo vive em `GameData.reward_enemy_defeat()` e a publicação atómica em `SaveSystem.commit_enemy_defeat()`.
 

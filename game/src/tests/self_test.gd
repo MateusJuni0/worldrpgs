@@ -21,6 +21,7 @@ func _ready() -> void:
 	_test_task4_combat_closures()
 	_test_progression_closures()
 	_test_class_ability_contracts()
+	_test_task5_execution_contracts()
 	_test_named_encounters()
 	_test_economy_and_loot_transaction()
 	_test_integration_closures()
@@ -80,6 +81,242 @@ func _test_class_ability_contracts() -> void:
 		and float(paladin.get("conversion_fraction", 0.0)) == 1.0
 		and not bool(paladin.get("increases_total_damage", true)),
 		"Julgamento converte 100% para raio sem aumentar o dano total")
+
+
+# --- spec/74: parametros que a Revisao 2 encontrou em falta -----------------
+
+func _test_task5_execution_contracts() -> void:
+	var common_ability_fields := ["activation_s", "commit_point_s",
+		"interruptible_before_commit", "cooldown_starts"]
+	for class_id: String in ["warrior", "sorcerer", "tank", "assassin", "berserker", "paladin"]:
+		var ability: Dictionary = GameData.abilities.get(class_id, {}) as Dictionary
+		for field: String in common_ability_fields:
+			_check(ability.has(field), "T5/%s: habilidade declara %s" % [class_id, field])
+		_check(float(ability.get("activation_s", 0.0)) > 0.0
+			and float(ability.get("commit_point_s", -1.0)) >= 0.0
+			and float(ability.get("commit_point_s", 99.0)) <= float(ability.get("activation_s", 0.0)),
+			"T5/%s: compromisso cabe na activacao" % class_id)
+		_check(String(ability.get("cooldown_starts", "")) in
+			["on_commit", "on_repeated_spell_commit"],
+			"T5/%s: cooldown nasce num compromisso observavel" % class_id)
+
+	var echo: Dictionary = GameData.abilities.get("sorcerer", {}) as Dictionary
+	_check(String(echo.get("source_spell_policy", "")) == "last_committed_spell"
+		and String(echo.get("target_policy", "")) == "current_aim"
+		and String(echo.get("timing_policy", "")) == "repeat_source_cast",
+		"T5/Eco: fonte, alvo e tempo ficam inequívocos")
+	_check((echo.get("preserved_non_mana_costs", []) as Array) == ["health", "corpse", "item"]
+		and bool(echo.get("invalid_attempt_starts_cooldown", true)) == false,
+		"T5/Eco: preserva custos nao-mana e tentativa invalida nao cobra cooldown")
+
+	var forms: Array = GameData.spells.get("_delivery_forms", []) as Array
+	var form_contracts: Dictionary = GameData.spells.get("_delivery_contracts", {}) as Dictionary
+	var physical_fields := ["speed_m_s", "turn_deg_s", "gravity_m_s2",
+		"collision_radius_m", "lifetime_s", "hit_policy", "count", "cadence_s", "pulse_s"]
+	_check(form_contracts.size() == forms.size(),
+		"T5/magia: as 12 formas recebem contrato fisico")
+	for form_value: Variant in forms:
+		var form_id := String(form_value)
+		var contract: Dictionary = form_contracts.get(form_id, {}) as Dictionary
+		for field: String in physical_fields:
+			_check(contract.has(field), "T5/forma %s: declara %s" % [form_id, field])
+		_check(String(contract.get("hit_policy", "")) != ""
+			and int(contract.get("count", 0)) >= 1
+			and float(contract.get("lifetime_s", 0.0)) > 0.0,
+			"T5/forma %s: contagem, impacto e expiracao executaveis" % form_id)
+	_check(GameData.has_method("spell_delivery_contract"),
+		"T5/magia: runtime publica contrato expandido da forma")
+	if GameData.has_method("spell_delivery_contract"):
+		var dardo_contract: Dictionary = GameData.call("spell_delivery_contract", "dardo") as Dictionary
+		_check(float(dardo_contract.get("speed_m_s", 0.0)) == 20.0
+			and float(dardo_contract.get("max_range_m", 0.0)) == 18.0,
+			"T5/Dardo: override da ficha prevalece sobre a forma")
+	for spell_id_value: Variant in GameData.spells.get("order", []):
+		var spell_id := String(spell_id_value)
+		var spell: Dictionary = GameData.spell(spell_id)
+		if String(spell.get("delivery_form", "")) in ["projectil_simples", "perfurante"] \
+				and String(spell.get("contact_type", "")) != "nenhum":
+			_check(String(spell.get("contact_type", "")) == "volume_movel",
+				"T5/%s: projectil com contacto nunca resolve instantaneamente" % spell_id)
+
+	var enemy_defaults: Dictionary = GameData.enemies.get("_enemy_defaults", {}) as Dictionary
+	var perception: Dictionary = enemy_defaults.get("perception", {}) as Dictionary
+	for field: String in ["vision_cone_deg", "vision_range_m", "hearing_range_m",
+			"combat_sound_range_m", "alert_delay_s", "call_radius_m", "call_delay_s",
+			"desist_after_s", "desist_home_distance_m", "return_arrival_radius_m",
+			"return_heal_pulse_s", "return_heal_fraction", "damage_reacquires"]:
+		_check(perception.has(field), "T5/percepcao: declara %s" % field)
+	_check(float(perception.get("return_heal_fraction", 0.0)) == 1.0
+		and bool(perception.get("damage_reacquires", false)),
+		"T5/percepcao: regresso cura por inteiro e dano volta a adquirir")
+	var attack_templates: Dictionary = GameData.enemies.get("_attack_templates", {}) as Dictionary
+	for template_id: String in ["tiro", "perseguidor"]:
+		var template: Dictionary = attack_templates.get(template_id, {}) as Dictionary
+		for field: String in ["projectile_speed_m_s", "projectile_turn_deg_s",
+				"projectile_gravity_m_s2", "projectile_radius_m", "projectile_lifetime_s",
+				"projectile_hit_policy"]:
+			_check(template.has(field), "T5/%s: declara %s" % [template_id, field])
+		_check(String(template.get("tipo_contacto", "")) == "volume_movel",
+			"T5/%s: projectil nao e contacto instantaneo" % template_id)
+
+	const FILLED_IN_REVIEW_2: Array[String] = [
+		"goblin_mist_scout", "goblin_canopy_raider", "goblin_canopy_slinger",
+		"kobold_bell_trapper", "weaver_canopy_snarer", "skeleton_swordsman",
+		"skeleton_archer", "kobold_mine_trapper", "sea_orc_hookbearer",
+		"cliff_windborne", "summit_windborne", "storm_kobold", "spore_weaver",
+		"fungus_goblin", "penitent_cantor", "penitent_censer", "gilded_skeleton",
+		"ancient_skeleton"]
+	var role_profiles: Dictionary = GameData.enemies.get("_chase_profiles", {}) as Dictionary
+	var raw_enemies_value: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/enemies.json"))
+	var raw_enemies: Dictionary = raw_enemies_value as Dictionary
+	for enemy_id: String in FILLED_IN_REVIEW_2:
+		var raw_enemy: Dictionary = raw_enemies.get(enemy_id, {}) as Dictionary
+		var profile_id := String(raw_enemy.get("chase_profile", ""))
+		var profile: Dictionary = role_profiles.get(profile_id, {}) as Dictionary
+		_check(not profile.is_empty() and String(profile.get("role", "")) == String(raw_enemy.get("role", "")),
+			"T5/%s: velocidade explica o papel %s" % [enemy_id, raw_enemy.get("role", "")])
+		_check(float(raw_enemy.get("chase_speed", -1.0)) == float(profile.get("speed_m_s", -2.0)),
+			"T5/%s: valor segue o perfil documentado" % enemy_id)
+		# Prova comportamental conservadora: depois de ganhar 3,5 m de separacao,
+		# correr em linha recta ate ao leash nunca permite que o perseguidor toque.
+		var player_home_distance_m := 3.5
+		var separation_m := 3.5
+		var elapsed_s := 0.0
+		var chase_speed := float(raw_enemy.get("chase_speed", 99.0))
+		var leash_m := float(enemy_defaults.get("leash_range", 34.0))
+		while player_home_distance_m < leash_m and elapsed_s < 10.0:
+			player_home_distance_m += 5.0 / 60.0
+			separation_m += (5.0 - chase_speed) / 60.0
+			elapsed_s += 1.0 / 60.0
+		_check(separation_m > 0.0 and player_home_distance_m >= leash_m and elapsed_s < 7.0,
+			"T5/%s: correr abre distancia ate quebrar a perseguicao" % enemy_id)
+
+	for zone_id: String in (GameData.world.get("zones", {}) as Dictionary).keys():
+		var threat: Dictionary = ((GameData.world.get("zones", {}) as Dictionary).get(
+			zone_id, {}) as Dictionary).get("environmental_threat", {}) as Dictionary
+		_check((threat.get("unresolved_parameters", []) as Array).is_empty(),
+			"T5/%s: ameaca sem parametro por decidir" % zone_id)
+		_check(String(threat.get("runtime_type", "")) != ""
+			and not (threat.get("rules", {}) as Dictionary).is_empty(),
+			"T5/%s: ameaca tem consumidor e numeros" % zone_id)
+
+	var magic_instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
+	for school_id: String in (GameData.spells.get("_schools", {}) as Dictionary).keys():
+		var school: Dictionary = (GameData.spells.get("_schools", {}) as Dictionary).get(
+			school_id, {}) as Dictionary
+		for instrument_value: Variant in school.get("instrumentos", []):
+			var instrument_id := String(instrument_value)
+			_check(magic_instruments.has(instrument_id),
+				"T5/%s: instrumento %s resolve no equipamento" % [school_id, instrument_id])
+	for instrument_id: String in magic_instruments.keys():
+		var instrument: Dictionary = magic_instruments.get(instrument_id, {}) as Dictionary
+		for field: String in ["weapon_id", "instrument_type", "school_tags", "slot", "hands",
+				"spell_power", "cast_speed_multiplier_by_form"]:
+			_check(instrument.has(field), "T5/instrumento %s: declara %s" % [instrument_id, field])
+
+	for enemy_id: String in GameData.enemies.keys():
+		if enemy_id.begins_with("_"):
+			continue
+		for card_value: Variant in GameData.enemy(enemy_id).get("loot_cards", []):
+			_check(not String(card_value).begins_with("acessorio:"),
+				"T5/%s: baralho nao pendura categoria de acessorio" % enemy_id)
+
+	var encounter_slots: Dictionary = GameData.world.get("encounter_slots", {}) as Dictionary
+	_check(encounter_slots.size() == 24, "T5/mundo: 12 guardioes + 12 subchefes tem slots estaveis")
+	for zone_id: String in (GameData.world.get("zones", {}) as Dictionary).keys():
+		var zone: Dictionary = (GameData.world.get("zones", {}) as Dictionary).get(zone_id, {}) as Dictionary
+		for slot_id: String in [String((zone.get("dungeon", {}) as Dictionary).get(
+				"guardian_slot", "")), String(zone.get("subboss_slot", ""))]:
+			var slot: Dictionary = encounter_slots.get(slot_id, {}) as Dictionary
+			_check(not slot.is_empty() and String(slot.get("zone_id", "")) == zone_id,
+				"T5/%s: encontro %s resolve no catalogo de slots" % [zone_id, slot_id])
+			_check(String(slot.get("content_state", "")) in ["implemented", "blocked_owner_q52"],
+				"T5/%s: slot diz honestamente se tem conteudo" % slot_id)
+
+	var ring_clients: Dictionary = GameData.equipment.get("_ring_effect_clients", {}) as Dictionary
+	var affinity_tags: Dictionary = GameData.equipment.get("_ring_affinity_tags", {}) as Dictionary
+	var rings: Dictionary = GameData.equipment.get("rings", {}) as Dictionary
+	for ring_id: String in rings.keys():
+		var ring: Dictionary = rings.get(ring_id, {}) as Dictionary
+		var effect_type := String(ring.get("effect_type", ""))
+		var client_id := String(ring.get("client_id", ""))
+		_check(ring_clients.has(effect_type)
+			and String((ring_clients.get(effect_type, {}) as Dictionary).get("client_id", "")) == client_id,
+			"T5/anel %s: effect_type resolve num cliente fechado" % ring_id)
+		_check(affinity_tags.has(String(ring.get("afinidade", ""))),
+			"T5/anel %s: afinidade resolve como etiqueta, nao requisito" % ring_id)
+	for ring_id: String in ["salto_de_cabra", "fio_de_vento", "corda_do_naufrago",
+			"companhia_vazia", "mapa_dos_caidos"]:
+		var effect := String((rings.get(ring_id, {}) as Dictionary).get("efeito", ""))
+		_check(not effect.contains("agarrar") and not effect.contains("saltar")
+			and not effect.contains("escalável") and not effect.contains("sinal de invocação")
+			and not effect.contains("outras manchas"),
+			"T5/anel %s: nao inventa travessia nem matchmaking" % ring_id)
+
+	for armor_id: String in (GameData.equipment.get("armor", {}) as Dictionary).keys():
+		var piece: Dictionary = (GameData.equipment.get("armor", {}) as Dictionary).get(
+			armor_id, {}) as Dictionary
+		_check(String(piece.get("effect_type", "")) == "none",
+			"T5/armadura %s: nao finge habilidade sem consumidor" % armor_id)
+		if not bool(piece.get("fatia_1", false)):
+			_check(not bool(piece.get("implemented", true)),
+				"T5/armadura %s: futuro fica explicitamente bloqueado por 44/54" % armor_id)
+
+	const CLOSED_EFFECT_SPELLS: Array[String] = ["sinal", "farol_gelado", "sutura_clara",
+		"orvalho_lento", "pele_de_marmore", "segundo_folego", "passo_de_centelha",
+		"ultimo_veu", "marca_usurario", "peso", "espelho", "chama_faminta"]
+	for spell_id: String in CLOSED_EFFECT_SPELLS:
+		var spell: Dictionary = GameData.spell(spell_id)
+		_check(String(spell.get("effect_type", "")) != ""
+			and not (spell.get("effect", {}) as Dictionary).is_empty(),
+			"T5/%s: efeito deixa de ser apenas prosa" % spell_id)
+		_check(String(spell.get("tuning_state", "")).contains("M2")
+			and not spell.has("_lacuna_revisao_1"),
+			"T5/%s: numero [CODEX] aponta a validacao M2 sem lacuna escondida" % spell_id)
+	var mirror_effect: Dictionary = (GameData.spell("espelho").get("effect", {}) as Dictionary)
+	_check(is_equal_approx(float(mirror_effect.get("window_s", 0.0)), 0.25)
+		and is_equal_approx(float(mirror_effect.get("failure_recovery_s", 0.0)), 0.6)
+		and String(mirror_effect.get("reflected_damage_formula", "")).contains("instrument_spell_power")
+		and not mirror_effect.has("reflected_damage_fraction"),
+		"T5/espelho: aplica a correcao decidida na spec 53 e deixa de escalar pelo chefe")
+
+	var graphics_variant: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/graphics.json"))
+	var presentation: Dictionary = ((graphics_variant as Dictionary).get("presentation", {})
+		as Dictionary)
+	_check(int(ProjectSettings.get_setting("display/window/size/mode", 0)) == 3
+		and String(presentation.get("default_mode", "")) == "fullscreen"
+		and is_equal_approx(float(presentation.get("frame_budget_ms", 0.0)), 16.67)
+		and is_equal_approx(float(presentation.get("worst_frame_ceiling_ms", 0.0)), 20.0),
+		"T5/frame pacing: ecrã inteiro é o caminho medido e os dois limites ficam explícitos")
+	var signal_effect: Dictionary = GameData.spell("sinal").get("effect", {}) as Dictionary
+	_check(float(signal_effect.get("duration_s", 0.0)) == 8.0
+		and int(signal_effect.get("max_targets", 0)) == 1,
+		"T5/Sinal: uma marca dura 8 s")
+	var heal_effect: Dictionary = GameData.spell("sutura_clara").get("effect", {}) as Dictionary
+	_check(float(heal_effect.get("heal_max_health_fraction", 0.0)) == 0.30,
+		"T5/Sutura: cura 30% da vida maxima")
+	var hungry_effect: Dictionary = GameData.spell("chama_faminta").get("effect", {}) as Dictionary
+	_check(float(hungry_effect.get("posture_damage_base", 0.0)) == 35.0
+		and float(hungry_effect.get("guard_stamina_damage_base", 0.0)) == 35.0
+		and String(hungry_effect.get("resource_return", "")) == "none",
+		"T5/Chama Faminta: postura/guarda 35 e nenhum recurso fantasma retorna")
+
+	var upgrade_gate: Dictionary = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"upgrades", {}) as Dictionary
+	var available_upgrade_levels: Array = upgrade_gate.get("available_levels", []) as Array
+	_check(String(upgrade_gate.get("implementation_state", "")) == "blocked_owner_q41"
+		and available_upgrade_levels.size() == 1 and int(available_upgrade_levels[0]) == 0,
+		"T5/melhorias: niveis futuros nao fingem estar executaveis antes de 41")
+	_check(GameData.has_method("spell_upgrade")
+		and (GameData.call("spell_upgrade", "dardo", 1) as Dictionary).is_empty(),
+		"T5/melhorias: runtime recusa nivel futuro enquanto 41 esta aberta")
+
+	var block: Dictionary = GameData.section("block")
+	_check(float(block.get("shield_magic_absorb", -1.0)) == 0.0
+		and String(block.get("shield_magic_absorb_state", "")) == "blocked_owner_q43",
+		"T5/escudos: fallback nao inventa afinidade enquanto 43 esta aberta")
 
 func _test_named_encounters() -> void:
 	var encounters: Dictionary = GameData.named_catalog.get("encounters", {}) as Dictionary

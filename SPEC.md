@@ -49,7 +49,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | 🟢 curvas canónicas por atributo no [`70`](spec/70-fecho-dos-sistemas-de-combate.md); piso corporal e escudos separados |
 | 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Primeira proposta de escolas/catálogo (WP4) | 🔵 substituído pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) + [`66`](spec/66-catalogo-de-magia.md) |
-| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; 120/68/70 enumerados no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), com escudos/acessórios em `🔴` |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; 120/68/70 enumerados no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md); acessórios fantasma removidos e escudo mágico bloqueado com honestidade no [`74`](spec/74-fecho-da-revisao-2.md) |
 | 15 | [Bestiário — primeira camada](spec/15-inimigos.md) | IA e primeiros encontros (WP6) | 🔵 catálogo substituído pelo [`67`](spec/67-catalogo-do-bestiario.md); a máquina comum e a Fatia 1 continuam herdadas |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Primeira proposta de rede, dungeons e traçado (WP8) | 🔵 substituído pelo catálogo completo do [`69`](spec/69-catalogo-do-mundo.md) |
@@ -66,18 +66,19 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | 🟢 contrato canónico completado pelos [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) e [`70`](spec/70-fecho-dos-sistemas-de-combate.md); golpes futuros são produção M2 |
 
-### Decisões e estudos (32–73)
+### Decisões e estudos (32–74)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 74 | [**Fecho da Revisão 2**](spec/74-fecho-da-revisao-2.md) | projécteis/formas · Eco · percepção · ameaças · dependências · 18 perseguições · frame pacing | 🟠 contratos e referências fechados; `not_ready` porque p99 real 18,323 ms e gates 50–51/integrado continuam abertos |
 | 73 | [**Fecho dos buracos de integração**](spec/73-fecho-dos-buracos-de-integracao.md) | magia inimiga · cura remota · travessia · subchefes · textos · comando · voz · migração `sabedoria` · fronteira spec→produção | 🟢 varrimento da Tarefa 4 fechado; dívida de produção explicitamente não confundida com implementação |
 | 72 | [**Materiais, consumíveis e economia**](spec/72-materiais-consumiveis-e-economia.md) | curva cúbica exacta · 40 materiais · 15 consumíveis canónicos · bias por classe · morte→baralho→recibo/save | 🟢 WP9 fechado no contrato e na transacção local; política de destinatário co-op continua dos donos |
 | 71 | [**Encontros nomeados**](spec/71-encontros-nomeados.md) | 36 fichas · 3 por zona · um ataque extra · carta garantida · reutilização de tipo-base | 🟢 catálogo fechado; produção segue a promoção `Fatia 1?` do tipo-base |
 | 70 | [**Fecho dos sistemas de combate**](spec/70-fecho-dos-sistemas-de-combate.md) | parry 8/8/40 · curvas por atributo · sobrecarga · empunhadura · gramática inimiga | 🟢 contrato canónico da Tarefa 4; dados e invariantes executáveis |
 | 69 | [**Catálogo do mundo: doze círculos que se aprendem**](spec/69-catalogo-do-mundo.md) | leitura antes do traçado · 12 zonas de 8–12 min · 21 ligações · círculos horizontais/verticais · atalhos por dentro · 30 portas de história | 🟢 WP8 fechado 01-08; mapa, streaming e 11 zonas continuam por construir |
-| 68 | [**Catálogo de armas, armaduras, estados e anéis**](spec/68-catalogo-de-armas-armaduras-e-aneis.md) | 120 armas · 68 armaduras · 70 anéis · 8×11 golpes · melhoria sem força · estados · Assassino | 🟢 WP5 fechado 01-08; 5 armas e 11 armaduras na Fatia 1; Assassino aguarda confirmação do Mateus |
-| 67 | [**Catálogo do bestiário**](spec/67-catalogo-do-bestiario.md) | 33 tipos · 100 ataques comuns · contacto/vector · 10 cartas · cues · massa · almas e 12 orçamentos | 🟢 WP6 fechado; recompensa/economia entregues no [`72`](spec/72-materiais-consumiveis-e-economia.md); modelos/animações e colocação continuam WP15/WP8 |
-| 66 | [**Catálogo de magia: mana, formas e verbos**](spec/66-catalogo-de-magia.md) | 53 feitiços · 4 escolas · 12 formas · grelha sem vazios · custos · melhoria 0–5 · meditação/favoritos | 🟢 WP4 fechado 01-08; 3 da Fatia 1 executáveis, formas restantes por implementar |
+| 68 | [**Catálogo de armas, armaduras, estados e anéis**](spec/68-catalogo-de-armas-armaduras-e-aneis.md) | 120 armas · 68 armaduras · 70 anéis · 8×11 golpes · melhoria sem força · estados · Assassino | 🟢 WP5 fechado; anéis têm clientes fechados e armaduras futuras não fingem efeitos; só 5 armas/11 armaduras são Fatia 1 |
+| 67 | [**Catálogo do bestiário**](spec/67-catalogo-do-bestiario.md) | 33 tipos · 100 ataques comuns · contacto/vector · 10 cartas · cues · massa · almas e 12 orçamentos | 🟢 WP6 fechado; as 18 perseguições antes implícitas e os acessórios fantasma foram fechados no [`74`](spec/74-fecho-da-revisao-2.md) |
+| 66 | [**Catálogo de magia: mana, formas e verbos**](spec/66-catalogo-de-magia.md) | 53 feitiços · 4 escolas · 12 formas · grelha sem vazios · custos · melhoria 0–5 · meditação/favoritos | 🟢 contratos físicos/12 efeitos fechados no [`74`](spec/74-fecho-da-revisao-2.md); 3 da Fatia 1 executáveis, níveis +1–+5 bloqueados por 41 |
 | 65 | [**Música e ambiente: atmosfera que nunca tapa informação**](spec/65-musica-e-ambiente.md) | Inventário dos 182 OGG · mapa por uso · estados/transições · ambiente · buses/ducking · prova de mascaramento | 🟢 sistema fechado 01-08; zero música/loops e audio director por construir |
 | 64 | [**Criação de personagem: escolher um começo, não uma prisão**](spec/64-criacao-de-personagem.md) | Fluxo inicial · seis presets · aspecto finito · nome · save · prova da Lei 3 | 🟢 sistema fechado 01-08; UI, retarget e save v2 por construir |
 | 63 | [**Como se afinam os números: medir, mudar um, provar**](spec/63-como-se-afinam-os-numeros.md) | Inventário · ordem causal · papéis · A/B de uma variável · diagnóstico por sintoma · quando congelar | 🟢 método fechado 01-08; CSV/comandos assumidos pelo 28 não existem no código |
@@ -140,7 +141,9 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 ## O que trava
 
-**Cinco lacunas `🔴` travam as famílias afectadas, não toda a construção:** mecanismos de 12 feitiços, melhorias dos 53 feitiços, afinidade elemental de escudos, velocidade de perseguição em 18 fichas e cinco acessórios obrigatórios sem catálogo. Estão no [`LACUNAS`](LACUNAS.md); as decisões reservadas aos donos estão no [`99`](spec/99-perguntas-abertas.md). Combate da Fatia 1, produção independente e medição podem continuar.
+As cinco lacunas `🔴` herdadas da Revisão 1 foram fechadas no [`74`](spec/74-fecho-da-revisao-2.md): 12 efeitos têm mecanismo, melhorias futuras ficam indisponíveis até 41, o fallback mágico de escudo deixou de inventar 50%, as 18 fugas são provadas e não há `acessorio:*`.
+
+**Ainda travam `ready`:** o frame pacing de cinco esqueletos reprova p99 (**18,323 ms > 16,67 ms**), falta o gate quente integrado 2+5 e as `[TENSÃO]` 50–51 ainda não fecham orçamento de streaming/actores. Estão no [`LACUNAS`](LACUNAS.md); propostas e recomendações dos donos continuam no [`99`](spec/99-perguntas-abertas.md).
 
 ⚠️ **Mesmo depois de fechar as cinco lacunas, o maior risco continua a ser escopo:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 

@@ -2,9 +2,8 @@
 /**
  * Verifica as referências entre os 17 catálogos de game/data.
  *
- * As duas listas EXPECTED_* são dívida conhecida, não referências válidas:
- * tornam a lacuna visível e fazem o teste falhar se ela crescer ou mudar sem
- * que esta fronteira seja revista.
+ * Não há allowlist de dívida: qualquer prefixo ou slot novo tem de resolver
+ * num catálogo real antes de entrar em main.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -17,27 +16,6 @@ const data = Object.fromEntries(files.map((name) => [
   name.replace(/\.json$/, ""),
   JSON.parse(fs.readFileSync(path.join(dataDir, name), "utf8")),
 ]));
-
-const EXPECTED_ACCESSORY_GAPS = new Set([
-  "lanterna_violeta_antiga",
-  "sino_aviso_kobold",
-  "sino_ferro_kobold",
-  "sino_osso_kobold",
-  "sino_prata_afogado",
-]);
-const EXPECTED_GUARDIAN_GAPS = new Set([
-  "guardiao_campas_cinzentas_wp7",
-  "guardiao_cidade_afogada_wp7",
-  "guardiao_cimeira_wp7",
-  "guardiao_costa_quebrada_wp7",
-  "guardiao_fornalha_wp7",
-  "guardiao_fulgor_wp7",
-  "guardiao_raiz_wp7",
-  "guardiao_raizama_wp7",
-  "guardiao_santuario_branco_wp7",
-  "guardiao_selva_funda_wp7",
-  "guardiao_fojo_wp7",
-]);
 
 const errors = [];
 let checked = 0;
@@ -105,7 +83,6 @@ for (const [raceId, race] of publicEntries(races)) {
   for (const biomeId of Object.keys(race.biomas ?? {})) ref(biomes, biomeId, `races.${raceId}.biomas`);
 }
 
-const unresolvedAccessories = new Set();
 const resolveCard = (card, label) => {
   check(typeof card === "string" && card.includes(":"), `${label}: payload inválido '${card}'`);
   if (typeof card !== "string" || !card.includes(":")) return;
@@ -122,8 +99,6 @@ const resolveCard = (card, label) => {
     check(Number.isInteger(Number(id)) && Number(id) > 0, `${label}: almas_bonus inválido '${id}'`);
   } else if (kind === "bias") {
     check(id === "classe", `${label}: bias desconhecido '${id}'`);
-  } else if (kind === "acessorio") {
-    unresolvedAccessories.add(id);
   } else if (catalogues[kind]) {
     ref(catalogues[kind], id, label);
   } else {
@@ -198,6 +173,21 @@ for (const [weaponId, weapon] of Object.entries(equipment.weapons)) {
 }
 for (const [armorId, piece] of Object.entries(equipment.armor)) {
   check(armor.slots.includes(piece.slot), `equipment.armor.${armorId}: slot '${piece.slot}' inexistente`);
+  check(piece.effect_type === "none", `equipment.armor.${armorId}: efeito sem cliente`);
+}
+for (const [instrumentId, instrument] of Object.entries(equipment.magic_instruments ?? {})) {
+  ref(equipment.weapons, instrument.weapon_id, `equipment.magic_instruments.${instrumentId}.weapon_id`);
+  for (const schoolId of instrument.school_tags ?? []) {
+    ref(spells._schools, schoolId, `equipment.magic_instruments.${instrumentId}.school_tags`);
+  }
+  check(Object.keys(instrument.cast_speed_multiplier_by_form ?? {}).length === spells._delivery_forms.length,
+    `equipment.magic_instruments.${instrumentId}: multiplicadores não cobrem as formas`);
+}
+for (const [ringId, ring] of Object.entries(equipment.rings)) {
+  ref(equipment._ring_effect_clients, ring.effect_type, `equipment.rings.${ringId}.effect_type`);
+  check(equipment._ring_effect_clients[ring.effect_type]?.client_id === ring.client_id,
+    `equipment.rings.${ringId}: cliente não coincide com effect_type`);
+  ref(equipment._ring_affinity_tags, ring.afinidade, `equipment.rings.${ringId}.afinidade`);
 }
 
 const deliveryForms = new Set(spells._delivery_forms);
@@ -209,6 +199,11 @@ for (const spellId of spells.order) {
   check(deliveryForms.has(spell.delivery_form), `spells.${spellId}: forma '${spell.delivery_form}' inexistente`);
   check(escapeVectors.has(spell.escape_vector) || spell.escape_vector === "nao_aplicavel",
     `spells.${spellId}: vector '${spell.escape_vector}' inexistente`);
+}
+for (const [schoolId, school] of Object.entries(spells._schools)) {
+  for (const instrumentId of school.instrumentos ?? []) {
+    ref(equipment.magic_instruments, instrumentId, `spells._schools.${schoolId}.instrumentos`);
+  }
 }
 for (const spellId of spells._rules.default_favorites) ref(spells, spellId, "spells.default_favorites");
 
@@ -223,7 +218,6 @@ for (const connection of world.connections) {
     `world.${connection.id}.loads não coincide com os extremos`);
   edgeKeys.add([connection.from, connection.to].sort().join("|"));
 }
-const unresolvedGuardians = new Set();
 for (const [zoneId, zone] of Object.entries(world.zones)) {
   check(zone.biome_id === zoneId, `world.zones.${zoneId}.biome_id não coincide com a chave`);
   for (const neighbour of zone.connections) {
@@ -232,24 +226,30 @@ for (const [zoneId, zone] of Object.entries(world.zones)) {
     check(edgeKeys.has([zoneId, neighbour].sort().join("|")), `world: ligação ${zoneId}<->${neighbour} falta em connections`);
   }
   const guardian = zone.dungeon?.guardian_slot;
-  if (!Object.hasOwn(enemies, guardian)) unresolvedGuardians.add(guardian);
+  ref(world.encounter_slots, guardian, `world.zones.${zoneId}.dungeon.guardian_slot`);
+  ref(world.encounter_slots, zone.subboss_slot, `world.zones.${zoneId}.subboss_slot`);
+}
+for (const [slotId, slot] of Object.entries(world.encounter_slots ?? {})) {
+  ref(world.zones, slot.zone_id, `world.encounter_slots.${slotId}.zone_id`);
+  check(["guardian", "subboss"].includes(slot.kind), `world.encounter_slots.${slotId}: kind inválido`);
+  check(["implemented", "blocked_owner_q52"].includes(slot.content_state),
+    `world.encounter_slots.${slotId}: estado inválido`);
+  if (slot.content_state === "implemented") {
+    ref(enemies, slot.enemy_id, `world.encounter_slots.${slotId}.enemy_id`);
+  } else {
+    check(slot.enemy_id === null && slot.owner_gate === 52,
+      `world.encounter_slots.${slotId}: bloqueio não aponta à pergunta 52`);
+  }
 }
 for (const [doorId, door] of Object.entries(world.history_doors)) {
   ref(world.zones, door.biome_id, `world.history_doors.${doorId}.biome_id`);
 }
 ref(graphics.presets, graphics.default, "graphics.default");
 
-check(sameSet(unresolvedAccessories, EXPECTED_ACCESSORY_GAPS),
-  `lacunas acessorio:* mudaram: ${[...unresolvedAccessories].sort().join(", ")}`);
-check(sameSet(unresolvedGuardians, EXPECTED_GUARDIAN_GAPS),
-  `slots de guardião sem ficha mudaram: ${[...unresolvedGuardians].sort().join(", ")}`);
-
 if (errors.length > 0) {
   console.error(`\n${errors.length} ERRO(S) DE REFERÊNCIA:`);
   for (const error of errors) console.error(`  - ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`${files.length} JSON · ${checked} referências/contratos verificados · 0 erros novos`);
-  console.log(`AVISO conhecido: ${unresolvedAccessories.size} acessorios sem catálogo (${[...unresolvedAccessories].sort().join(", ")})`);
-  console.log(`AVISO conhecido: ${unresolvedGuardians.size} guardiões sem ficha (${[...unresolvedGuardians].sort().join(", ")})`);
+  console.log(`${files.length} JSON · ${checked} referências/contratos verificados · 0 erros`);
 }

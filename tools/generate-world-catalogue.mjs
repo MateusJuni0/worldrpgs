@@ -29,8 +29,9 @@ const profiles = {
     shortcut: ["Portão da Árvore", "árvore morta → Orla, repetição em 38 s", "cancela de troncos negros com lingueta de ferro acessível apenas no lado da árvore morta"],
     dungeon: ["A Toca", "fenda sob a árvore morta", "tronco sem copa visível a 60 m; corvos entram na fenda e não voltam", "entrada de rocha húmida com 2,5 m sob raízes de carvalho-negro, penas presas na bruma"],
     threat: ["bruma de borda", "a bruma fica opaca durante 3 s e vira o jogador para terreno seguro", "densidade sobe em três degraus; ramos e pedras apontam de volta", "recuar antes dos 3 s"],
-    threat_rules: { telegraph_s: 3.0 },
-    threat_unresolved: ["turn_speed_deg_s", "control_lock_s", "cooldown_s"],
+    threat_runtime: "safe_turn_volume",
+    threat_rules: { telegraph_s: 3.0, turn_speed_deg_s: 180.0, control_lock_s: 0.5, cooldown_s: 8.0 },
+    threat_unresolved: [],
   },
   selva_funda: {
     minutes: 10, common: 14, elites: 4, named: 2, rests: 3,
@@ -46,8 +47,9 @@ const profiles = {
     shortcut: ["Escada da Seiva", "ninho do guardião → aldeia, repetição em 52 s", "escada de corda e seda crua enrolada numa viga, solta apenas da plataforma superior"],
     dungeon: ["Casulo Vazio", "bolsa de seda atrás da Cascata Verde", "fios secos atravessam a água; pequenas carapaças acumulam-se na margem", "casulo oval de seda crua com 5 m, rasgado por dentro e preso a raízes negras molhadas"],
     threat: ["passadiço cedente", "tábua marcada range 1,2 s antes de cair para uma rede 4 m abaixo", "vime esbranquiçado, fibras soltas e oscilação crescente", "sair da placa ou usar a queda segura para o piso inferior"],
-    threat_rules: { telegraph_s: 1.2, safe_fall_m: 4.0 },
-    threat_unresolved: ["reset_s"],
+    threat_runtime: "collapsing_floor",
+    threat_rules: { telegraph_s: 1.2, safe_fall_m: 4.0, reset_s: 12.0 },
+    threat_unresolved: [],
   },
   campas_cinzentas: {
     minutes: 9, common: 13, elites: 3, named: 3, rests: 2,
@@ -63,6 +65,7 @@ const profiles = {
     shortcut: ["Comporta dos Mortos", "capela → cais seco, repetição em 45 s", "grade de ferro comida de ferrugem num canal estreito, manivela de osso apenas no lado da capela"],
     dungeon: ["Ossário Sem Ordens", "cripta sob o dique dos estandartes", "água corre para baixo entre duas lápides; um estandarte aponta contra o vento", "escadaria de pedra afundada entre lápides, degraus de osso seco e fogos-fátuos verde-água"],
     threat: ["lodo que agarra", "andar no lodo reduz a deslocação para 50%; rolar sai para terreno seco", "água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme", "usar diques ou rolar para uma ilha seca"],
+    threat_runtime: "movement_volume",
     threat_rules: { movement_multiplier: 0.5 },
     threat_unresolved: [],
   },
@@ -80,8 +83,9 @@ const profiles = {
     shortcut: ["Elevador do Veio", "labirinto → boca alta, repetição em 58 s", "plataforma de ferro de 4 m, alavanca dentada voltada para o fundo da mina e corrente grossa"],
     dungeon: ["Contramina Cega", "porta lateral atrás do Veio Rubro", "corrente de ar desloca a poeira; marcas de picareta terminam numa parede lisa", "porta rectangular de granito sem dobradiças, contorno de pó limpo e cunhas de ferro no chão"],
     threat: ["armadilhas kobold", "placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s", "pedra mais clara, fio de cobre e orifícios alinhados na parede", "parar antes da placa, recuar para fora da faixa ou bloquear os dardos"],
-    threat_rules: { telegraph_s: 0.8, safe_fall_m: 4.0 },
-    threat_unresolved: ["dart_speed_m_s", "dart_damage", "reset_s"],
+    threat_runtime: "pressure_plate_trap",
+    threat_rules: { telegraph_s: 0.8, safe_fall_m: 4.0, dart_speed_m_s: 18.0, dart_damage: 45, reset_s: 10.0 },
+    threat_unresolved: [],
   },
   costa_quebrada: {
     minutes: 11, common: 15, elites: 4, named: 3, rests: 2,
@@ -97,8 +101,9 @@ const profiles = {
     shortcut: ["Guincho da Quilha", "promontório → praia, repetição em 49 s", "plataforma de madeira de naufrágio com travão de bronze, libertado apenas junto ao farol"],
     dungeon: ["Porão ao Contrário", "escotilha no casco do Navio Vertical", "água pinga para o lado errado; gaivotas pousam em redor mas nunca na tampa", "escotilha quadrada de bronze verde num casco vertical, corda salgada e cracas a formar um aro"],
     threat: ["rajada de falésia", "faixa exposta recebe empurrão máximo de 1,5 m após assobio de 1 s", "fitas de vela, chuva inclinada e espuma movem-se antes da força", "baixar-se atrás de quebra-ventos ou sair da faixa marcada"],
-    threat_rules: { telegraph_s: 1.0, max_push_m: 1.5 },
-    threat_unresolved: ["lane_width_m", "repeat_interval_s"],
+    threat_runtime: "wind_lane",
+    threat_rules: { telegraph_s: 1.0, max_push_m: 1.5, lane_width_m: 4.0, repeat_interval_s: 8.0 },
+    threat_unresolved: [],
   },
   cimeira: {
     minutes: 10, common: 14, elites: 3, named: 2, rests: 3,
@@ -114,6 +119,7 @@ const profiles = {
     shortcut: ["Ascensor da Agulha", "observatório → abrigo baixo, repetição em 55 s", "porta de aço frio sem puxador no piso baixo, alavanca azul apenas na estação superior"],
     dungeon: ["Sala do Horizonte", "porta sob o Observatório Partido", "a neve nunca assenta num círculo de 5 m; a sombra do telescópio aponta para a junta", "porta circular de aço frio com 4 m, vidro azul rachado e marcas de luvas na face interior"],
     threat: ["frio de exposição", "após 25 s sem abrigo, stamina máxima perde 5% a cada 20 s até ao tecto de 25%", "vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco", "entrar num abrigo; recupera 10% por segundo junto a uma fogueira"],
+    threat_runtime: "exposure_meter",
     threat_rules: { exposure_delay_s: 25.0, tick_s: 20.0, loss_fraction_per_tick: 0.05, max_loss_fraction: 0.25, recovery_fraction_s: 0.10 },
     threat_unresolved: [],
   },
@@ -131,8 +137,9 @@ const profiles = {
     shortcut: ["Cadinho de Regresso", "cratera → pátio de escória, repetição em 57 s", "elevador de cadinho com trinco cerâmico acessível só no anel superior das forjas"],
     dungeon: ["Forja Sem Ferreiro", "conduta por baixo do Martelo Imóvel", "brasas formam pegadas que entram na parede; o bronze está quente só numa placa", "alçapão de bronze quadrado com 3 m, borda de obsidiana lascada e calor ondulante visível"],
     threat: ["crosta rubra", "crosta marcada cede 1 s depois e deixa cair 4 m numa calha lateral, nunca no vazio", "vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra", "sair da placa ou aceitar o atalho de queda sobrevivível"],
-    threat_rules: { telegraph_s: 1.0, safe_fall_m: 4.0 },
-    threat_unresolved: ["reset_s"],
+    threat_runtime: "collapsing_floor",
+    threat_rules: { telegraph_s: 1.0, safe_fall_m: 4.0, reset_s: 12.0 },
+    threat_unresolved: [],
   },
   fulgor: {
     minutes: 9, common: 16, elites: 4, named: 3, rests: 3,
@@ -148,8 +155,9 @@ const profiles = {
     shortcut: ["Pára-Raios Tombado", "olho → Marco de terra, repetição em 46 s", "torre de fulgurite inclinada que vira ponte quando a corrente interior é libertada no topo"],
     dungeon: ["Câmara do Nono Raio", "fenda sob a Pedra Aterrada", "as correntes vibram sem vento; nove cicatrizes convergem na base", "abertura triangular no granito com 3 m, correntes negras, vidro violeta e areia fundida no limiar"],
     threat: ["queda de relâmpago", "o impacto ocorre 1 s depois de um círculo de 3 m acender no chão", "fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco", "sair do círculo ou ficar sobre a Pedra Aterrada"],
-    threat_rules: { telegraph_s: 1.0, radius_m: 3.0 },
-    threat_unresolved: ["damage", "repeat_interval_s"],
+    threat_runtime: "strike_marker",
+    threat_rules: { telegraph_s: 1.0, radius_m: 3.0, damage: 90, repeat_interval_s: 8.0 },
+    threat_unresolved: [],
   },
   raizama: {
     minutes: 11, common: 15, elites: 4, named: 2, rests: 2,
@@ -165,8 +173,9 @@ const profiles = {
     shortcut: ["Fio do Crânio", "crânio → Costela-Mãe, repetição em 59 s", "elevador de seda enrolado numa mandíbula gigante, comando de quitina apenas no topo"],
     dungeon: ["Medula Oca", "fissura dentro da Costela-Mãe", "esporos são sugados para a fenda; a seda forma setas viradas para dentro", "fenda vertical de 3 m em osso antigo, borda coberta de quitina e luz ciano a respirar"],
     threat: ["nuvem de esporos", "atravessar acumula veneno a 35 por segundo; fora da nuvem decai 20 por segundo", "volume ciano opaco com partículas a correr para cima e barra visível", "rebentar o saco à distância ou esperar a nuvem baixar"],
-    threat_rules: { poison_buildup_s: 35.0, poison_decay_s: 20.0 },
-    threat_unresolved: ["cloud_radius_m", "cloud_lifetime_s", "sack_respawn_s"],
+    threat_runtime: "buildup_volume",
+    threat_rules: { poison_buildup_per_s: 35.0, poison_decay_per_s: 20.0, cloud_radius_m: 3.5, cloud_lifetime_s: 6.0, sack_respawn_s: 15.0 },
+    threat_unresolved: [],
   },
   cidade_afogada: {
     minutes: 10, common: 18, elites: 5, named: 2, rests: 3,
@@ -182,8 +191,9 @@ const profiles = {
     shortcut: ["Ascensor do Sino", "torre → cais, repetição em 51 s", "plataforma do campanário com alavanca de prata no piso superior e contrapeso visível sob a água"],
     dungeon: ["Arquivo Submerso", "porta seca sob o Aqueduto Quebrado", "folhas de prata boiam contra a corrente; bolhas escapam por uma junta acima da água", "porta de mármore azul com 4 m, moldura de prata escurecida e vidro verde intacto no centro"],
     threat: ["água profunda", "a rota principal usa passadiços; zonas opcionais fundas têm fundo caminhável lento e desactivam ataque e esquiva", "mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água", "ficar nos aquedutos; a água funda nunca exige natação livre"],
-    threat_rules: { free_swimming: false },
-    threat_unresolved: ["deep_water_movement_multiplier"],
+    threat_runtime: "deep_water_volume",
+    threat_rules: { free_swimming: false, deep_water_movement_multiplier: 0.45 },
+    threat_unresolved: [],
   },
   santuario_branco: {
     minutes: 9, common: 17, elites: 4, named: 3, rests: 2,
@@ -199,8 +209,9 @@ const profiles = {
     shortcut: ["Altar Ascendente", "coro → pórtico, repetição em 43 s", "altar quadrado de mármore que desce quando a vela vermelha do coro é apagada pelo lado interior"],
     dungeon: ["Sacristia Sem Olhos", "porta atrás da Sombra Vertical", "a sombra continua por baixo da moldura; cera derretida corre para a porta em vez de sair", "porta estreita de mármore com 3 m, dez relevos sem olhos e uma linha de sangue seco na soleira"],
     threat: ["luz cegante", "encarar um foco marcado acumula 25 por segundo após 0,8 s; a barra cheia cega durante 3 s", "padrão radial no chão, sobre-exposição gradual e borda negra fora do foco", "olhar para baixo, quebrar visão numa coluna ou entrar na sombra"],
-    threat_rules: { exposure_delay_s: 0.8, blind_buildup_s: 25.0, blind_duration_s: 3.0 },
-    threat_unresolved: ["blind_threshold"],
+    threat_runtime: "gaze_meter",
+    threat_rules: { exposure_delay_s: 0.8, blind_buildup_per_s: 25.0, blind_threshold: 100.0, blind_duration_s: 3.0 },
+    threat_unresolved: [],
   },
   raiz: {
     minutes: 12, common: 20, elites: 5, named: 2, rests: 3,
@@ -216,8 +227,9 @@ const profiles = {
     shortcut: ["Queda Invertida", "lábio → Foz invertida, repetição em 60 s", "plataforma de raiz que desce contra o fluxo da bruma quando o selo de prata no topo é quebrado"],
     dungeon: ["Câmara da Primeira Fenda", "abertura por trás do Rio Ascendente", "a bruma divide-se à volta de um rectângulo vazio; raízes quebradas apontam para dentro", "fenda rectangular de 5 m em pedra negra, moldura de prata baça e bruma pálida a contornar o vazio"],
     threat: ["escuro absoluto", "fora dos focos de bruma a visibilidade cai para 6 m; a lanterna ocupa a mão esquerda", "silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados", "usar a lanterna, caminhar junto ao rio ou trocar defesa por visão"],
-    threat_rules: { visibility_m: 6.0, lantern_slot: "left_hand" },
-    threat_unresolved: ["lantern_item_id"],
+    threat_runtime: "visibility_volume",
+    threat_rules: { visibility_m: 6.0, lantern_slot: "left_hand", lantern_item_id: "consumivel:lanterna_raiz" },
+    threat_unresolved: [],
   },
 };
 
@@ -392,8 +404,10 @@ for (const [id, profile] of Object.entries(profiles)) {
       guardian_slot: id === "brumal" ? "vorgar" : `guardiao_${id}_wp7`,
       descricao_visual: profile.dungeon[3], image_source: dungeonAsset, fatia_1: inSlice,
     },
+    subboss_slot: `subchefe_${id}_wp8`,
     environmental_threat: {
       nome: profile.threat[0], effect: profile.threat[1], telegraph: profile.threat[2], escape: profile.threat[3],
+      runtime_type: profile.threat_runtime,
       rules: profile.threat_rules,
       unresolved_parameters: profile.threat_unresolved,
       requires_unresolved_movement: false,
@@ -405,6 +419,22 @@ for (const [id, profile] of Object.entries(profiles)) {
     descricao_visual: biome.descricao_visual,
     concept_art: asset(`art/concept/${conceptName}`),
     fatia_1: inSlice,
+  };
+}
+
+const encounterSlots = {};
+for (const [zoneId, zone] of Object.entries(zones)) {
+  const guardianId = zone.dungeon.guardian_slot;
+  encounterSlots[guardianId] = {
+    kind: "guardian", zone_id: zoneId,
+    content_state: zoneId === "brumal" ? "implemented" : "blocked_owner_q52",
+    enemy_id: zoneId === "brumal" ? "vorgar" : null,
+    owner_gate: zoneId === "brumal" ? null : 52,
+  };
+  const subbossId = zone.subboss_slot;
+  encounterSlots[subbossId] = {
+    kind: "subboss", zone_id: zoneId, content_state: "blocked_owner_q52",
+    enemy_id: null, owner_gate: 52,
   };
 }
 
@@ -442,6 +472,11 @@ const world = {
     on_new_zone_cycle: "Brasa ou NG+ volta a colocá-lo; a recompensa fixa só pode sair uma vez por ciclo",
     presentation: "sem nevoeiro, barra global ou música própria; pode ser abandonado por qualquer saída legível",
   },
+  _encounter_slot_rules: {
+    stable_ids: true,
+    implemented_requires_enemy_id: true,
+    blocked_state: "bloqueia conteudo, nunca resolve por fallback",
+  },
   map_reading: mapReading,
   world_scale: {
     target_endpoint_minutes: 30,
@@ -463,6 +498,7 @@ const world = {
   },
   connections,
   zones,
+  encounter_slots: encounterSlots,
   history_doors: historyDoors,
 };
 
@@ -474,6 +510,7 @@ const requiredVisual = (entity, label) => {
 };
 
 if (Object.keys(zones).length !== 12) throw new Error("o mundo precisa de 12 zonas");
+if (Object.keys(encounterSlots).length !== 24) throw new Error("o mundo precisa de 24 slots de guardiao/subchefe");
 if (Object.keys(historyDoors).length !== 30) throw new Error("o mundo precisa de 30 portas de história");
 requiredVisual(mapReading, "leitura do mapa");
 requiredVisual(world.world_scale, "escala do mundo");

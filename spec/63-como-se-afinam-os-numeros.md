@@ -282,7 +282,7 @@ Instrumentação ≤ 0,10 ms CPU e ≤ 5 MB; grava em buffer e descarrega fora d
 |---|---|
 | CSV/TuningRecorder e comandos que o `28` já assume | 🔴 bloqueia afinação reproduzível; registado no [`LACUNAS`](../LACUNAS.md) |
 | Fixtures A/B e pasta `medicoes/afinacao/` | criam-se com a primeira volta real, não com dados inventados |
-| Valores actuais da fatia | continuam `partida` até passarem este ciclo; 8559 auto-testes provam coerência, não feel |
+| Valores actuais da fatia | continuam `partida` até passarem este ciclo; 9531 auto-testes provam coerência, não feel |
 | Pergunta 24 e outras `[TENSÃO]` | mede-se e recomenda-se; agentes não decidem |
 
 ## Ligações

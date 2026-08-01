@@ -2,7 +2,7 @@
 
 > **Tarefa 3.1 · Codex · 01-08-2026.** Este documento fecha o WP4 sobre as decisões mais recentes. O catálogo executável é [`game/data/spells.json`](../game/data/spells.json); o auto-teste recusa fichas incompletas.
 
-> **CORRECÇÃO CANÓNICA DA TAREFA 4 — ver [`70`](70-fecho-dos-sistemas-de-combate.md) §5.** “Stamina do inimigo” está revogado. **Fôlego Roubado** causa dano de postura/guarda e devolve stamina igual a 50% do efeito realmente conseguido; dados e linha editorial já repetem esse contrato. **Chama Faminta** ainda não declara a magnitude equivalente e está `🔴` no `LACUNAS`.
+> **CORRECÇÃO CANÓNICA DA TAREFA 5 — ver [`74`](74-fecho-da-revisao-2.md).** “Stamina do inimigo” está revogado. **Fôlego Roubado** causa dano de postura/guarda e devolve stamina igual a 50% do efeito conseguido; **Chama Faminta** declara 35 de postura/guarda e zero retorno. As 12 formas têm contrato físico. Só o cajado baseline 1,0 é instrumento executável; os níveis +1–+5 ficam indisponíveis enquanto 41 estiver aberta.
 
 ## 1. O que manda e o que foi substituído
 
@@ -17,9 +17,9 @@
 | Escola | Escala | Instrumento | Identidade |
 |---|---|---|---|
 | **Feitiçaria** | Inteligência | cajado | precisão, utilidade, controlo por vidro azul-gelo |
-| **Milagre** | Fé | sino ou talismã | cura, co-op, raio e protecção por mármore/ouro/cera |
-| **Piromancia** | média de Inteligência e Fé | chama | fogo, veneno e controlo do chão por obsidiana/bronze |
-| **Escola vermelha** | ⭐ **menor de Inteligência e Fé** | cajado, relicário ou híbrido | os verbos do [`52`](52-mago-do-mal.md), cadáveres e vida como segundo preço |
+| **Milagre** | Fé | cajado *(sino/talismã esperam 56)* | cura, co-op, raio e protecção por mármore/ouro/cera |
+| **Piromancia** | média de Inteligência e Fé | cajado *(chama espera 56)* | fogo, veneno e controlo do chão por obsidiana/bronze |
+| **Escola vermelha** | ⭐ **menor de Inteligência e Fé** | cajado *(relicário/híbrido esperam 56)* | os verbos do [`52`](52-mago-do-mal.md), cadáveres e vida como segundo preço |
 
 `[CODEX]` A reserva de mana usa o **maior** de Inteligência/Fé: `60 + 4×maior` até 35; depois +1/ponto. A eficácia vermelha continua a usar o **menor**. Razão: uma única reserva serve as quatro escolas, enquanto o preço duplo da vermelha vive na escala. Alternativa descartada: usar o menor também na reserva — penalizava todos os milagres/feitiçarias que o personagem conhece.
 
@@ -39,6 +39,8 @@
 `[CODEX]` As duas tentativas fecham o buraco “40 s num sítio limpo = custo nenhum” sem alterar o que o Mateus decidiu: uma meditação completa continua a demorar 40 s, funciona em qualquer sítio e repõe 100%. Alternativa descartada: reduzir para 40–50%, porque isso reescreveria uma linha `[DECIDIDO]`.
 
 ## 4. As 12 formas
+
+As identidades espaciais abaixo continuam a mandar; os números de movimento, colisão, cadência, pulso e expiração estão no [`74`](74-fecho-da-revisao-2.md) §1.3 e em `_delivery_contracts`.
 
 | Forma | Onde falha por natureza | Vector principal |
 |---|---|---|
@@ -136,7 +138,7 @@ Cada linha abaixo é a vista humana. A mesma ficha traz no JSON: fórmula, custo
 | **Chuva Cinzenta** | Escola vermelha | um grupo está junto à minha frente — leque de projécteis; de perto mais fragmentos acertam | 34 · 0,9 s | barragem_cone · volume_movel | um alvo único a longa distância | rolar_para_dentro — rolar para dentro do leque ou sair das laterais | leque de nove lascas de osso cinzento, 110 graus, pontas vermelhas e poeira de ferro ferrugento | ⬜ |
 | **Marca Ardente** | Escola vermelha | preciso de queimação num alvo grande e lento — acende o alvo; o medidor visível enche e come vida | 28 · 0,8 s | projectil_simples · instantaneo | alvos que removem queimadura ou não ficam vivos até o medidor encher | sair_da_linha — sair da linha do selo antes de ele tocar | selo circular de ferro ferrugento, três pregos de osso, runa vermelha e medidor segmentado no bordo | ⬜ |
 | **Febre** | Escola vermelha | quero que a queimação salte pelo grupo — marca que passa ao vizinho quando o portador morre | 36 · 1 s | portador · volume_persistente | inimigos isolados | afastar_se — separar-se do alvo marcado antes de ele morrer | ampola de osso com líquido vermelho, corrente de ferro, três marcas menores e fumo cinzento | ⬜ |
-| **Chama Faminta** | Escola vermelha | preciso de queimar e pressionar a postura/guarda ao mesmo alvo — feixe curto que queima e deve converter o antigo “roubo de stamina” em postura/guarda; ⚠️ magnitude/retorno por declarar (`🔴`) | 44 · 1,2 s | feixe · volume_persistente | fora de 12 m, atrás de cobertura ou contra imunes a queimadura | quebrar_visao — quebrar a linha antes de o feixe fechar | mandíbula de osso como bocal, língua de fogo vermelho de 12 m e elos de ferro a contrair | ⬜ |
+| **Chama Faminta** | Escola vermelha | queimar e pressionar postura/guarda: 35 de postura, 35 de stamina de guarda e 25 de queimadura por pulso de 0,20 s; não devolve recurso | 44 · 1,2 s | feixe · volume_persistente | fora de 12 m, atrás de cobertura ou contra imunes a queimadura | quebrar_visao — quebrar a linha antes de o feixe fechar | mandíbula de osso como bocal, língua de fogo vermelho de 12 m e elos de ferro a contrair | ⬜ |
 | **Levantar** | Escola vermelha | há um morto útil no chão — levanta o morto com 60% da vida e custo adicional de 5–15% PV | 45 · 2 s | feixe_rasteiro · nenhum | sem cadáver à frente ou com vida insuficiente | nao_aplicavel — interromper antes do fio chegar ao cadáver | mão de osso sobre círculo de ferro ferrugento, três fios vermelhos presos a um cadáver e cinza húmida | ⬜ |
 | **Erguer o Guardião** | Escola vermelha | quero levar um chefe morto comigo — levanta um chefe portátil por 50% da vida máxima | 85 · 2 s | feixe_rasteiro · nenhum | sem corpo de chefe gasto no ciclo ou com menos de metade da vida máxima disponível | nao_aplicavel — interromper antes do fio chegar ao guardião | coroa de vértebras sobre disco de pedra negra de 4 m, correntes de ferro e quatro pilares de bruma vermelha | ⬜ |
 | **Rebentar** | Escola vermelha | um morto meu já não serve e está no sítio certo — destrói um invocado numa explosão | 30 · 0,7 s | portador · volume_persistente | sem invocado próprio ou quando ele está junto do parceiro | sair_da_area — afastar-se do invocado marcado | costelas abertas com núcleo de obsidiana vermelha, círculo de cinza de 4 m e fragmentos de osso voltados para fora | ⬜ |
@@ -154,6 +156,8 @@ Cada linha abaixo é a vista humana. A mesma ficha traz no JSON: fórmula, custo
 | **Cutelo Carmim** | Escola vermelha | o mago vermelho precisa de uma resposta honesta ao perto — golpe corpo a corpo de magia; pode reforçar a arma com escuridão por 90 s | 46 · 0,7 s | forma_arma · instantaneo | contra armas de maior alcance ou aparadores pacientes | aparar — aparar o golpe único ou manter mais de 3 m | cutelo curvo de obsidiana vermelha, 95 cm, espinha de osso, punho de couro curtido e gume de bruma negra | ⬜ |
 
 ## 7. As seis melhorias de cada feitiço
+
+> ⚠️ **Estado de execução após a Tarefa 5:** a tabela abaixo conserva as propostas editoriais, mas **só o nível 0 está disponível**. `spell_upgrade(id, 1…5)` devolve vazio e `_rules.upgrades` declara `blocked_owner_q41`. Isto não resolve a `[TENSÃO]` entre os três eixos e a Lei 2; impede que os moldes genéricos sejam confundidos com conteúdo pronto.
 
 A tabela é por feitiço, não um perfil global. **0** é o feitiço encontrado; **+1, +3 e +5** abrem sempre **lançamentos ou área**. +2/+4 trocam forma. Assim nenhum caminho é “o mesmo feitiço, só mais forte”.
 
@@ -218,7 +222,7 @@ A tabela é por feitiço, não um perfil global. **0** é o feitiço encontrado;
 | Pergunta do fio solto | Resposta |
 |---|---|
 | **Como usa?** | equipa o instrumento declarado, escolhe entre os 8 favoritos com `F`/roda, lança com `C`; `M` medita. Tudo é remapeável pelo [`45`](45-controlos-configuraveis.md). |
-| **Como prova?** | o auto-teste percorre os **53 feitiços**: quatro escolas, 12 formas usadas, ficha completa, tabela 0…5, +1/+3/+5 em área/lançamentos, escala vermelha pelo menor, três itens exactos na Fatia 1. |
+| **Como prova?** | o auto-teste percorre os **53 feitiços**: quatro escolas, 12 formas com contrato, 12 efeitos antes incompletos, escala vermelha pelo menor e três itens exactos na Fatia 1; prova ainda que níveis >0 não chegam ao runtime antes de 41. |
 | **Arte e som?** | a descrição visual é a fonte do prompt. Ícones aprovados da Fatia 1: [`dardo.png`](../art/ui/icons/spells/dardo.png), [`ruina.png`](../art/ui/icons/spells/ruina.png) e [`egide.png`](../art/ui/icons/spells/egide.png), ligados por ID/caminho no catálogo. Efeitos usam um evento com `sound_cue` + `visual_cue`, nunca áudio sozinho ([`62`](62-acessibilidade-auditiva.md)). |
 | **Máquina do Rico?** | o catálogo custa zero por frame. Chuva/áreas usam um emissor e decal, não dezenas de luzes; partículas respeitam o [`21`](21-arte-render.md). O possível tecto técnico **8/5/3 invocados por preset continua pergunta dos donos** no [`52`](52-mago-do-mal.md) §11; este catálogo não o decide nem contradiz “sem tecto de jogo”. |
 

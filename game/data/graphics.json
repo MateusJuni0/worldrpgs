@@ -5,6 +5,19 @@
 
   "default": "medio",
 
+  "presentation": {
+    "_why": "[CODEX] No Iris Xe medido, cinco e dez esqueletos têm custo semelhante mas o modo janela acrescenta jitter de apresentação; ecrã inteiro reduziu os picos do caso de cinco actores, sem fazer passar ainda o p99. Validar de novo no M2 e em cada máquina-alvo.",
+    "default_mode": "fullscreen",
+    "windowed_supported": true,
+    "native_width": 1920,
+    "native_height": 1080,
+    "vsync": "on",
+    "frame_budget_ms": 16.67,
+    "worst_frame_ceiling_ms": 20.0,
+    "acceptance_actors": 5,
+    "benchmark": "res://src/tools/animation_benchmark.gd --actors=5 --window=fullscreen --vsync=on --gate"
+  },
+
   "presets": {
     "alto": {
       "shadows": true, "shadow_size": 2048, "shadow_distance": 45.0,

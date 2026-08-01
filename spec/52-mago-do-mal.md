@@ -4,6 +4,8 @@
 
 > ⚠️ **Autoridade posterior:** catálogo e dados seguem o Voto de Sangue por **trocas de verbo** do [`53`](53-chefes-ritmo-e-o-mago-forte.md) §§4–5, não o +30/+60/+90% preservado abaixo. Como essa mudança colide com uma decisão explícita do Mateus, a revisão não a promove a decisão dos donos: fica registada como `[TENSÃO]` no [`99`](99-perguntas-abertas.md).
 
+> **Execução posterior — Tarefa 5:** o Espelho segue a correcção do [`53`](53-chefes-ritmo-e-o-mago-forte.md) §4: janela 0,25 s, recuperação 0,6 s e escala pelo instrumento; luz 4 s e feitiço grátis durante 5 s são baselines `[CODEX]` M2. As fantasias de instrumento deste documento não são IDs actuais: só o cajado 1,0 existe até os donos fecharem 56.
+
 > **Porque este documento é do Claude e não do Fable:** o Mateus disse-o à frente — *"o Rico não vai pensar nisso quando criar"*. Uma classe que uma pessoa vai jogar durante cem horas desenha-se **com** essa pessoa, não por delegação.
 >
 > **Isto é uma proposta detalhada, não uma decisão fechada.** Está aqui para o Mateus cortar, mudar e acrescentar.

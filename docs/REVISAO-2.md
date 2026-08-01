@@ -4,6 +4,8 @@
 **Foco:** executabilidade, dependências, ordem de construção, Lei 4 e promessas verificáveis  
 **Veredicto:** **`not_ready` para construir o jogo inteiro sem perguntas.** É possível começar amanhã pela fundação e pelo núcleo solo; não é possível terminar sequer a Fatia 1 exactamente como prometida sem uma decisão curta dos donos.
 
+> **Actualização de execução — Tarefa 5, 01-08-2026:** os achados mecânicos deste relatório foram atacados no [`74`](../spec/74-fecho-da-revisao-2.md), sem fazer uma terceira revisão. Projécteis/formas, Eco, percepção e ameaças têm números; referências a acessórios/instrumentos/encontros/anéis resolvem ou ficam bloqueadas sem ID; as cinco lacunas herdadas e as 18 perseguições têm gate/teste. O verificador passa **17 JSON · 2791 referências/contratos · 0 erros** e o auto-teste passa **9531/9531**. O veredicto continua `not_ready`: p99 real de cinco esqueletos em fullscreen é **18,323 ms > 16,67 ms**, falta o ensaio quente integrado 2+5 e 50–51 continuam decisões dos donos.
+
 ## Resposta curta
 
 A spec deixou de ser apenas uma colecção de intenções: há um protótipo, 17 catálogos, saves atómicos, combate mensurável e **8559 auto-testes verdes**. A Revisão 2 também passou a verificar automaticamente **2380 referências/contratos** entre todos os JSON.
@@ -258,4 +260,3 @@ Isto não implica doze reuniões. A ordem do §5 permite um gate de combate/dado
 | documentação/risco | estados históricos actualizados; IA/armaduras/anéis/instrumentos isolados; Lei 4 reavaliada; perguntas 53–56; este relatório |
 
 Não houve push. Não foram tocados `game/scenes/`, `art/models/` nem `art/textures/`.
-

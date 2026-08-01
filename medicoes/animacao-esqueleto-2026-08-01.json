@@ -34,6 +34,72 @@
       "worst_frame_ms": 18.539
     }
   ],
+  "task5_investigation": {
+    "method_change": "O benchmark passa a medir tempo de parede entre callbacks e mostra o delta do motor em separado; o delta pode esconder jitter de apresentação.",
+    "historical_review2_observation": {
+      "actors": 5,
+      "average_fps": 60.0,
+      "p99_frame_ms": 19.910,
+      "worst_frame_ms": 21.993
+    },
+    "runs_after_warmup_5s_over_12s": [
+      {
+        "actors": 5,
+        "window": "windowed",
+        "vsync": "on",
+        "wall_average_ms": 16.666,
+        "wall_p95_ms": 18.305,
+        "wall_p99_ms": 18.785,
+        "wall_worst_ms": 19.718,
+        "engine_delta_p99_ms": 16.666
+      },
+      {
+        "actors": 5,
+        "window": "fullscreen",
+        "vsync": "on",
+        "wall_average_ms": 16.666,
+        "wall_p95_ms": 17.778,
+        "wall_p99_ms": 18.323,
+        "wall_worst_ms": 19.414,
+        "engine_delta_p99_ms": 16.666,
+        "gate": "fail_p99"
+      },
+      {
+        "actors": 5,
+        "window": "fullscreen",
+        "vsync": "off",
+        "wall_average_ms": 2.545,
+        "average_fps": 392.9,
+        "wall_p95_ms": 4.404,
+        "wall_p99_ms": 5.714,
+        "wall_worst_ms": 7.176
+      },
+      {
+        "actors": 5,
+        "window": "exclusive",
+        "vsync": "on",
+        "wall_p99_ms": 18.698,
+        "wall_worst_ms": 19.492
+      },
+      {
+        "actors": 5,
+        "window": "fullscreen",
+        "vsync": "adaptive",
+        "wall_p99_ms": 18.686,
+        "wall_worst_ms": 19.762
+      },
+      {
+        "actors": 5,
+        "window": "fullscreen",
+        "vsync": "mailbox",
+        "wall_p99_ms": 18.503,
+        "wall_worst_ms": 19.308
+      }
+    ],
+    "diagnosis": "A carga sem VSync cabe folgadamente em 16,67 ms e o jitter não cresce com cinco versus dez actores nas medições anteriores. Importação ocorre antes da amostra e shaders têm 5 s de aquecimento. O factor isolado é pacing de apresentação/VSync no Windows+driver, não custo de animação, culling ou conteúdo.",
+    "mitigation": "Arranque por omissão em fullscreen nativo com VSync normal; reduz p99/pior frame frente a janela e trouxe o pior abaixo de 20 ms nesta repetição.",
+    "honest_result": "O pior frame melhorou de 21,993 para 19,414 ms, mas p99=18,323 ms continua acima do orçamento 16,67 ms. Não está corrigido; o gate falha e a prova integrada quente 2+5 continua obrigatória."
+  },
   "integrated_run": {
     "scene": "lei4",
     "actors": 5,
@@ -48,7 +114,7 @@
     "primitives": 100228,
     "video_memory_mb": 115.2
   },
-  "conclusion": "Cinco e dez esqueletos mantêm 60,0 fps médios; a cena integrada com 2 jogadores e 3 inimigos manteve também mínimo e 1% low de 60,0 durante 30 segundos.",
-  "limits": "Os ensaios isolados têm jitter curto. Uma amostra integrada sem vsync apanhou um pico de 75,2 ms e 1% low de 57,7; outra deu 88,4. A carga concorrente da máquina torna os picos variáveis, por isso cada camada visual deve ser novamente medida.",
-  "reproduction": "game/src/tools/animation_benchmark.gd; usar res://assets/models/animations/quaternius/UAL1_Standard.glb e correr com --actors=5/10 --warmup=3 --seconds=12 --width=1920 --height=1080"
+  "conclusion": "A média de cinco esqueletos continua em 60,0 fps e o pior frame caiu abaixo do tecto de 20 ms em fullscreen, mas o p99 real de 18,323 ms ainda reprova o orçamento de 16,67 ms. O estado honesto é not_ready.",
+  "limits": "O caso sem VSync prova que animação/render cabem no orçamento, mas não prova apresentação sem tearing. A prova integrada existente é 2+3, não 2+5, e o pacing varia com Windows/driver/carga concorrente. É obrigatório repetir quente no M2 e em cada máquina-alvo.",
+  "reproduction": "game/src/tools/animation_benchmark.gd; usar res://assets/models/animations/quaternius/UAL1_Standard.glb e correr com --actors=5 --warmup=5 --seconds=12 --width=1920 --height=1080 --window=fullscreen --vsync=on --gate"
 }

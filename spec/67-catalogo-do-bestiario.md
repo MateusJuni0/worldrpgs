@@ -2,7 +2,7 @@
 
 > **Tarefa 3.2 · Codex · WP6** (01-08-2026). Fecha as 30–36 combinações `raça × bioma × camada` pedidas pelo [`50`](50-racas.md), sem reabrir os chefes do WP7. O catálogo executável é [`game/data/enemies.json`](../game/data/enemies.json); este documento explica a conta e torna-a auditável.
 
-`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ✅ A Revisão 2 preencheu e passou a testar a velocidade de perseguição das 33 fichas. ⚠️ Continuam sem catálogo cinco cartas obrigatórias `acessorio:*` (`LACUNAS`, `🔴`).
+`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ✅ A Tarefa 5 preencheu por papel as 18 velocidades que faltavam e prova a fuga das 33 fichas; as cinco cartas `acessorio:*` foram migradas para anéis/consumível existentes no [`74`](74-fecho-da-revisao-2.md).
 
 ---
 
@@ -87,7 +87,7 @@ Formato numérico: `PV / DEF / postura · massa · almas`. Equipamento resolve n
 
 ### Regras raciais que não cabem nos números
 
-Cada tipo comum tem de declarar `chase_speed`; Submersos declaram o par `swim_chase_speed`/`land_chase_speed`. Todos os valores têm de ser `<5,0 m/s`, para a corrida normal abrir distância. Hoje só 15/33 fichas cumprem a obrigação sintáctica; as dezoito omissões estão registadas para preenchimento, sem números inventados por esta revisão.
+Cada tipo comum declara `chase_speed`; Submersos declaram o par `swim_chase_speed`/`land_chase_speed`. Todos os valores são `<5,0 m/s`, para a corrida normal abrir distância. As dezoito omissões da Revisão 2 receberam perfis explícitos no [`74`](74-fecho-da-revisao-2.md): rápido 4,6 · grupo 4,0 · distância 3,8 · armadilha 3,4 m/s. O auto-teste simula a fuga até ao leash, em vez de verificar apenas a desigualdade.
 
 - Esqueletos reerguem-se uma vez salvo golpe final contundente; zumbis recebem `×0,75` de físico comum.
 - Submersos têm velocidade de perseguição própria dentro/fora de água. Mímicos respiram antes de abrir.
@@ -152,7 +152,7 @@ Cada ficha declara `loot_cards[10]`, `mandatory_loot_count` e os índices obriga
 
 Os **330 cartões exactos** estão no JSON para não haver uma segunda fonte que possa divergir. O auto-teste conta 10 por tipo, confirma compra sem reposição e verifica que todos os índices obrigatórios existem.
 
-⚠️ Isso não prova que cada payload resolve. Armas, armaduras e anéis resolvem; a Revisão 1 encontrou cinco payloads obrigatórios `acessorio:*` sem qualquer ficha: os quatro sinos dos kobolds/zumbi e a lanterna do esqueleto antigo. A garantia visual fica incompleta até esses IDs ganharem catálogo ou serem substituídos por uma categoria já definida.
+✅ A Tarefa 5 passou a provar também cada payload: os quatro sinos e a lanterna fantasma foram substituídos por anéis/consumível catalogados, e qualquer prefixo desconhecido é erro. A garantia visual já não depende de `acessorio:*`.
 
 ---
 

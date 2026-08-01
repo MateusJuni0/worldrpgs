@@ -858,7 +858,7 @@ func take_damage(info: DamageInfo) -> void:
 	if state == State.BLOCK and _is_in_front(info) and not info.is_aoe:
 		var b := GameData.section("block")
 		var source := _block_source()
-		var absorb: float = b.get("shield_magic_absorb", 0.5) if info.is_magic else b.get("shield_physical_absorb", 1.0)
+		var absorb: float = b.get("shield_magic_absorb", 0.0) if info.is_magic else b.get("shield_physical_absorb", 1.0)
 		var cost_mult := 1.0
 		if source == "onehand":
 			absorb = b.get("onehand_absorb", 0.5)

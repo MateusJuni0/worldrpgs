@@ -348,6 +348,40 @@ func spell(id: String) -> Dictionary:
 	return spells.get(id, {}) as Dictionary
 
 
+## Expande a forma comum e deixa a ficha do feitico substituir apenas as
+## diferencas. Esta e a unica fronteira que o runtime de projeteis deve ler.
+func spell_delivery_contract(id: String) -> Dictionary:
+	var spell_entry := spell(id)
+	if spell_entry.is_empty():
+		return {}
+	var contracts: Dictionary = spells.get("_delivery_contracts", {}) as Dictionary
+	var contract: Dictionary = (contracts.get(
+		String(spell_entry.get("delivery_form", "")), {}) as Dictionary).duplicate(true)
+	if spell_entry.has("speed_mps"):
+		contract["speed_m_s"] = float(spell_entry.get("speed_mps", 0.0))
+	if spell_entry.has("max_range"):
+		contract["max_range_m"] = float(spell_entry.get("max_range", 0.0))
+	contract["delivery_form"] = String(spell_entry.get("delivery_form", ""))
+	contract["contact_type"] = String(spell_entry.get("contact_type", ""))
+	return contract
+
+
+## A pergunta 41 continua dos donos. Enquanto estiver aberta, o runtime expõe
+## apenas o nível base e nunca interpreta as propostas editoriais como regras.
+func spell_upgrade(id: String, level: int) -> Dictionary:
+	var spell_entry := spell(id)
+	if spell_entry.is_empty() or level < 0:
+		return {}
+	var gate: Dictionary = (spells.get("_rules", {}) as Dictionary).get(
+		"upgrades", {}) as Dictionary
+	if not (gate.get("available_levels", []) as Array).has(level):
+		return {}
+	var upgrades: Array = spell_entry.get("upgrades", []) as Array
+	if level >= upgrades.size():
+		return {}
+	return (upgrades[level] as Dictionary).duplicate(true)
+
+
 func class_attributes(class_id: String) -> Dictionary:
 	return (attributes.get("classes", {}) as Dictionary).get(class_id, {}) as Dictionary
 

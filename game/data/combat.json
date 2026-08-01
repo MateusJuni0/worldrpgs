@@ -54,7 +54,8 @@
 
   "block": {
     "shield_physical_absorb": 1.0,
-    "shield_magic_absorb": 0.5,
+    "shield_magic_absorb": 0.0,
+    "shield_magic_absorb_state": "blocked_owner_q43",
     "onehand_absorb": 0.5,
     "onehand_cost_multiplier": 1.5,
     "stamina_per_blow": 15.0,

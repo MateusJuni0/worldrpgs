@@ -33,7 +33,7 @@ corre a **60,0 fps travados, com 1% low de 60,0, pior frame de 16,67 ms e zero
 frames fora do orçamento** durante 30 segundos. O número antigo de 377 fps sem
 vsync pertence ao greybox; a medição actual sem vsync é registada abaixo.
 
-Ao fim de **20 minutos quente**, a média do greybox é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável nesse cenário.** O spike posterior com cinco esqueletos UAL manteve 60,0 fps médios, mas deu **p99 19,910 ms e pior frame 21,993 ms**: amarelo pelo critério global e acima do tecto de pico de arena. Portanto a média já não pode ser usada como prova de 60 fps estáveis do conteúdo final.
+Ao fim de **20 minutos quente**, a média do greybox é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável nesse cenário.** O spike posterior com cinco esqueletos UAL manteve 60,0 fps médios, mas deu **p99 19,910 ms e pior frame 21,993 ms**. A Tarefa 5 melhorou fullscreen para **p99 real 18,323 ms/pior 19,414 ms**: o pico passa, o p99 não. Portanto a média não é prova de 60 fps estáveis do conteúdo final.
 
 ---
 
@@ -116,6 +116,14 @@ actores partilham a mesma estrutura de **65 ossos**.
 | UAL isolado | 5 | **60,0 fps** | 17,773 ms | 18,723 ms | 20,619 ms |
 | UAL isolado | 10 | **60,0 fps** | 16,666 ms | 17,323 ms | 18,539 ms |
 
+Essas duas linhas são a campanha histórica baseada no `delta` do Godot. A Tarefa 5 descobriu que esse valor pode ser suavizado: em fullscreen/VSync o motor mostrou p99 **16,666 ms**, mas o relógio real entre callbacks mostrou **18,323 ms**. O benchmark mede agora ambos e o gate usa o relógio real.
+
+| Tarefa 5 — 5 UAL | Média | p95 real | p99 real | Pior real |
+|---|---:|---:|---:|---:|
+| janela + VSync | 60,0 fps | 18,305 ms | 18,785 ms | 19,718 ms |
+| **fullscreen + VSync** | **60,0 fps** | **17,778 ms** | **18,323 ms** | **19,414 ms** |
+| fullscreen sem VSync | 392,9 fps | 4,404 ms | 5,714 ms | 7,176 ms |
+
 Na prova integrada `lei4`, com **2 jogadores + 3 inimigos**, modelos, texturas,
 IA, animação e colisões reais, 30 s com vsync deram **60,0 fps de média, 60,0 de
 1% low, mínimo 60,0, pior frame 16,67 ms e 0,0% acima do orçamento**. A cena
@@ -128,10 +136,9 @@ amostra anterior na mesma sessão deu 219,3 fps e 1% low de 88,4. Esta variaçã
 é ruído real da máquina enquanto estava a ser usada; não se esconde. O critério
 de jogo, medido com o limite real de 60 fps durante 30 s, passou sem uma quebra.
 
-**Conclusão:** “cápsulas não são personagens animados” deixou de ser risco por
-medir. Cinco e dez esqueletos mantêm 60 fps; cinco dentro do combate também.
-Os picos curtos do ensaio isolado e sem vsync continuam a justificar medir de
-novo depois de cada camada visual.
+**Diagnóstico:** sem VSync há mais de 10 ms de margem; importação acontece antes da amostra; 5 s de aquecimento retiram shader frio; 5 e 10 actores não mostram escala proporcional. O factor isolado é o pacing de apresentação/VSync no Windows/driver Iris Xe, não animação, importação ou culling. Exclusivo, adaptativo e mailbox foram piores. Fullscreen normal ficou por omissão porque foi a melhor mitigação útil, mas **o gate p99 continua a falhar**.
+
+**Conclusão:** “cápsulas não são personagens animados” deixou de ser risco por medir; estabilidade de apresentação não. A prova integrada antiga usa a métrica legada e é 2+3. Falta a prova quente 2+5 com relógio real, IA, VFX, HUD e rede.
 
 Dados reproduzíveis: [`medicoes/animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json)
 e `src/tools/animation_benchmark.gd`.
@@ -183,7 +190,7 @@ do greybox. Com cinco corpos importados, a cena integrada actual chega a
 
 Sou obrigado a ser honesto sobre isto, senão o dado engana.
 
-**Já não é greybox puro — há corpos, texturas e animação de esqueleto.** Mas faltam equipamento encaixado, efeitos, som e interface final. Não há texturas finais, partículas, som, interface a sério nem IA completa no mesmo teste. A animação de esqueleto já foi medida isoladamente ([`medicoes/animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json)): cinco e dez actores deram 60,0 fps médios, mas p95 ≈18,5 ms, p99 ≈19,9 ms e picos de 22,0–22,5 ms. Isso fecha “consegue animar?”, mas **não** fecha o gate p99 ≤16,7 ms nem “aguenta o combate completo”.
+**Já não é greybox puro — há corpos, texturas e animação de esqueleto.** Mas faltam equipamento encaixado, efeitos, som e interface final. Não há texturas finais, partículas, som, interface a sério nem IA completa no mesmo teste. A animação de esqueleto já foi medida isoladamente ([`medicoes/animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json)): o melhor modo útil dá p99 real 18,323 ms e pior 19,414 ms. Isso fecha “consegue animar?”, mas **não** fecha o gate p99 ≤16,7 ms nem “aguenta o combate completo”.
 
 **A folga é o orçamento para o conteúdo, não uma garantia.** Os 154–219 fps sem
 vsync medidos com cinco corpos deixam margem média, mas os picos mostram por que
@@ -214,8 +221,8 @@ godot --path . --rendering-method mobile -- --bench --scene=lei4 --seconds=60 --
 # quente (20 min)
 godot --path . --rendering-method mobile -- --bench --scene=perf --seconds=1200 --label=quente
 
-# custo isolado de 5 e 10 esqueletos UAL reais
-godot --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=12 --warmup=3 --width=1920 --height=1080
+# custo isolado de 5 esqueletos UAL reais; sai com código 1 se falhar p99/pico
+godot --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=12 --warmup=5 --width=1920 --height=1080 --window=fullscreen --vsync=on --gate
 ```
 
 Os JSON crus ficam em `perf-raw/` (fora do git). Se algum número aqui e no JSON divergirem, **manda o JSON**.

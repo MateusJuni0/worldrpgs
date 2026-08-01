@@ -25,7 +25,24 @@
     "leash_range": 34.0,
     "attack_range": 2.8,
     "preferred_distance": 2.4,
-    "color_idle": "#777777"
+    "color_idle": "#777777",
+    "perception": {
+      "vision_cone_deg": 90.0, "vision_range_m": 15.0,
+      "hearing_range_m": 8.0, "combat_sound_range_m": 20.0,
+      "alert_delay_s": 2.0, "alert_advance_m": 2.0,
+      "call_radius_m": 10.0, "call_delay_s": 0.8,
+      "desist_after_s": 6.0, "desist_home_distance_m": 30.0,
+      "return_speed_policy": "same_as_chase", "return_arrival_radius_m": 1.2,
+      "return_heal_pulse_s": 1.0, "return_heal_fraction": 1.0,
+      "damage_reacquires": true
+    }
+  },
+  "_chase_profiles": {
+    "rapido": {"role": "rapido", "speed_m_s": 4.6, "reason": "fecha angulos e castiga hesitacao, mas perde 0,4 m/s para o correr"},
+    "grupo": {"role": "grupo", "speed_m_s": 4.0, "reason": "pressiona em conjunto sem um membro isolado colar ao jogador"},
+    "distancia": {"role": "distancia", "speed_m_s": 3.8, "reason": "reposiciona para alcance e LOS; nao ganha corrida a curta distancia"},
+    "armadilha": {"role": "armadilha", "speed_m_s": 3.4, "reason": "defende a bolsa preparada em vez de perseguir para fora dela"},
+    "pesado": {"role": "pesado", "speed_m_s": 3.2, "reason": "massa e alcance trocam velocidade por compromisso legivel"}
   },
   "_attack_templates": {
     "recto_aparavel": {
@@ -66,8 +83,10 @@
     },
     "tiro": {
       "phase_1_frames": 24, "phase_2_frames": 12, "active": 4, "recovery": 30, "phase_4_frames": 8,
-      "tipo_contacto": "instantaneo", "parryable": false, "vectores_fuga": ["sair_da_linha", "aproximar_se"],
-      "visual_shape": "seta móvel alinhada ao projéctil", "pergunta": "fechar_distancia_ou_sair_do_tiro", "janela_castigo_frames": 22
+      "tipo_contacto": "volume_movel", "parryable": false, "vectores_fuga": ["sair_da_linha", "aproximar_se"],
+      "visual_shape": "seta móvel alinhada ao projéctil", "pergunta": "fechar_distancia_ou_sair_do_tiro", "janela_castigo_frames": 22,
+      "projectile_speed_m_s": 18.0, "projectile_turn_deg_s": 0.0, "projectile_gravity_m_s2": 0.0,
+      "projectile_radius_m": 0.16, "projectile_lifetime_s": 1.2, "projectile_hit_policy": "first_body_or_solid"
     },
     "mergulho": {
       "phase_1_frames": 30, "phase_2_frames": 12, "active": 18, "recovery": 38, "phase_4_frames": 10,
@@ -91,7 +110,9 @@
       "phase_1_frames": 30, "phase_2_frames": 14, "active": 72, "recovery": 34, "phase_4_frames": 8,
       "tipo_contacto": "volume_movel", "parryable": false, "vectores_fuga": ["quebrar_a_visao"],
       "visual_shape": "rasto de duas pontas liga o perseguidor à origem", "pergunta": "quebrar_a_visao_do_perseguidor", "janela_castigo_frames": 24,
-      "hit_once_per_passage": true
+      "hit_once_per_passage": true,
+      "projectile_speed_m_s": 9.0, "projectile_turn_deg_s": 120.0, "projectile_gravity_m_s2": 0.0,
+      "projectile_radius_m": 0.22, "projectile_lifetime_s": 1.2, "projectile_hit_policy": "first_body_or_solid_los_breaks"
     }
   },
   "_zone_budgets": {
@@ -139,7 +160,7 @@
   },
 
   "goblin_mist_scout": {
-    "display_name":"Batedor goblin da bruma","race_id":"goblins","biome_ids":["brumal"],"role":"grupo","health":95,"defense":2,"posture":28,"souls":35,"mass_kg":41,"damage":{"light":42,"heavy":60},"chase_speed":4.2,
+    "display_name":"Batedor goblin da bruma","race_id":"goblins","biome_ids":["brumal"],"role":"grupo","health":95,"defense":2,"posture":28,"souls":35,"mass_kg":41,"damage":{"light":42,"heavy":60},"chase_speed":4.0,"chase_profile":"grupo",
     "descricao_visual":"goblin baixo com casaco de couro de javali, faca curva de ferro rude com 45 cm e máscara de casca de carvalho coberta de líquen cinzento","fatia_1":false,"color_idle":"#697a55",
     "loot_cards":["arma:faca_goblin_bruma","armadura:mascara_casca_bruma","armadura:casaco_goblin_bruma","almas_bonus:15","almas_bonus:20","material:limalha_ferro","material:couro_javali","consumivel:bomba_bruma","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -150,7 +171,7 @@
   },
 
   "goblin_canopy_raider": {
-    "display_name":"Salteador goblin das copas","race_id":"goblins","biome_ids":["selva_funda"],"role":"grupo","health":115,"defense":3,"posture":30,"souls":50,"mass_kg":43,"damage":{"light":50,"heavy":72},"chase_speed":4.2,
+    "display_name":"Salteador goblin das copas","race_id":"goblins","biome_ids":["selva_funda"],"role":"grupo","health":115,"defense":3,"posture":30,"souls":50,"mass_kg":43,"damage":{"light":50,"heavy":72},"chase_speed":4.0,"chase_profile":"grupo",
     "descricao_visual":"goblin magro com sabre de osso serrado de 65 cm, colete de vime verde e cordas cor-de-rosa atadas aos pulsos para atravessar passadiços","fatia_1":false,"color_idle":"#58754d",
     "loot_cards":["arma:sabre_osso_goblin","armadura:colete_vime_goblin","armadura:braceletes_corda_selva","almas_bonus:20","almas_bonus:25","material:seiva_peconha","material:vime_trancado","consumivel:antidoto_selva","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -161,7 +182,7 @@
   },
 
   "goblin_canopy_slinger": {
-    "display_name":"Fundibulário goblin das copas","race_id":"goblins","biome_ids":["selva_funda"],"role":"distancia","health":90,"defense":2,"posture":24,"souls":55,"mass_kg":39,"damage":{"light":48,"heavy":68},"chase_speed":4.2,"preferred_distance":9.0,"attack_range":12.0,
+    "display_name":"Fundibulário goblin das copas","race_id":"goblins","biome_ids":["selva_funda"],"role":"distancia","health":90,"defense":2,"posture":24,"souls":55,"mass_kg":39,"damage":{"light":48,"heavy":68},"chase_speed":3.8,"chase_profile":"distancia","preferred_distance":9.0,"attack_range":12.0,
     "descricao_visual":"goblin de capuz de folhas largas, funda de seda crua com bolsa magenta e aljava de caroços negros presa a um cinto de vime","fatia_1":false,"color_idle":"#4d6b3f",
     "loot_cards":["arma:funda_seda_selva","armadura:capuz_folhas_goblin","armadura:cinto_vime_caroços","almas_bonus:25","almas_bonus:30","material:seiva_peconha","material:seda_crua","consumivel:antidoto_selva","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -172,9 +193,9 @@
   },
 
   "kobold_bell_trapper": {
-    "display_name":"Armadilheiro kobold do sino","race_id":"kobolds","biome_ids":["selva_funda"],"role":"armadilha","health":105,"defense":4,"posture":32,"souls":60,"mass_kg":48,"damage":{"light":46,"heavy":78},"chase_speed":4.2,
+    "display_name":"Armadilheiro kobold do sino","race_id":"kobolds","biome_ids":["selva_funda"],"role":"armadilha","health":105,"defense":4,"posture":32,"souls":60,"mass_kg":48,"damage":{"light":46,"heavy":78},"chase_speed":3.4,"chase_profile":"armadilha",
     "descricao_visual":"kobold de focinho estreito com sino de bronze ao pescoço, gibão de couro verde, lança curta de bambu e bobina de corda com espinhos cor-de-rosa","fatia_1":false,"color_idle":"#796d45",
-    "loot_cards":["arma:lanca_bambu_kobold","armadura:gibao_kobold_selva","acessorio:sino_aviso_kobold","almas_bonus:25","almas_bonus:30","material:seiva_peconha","material:corda_espinhosa","consumivel:antidoto_selva","bias:classe","bias:classe"],"mandatory_loot_count":3,
+    "loot_cards":["arma:lanca_bambu_kobold","armadura:gibao_kobold_selva","anel:fome_do_musgo","almas_bonus:25","almas_bonus:30","material:seiva_peconha","material:corda_espinhosa","consumivel:antidoto_selva","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
       {"id":"bamboo_jab","display_name":"Picada de bambu","template":"recto_aparavel","actor":"lança curta de bambu","tell":"encosta a haste ao sino e baixa o focinho","impact":"ponta de osso percorre 2,1 m numa linha de 40 graus","sound":"sino dá uma nota única quando a haste recua","anchor":"ponta branca da lança","range":2.1,"arc_degrees":40,"weight":"light"},
       {"id":"thorn_snare","display_name":"Laço de espinhos","template":"area_persistente","radius":3.0,"actor":"bobina de corda com espinhos rosa","tell":"lança a bobina ao chão e o círculo de corda abre inteiro","impact":"laço visível de 3 m prende e pulsa enquanto a corda permanece","sound":"sino treme três vezes e a corda desenrola áspera","anchor":"contorno de corda no chão","weight":"heavy"},
@@ -183,7 +204,7 @@
   },
 
   "weaver_canopy_snarer": {
-    "display_name":"Tecelão enredador das copas","race_id":"teceloes","biome_ids":["selva_funda"],"role":"armadilha","health":145,"defense":5,"posture":38,"souls":75,"mass_kg":67,"damage":{"light":55,"heavy":85},"chase_speed":4.2,
+    "display_name":"Tecelão enredador das copas","race_id":"teceloes","biome_ids":["selva_funda"],"role":"armadilha","health":145,"defense":5,"posture":38,"souls":75,"mass_kg":67,"damage":{"light":55,"heavy":85},"chase_speed":3.4,"chase_profile":"armadilha",
     "descricao_visual":"aracnídeo de seis pernas com quitina verde-escura, abdómen riscado a magenta e braceletes de vime que guiam fios de seda grossa entre os ramos","fatia_1":false,"color_idle":"#31543b",
     "loot_cards":["arma:fuso_teciao_selva","armadura:braceletes_vime_teciao","almas_bonus:30","almas_bonus:35","material:seda_crua","material:seiva_peconha","material:quitina_verde","consumivel:solvente_teia","bias:classe","bias:classe"],"mandatory_loot_count":2,
     "attacks":[
@@ -194,7 +215,7 @@
   },
 
   "skeleton_swordsman": {
-    "display_name":"Espadachim esqueleto das Campas","race_id":"esqueletos","biome_ids":["campas_cinzentas"],"role":"rapido","health":120,"defense":5,"posture":34,"souls":60,"mass_kg":36,"damage":{"light":58,"heavy":78},"chase_speed":4.2,"revives_once_unless_blunt_final":true,
+    "display_name":"Espadachim esqueleto das Campas","race_id":"esqueletos","biome_ids":["campas_cinzentas"],"role":"rapido","health":120,"defense":5,"posture":34,"souls":60,"mass_kg":36,"damage":{"light":58,"heavy":78},"chase_speed":4.6,"chase_profile":"rapido","revives_once_unless_blunt_final":true,
     "descricao_visual":"esqueleto amarelado com espada curta de ferro ferrugento de 75 cm, elmo rachado e tiras de madeira encharcada presas às costelas","fatia_1":false,"color_idle":"#a89f89",
     "loot_cards":["arma:espada_curta_campas","armadura:elmo_rachado_campas","armadura:tirantes_campas","almas_bonus:25","almas_bonus:30","material:cinza_ossario","material:osso_antigo","consumivel:agua_lustral","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -205,7 +226,7 @@
   },
 
   "skeleton_archer": {
-    "display_name":"Arqueiro esqueleto das Campas","race_id":"esqueletos","biome_ids":["campas_cinzentas"],"role":"distancia","health":95,"defense":3,"posture":26,"souls":65,"mass_kg":34,"damage":{"light":55,"heavy":82},"chase_speed":4.2,"preferred_distance":10.0,"attack_range":15.0,"revives_once_unless_blunt_final":true,
+    "display_name":"Arqueiro esqueleto das Campas","race_id":"esqueletos","biome_ids":["campas_cinzentas"],"role":"distancia","health":95,"defense":3,"posture":26,"souls":65,"mass_kg":34,"damage":{"light":55,"heavy":82},"chase_speed":3.8,"chase_profile":"distancia","preferred_distance":10.0,"attack_range":15.0,"revives_once_unless_blunt_final":true,
     "descricao_visual":"esqueleto de costelas negras com arco de madeira encharcada de 140 cm, capuz de linho cinzento e aljava de flechas com penas verde-água","fatia_1":false,"color_idle":"#999383",
     "loot_cards":["arma:arco_encharcado_campas","armadura:capuz_linho_campas","armadura:aljava_fatuos","almas_bonus:30","almas_bonus:35","material:cinza_ossario","material:madeira_encharcada","consumivel:agua_lustral","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -238,9 +259,9 @@
   },
 
   "kobold_mine_trapper": {
-    "display_name":"Armadilheiro kobold da mina","race_id":"kobolds","biome_ids":["fojo"],"role":"armadilha","health":130,"defense":6,"posture":36,"souls":75,"mass_kg":52,"damage":{"light":58,"heavy":92},"chase_speed":4.2,
+    "display_name":"Armadilheiro kobold da mina","race_id":"kobolds","biome_ids":["fojo"],"role":"armadilha","health":130,"defense":6,"posture":36,"souls":75,"mass_kg":52,"damage":{"light":58,"heavy":92},"chase_speed":3.4,"chase_profile":"armadilha",
     "descricao_visual":"kobold ocre com capacete de couro, sino de ferro ao pescoço, picareta curta de 70 cm e três placas de pressão presas por corda à mochila","fatia_1":false,"color_idle":"#9a7045",
-    "loot_cards":["arma:picareta_kobold_fojo","armadura:capacete_mineiro_kobold","acessorio:sino_ferro_kobold","almas_bonus:30","almas_bonus:40","material:ferro_bruto","material:corda_mina","consumivel:pedra_raio","bias:classe","bias:classe"],"mandatory_loot_count":3,
+    "loot_cards":["arma:picareta_kobold_fojo","armadura:capacete_mineiro_kobold","anel:ganancia_mineira","almas_bonus:30","almas_bonus:40","material:ferro_bruto","material:corda_mina","consumivel:pedra_raio","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
       {"id":"pick_jab","display_name":"Bico de picareta","template":"recto_aparavel","actor":"picareta curta de ferro","tell":"recolhe o bico junto à axila e abre a mão traseira","impact":"bico percorre 1,8 m numa linha de 35 graus","sound":"sino toca contra a cabeça da picareta","anchor":"bico brilhante da ferramenta","range":1.8,"arc_degrees":35,"weight":"light"},
       {"id":"pressure_plate","display_name":"Placa de pressão","template":"area_persistente","radius":3.0,"actor":"placa quadrada presa à mochila","tell":"atira a placa à vista e a corda desenha o perímetro completo","impact":"pedras saltam no quadrado inscrito durante 90 frames, por pulsos de 30","sound":"roldana chia e o sino dá uma nota baixa","anchor":"quadrado de corda no chão","weight":"heavy"},
@@ -271,7 +292,7 @@
   },
 
   "sea_orc_hookbearer": {
-    "display_name":"Orc do mar com gancho","race_id":"orcs","biome_ids":["costa_quebrada"],"role":"rapido","health":190,"defense":8,"posture":52,"souls":95,"mass_kg":105,"damage":{"light":72,"heavy":108},"chase_speed":4.2,
+    "display_name":"Orc do mar com gancho","race_id":"orcs","biome_ids":["costa_quebrada"],"role":"rapido","health":190,"defense":8,"posture":52,"souls":95,"mass_kg":105,"damage":{"light":72,"heavy":108},"chase_speed":4.6,"chase_profile":"rapido",
     "descricao_visual":"orc de pele verde salgada com gancho de bronze verde de 80 cm, casaco de madeira de naufrágio laminada e corda de cânhamo enrolada no antebraço","fatia_1":false,"color_idle":"#527467",
     "loot_cards":["arma:gancho_orc_mar","armadura:casaco_naufragio_orc","armadura:bracelete_corda_mar","almas_bonus:40","almas_bonus:50","material:bronze_mar","material:madeira_naufragio","consumivel:oleo_salino","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -293,7 +314,7 @@
   },
 
   "cliff_windborne": {
-    "display_name":"Ventaneira da falésia","race_id":"ventaneiras","biome_ids":["costa_quebrada"],"role":"distancia","health":155,"defense":5,"posture":38,"souls":105,"mass_kg":54,"damage":{"light":75,"heavy":115},"chase_speed":4.2,"preferred_distance":8.0,"attack_range":14.0,
+    "display_name":"Ventaneira da falésia","race_id":"ventaneiras","biome_ids":["costa_quebrada"],"role":"distancia","health":155,"defense":5,"posture":38,"souls":105,"mass_kg":54,"damage":{"light":75,"heavy":115},"chase_speed":3.8,"chase_profile":"distancia","preferred_distance":8.0,"attack_range":14.0,
     "descricao_visual":"ave humanoide de penas cinza-chuva com lança curta de espinho de 110 cm, asas marcadas por tiras de bronze verde e pés enrolados em corda de navio","fatia_1":false,"color_idle":"#788b98",
     "loot_cards":["arma:lanca_espinho_ventaneira","armadura:tiras_bronze_asa","armadura:corda_pes_ventaneira","almas_bonus:45","almas_bonus:60","material:bronze_mar","material:pena_tempestade","consumivel:oleo_salino","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -315,7 +336,7 @@
   },
 
   "summit_windborne": {
-    "display_name":"Ventaneira da Cimeira","race_id":"ventaneiras","biome_ids":["cimeira"],"role":"distancia","health":190,"defense":7,"posture":44,"souls":120,"mass_kg":58,"damage":{"light":82,"heavy":125},"chase_speed":4.2,"preferred_distance":9.0,"attack_range":16.0,
+    "display_name":"Ventaneira da Cimeira","race_id":"ventaneiras","biome_ids":["cimeira"],"role":"distancia","health":190,"defense":7,"posture":44,"souls":120,"mass_kg":58,"damage":{"light":82,"heavy":125},"chase_speed":3.8,"chase_profile":"distancia","preferred_distance":9.0,"attack_range":16.0,
     "descricao_visual":"ave humanoide de penas branco-azuladas com lança de aço frio de 150 cm, máscara de gelo-azul translúcido e manto curto de pele de cabra","fatia_1":false,"color_idle":"#c6d7e9",
     "loot_cards":["arma:lanca_aco_frio","armadura:mascara_gelo_ventaneira","armadura:manto_cabra_ventaneira","almas_bonus:55","almas_bonus:65","material:flor_gelo","material:pena_cimeira","consumivel:sal_gelo","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -370,9 +391,9 @@
   },
 
   "storm_kobold": {
-    "display_name":"Kobold das tempestades","race_id":"kobolds","biome_ids":["fulgor"],"role":"armadilha","health":175,"defense":8,"posture":42,"souls":115,"mass_kg":55,"damage":{"light":76,"heavy":118},"chase_speed":4.2,
+    "display_name":"Kobold das tempestades","race_id":"kobolds","biome_ids":["fulgor"],"role":"armadilha","health":175,"defense":8,"posture":42,"souls":115,"mass_kg":55,"damage":{"light":76,"heavy":118},"chase_speed":3.4,"chase_profile":"armadilha",
     "descricao_visual":"kobold amarelo-poeira com sino de osso, funda de couro seco, varetas de fulgurite na mochila e marcas brancas de raio pintadas no focinho","fatia_1":false,"color_idle":"#9a885b",
-    "loot_cards":["arma:funda_couro_fulgor","armadura:mochila_fulgurite_kobold","acessorio:sino_osso_kobold","almas_bonus:50","almas_bonus:60","material:fulgurite","material:couro_seco","consumivel:po_terra","bias:classe","bias:classe"],"mandatory_loot_count":3,
+    "loot_cards":["arma:funda_couro_fulgor","armadura:mochila_fulgurite_kobold","anel:ferro_aterrado","almas_bonus:50","almas_bonus:60","material:fulgurite","material:couro_seco","consumivel:po_terra","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
       {"id":"glass_shot","display_name":"Estilhaço de fulgurite","template":"tiro","actor":"funda de couro seco com vidro violeta","tell":"gira a funda uma vez acima do sino de osso","impact":"estilhaço percorre 14 m em linha e parte onde toca","sound":"sino de osso soa oco antes do silvo de vidro","anchor":"estilhaço violeta na funda","range":14.0,"arc_degrees":7,"weight":"light"},
       {"id":"lightning_rod","display_name":"Vareta de chamada","template":"area_persistente","radius":3.1,"active":90,"actor":"vareta de fulgurite cravada no chão","tell":"ergue a vareta e o círculo violeta brilha inteiro antes de a cravar","impact":"três pulsos eléctricos ocupam 3,1 m a intervalos de 30 frames","sound":"vidro canta cada vez mais agudo até ao primeiro pulso","anchor":"vareta e círculo violeta","weight":"heavy"},
@@ -381,7 +402,7 @@
   },
 
   "spore_weaver": {
-    "display_name":"Tecelão de esporos","race_id":"teceloes","biome_ids":["raizama"],"role":"armadilha","health":240,"defense":10,"posture":58,"souls":140,"mass_kg":82,"damage":{"light":88,"heavy":135},"chase_speed":4.2,
+    "display_name":"Tecelão de esporos","race_id":"teceloes","biome_ids":["raizama"],"role":"armadilha","health":240,"defense":10,"posture":58,"souls":140,"mass_kg":82,"damage":{"light":88,"heavy":135},"chase_speed":3.4,"chase_profile":"armadilha",
     "descricao_visual":"aracnídeo de quitina azul-negra com abdómen ciano luminoso, fuso de madeira-cogumelo de 120 cm e véus de seda entre seis pernas finas","fatia_1":false,"color_idle":"#294260",
     "loot_cards":["arma:fuso_esporos_teciao","armadura:veu_seda_raizama","armadura:placas_quitina_azul","almas_bonus:60","almas_bonus:75","material:esporo_lumen","material:seda_teia","consumivel:tocha_esporo","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -392,7 +413,7 @@
   },
 
   "fungus_goblin": {
-    "display_name":"Goblin-fungo","race_id":"goblins","biome_ids":["raizama"],"role":"grupo","health":195,"defense":7,"posture":40,"souls":120,"mass_kg":47,"damage":{"light":80,"heavy":122},"chase_speed":4.2,
+    "display_name":"Goblin-fungo","race_id":"goblins","biome_ids":["raizama"],"role":"grupo","health":195,"defense":7,"posture":40,"souls":120,"mass_kg":47,"damage":{"light":80,"heavy":122},"chase_speed":4.0,"chase_profile":"grupo",
     "descricao_visual":"goblin azul-escuro com chapéu de cogumelo ciano, clava de madeira-cogumelo de 90 cm e bolsas de esporos translúcidas cosidas num colete de seda","fatia_1":false,"color_idle":"#34506b",
     "loot_cards":["arma:clava_cogumelo_goblin","armadura:chapeu_fungo_goblin","armadura:colete_seda_raizama","almas_bonus:50","almas_bonus:65","material:esporo_lumen","material:madeira_cogumelo","consumivel:tocha_esporo","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -416,7 +437,7 @@
   "drowned_zombie": {
     "display_name":"Zumbi afogado","race_id":"zumbis","biome_ids":["cidade_afogada"],"role":"pesado","health":350,"defense":10,"posture":78,"souls":130,"mass_kg":112,"damage":{"light":88,"heavy":145},"chase_speed":2.4,"physical_damage_multiplier":0.75,
     "descricao_visual":"cadáver coberto de lodo verde com sino pequeno de prata preso ao pescoço, coluna de mármore partida usada como maça e algas brancas nos braços","fatia_1":false,"color_idle":"#53716d",
-    "loot_cards":["arma:coluna_marmore_zumbi","acessorio:sino_prata_afogado","almas_bonus:55","almas_bonus:70","material:prata_afogada","material:marmore_afogado","consumivel:oleo_condutor","consumivel:sal_seco","bias:classe","bias:classe"],"mandatory_loot_count":2,
+    "loot_cards":["arma:coluna_marmore_zumbi","anel:conta_afogada","almas_bonus:55","almas_bonus:70","material:prata_afogada","material:marmore_afogado","consumivel:oleo_condutor","consumivel:sal_seco","bias:classe","bias:classe"],"mandatory_loot_count":2,
     "attacks":[
       {"id":"marble_drop","display_name":"Coluna caída","template":"pancada_curta","actor":"fragmento de coluna de mármore","tell":"ergue a pedra devagar e o sino sai da água","impact":"mármore cai 2,5 m numa faixa vertical de 65 graus","sound":"sino toca claro e água escorre da coluna","anchor":"extremo branco do mármore","range":2.5,"arc_degrees":65,"weight":"heavy"},
       {"id":"drowned_grab","display_name":"Mãos afogadas","template":"recto_esquiva","vectores_fuga":["afastar_se"],"actor":"duas mãos cobertas de algas","tell":"abre os braços e as algas ficam tensas entre os dedos","impact":"mãos fecham num volume de 1,4 m à frente","sound":"sino afunda e bolhas rebentam junto às mãos","anchor":"dois ganchos nas mãos","range":1.4,"arc_degrees":75,"weight":"heavy"},
@@ -425,7 +446,7 @@
   },
 
   "penitent_cantor": {
-    "display_name":"Cantor penitente","race_id":"penitentes","biome_ids":["santuario_branco"],"role":"grupo","health":230,"defense":9,"posture":48,"souls":170,"mass_kg":72,"damage":{"light":80,"heavy":125},"chase_speed":4.2,"preferred_distance":8.0,
+    "display_name":"Cantor penitente","race_id":"penitentes","biome_ids":["santuario_branco"],"role":"grupo","health":230,"defense":9,"posture":48,"souls":170,"mass_kg":72,"damage":{"light":80,"heavy":125},"chase_speed":4.0,"chase_profile":"grupo","preferred_distance":8.0,
     "descricao_visual":"figura sem olhos em túnica de cera branca, diapasão de ouro baço com 100 cm e gola de mármore fino riscada por sangue seco","fatia_1":false,"color_idle":"#d8caa8","buffs_allies_while_singing":true,
     "loot_cards":["arma:diapasao_penitente","armadura:tunica_cera_cantor","armadura:gola_marmore_cantor","almas_bonus:75","almas_bonus:90","material:cera_benta","material:ouro_baco","consumivel:veu_sombra","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -436,7 +457,7 @@
   },
 
   "penitent_censer": {
-    "display_name":"Turiferário penitente","race_id":"penitentes","biome_ids":["santuario_branco"],"role":"grupo","health":300,"defense":12,"posture":66,"souls":160,"mass_kg":86,"damage":{"light":95,"heavy":150},"chase_speed":4.2,
+    "display_name":"Turiferário penitente","race_id":"penitentes","biome_ids":["santuario_branco"],"role":"grupo","health":300,"defense":12,"posture":66,"souls":160,"mass_kg":86,"damage":{"light":95,"heavy":150},"chase_speed":4.0,"chase_profile":"grupo",
     "descricao_visual":"penitente sem olhos em placas de mármore branco, turíbulo de ouro baço numa corrente de 160 cm e capuz de cera endurecida manchado de sangue seco","fatia_1":false,"color_idle":"#e1d3b1",
     "loot_cards":["arma:turibulo_penitente","armadura:capuz_cera_penitente","armadura:placas_marmore_penitente","almas_bonus:70","almas_bonus:85","material:cera_benta","material:ouro_baco","consumivel:veu_sombra","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -447,7 +468,7 @@
   },
 
   "gilded_skeleton": {
-    "display_name":"Esqueleto dourado","race_id":"esqueletos","biome_ids":["santuario_branco"],"role":"rapido","health":250,"defense":11,"posture":55,"souls":155,"mass_kg":44,"damage":{"light":92,"heavy":138},"chase_speed":4.2,"revives_once_unless_blunt_final":true,
+    "display_name":"Esqueleto dourado","race_id":"esqueletos","biome_ids":["santuario_branco"],"role":"rapido","health":250,"defense":11,"posture":55,"souls":155,"mass_kg":44,"damage":{"light":92,"heavy":138},"chase_speed":4.6,"chase_profile":"rapido","revives_once_unless_blunt_final":true,
     "descricao_visual":"esqueleto revestido por folha de ouro baço, espada recta de prata de 95 cm, cota de elos dourados e gotas de cera branca nas órbitas vazias","fatia_1":false,"color_idle":"#bca66f",
     "loot_cards":["arma:espada_prata_santuario","armadura:cota_dourada_esqueleto","armadura:elmo_cera_esqueleto","almas_bonus:65","almas_bonus:80","material:cera_benta","material:ouro_baco","consumivel:veu_sombra","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
@@ -469,9 +490,9 @@
   },
 
   "ancient_skeleton": {
-    "display_name":"Esqueleto antigo da Raiz","race_id":"esqueletos","biome_ids":["raiz"],"role":"rapido","health":320,"defense":14,"posture":68,"souls":190,"mass_kg":48,"damage":{"light":112,"heavy":170},"chase_speed":4.2,"revives_once_unless_blunt_final":true,
+    "display_name":"Esqueleto antigo da Raiz","race_id":"esqueletos","biome_ids":["raiz"],"role":"rapido","health":320,"defense":14,"posture":68,"souls":190,"mass_kg":48,"damage":{"light":112,"heavy":170},"chase_speed":4.6,"chase_profile":"rapido","revives_once_unless_blunt_final":true,
     "descricao_visual":"esqueleto negro mineralizado com espada curva de prata baça de 105 cm, elos de raiz petrificada nas costelas e lanterna violeta pendurada à anca","fatia_1":false,"color_idle":"#383044",
-    "loot_cards":["arma:espada_curva_raiz","armadura:elos_raiz_esqueleto","acessorio:lanterna_violeta_antiga","almas_bonus:85","almas_bonus:100","material:lagrima_bruma","material:prata_baca","consumivel:lanterna_raiz","bias:classe","bias:classe"],"mandatory_loot_count":3,
+    "loot_cards":["arma:espada_curva_raiz","armadura:elos_raiz_esqueleto","consumivel:lanterna_raiz","almas_bonus:85","almas_bonus:100","material:lagrima_bruma","material:prata_baca","anel:eco_sem_face","bias:classe","bias:classe"],"mandatory_loot_count":3,
     "attacks":[
       {"id":"black_cut","display_name":"Corte mineral","template":"recto_aparavel","actor":"espada curva de prata baça","tell":"lanterna violeta sobe enquanto o gume recua às costelas","impact":"espada corta 2,6 m num arco frontal de 75 graus","sound":"prata raspa osso mineral uma vez","anchor":"gume pálido contra o osso negro","range":2.6,"arc_degrees":75,"weight":"light","gramatica":["FINGE_MORTE"],"feign_death":{"placement_owned":true,"once_per_placement":true,"trigger_distance_m":2.6,"readable_tells":["espada_agarrada","pulso_violeta_audivel"],"rise_into_attack":"black_cut"}},
       {"id":"root_arc","display_name":"Arco de raiz","template":"varrimento_aparavel","actor":"espada e corrente de raiz petrificada","tell":"corrente fica tensa e desenha o arco inteiro atrás das costelas","impact":"gume varre 2,9 m e 170 graus","sound":"elos de pedra batem do punho para a anca","anchor":"corrente tensa e gume","range":2.9,"arc_degrees":170,"weight":"light"},

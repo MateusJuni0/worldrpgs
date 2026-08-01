@@ -31,6 +31,11 @@
     "on_new_zone_cycle": "Brasa ou NG+ volta a colocá-lo; a recompensa fixa só pode sair uma vez por ciclo",
     "presentation": "sem nevoeiro, barra global ou música própria; pode ser abandonado por qualquer saída legível"
   },
+  "_encounter_slot_rules": {
+    "stable_ids": true,
+    "implemented_requires_enemy_id": true,
+    "blocked_state": "bloqueia conteudo, nunca resolve por fallback"
+  },
   "map_reading": {
     "decided_before_layout": true,
     "projection": "inclinada_40_graus",
@@ -505,19 +510,20 @@
         "image_source": "res://../art/concept/toca-entrada.png",
         "fatia_1": true
       },
+      "subboss_slot": "subchefe_brumal_wp8",
       "environmental_threat": {
         "nome": "bruma de borda",
         "effect": "a bruma fica opaca durante 3 s e vira o jogador para terreno seguro",
         "telegraph": "densidade sobe em três degraus; ramos e pedras apontam de volta",
         "escape": "recuar antes dos 3 s",
+        "runtime_type": "safe_turn_volume",
         "rules": {
-          "telegraph_s": 3
+          "telegraph_s": 3,
+          "turn_speed_deg_s": 180,
+          "control_lock_s": 0.5,
+          "cooldown_s": 8
         },
-        "unresolved_parameters": [
-          "turn_speed_deg_s",
-          "control_lock_s",
-          "cooldown_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "carvalho-negro, ferro rude, couro de javali; densidade sobe em três degraus; ramos e pedras apontam de volta",
         "fatia_1": true
@@ -646,18 +652,19 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_selva_funda_wp8",
       "environmental_threat": {
         "nome": "passadiço cedente",
         "effect": "tábua marcada range 1,2 s antes de cair para uma rede 4 m abaixo",
         "telegraph": "vime esbranquiçado, fibras soltas e oscilação crescente",
         "escape": "sair da placa ou usar a queda segura para o piso inferior",
+        "runtime_type": "collapsing_floor",
         "rules": {
           "telegraph_s": 1.2,
-          "safe_fall_m": 4
+          "safe_fall_m": 4,
+          "reset_s": 12
         },
-        "unresolved_parameters": [
-          "reset_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; vime esbranquiçado, fibras soltas e oscilação crescente",
         "fatia_1": false
@@ -780,11 +787,13 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_campas_cinzentas_wp8",
       "environmental_threat": {
         "nome": "lodo que agarra",
         "effect": "andar no lodo reduz a deslocação para 50%; rolar sai para terreno seco",
         "telegraph": "água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme",
         "escape": "usar diques ou rolar para uma ilha seca",
+        "runtime_type": "movement_volume",
         "rules": {
           "movement_multiplier": 0.5
         },
@@ -917,20 +926,21 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_fojo_wp8",
       "environmental_threat": {
         "nome": "armadilhas kobold",
         "effect": "placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s",
         "telegraph": "pedra mais clara, fio de cobre e orifícios alinhados na parede",
         "escape": "parar antes da placa, recuar para fora da faixa ou bloquear os dardos",
+        "runtime_type": "pressure_plate_trap",
         "rules": {
           "telegraph_s": 0.8,
-          "safe_fall_m": 4
+          "safe_fall_m": 4,
+          "dart_speed_m_s": 18,
+          "dart_damage": 45,
+          "reset_s": 10
         },
-        "unresolved_parameters": [
-          "dart_speed_m_s",
-          "dart_damage",
-          "reset_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "granito, ferro em bruto, corda e roldana; pedra mais clara, fio de cobre e orifícios alinhados na parede",
         "fatia_1": false
@@ -1055,19 +1065,20 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_costa_quebrada_wp8",
       "environmental_threat": {
         "nome": "rajada de falésia",
         "effect": "faixa exposta recebe empurrão máximo de 1,5 m após assobio de 1 s",
         "telegraph": "fitas de vela, chuva inclinada e espuma movem-se antes da força",
         "escape": "baixar-se atrás de quebra-ventos ou sair da faixa marcada",
+        "runtime_type": "wind_lane",
         "rules": {
           "telegraph_s": 1,
-          "max_push_m": 1.5
+          "max_push_m": 1.5,
+          "lane_width_m": 4,
+          "repeat_interval_s": 8
         },
-        "unresolved_parameters": [
-          "lane_width_m",
-          "repeat_interval_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "madeira de naufragio, bronze verde de azinhavre, sal; fitas de vela, chuva inclinada e espuma movem-se antes da força",
         "fatia_1": false
@@ -1196,11 +1207,13 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_cimeira_wp8",
       "environmental_threat": {
         "nome": "frio de exposição",
         "effect": "após 25 s sem abrigo, stamina máxima perde 5% a cada 20 s até ao tecto de 25%",
         "telegraph": "vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco",
         "escape": "entrar num abrigo; recupera 10% por segundo junto a uma fogueira",
+        "runtime_type": "exposure_meter",
         "rules": {
           "exposure_delay_s": 25,
           "tick_s": 20,
@@ -1331,18 +1344,19 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_fornalha_wp8",
       "environmental_threat": {
         "nome": "crosta rubra",
         "effect": "crosta marcada cede 1 s depois e deixa cair 4 m numa calha lateral, nunca no vazio",
         "telegraph": "vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
         "escape": "sair da placa ou aceitar o atalho de queda sobrevivível",
+        "runtime_type": "collapsing_floor",
         "rules": {
           "telegraph_s": 1,
-          "safe_fall_m": 4
+          "safe_fall_m": 4,
+          "reset_s": 12
         },
-        "unresolved_parameters": [
-          "reset_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "obsidiana, bronze fundido, couro curtido; vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
         "fatia_1": false
@@ -1472,19 +1486,20 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_fulgor_wp8",
       "environmental_threat": {
         "nome": "queda de relâmpago",
         "effect": "o impacto ocorre 1 s depois de um círculo de 3 m acender no chão",
         "telegraph": "fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
         "escape": "sair do círculo ou ficar sobre a Pedra Aterrada",
+        "runtime_type": "strike_marker",
         "rules": {
           "telegraph_s": 1,
-          "radius_m": 3
+          "radius_m": 3,
+          "damage": 90,
+          "repeat_interval_s": 8
         },
-        "unresolved_parameters": [
-          "damage",
-          "repeat_interval_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
         "fatia_1": false
@@ -1608,20 +1623,21 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_raizama_wp8",
       "environmental_threat": {
         "nome": "nuvem de esporos",
         "effect": "atravessar acumula veneno a 35 por segundo; fora da nuvem decai 20 por segundo",
         "telegraph": "volume ciano opaco com partículas a correr para cima e barra visível",
         "escape": "rebentar o saco à distância ou esperar a nuvem baixar",
+        "runtime_type": "buildup_volume",
         "rules": {
-          "poison_buildup_s": 35,
-          "poison_decay_s": 20
+          "poison_buildup_per_s": 35,
+          "poison_decay_per_s": 20,
+          "cloud_radius_m": 3.5,
+          "cloud_lifetime_s": 6,
+          "sack_respawn_s": 15
         },
-        "unresolved_parameters": [
-          "cloud_radius_m",
-          "cloud_lifetime_s",
-          "sack_respawn_s"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "quitina, madeira-cogumelo, seda de teia; volume ciano opaco com partículas a correr para cima e barra visível",
         "fatia_1": false
@@ -1750,17 +1766,18 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_cidade_afogada_wp8",
       "environmental_threat": {
         "nome": "água profunda",
         "effect": "a rota principal usa passadiços; zonas opcionais fundas têm fundo caminhável lento e desactivam ataque e esquiva",
         "telegraph": "mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
         "escape": "ficar nos aquedutos; a água funda nunca exige natação livre",
+        "runtime_type": "deep_water_volume",
         "rules": {
-          "free_swimming": false
+          "free_swimming": false,
+          "deep_water_movement_multiplier": 0.45
         },
-        "unresolved_parameters": [
-          "deep_water_movement_multiplier"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "marmore afogado, prata escurecida, vidro; mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
         "fatia_1": false
@@ -1884,19 +1901,20 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_santuario_branco_wp8",
       "environmental_threat": {
         "nome": "luz cegante",
         "effect": "encarar um foco marcado acumula 25 por segundo após 0,8 s; a barra cheia cega durante 3 s",
         "telegraph": "padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
         "escape": "olhar para baixo, quebrar visão numa coluna ou entrar na sombra",
+        "runtime_type": "gaze_meter",
         "rules": {
           "exposure_delay_s": 0.8,
-          "blind_buildup_s": 25,
+          "blind_buildup_per_s": 25,
+          "blind_threshold": 100,
           "blind_duration_s": 3
         },
-        "unresolved_parameters": [
-          "blind_threshold"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "marmore branco, ouro baco, cera; padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
         "fatia_1": false
@@ -2026,18 +2044,19 @@
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
       },
+      "subboss_slot": "subchefe_raiz_wp8",
       "environmental_threat": {
         "nome": "escuro absoluto",
         "effect": "fora dos focos de bruma a visibilidade cai para 6 m; a lanterna ocupa a mão esquerda",
         "telegraph": "silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
         "escape": "usar a lanterna, caminhar junto ao rio ou trocar defesa por visão",
+        "runtime_type": "visibility_volume",
         "rules": {
           "visibility_m": 6,
-          "lantern_slot": "left_hand"
+          "lantern_slot": "left_hand",
+          "lantern_item_id": "consumivel:lanterna_raiz"
         },
-        "unresolved_parameters": [
-          "lantern_item_id"
-        ],
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "pedra negra, raiz petrificada, prata baca; silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
         "fatia_1": false
@@ -2051,6 +2070,176 @@
       "descricao_visual": "abismo de pedra negra onde rios de bruma palida correm para cima, escuro quase total, raizes petrificadas do tamanho de torres",
       "concept_art": "res://../art/concept/bioma-raiz.png",
       "fatia_1": false
+    }
+  },
+  "encounter_slots": {
+    "vorgar": {
+      "kind": "guardian",
+      "zone_id": "brumal",
+      "content_state": "implemented",
+      "enemy_id": "vorgar",
+      "owner_gate": null
+    },
+    "subchefe_brumal_wp8": {
+      "kind": "subboss",
+      "zone_id": "brumal",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_selva_funda_wp7": {
+      "kind": "guardian",
+      "zone_id": "selva_funda",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_selva_funda_wp8": {
+      "kind": "subboss",
+      "zone_id": "selva_funda",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_campas_cinzentas_wp7": {
+      "kind": "guardian",
+      "zone_id": "campas_cinzentas",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_campas_cinzentas_wp8": {
+      "kind": "subboss",
+      "zone_id": "campas_cinzentas",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_fojo_wp7": {
+      "kind": "guardian",
+      "zone_id": "fojo",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_fojo_wp8": {
+      "kind": "subboss",
+      "zone_id": "fojo",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_costa_quebrada_wp7": {
+      "kind": "guardian",
+      "zone_id": "costa_quebrada",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_costa_quebrada_wp8": {
+      "kind": "subboss",
+      "zone_id": "costa_quebrada",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_cimeira_wp7": {
+      "kind": "guardian",
+      "zone_id": "cimeira",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_cimeira_wp8": {
+      "kind": "subboss",
+      "zone_id": "cimeira",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_fornalha_wp7": {
+      "kind": "guardian",
+      "zone_id": "fornalha",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_fornalha_wp8": {
+      "kind": "subboss",
+      "zone_id": "fornalha",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_fulgor_wp7": {
+      "kind": "guardian",
+      "zone_id": "fulgor",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_fulgor_wp8": {
+      "kind": "subboss",
+      "zone_id": "fulgor",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_raizama_wp7": {
+      "kind": "guardian",
+      "zone_id": "raizama",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_raizama_wp8": {
+      "kind": "subboss",
+      "zone_id": "raizama",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_cidade_afogada_wp7": {
+      "kind": "guardian",
+      "zone_id": "cidade_afogada",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_cidade_afogada_wp8": {
+      "kind": "subboss",
+      "zone_id": "cidade_afogada",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_santuario_branco_wp7": {
+      "kind": "guardian",
+      "zone_id": "santuario_branco",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_santuario_branco_wp8": {
+      "kind": "subboss",
+      "zone_id": "santuario_branco",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "guardiao_raiz_wp7": {
+      "kind": "guardian",
+      "zone_id": "raiz",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
+    },
+    "subchefe_raiz_wp8": {
+      "kind": "subboss",
+      "zone_id": "raiz",
+      "content_state": "blocked_owner_q52",
+      "enemy_id": null,
+      "owner_gate": 52
     }
   },
   "history_doors": {

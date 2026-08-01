@@ -272,7 +272,8 @@ const armorCatalogue = {};
 for (const [id, piece] of Object.entries(starterArmor)) {
   armorCatalogue[id] = {
     nome: piece.nome, slot: piece.slot, peso: piece.peso, material: piece.material,
-    resistencias: piece.resistencias, habilidade: "nenhuma — kit inicial não altera o combate medido",
+    resistencias: piece.resistencias, effect_type: "none", implemented: true,
+    habilidade: "nenhuma — kit inicial não altera o combate medido",
     onde_ma: "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
     onde_se_encontra: "kit inicial de uma das seis origens em Brumal",
     descricao_visual: piece.descricao_visual,
@@ -288,7 +289,8 @@ for (const id of [...lootByKind.armadura].sort()) {
     nome: title(id), slot, peso: armorWeight[slot] + (ordinal % 3) * 0.5,
     material: biome.material,
     resistencias: { [biomeId]: 6 + (ordinal % 3) * 2 },
-    habilidade: `ao ler o perigo próprio de ${biome.nome}, permite escolher uma resposta de ${slot}; termina ao trocar esta peça`,
+    effect_type: "none", implemented: false,
+    habilidade: "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
     onde_ma: `fora de ${biome.nome}, o peso permanece mas a resistência regional raramente responde à ameaça dominante`,
     onde_se_encontra: `carta sem reposição do inimigo que veste esta peça em ${biome.nome}`,
     descricao_visual: `${title(id)}, peça de ${slot} em ${biome.material}: ${armorShape[slot]}; desgaste e fixações pertencem a ${biome.nome}`,
@@ -299,6 +301,24 @@ if (Object.keys(armorCatalogue).length !== 68) throw new Error("o catálogo de a
 
 const ringRows = [];
 const R = (id, nome, eixo, efeito, numeros, afinidade, soma, onde, visual) => ringRows.push({ id, nome, eixo, efeito, numeros, afinidade, soma_com_outro: soma, onde_se_encontra: onde, visual });
+const ringEffectByAxis = {
+  recursos: ["resource_event_rule", "resource_system"],
+  movimento_e_fisica: ["movement_event_rule", "movement_system"],
+  combate_defensivo: ["combat_event_rule", "combat_system"],
+  combate_ofensivo: ["combat_event_rule", "combat_system"],
+  risco: ["combat_event_rule", "combat_system"],
+  almas: ["world_state_rule", "world_state"],
+  elementos: ["status_event_rule", "status_system"],
+  coop: ["gameplay_cue_rule", "gameplay_cue"],
+};
+const ringEffectClients = Object.fromEntries(
+  [...new Map(Object.values(ringEffectByAxis).map(([effectType, clientId]) =>
+    [effectType, { client_id: clientId, contract: "condition + numeros -> cue ou ramo de sistema existente" }])).entries()],
+);
+const ringAffinityTags = Object.fromEntries(
+  ["warrior", "sorcerer", "tank", "assassin", "berserker", "paladin", "batedor", "mago_do_mal", "universal"]
+    .map((id) => [id, { equip_requirement: false, loot_bias_only: true }]),
+);
 
 // Recursos (9)
 R("gota_guardada", "Gota Guardada", "recursos", "uma cura interrompida conserva metade da carga em vez de a perder", { max_percent: 0, fraction: 0.5 }, "paladin", "não; altera a mesma interrupção", "Brumal, no fundo do poço seco atrás da capela", "ferro fosco com cavidade em forma de gota e uma lasca de vidro verde");
@@ -313,12 +333,12 @@ R("semente_de_favorito", "Semente de Favorito", "recursos", "ao descansar permit
 
 // Movimento e física (9)
 R("passo_de_linho", "Passo de Linho", "movimento_e_fisica", "andar sem correr deixa de emitir o sinal visual de passos, mas a visão inimiga não muda", { max_percent: 0, walk_only: true }, "assassin", "não; mesma supressão", "Campas Cinzentas, nos pés da efígie do corredor estreito", "linho cinzento entrançado sobre aro de ferro fino, sem qualquer superfície solta");
-R("salto_de_cabra", "Salto de Cabra", "movimento_e_fisica", "agarrar uma borda depois de cair converte a queda em balanço uma vez por travessia", { max_percent: 0, uses_per_crossing: 1 }, "batedor", "não; verbo único", "Cimeira, sob a cornija alcançada pelo caminho de dentro", "chifre branco curvado em torno de uma dobradiça de aço frio");
+R("salto_de_cabra", "Salto de Cabra", "movimento_e_fisica", "sobreviver a uma queda autorada marca durante cinco segundos o elo vertical de regresso mais próximo", { max_percent: 0, marker_s: 5 }, "batedor", "não; uma marca de mapa", "Cimeira, sob a cornija alcançada pelo caminho de dentro", "chifre branco curvado em torno de uma dobradiça de aço frio");
 R("rolamento_de_mare", "Rolamento de Maré", "movimento_e_fisica", "a esquiva que termina dentro de água rasa continua em deslize, mas não pode encadear ataque", { max_percent: 0, attack_lock_frames: 18 }, "warrior", "não; substitui a saída", "Cidade Afogada, numa janela abaixo da linha de água", "prata verdeada com três ondas gravadas e borda lisa de vidro");
 R("calcanhar_de_obsidiana", "Calcanhar de Obsidiana", "movimento_e_fisica", "uma aterragem pesada parte chão rachado sem exigir ataque de queda", { max_percent: 0, heavy_landing: true }, "berserker", "não; verbo de terreno", "Fornalha, na chaminé cujo piso soa oco", "obsidiana quadrada com fissura central e incrustação de bronze vermelho");
-R("fio_de_vento", "Fio de Vento", "movimento_e_fisica", "saltar a favor de uma rajada prende o manto e mostra a próxima corrente ascendente", { max_percent: 0, reveal_s: 5 }, "batedor", "sim; sem somar duração", "Cimeira, pendurado no sino de gelo exterior", "aço frio quase sem espessura com pena branca presa no engaste");
+R("fio_de_vento", "Fio de Vento", "movimento_e_fisica", "ouvir o aviso de uma rajada marca durante cinco segundos o primeiro quebra-vento seguro da faixa", { max_percent: 0, reveal_s: 5 }, "batedor", "sim; sem somar duração", "Cimeira, pendurado no sino de gelo exterior", "aço frio quase sem espessura com pena branca presa no engaste");
 R("joelho_de_pedra", "Joelho de Pedra", "movimento_e_fisica", "empurrado contra uma parede, podes gastar uma esquiva para cair de lado em vez de ressaltar", { max_percent: 0, stamina_cost: 25 }, "tank", "não; troca a reacção", "Fojo, atrás da prensa de minério bloqueada", "granito escuro octogonal com faixa articulada de ferro bruto");
-R("corda_do_naufrago", "Corda do Náufrago", "movimento_e_fisica", "uma corda cortada por ti fica escalável do lado de baixo até ao descanso", { max_percent: 0, until_rest: true }, "assassin", "não; estado do atalho", "Costa Quebrada, no mastro que só se alcança pela falésia", "bronze-do-mar envolto em cabo salgado com nó de escota minúsculo");
+R("corda_do_naufrago", "Corda do Náufrago", "movimento_e_fisica", "abrir um atalho de corda autorado conserva a sua marca no mapa até ao descanso", { max_percent: 0, until_rest: true }, "assassin", "não; estado do atalho", "Costa Quebrada, no mastro que só se alcança pela falésia", "bronze-do-mar envolto em cabo salgado com nó de escota minúsculo");
 R("passada_de_raiz", "Passada de Raiz", "movimento_e_fisica", "raízes móveis deixam de agarrar enquanto caminhas para trás de frente para elas", { max_percent: 0, backward_only: true }, "sorcerer", "não; condição espacial", "Raizama, sob o micélio que recua da luz", "quitina verde em forma de pegada com filamentos de raiz petrificada");
 R("queda_contada", "Queda Contada", "movimento_e_fisica", "antes de saltar, o bordo mostra se a queda causa dano, quase morte ou morte", { max_percent: 0, categories: 3 }, "universal", "não; leitura única", "Brumal, atrás do telhado quebrado do tutorial de quedas", "ferro rude com três degraus gravados e fio de prumo em cobre");
 
@@ -352,14 +372,14 @@ R("passo_sem_regresso", "Passo sem Regresso", "risco", "entrar numa arena sem fr
 R("trovao_na_mao", "Trovão na Mão", "risco", "segurar um pesado durante uma tempestade atrai um raio para a arma e marca o impacto", { max_percent: 0, charge_required: true }, "warrior", "não; evento ambiental", "Fulgor, no pára-raios tombado da praça", "fulgurite bruta presa por quatro garras de prata baça");
 R("fundo_do_poco", "Fundo do Poço", "risco", "depois de sobreviver a uma queda quase mortal, revela a saída mais baixa da sala", { max_percent: 0, near_death_fall: true }, "batedor", "não; uma saída por sala", "Fojo, no patamar inferior do poço de minério", "ferro bruto em espiral descendente com ponto de cobre no fundo");
 R("vidro_sem_armadura", "Vidro sem Armadura", "risco", "com carga leve e nenhum escudo, feitiços persistentes mostram o intervalo exacto entre pulsos", { max_percent: 0, pulse_preview: true }, "sorcerer", "não; leitura de volume", "Cidade Afogada, na redoma partida da torre", "vidro verde transparente sem aro exterior, preso a uma única garra de prata");
-R("companhia_vazia", "Companhia Vazia", "risco", "sozinho num mundo co-op, altares de ressurreição apontam para o próximo sinal de invocação", { max_percent: 0, solo_only: true }, "universal", "não; navegação condicional", "Brumal, no segundo assento vazio da mesa de descanso", "dois aros de ferro rude, um inteiro e outro interrompido");
+R("companhia_vazia", "Companhia Vazia", "risco", "sozinho num mundo co-op privado, um altar de ressurreição aponta para o último descanso visitado", { max_percent: 0, solo_only: true }, "universal", "não; navegação condicional", "Brumal, no segundo assento vazio da mesa de descanso", "dois aros de ferro rude, um inteiro e outro interrompido");
 
 // Almas (8)
 R("ganancia_mineira", "Ganância Mineira", "almas", "um veio explorado mostra quantos inimigos recompensados restam na zona", { max_percent: 0, counter: true }, "berserker", "não; informação da zona", "Fojo, carta rara do kobold armadilheiro da mina", "ferro bruto com pequena pepita presa atrás de uma grade de quatro barras");
 R("fio_da_mancha", "Fio da Mancha", "almas", "a tua mancha de almas liga-se por fio ao último atalho aberto", { max_percent: 0, one_anchor: true }, "assassin", "não; uma rota", "Campas Cinzentas, sob a ponte que volta à fogueira", "prata cinzenta com fio de linho vermelho enrolado três vezes");
 R("peso_do_morto", "Peso do Morto", "almas", "junto da mancha, o chão mostra a direcção do golpe que te matou", { max_percent: 0, one_direction: true }, "tank", "não; memória da morte", "Brumal, no cadáver atrás do primeiro brutamontes", "ferro rude com seta funda e gota de vidro vermelho escuro");
 R("dizimo_branco", "Dízimo Branco", "almas", "oferecer almas num altar deixa-as guardadas ali até ao próximo descanso", { max_percent: 0, one_altar: true }, "paladin", "não; depósito não acumula entre altares", "Santuário Branco, na caixa de esmolas selada por dentro", "mármore branco com fenda estreita e aro de ouro baço");
-R("mapa_dos_caidos", "Mapa dos Caídos", "almas", "uma mancha recuperada revela outras manchas de jogadores na mesma travessia", { max_percent: 0, reveal_s: 12 }, "batedor", "não; só sobreposição social", "Cimeira, no memorial varrido pelo vento", "aço frio com pontos de prata ligados como um mapa sem nomes");
+R("mapa_dos_caidos", "Mapa dos Caídos", "almas", "recuperar a tua mancha revela durante doze segundos o último atalho que abriste", { max_percent: 0, reveal_s: 12 }, "batedor", "não; usa o próprio save", "Cimeira, no memorial varrido pelo vento", "aço frio com pontos de prata ligados como um mapa sem nomes");
 R("conta_afogada", "Conta Afogada", "almas", "almas perdidas dentro de água sobem à superfície como bolhas visíveis", { max_percent: 0, water_only: true }, "sorcerer", "não; muda apresentação", "Cidade Afogada, no pescoço da estátua submersa", "prata afogada com esfera oca de vidro verde cheia de uma bolha fixa");
 R("cinza_de_dez", "Cinza de Dez", "almas", "ao esgotar as dez derrotas recompensadas de um inimigo, marca a sua carta final no bestiário", { max_percent: 0, rewarded_defeats: 10 }, "universal", "não; estado de catálogo", "Fornalha, na décima urna da galeria de cinza", "obsidiana com dez entalhes, o último preenchido por cinza branca");
 R("eco_sem_face", "Eco sem Face", "almas", "derrotar um sem-rosto faz a mancha repetir a silhueta do equipamento que ele largaria", { max_percent: 0, preview_card: true }, "mago_do_mal", "não; pré-visualização única", "A Raiz, carta rara do alabardeiro sem rosto", "osso antigo liso sem símbolo, com reflexo escuro que não copia o portador");
@@ -390,8 +410,12 @@ if (ringRows.length !== 70) throw new Error(`o catálogo de anéis fechou ${ring
 const rings = {};
 for (const row of ringRows) {
   if (rings[row.id]) throw new Error(`anel repetido: ${row.id}`);
+  const [effectType, clientId] = ringEffectByAxis[row.eixo] ?? [];
+  if (!effectType || !clientId) throw new Error(`anel ${row.id}: eixo sem cliente`);
+  if (!ringAffinityTags[row.afinidade]) throw new Error(`anel ${row.id}: afinidade sem etiqueta`);
   rings[row.id] = {
     nome: row.nome, eixo: row.eixo, efeito: row.efeito, numeros: row.numeros,
+    effect_type: effectType, client_id: clientId,
     afinidade: row.afinidade, soma_com_outro: row.soma_com_outro,
     onde_se_encontra: row.onde_se_encontra,
     descricao_visual: `anel ${row.visual}; objecto isolado com interior e perfil lateral legíveis`,
@@ -409,6 +433,8 @@ const output = {
     ring_same_effect_stack_limit: 2,
     first_slice_images: "só fatia_1=true; itens futuros mantêm descrição visual mas não geram agora",
   },
+  _ring_effect_clients: ringEffectClients,
+  _ring_affinity_tags: ringAffinityTags,
   family_movesets: familyMovesets,
   weapon_improvement: {
     rule: "cada nível abre uma decisão reversível no altar; nenhum aumenta dano base, defesa ou velocidade",
@@ -461,6 +487,18 @@ const output = {
     class_affinity_not_lock: true,
     availability: "o Assassino começa com as duas adagas e a técnica; qualquer origem pode aprendê-la como loot de marco",
     runtime_state: "por implementar no M2; os dados e guardas já são validados",
+  },
+  magic_instruments: {
+    cajado: {
+      weapon_id: "staff", instrument_type: "cajado",
+      school_tags: ["feiticaria", "milagre", "piromancia", "mal"],
+      slot: "main_hand", hands: 2, spell_power: 1.0,
+      cast_speed_multiplier_by_form: Object.fromEntries([
+        "projectil_simples", "perfurante", "perseguidor", "orbitante", "feixe", "feixe_rasteiro",
+        "barragem_cone", "chuva", "forma_arma", "portador", "onda_sem_dano", "isco",
+      ].map((form) => [form, 1.0])),
+      scope: "[CODEX] baseline M2; outros tipos removidos das fichas até resposta 56",
+    },
   },
   weapons: weaponCatalogue,
   armor: armorCatalogue,
@@ -572,7 +610,7 @@ ${ringTable}
 | Pergunta | Resposta |
 |---|---|
 | **Como se usa?** | armas herdam o moveset da família; melhoria escolhe-se no altar; armadura e anéis equipam-se no ecrã WP11; estados entram por ataque e mostram barra/saída; Assassino usa duas adagas e habilidade de classe |
-| **Como se prova?** | \`GameData\` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e os IDs WP6 das categorias arma/armadura/anel; \`self_test.gd\` repete a fronteira e os três guardas do Assassino. ⚠️ Cinco payloads obrigatórios \`acessorio:*\` ficaram fora dessas categorias e estão em \`LACUNAS\` |
+| **Como se prova?** | \`GameData\` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e os IDs WP6; \`self_test.gd\` repete a fronteira, clientes/afinidades dos 70 anéis e os três guardas do Assassino. A Tarefa 5 eliminou \`acessorio:*\` e o verificador rejeita prefixos desconhecidos. |
 | **De onde vem a arte?** | cada item/estado tem \`descricao_visual\`; cinco armas reutilizam imagens aprovadas, onze armaduras geram neste bloco e tudo o resto espera \`Fatia 1?\` |
 | **Quanto custa?** | agora: 11 fontes 1254×1254 com import de UI a 512; futuro: 115 armas + 57 armaduras + 70 anéis, produzidos só quando entrarem numa fatia; runtime dos sete golpes e equipar ficam para M2/WP11 |
 

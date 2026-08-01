@@ -7,6 +7,70 @@
     "ring_same_effect_stack_limit": 2,
     "first_slice_images": "só fatia_1=true; itens futuros mantêm descrição visual mas não geram agora"
   },
+  "_ring_effect_clients": {
+    "resource_event_rule": {
+      "client_id": "resource_system",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    },
+    "movement_event_rule": {
+      "client_id": "movement_system",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    },
+    "combat_event_rule": {
+      "client_id": "combat_system",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    },
+    "world_state_rule": {
+      "client_id": "world_state",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    },
+    "status_event_rule": {
+      "client_id": "status_system",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    },
+    "gameplay_cue_rule": {
+      "client_id": "gameplay_cue",
+      "contract": "condition + numeros -> cue ou ramo de sistema existente"
+    }
+  },
+  "_ring_affinity_tags": {
+    "warrior": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "sorcerer": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "tank": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "assassin": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "berserker": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "paladin": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "batedor": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "mago_do_mal": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    },
+    "universal": {
+      "equip_requirement": false,
+      "loot_bias_only": true
+    }
+  },
   "family_movesets": {
     "espada_recta": {
       "leve": {
@@ -598,6 +662,36 @@
     "class_affinity_not_lock": true,
     "availability": "o Assassino começa com as duas adagas e a técnica; qualquer origem pode aprendê-la como loot de marco",
     "runtime_state": "por implementar no M2; os dados e guardas já são validados"
+  },
+  "magic_instruments": {
+    "cajado": {
+      "weapon_id": "staff",
+      "instrument_type": "cajado",
+      "school_tags": [
+        "feiticaria",
+        "milagre",
+        "piromancia",
+        "mal"
+      ],
+      "slot": "main_hand",
+      "hands": 2,
+      "spell_power": 1,
+      "cast_speed_multiplier_by_form": {
+        "projectil_simples": 1,
+        "perfurante": 1,
+        "perseguidor": 1,
+        "orbitante": 1,
+        "feixe": 1,
+        "feixe_rasteiro": 1,
+        "barragem_cone": 1,
+        "chuva": 1,
+        "forma_arma": 1,
+        "portador": 1,
+        "onda_sem_dano": 1,
+        "isco": 1
+      },
+      "scope": "[CODEX] baseline M2; outros tipos removidos das fichas até resposta 56"
+    }
   },
   "weapons": {
     "longsword": {
@@ -2740,6 +2834,8 @@
       "resistencias": {
         "corte": 12
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2755,6 +2851,8 @@
       "resistencias": {
         "corte": 4
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2770,6 +2868,8 @@
       "resistencias": {
         "contusao": 10
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2786,6 +2886,8 @@
         "corte": 18,
         "contusao": 10
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2802,6 +2904,8 @@
         "corte": 16,
         "luz": 6
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2815,6 +2919,8 @@
       "peso": 0.5,
       "material": "pano (neutro)",
       "resistencias": {},
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2828,6 +2934,8 @@
       "peso": 1,
       "material": "pano (neutro)",
       "resistencias": {},
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2843,6 +2951,8 @@
       "resistencias": {
         "corte": 6
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2858,6 +2968,8 @@
       "resistencias": {
         "bruma": 8
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2873,6 +2985,8 @@
       "resistencias": {
         "sombra": 8
       },
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2886,6 +3000,8 @@
       "peso": 1,
       "material": "couro (Brumal)",
       "resistencias": {},
+      "effect_type": "none",
+      "implemented": true,
       "habilidade": "nenhuma — kit inicial não altera o combate medido",
       "onde_ma": "não traz verbo próprio; troca-se quando a rota já ensinou resistências e peso",
       "onde_se_encontra": "kit inicial de uma das seis origens em Brumal",
@@ -2901,7 +3017,9 @@
       "resistencias": {
         "campas_cinzentas": 10
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Aljava Fatuos, peça de cintura em osso seco, linho tumular e ferro ferrugento: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Campas Cinzentas",
@@ -2916,7 +3034,9 @@
       "resistencias": {
         "brumal": 6
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Arnes Orc Bruma, peça de peito em ferro rude e couro de javali: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Brumal",
@@ -2931,7 +3051,9 @@
       "resistencias": {
         "brumal": 8
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Arnes Orc Pesado, peça de peito em ferro rude e couro de javali: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Brumal",
@@ -2946,7 +3068,9 @@
       "resistencias": {
         "fornalha": 10
       },
-      "habilidade": "ao ler o perigo próprio de Fornalha, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fornalha, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fornalha",
       "descricao_visual": "Avental Borralheiro, peça de peito em obsidiana, bronze fundido e couro chamuscado: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Fornalha",
@@ -2961,7 +3085,9 @@
       "resistencias": {
         "cimeira": 6
       },
-      "habilidade": "ao ler o perigo próprio de Cimeira, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cimeira, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cimeira",
       "descricao_visual": "Avental Cabra Minotauro, peça de peito em aço frio, couro branco e flor-de-gelo: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Cimeira",
@@ -2976,7 +3102,9 @@
       "resistencias": {
         "fornalha": 8
       },
-      "habilidade": "ao ler o perigo próprio de Fornalha, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fornalha, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fornalha",
       "descricao_visual": "Avental Orc Fornalha, peça de peito em obsidiana, bronze fundido e couro chamuscado: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Fornalha",
@@ -2991,7 +3119,9 @@
       "resistencias": {
         "brumal": 10
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Bracadeiras Orc Bruma, peça de maos em ferro rude e couro de javali: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Brumal",
@@ -3006,7 +3136,9 @@
       "resistencias": {
         "costa_quebrada": 6
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Bracelete Corda Mar, peça de maos em bronze-do-mar, corda salgada e madeira de naufrágio: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Costa Quebrada",
@@ -3021,7 +3153,9 @@
       "resistencias": {
         "fojo": 8
       },
-      "habilidade": "ao ler o perigo próprio de Fojo, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fojo, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fojo",
       "descricao_visual": "Braceletes Corda Minotauro, peça de maos em ferro em bruto marcado por picareta: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Fojo",
@@ -3036,7 +3170,9 @@
       "resistencias": {
         "selva_funda": 10
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Braceletes Corda Selva, peça de maos em bambu negro, seda crua e seiva-peçonha: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Selva Funda",
@@ -3051,7 +3187,9 @@
       "resistencias": {
         "cimeira": 6
       },
-      "habilidade": "ao ler o perigo próprio de Cimeira, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cimeira, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cimeira",
       "descricao_visual": "Braceletes Gelo Minotauro, peça de maos em aço frio, couro branco e flor-de-gelo: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Cimeira",
@@ -3066,7 +3204,9 @@
       "resistencias": {
         "selva_funda": 8
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de maos; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Braceletes Vime Teciao, peça de maos em bambu negro, seda crua e seiva-peçonha: punhos articulados do pulso aos nós dos dedos, com palma de couro flexível; desgaste e fixações pertencem a Selva Funda",
@@ -3081,7 +3221,9 @@
       "resistencias": {
         "fojo": 10
       },
-      "habilidade": "ao ler o perigo próprio de Fojo, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fojo, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fojo",
       "descricao_visual": "Capacete Mineiro Kobold, peça de cabeca em ferro em bruto marcado por picareta: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Fojo",
@@ -3096,7 +3238,9 @@
       "resistencias": {
         "santuario_branco": 6
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Capuz Cera Penitente, peça de cabeca em mármore branco, cera benta e ouro baço: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Santuário Branco",
@@ -3111,7 +3255,9 @@
       "resistencias": {
         "selva_funda": 8
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Capuz Folhas Goblin, peça de cabeca em bambu negro, seda crua e seiva-peçonha: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Selva Funda",
@@ -3126,7 +3272,9 @@
       "resistencias": {
         "campas_cinzentas": 10
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Capuz Linho Campas, peça de cabeca em osso seco, linho tumular e ferro ferrugento: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Campas Cinzentas",
@@ -3141,7 +3289,9 @@
       "resistencias": {
         "brumal": 6
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Casaco Goblin Bruma, peça de peito em ferro rude e couro de javali: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Brumal",
@@ -3156,7 +3306,9 @@
       "resistencias": {
         "costa_quebrada": 8
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Casaco Naufragio Orc, peça de peito em bronze-do-mar, corda salgada e madeira de naufrágio: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Costa Quebrada",
@@ -3171,7 +3323,9 @@
       "resistencias": {
         "raizama": 10
       },
-      "habilidade": "ao ler o perigo próprio de Raizama, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Raizama, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Raizama",
       "descricao_visual": "Chapeu Fungo Goblin, peça de cabeca em raiz petrificada, quitina e esporo-lúmen: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Raizama",
@@ -3186,7 +3340,9 @@
       "resistencias": {
         "fojo": 6
       },
-      "habilidade": "ao ler o perigo próprio de Fojo, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fojo, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fojo",
       "descricao_visual": "Cinta Ferro Mimico, peça de cintura em ferro em bruto marcado por picareta: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Fojo",
@@ -3201,7 +3357,9 @@
       "resistencias": {
         "brumal": 8
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Cinto Placas Orc, peça de cintura em ferro rude e couro de javali: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Brumal",
@@ -3216,7 +3374,9 @@
       "resistencias": {
         "selva_funda": 10
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Cinto Vime Caroços, peça de cintura em bambu negro, seda crua e seiva-peçonha: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Selva Funda",
@@ -3231,7 +3391,9 @@
       "resistencias": {
         "campas_cinzentas": 6
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Cinturao Tumido, peça de cintura em osso seco, linho tumular e ferro ferrugento: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Campas Cinzentas",
@@ -3246,7 +3408,9 @@
       "resistencias": {
         "raizama": 8
       },
-      "habilidade": "ao ler o perigo próprio de Raizama, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Raizama, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Raizama",
       "descricao_visual": "Colete Seda Raizama, peça de peito em raiz petrificada, quitina e esporo-lúmen: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Raizama",
@@ -3261,7 +3425,9 @@
       "resistencias": {
         "selva_funda": 10
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Colete Vime Goblin, peça de peito em bambu negro, seda crua e seiva-peçonha: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Selva Funda",
@@ -3276,7 +3442,9 @@
       "resistencias": {
         "costa_quebrada": 6
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de pes; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Corda Pes Ventaneira, peça de pes em bronze-do-mar, corda salgada e madeira de naufrágio: calçado de cano médio com sola espessa, biqueira reforçada e atacadores laterais; desgaste e fixações pertencem a Costa Quebrada",
@@ -3291,7 +3459,9 @@
       "resistencias": {
         "fulgor": 8
       },
-      "habilidade": "ao ler o perigo próprio de Fulgor, permite escolher uma resposta de pernas; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fulgor, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fulgor",
       "descricao_visual": "Correias Couro Seco, peça de pernas em fulgurite, prata baça e couro isolante: placas ou tiras do joelho ao tornozelo, articuladas atrás para permitir a esquiva; desgaste e fixações pertencem a Fulgor",
@@ -3306,7 +3476,9 @@
       "resistencias": {
         "santuario_branco": 10
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Cota Dourada Esqueleto, peça de peito em mármore branco, cera benta e ouro baço: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Santuário Branco",
@@ -3321,7 +3493,9 @@
       "resistencias": {
         "santuario_branco": 6
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Elmo Cera Esqueleto, peça de cabeca em mármore branco, cera benta e ouro baço: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Santuário Branco",
@@ -3336,7 +3510,9 @@
       "resistencias": {
         "campas_cinzentas": 8
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Elmo Rachado Campas, peça de cabeca em osso seco, linho tumular e ferro ferrugento: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Campas Cinzentas",
@@ -3351,7 +3527,9 @@
       "resistencias": {
         "raiz": 10
       },
-      "habilidade": "ao ler o perigo próprio de A Raiz, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de A Raiz, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em A Raiz",
       "descricao_visual": "Elos Raiz Esqueleto, peça de peito em madeira negra, lágrima de bruma e osso antigo: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a A Raiz",
@@ -3366,7 +3544,9 @@
       "resistencias": {
         "costa_quebrada": 6
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Ferragem Bronze Mimico, peça de peito em bronze-do-mar, corda salgada e madeira de naufrágio: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Costa Quebrada",
@@ -3381,7 +3561,9 @@
       "resistencias": {
         "selva_funda": 8
       },
-      "habilidade": "ao ler o perigo próprio de Selva Funda, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Selva Funda, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Selva Funda",
       "descricao_visual": "Gibao Kobold Selva, peça de peito em bambu negro, seda crua e seiva-peçonha: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Selva Funda",
@@ -3396,7 +3578,9 @@
       "resistencias": {
         "santuario_branco": 10
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de cabeca; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Gola Marmore Cantor, peça de cabeca em mármore branco, cera benta e ouro baço: cúpula baixa com abertura frontal legível e rebordo que não tapa os ombros; desgaste e fixações pertencem a Santuário Branco",
@@ -3411,7 +3595,9 @@
       "resistencias": {
         "brumal": 6
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de pernas; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Grevas Orc Pesado, peça de pernas em ferro rude e couro de javali: placas ou tiras do joelho ao tornozelo, articuladas atrás para permitir a esquiva; desgaste e fixações pertencem a Brumal",
@@ -3426,7 +3612,9 @@
       "resistencias": {
         "campas_cinzentas": 8
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Linho Encharcado Zumbi, peça de peito em osso seco, linho tumular e ferro ferrugento: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Campas Cinzentas",
@@ -3441,7 +3629,9 @@
       "resistencias": {
         "cimeira": 10
       },
-      "habilidade": "ao ler o perigo próprio de Cimeira, permite escolher uma resposta de capa; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cimeira, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cimeira",
       "descricao_visual": "Manto Cabra Ventaneira, peça de capa em aço frio, couro branco e flor-de-gelo: manto até à barriga da perna, preso num só ombro para deixar a arma legível; desgaste e fixações pertencem a Cimeira",
@@ -3456,7 +3646,9 @@
       "resistencias": {
         "raiz": 6
       },
-      "habilidade": "ao ler o perigo próprio de A Raiz, permite escolher uma resposta de capa; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de A Raiz, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em A Raiz",
       "descricao_visual": "Manto Pedra Sem Rosto, peça de capa em madeira negra, lágrima de bruma e osso antigo: manto até à barriga da perna, preso num só ombro para deixar a arma legível; desgaste e fixações pertencem a A Raiz",
@@ -3471,7 +3663,9 @@
       "resistencias": {
         "brumal": 8
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de rosto; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Mascara Casca Bruma, peça de rosto em ferro rude e couro de javali: placa ou tecido ajustado ao contorno do nariz e maxilar, preso por duas tiras posteriores; desgaste e fixações pertencem a Brumal",
@@ -3486,7 +3680,9 @@
       "resistencias": {
         "cimeira": 10
       },
-      "habilidade": "ao ler o perigo próprio de Cimeira, permite escolher uma resposta de rosto; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cimeira, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cimeira",
       "descricao_visual": "Mascara Gelo Ventaneira, peça de rosto em aço frio, couro branco e flor-de-gelo: placa ou tecido ajustado ao contorno do nariz e maxilar, preso por duas tiras posteriores; desgaste e fixações pertencem a Cimeira",
@@ -3501,7 +3697,9 @@
       "resistencias": {
         "fornalha": 6
       },
-      "habilidade": "ao ler o perigo próprio de Fornalha, permite escolher uma resposta de rosto; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fornalha, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fornalha",
       "descricao_visual": "Mascara Obsidiana Orc, peça de rosto em obsidiana, bronze fundido e couro chamuscado: placa ou tecido ajustado ao contorno do nariz e maxilar, preso por duas tiras posteriores; desgaste e fixações pertencem a Fornalha",
@@ -3516,7 +3714,9 @@
       "resistencias": {
         "cidade_afogada": 8
       },
-      "habilidade": "ao ler o perigo próprio de Cidade Afogada, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cidade Afogada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cidade Afogada",
       "descricao_visual": "Membranas Brancas Submerso, peça de peito em prata afogada, vidro verde e mármore molhado: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Cidade Afogada",
@@ -3531,7 +3731,9 @@
       "resistencias": {
         "fulgor": 10
       },
-      "habilidade": "ao ler o perigo próprio de Fulgor, permite escolher uma resposta de cintura; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fulgor, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fulgor",
       "descricao_visual": "Mochila Fulgurite Kobold, peça de cintura em fulgurite, prata baça e couro isolante: faixa de 14 cm com fecho frontal e bolsas ou placas suspensas sem cobrir as pernas; desgaste e fixações pertencem a Fulgor",
@@ -3546,7 +3748,9 @@
       "resistencias": {
         "brumal": 6
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de ombros; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Ombreira Orc Bruma, peça de ombros em ferro rude e couro de javali: duas placas assimétricas sobre correias cruzadas, deixando livre a elevação dos braços; desgaste e fixações pertencem a Brumal",
@@ -3561,7 +3765,9 @@
       "resistencias": {
         "brumal": 8
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de ombros; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Ombreira Orc Pesado, peça de ombros em ferro rude e couro de javali: duas placas assimétricas sobre correias cruzadas, deixando livre a elevação dos braços; desgaste e fixações pertencem a Brumal",
@@ -3576,7 +3782,9 @@
       "resistencias": {
         "fornalha": 10
       },
-      "habilidade": "ao ler o perigo próprio de Fornalha, permite escolher uma resposta de ombros; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fornalha, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fornalha",
       "descricao_visual": "Ombreiras Bronze Fundido, peça de ombros em obsidiana, bronze fundido e couro chamuscado: duas placas assimétricas sobre correias cruzadas, deixando livre a elevação dos braços; desgaste e fixações pertencem a Fornalha",
@@ -3591,7 +3799,9 @@
       "resistencias": {
         "brumal": 6
       },
-      "habilidade": "ao ler o perigo próprio de Brumal, permite escolher uma resposta de pernas; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Brumal, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Brumal",
       "descricao_visual": "Perneiras Orc Bruma, peça de pernas em ferro rude e couro de javali: placas ou tiras do joelho ao tornozelo, articuladas atrás para permitir a esquiva; desgaste e fixações pertencem a Brumal",
@@ -3606,7 +3816,9 @@
       "resistencias": {
         "fojo": 8
       },
-      "habilidade": "ao ler o perigo próprio de Fojo, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fojo, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fojo",
       "descricao_visual": "Placa Granito Minotauro, peça de peito em ferro em bruto marcado por picareta: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Fojo",
@@ -3621,7 +3833,9 @@
       "resistencias": {
         "santuario_branco": 10
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Placas Marmore Penitente, peça de peito em mármore branco, cera benta e ouro baço: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Santuário Branco",
@@ -3636,7 +3850,9 @@
       "resistencias": {
         "cidade_afogada": 6
       },
-      "habilidade": "ao ler o perigo próprio de Cidade Afogada, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Cidade Afogada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Cidade Afogada",
       "descricao_visual": "Placas Marmore Submerso, peça de peito em prata afogada, vidro verde e mármore molhado: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Cidade Afogada",
@@ -3651,7 +3867,9 @@
       "resistencias": {
         "fulgor": 8
       },
-      "habilidade": "ao ler o perigo próprio de Fulgor, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Fulgor, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Fulgor",
       "descricao_visual": "Placas Osso Fulgor, peça de peito em fulgurite, prata baça e couro isolante: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Fulgor",
@@ -3666,7 +3884,9 @@
       "resistencias": {
         "raizama": 10
       },
-      "habilidade": "ao ler o perigo próprio de Raizama, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Raizama, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Raizama",
       "descricao_visual": "Placas Quitina Azul, peça de peito em raiz petrificada, quitina e esporo-lúmen: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Raizama",
@@ -3681,7 +3901,9 @@
       "resistencias": {
         "costa_quebrada": 6
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Rede Salgada Submerso, peça de peito em bronze-do-mar, corda salgada e madeira de naufrágio: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Costa Quebrada",
@@ -3696,7 +3918,9 @@
       "resistencias": {
         "campas_cinzentas": 8
       },
-      "habilidade": "ao ler o perigo próprio de Campas Cinzentas, permite escolher uma resposta de ombros; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Campas Cinzentas, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Campas Cinzentas",
       "descricao_visual": "Tirantes Campas, peça de ombros em osso seco, linho tumular e ferro ferrugento: duas placas assimétricas sobre correias cruzadas, deixando livre a elevação dos braços; desgaste e fixações pertencem a Campas Cinzentas",
@@ -3711,7 +3935,9 @@
       "resistencias": {
         "costa_quebrada": 10
       },
-      "habilidade": "ao ler o perigo próprio de Costa Quebrada, permite escolher uma resposta de ombros; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Costa Quebrada, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Costa Quebrada",
       "descricao_visual": "Tiras Bronze Asa, peça de ombros em bronze-do-mar, corda salgada e madeira de naufrágio: duas placas assimétricas sobre correias cruzadas, deixando livre a elevação dos braços; desgaste e fixações pertencem a Costa Quebrada",
@@ -3726,7 +3952,9 @@
       "resistencias": {
         "santuario_branco": 6
       },
-      "habilidade": "ao ler o perigo próprio de Santuário Branco, permite escolher uma resposta de peito; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Santuário Branco, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Santuário Branco",
       "descricao_visual": "Tunica Cera Cantor, peça de peito em mármore branco, cera benta e ouro baço: painéis sobrepostos do esterno à cintura, fechados ao lado por correias largas; desgaste e fixações pertencem a Santuário Branco",
@@ -3741,7 +3969,9 @@
       "resistencias": {
         "raizama": 8
       },
-      "habilidade": "ao ler o perigo próprio de Raizama, permite escolher uma resposta de rosto; termina ao trocar esta peça",
+      "effect_type": "none",
+      "implemented": false,
+      "habilidade": "nenhuma — proposta de habilidade removida até Mateus + Rico fecharem 44/54",
       "onde_ma": "fora de Raizama, o peso permanece mas a resistência regional raramente responde à ameaça dominante",
       "onde_se_encontra": "carta sem reposição do inimigo que veste esta peça em Raizama",
       "descricao_visual": "Veu Seda Raizama, peça de rosto em raiz petrificada, quitina e esporo-lúmen: placa ou tecido ajustado ao contorno do nariz e maxilar, preso por duas tiras posteriores; desgaste e fixações pertencem a Raizama",
@@ -3758,6 +3988,8 @@
         "max_percent": 0,
         "fraction": 0.5
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "paladin",
       "soma_com_outro": "não; altera a mesma interrupção",
       "onde_se_encontra": "Brumal, no fundo do poço seco atrás da capela",
@@ -3773,6 +4005,8 @@
         "max_percent": 0,
         "wait_s": 8
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "tank",
       "soma_com_outro": "não; gatilho único",
       "onde_se_encontra": "Fojo, sobre a viga que cruza o veio abandonado",
@@ -3788,6 +4022,8 @@
         "max_percent": 0,
         "meditate_s": 40
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; verbo de mundo",
       "onde_se_encontra": "Campas Cinzentas, numa urna sem nome da cripta lateral",
@@ -3803,6 +4039,8 @@
         "max_percent": 0,
         "last_use": 1
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "warrior",
       "soma_com_outro": "sim; só com efeitos de navegação",
       "onde_se_encontra": "Costa Quebrada, dentro do casco virado ao contrário",
@@ -3818,6 +4056,8 @@
         "max_percent": 0,
         "before_commitment": true
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; reembolso não acumula",
       "onde_se_encontra": "Cidade Afogada, no balcão submerso do arquivo",
@@ -3833,6 +4073,8 @@
         "max_percent": 0,
         "one_recovery": true
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; restituição única",
       "onde_se_encontra": "Fornalha, atrás do fole partido da oficina baixa",
@@ -3848,6 +4090,8 @@
         "max_percent": 0,
         "reveal_s": 6
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "batedor",
       "soma_com_outro": "sim; não aumenta alcance",
       "onde_se_encontra": "Selva Funda, no ninho sob a ponte de cipós",
@@ -3863,6 +4107,8 @@
         "max_percent": 0,
         "choice_count": 1
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "paladin",
       "soma_com_outro": "não; uma escolha por descanso",
       "onde_se_encontra": "Santuário Branco, no cálice rachado da sacristia",
@@ -3878,6 +4124,8 @@
         "max_percent": 0,
         "swaps": 1
       },
+      "effect_type": "resource_event_rule",
+      "client_id": "resource_system",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; interface única",
       "onde_se_encontra": "A Raiz, dentro de um caroço negro que só abre após meditar",
@@ -3893,6 +4141,8 @@
         "max_percent": 0,
         "walk_only": true
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; mesma supressão",
       "onde_se_encontra": "Campas Cinzentas, nos pés da efígie do corredor estreito",
@@ -3903,13 +4153,15 @@
     "salto_de_cabra": {
       "nome": "Salto de Cabra",
       "eixo": "movimento_e_fisica",
-      "efeito": "agarrar uma borda depois de cair converte a queda em balanço uma vez por travessia",
+      "efeito": "sobreviver a uma queda autorada marca durante cinco segundos o elo vertical de regresso mais próximo",
       "numeros": {
         "max_percent": 0,
-        "uses_per_crossing": 1
+        "marker_s": 5
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "batedor",
-      "soma_com_outro": "não; verbo único",
+      "soma_com_outro": "não; uma marca de mapa",
       "onde_se_encontra": "Cimeira, sob a cornija alcançada pelo caminho de dentro",
       "descricao_visual": "anel chifre branco curvado em torno de uma dobradiça de aço frio; objecto isolado com interior e perfil lateral legíveis",
       "asset_path": "",
@@ -3923,6 +4175,8 @@
         "max_percent": 0,
         "attack_lock_frames": 18
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; substitui a saída",
       "onde_se_encontra": "Cidade Afogada, numa janela abaixo da linha de água",
@@ -3938,6 +4192,8 @@
         "max_percent": 0,
         "heavy_landing": true
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; verbo de terreno",
       "onde_se_encontra": "Fornalha, na chaminé cujo piso soa oco",
@@ -3948,11 +4204,13 @@
     "fio_de_vento": {
       "nome": "Fio de Vento",
       "eixo": "movimento_e_fisica",
-      "efeito": "saltar a favor de uma rajada prende o manto e mostra a próxima corrente ascendente",
+      "efeito": "ouvir o aviso de uma rajada marca durante cinco segundos o primeiro quebra-vento seguro da faixa",
       "numeros": {
         "max_percent": 0,
         "reveal_s": 5
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "batedor",
       "soma_com_outro": "sim; sem somar duração",
       "onde_se_encontra": "Cimeira, pendurado no sino de gelo exterior",
@@ -3968,6 +4226,8 @@
         "max_percent": 0,
         "stamina_cost": 25
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "tank",
       "soma_com_outro": "não; troca a reacção",
       "onde_se_encontra": "Fojo, atrás da prensa de minério bloqueada",
@@ -3978,11 +4238,13 @@
     "corda_do_naufrago": {
       "nome": "Corda do Náufrago",
       "eixo": "movimento_e_fisica",
-      "efeito": "uma corda cortada por ti fica escalável do lado de baixo até ao descanso",
+      "efeito": "abrir um atalho de corda autorado conserva a sua marca no mapa até ao descanso",
       "numeros": {
         "max_percent": 0,
         "until_rest": true
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; estado do atalho",
       "onde_se_encontra": "Costa Quebrada, no mastro que só se alcança pela falésia",
@@ -3998,6 +4260,8 @@
         "max_percent": 0,
         "backward_only": true
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; condição espacial",
       "onde_se_encontra": "Raizama, sob o micélio que recua da luz",
@@ -4013,6 +4277,8 @@
         "max_percent": 0,
         "categories": 3
       },
+      "effect_type": "movement_event_rule",
+      "client_id": "movement_system",
       "afinidade": "universal",
       "soma_com_outro": "não; leitura única",
       "onde_se_encontra": "Brumal, atrás do telhado quebrado do tutorial de quedas",
@@ -4028,6 +4294,8 @@
         "max_percent": 0,
         "preview_frames": 8
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "tank",
       "soma_com_outro": "não; leitura sobreposta",
       "onde_se_encontra": "Fojo, no escudo abandonado junto ao elevador",
@@ -4043,6 +4311,8 @@
         "max_percent": 0,
         "ghosts": 1
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; conserva só o último",
       "onde_se_encontra": "Brumal, na arena de treino atrás da porta interior",
@@ -4058,6 +4328,8 @@
         "max_percent": 0,
         "before_zero": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "tank",
       "soma_com_outro": "não; substitui a quebra",
       "onde_se_encontra": "Santuário Branco, sob o banco dos penitentes armados",
@@ -4073,6 +4345,8 @@
         "max_percent": 0,
         "first_projectile": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "paladin",
       "soma_com_outro": "sim; não soma marcas",
       "onde_se_encontra": "Costa Quebrada, no ninho do atirador acima do cais",
@@ -4088,6 +4362,8 @@
         "max_percent": 0,
         "attackers": 1
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; canal de acessibilidade",
       "onde_se_encontra": "Selva Funda, na plataforma entre duas emboscadas",
@@ -4103,6 +4379,8 @@
         "max_percent": 0,
         "wakeup_option": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; opção de levantar",
       "onde_se_encontra": "Campas Cinzentas, na pilha de fémures sob o sino",
@@ -4118,6 +4396,8 @@
         "max_percent": 0,
         "until_next_hit": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "sim; uma leitura por elemento",
       "onde_se_encontra": "Cidade Afogada, no laboratório de escudos inundado",
@@ -4133,6 +4413,8 @@
         "max_percent": 0,
         "marker_s": 3
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "batedor",
       "soma_com_outro": "não; conserva a marca recente",
       "onde_se_encontra": "Fornalha, no anel exterior do lago de escória",
@@ -4148,6 +4430,8 @@
         "max_percent": 0,
         "partner_only": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "paladin",
       "soma_com_outro": "não; regra de colisão",
       "onde_se_encontra": "A Raiz, atrás das duas estátuas encostadas",
@@ -4163,6 +4447,8 @@
         "max_percent": 0,
         "one_vector": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; substitui a gravação",
       "onde_se_encontra": "Brumal, na oficina do espadachim sem nome",
@@ -4178,6 +4464,8 @@
         "max_percent": 0,
         "followup_window_s": 2
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; ramo único",
       "onde_se_encontra": "Selva Funda, no passadiço por trás do sentinela",
@@ -4193,6 +4481,8 @@
         "max_percent": 0,
         "miss_distance_m": 0.5
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; treino do último golpe",
       "onde_se_encontra": "Fojo, ao lado do bloco de teste rachado",
@@ -4208,6 +4498,8 @@
         "max_percent": 0,
         "line_s": 2
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "paladin",
       "soma_com_outro": "sim; não multiplica dano",
       "onde_se_encontra": "Santuário Branco, no corredor das lanças votivas",
@@ -4223,6 +4515,8 @@
         "max_percent": 0,
         "targets": 2
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; leitura da arte",
       "onde_se_encontra": "Campas Cinzentas, no centro da rotunda funerária",
@@ -4238,6 +4532,8 @@
         "max_percent": 0,
         "next_shot": 1
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "batedor",
       "soma_com_outro": "não; partilha um traçado",
       "onde_se_encontra": "Cimeira, no poleiro acima da ponte de vento",
@@ -4253,6 +4549,8 @@
         "max_percent": 0,
         "timing_preview": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; leitura temporal",
       "onde_se_encontra": "Cidade Afogada, no coro submerso do arquivo",
@@ -4268,6 +4566,8 @@
         "max_percent": 0,
         "area_s": 6
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; mesma área",
       "onde_se_encontra": "Fornalha, dentro da cuba de têmpera vazia",
@@ -4283,6 +4583,8 @@
         "max_percent": 0,
         "reveal_kg": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "tank",
       "soma_com_outro": "não; informação, não força",
       "onde_se_encontra": "A Raiz, junto ao gigante que não pode ser movido",
@@ -4298,6 +4600,8 @@
         "max_percent": 0,
         "stamina_cost": 20
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; condição de equipamento",
       "onde_se_encontra": "Fornalha, sobre a armadura derretida do duelista",
@@ -4313,6 +4617,8 @@
         "max_percent": 0,
         "health_threshold_percent": 25
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "paladin",
       "soma_com_outro": "não; não altera cura",
       "onde_se_encontra": "Santuário Branco, atrás do vitral apagado",
@@ -4328,6 +4634,8 @@
         "max_percent": 0,
         "preview_only": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; informação única",
       "onde_se_encontra": "A Raiz, na mesa onde o sangue não seca",
@@ -4343,6 +4651,8 @@
         "max_percent": 0,
         "one_warning": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; condição de arena",
       "onde_se_encontra": "Campas Cinzentas, na porta que fecha atrás do carrasco",
@@ -4358,6 +4668,8 @@
         "max_percent": 0,
         "charge_required": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; evento ambiental",
       "onde_se_encontra": "Fulgor, no pára-raios tombado da praça",
@@ -4373,6 +4685,8 @@
         "max_percent": 0,
         "near_death_fall": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "batedor",
       "soma_com_outro": "não; uma saída por sala",
       "onde_se_encontra": "Fojo, no patamar inferior do poço de minério",
@@ -4388,6 +4702,8 @@
         "max_percent": 0,
         "pulse_preview": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; leitura de volume",
       "onde_se_encontra": "Cidade Afogada, na redoma partida da torre",
@@ -4398,11 +4714,13 @@
     "companhia_vazia": {
       "nome": "Companhia Vazia",
       "eixo": "risco",
-      "efeito": "sozinho num mundo co-op, altares de ressurreição apontam para o próximo sinal de invocação",
+      "efeito": "sozinho num mundo co-op privado, um altar de ressurreição aponta para o último descanso visitado",
       "numeros": {
         "max_percent": 0,
         "solo_only": true
       },
+      "effect_type": "combat_event_rule",
+      "client_id": "combat_system",
       "afinidade": "universal",
       "soma_com_outro": "não; navegação condicional",
       "onde_se_encontra": "Brumal, no segundo assento vazio da mesa de descanso",
@@ -4418,6 +4736,8 @@
         "max_percent": 0,
         "counter": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "berserker",
       "soma_com_outro": "não; informação da zona",
       "onde_se_encontra": "Fojo, carta rara do kobold armadilheiro da mina",
@@ -4433,6 +4753,8 @@
         "max_percent": 0,
         "one_anchor": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "assassin",
       "soma_com_outro": "não; uma rota",
       "onde_se_encontra": "Campas Cinzentas, sob a ponte que volta à fogueira",
@@ -4448,6 +4770,8 @@
         "max_percent": 0,
         "one_direction": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "tank",
       "soma_com_outro": "não; memória da morte",
       "onde_se_encontra": "Brumal, no cadáver atrás do primeiro brutamontes",
@@ -4463,6 +4787,8 @@
         "max_percent": 0,
         "one_altar": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "paladin",
       "soma_com_outro": "não; depósito não acumula entre altares",
       "onde_se_encontra": "Santuário Branco, na caixa de esmolas selada por dentro",
@@ -4473,13 +4799,15 @@
     "mapa_dos_caidos": {
       "nome": "Mapa dos Caídos",
       "eixo": "almas",
-      "efeito": "uma mancha recuperada revela outras manchas de jogadores na mesma travessia",
+      "efeito": "recuperar a tua mancha revela durante doze segundos o último atalho que abriste",
       "numeros": {
         "max_percent": 0,
         "reveal_s": 12
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "batedor",
-      "soma_com_outro": "não; só sobreposição social",
+      "soma_com_outro": "não; usa o próprio save",
       "onde_se_encontra": "Cimeira, no memorial varrido pelo vento",
       "descricao_visual": "anel aço frio com pontos de prata ligados como um mapa sem nomes; objecto isolado com interior e perfil lateral legíveis",
       "asset_path": "",
@@ -4493,6 +4821,8 @@
         "max_percent": 0,
         "water_only": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; muda apresentação",
       "onde_se_encontra": "Cidade Afogada, no pescoço da estátua submersa",
@@ -4508,6 +4838,8 @@
         "max_percent": 0,
         "rewarded_defeats": 10
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "universal",
       "soma_com_outro": "não; estado de catálogo",
       "onde_se_encontra": "Fornalha, na décima urna da galeria de cinza",
@@ -4523,6 +4855,8 @@
         "max_percent": 0,
         "preview_card": true
       },
+      "effect_type": "world_state_rule",
+      "client_id": "world_state",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; pré-visualização única",
       "onde_se_encontra": "A Raiz, carta rara do alabardeiro sem rosto",
@@ -4538,6 +4872,8 @@
         "max_percent": 0,
         "marker_s": 4
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "tank",
       "soma_com_outro": "não; marca ambiental",
       "onde_se_encontra": "Brumal, dentro da janela embaciada da torre",
@@ -4553,6 +4889,8 @@
         "max_percent": 0,
         "mirrored_meter": true
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "assassin",
       "soma_com_outro": "não; espelho visual",
       "onde_se_encontra": "Selva Funda, no tronco oco da árvore venenosa",
@@ -4568,6 +4906,8 @@
         "max_percent": 0,
         "hint_count": 1
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "warrior",
       "soma_com_outro": "não; pista de fraqueza",
       "onde_se_encontra": "Campas Cinzentas, na mão do esqueleto intacto",
@@ -4583,6 +4923,8 @@
         "max_percent": 0,
         "path_s": 3
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "paladin",
       "soma_com_outro": "não; rota de fuga",
       "onde_se_encontra": "Fulgor, sob a grelha electrificada da oficina",
@@ -4598,6 +4940,8 @@
         "max_percent": 0,
         "required_surfaces": 2
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "berserker",
       "soma_com_outro": "não; cura binária",
       "onde_se_encontra": "Fornalha, na vala de cinza junto ao forno",
@@ -4613,6 +4957,8 @@
         "max_percent": 0,
         "reveal_s": 1
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; sinal curto",
       "onde_se_encontra": "Costa Quebrada, numa tigela de sal dentro da gruta",
@@ -4628,6 +4974,8 @@
         "max_percent": 0,
         "split_display": true
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; apresentação de dano",
       "onde_se_encontra": "Cidade Afogada, no escudo cerimonial do salão",
@@ -4643,6 +4991,8 @@
         "max_percent": 0,
         "hud_candle": true
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "paladin",
       "soma_com_outro": "sim; não estende duração",
       "onde_se_encontra": "Santuário Branco, atrás do altar atingido por raio",
@@ -4658,6 +5008,8 @@
         "max_percent": 0,
         "route_until_heal": true
       },
+      "effect_type": "status_event_rule",
+      "client_id": "status_system",
       "afinidade": "mago_do_mal",
       "soma_com_outro": "não; uma rota activa",
       "onde_se_encontra": "A Raiz, dentro do relicário que pulsa sem som",
@@ -4673,6 +5025,8 @@
         "max_percent": 0,
         "both_players": true
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "batedor",
       "soma_com_outro": "não; uma porta comum",
       "onde_se_encontra": "Costa Quebrada, carta rara do submerso do cais",
@@ -4688,6 +5042,8 @@
         "max_percent": 0,
         "cue_equivalence": true
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "paladin",
       "soma_com_outro": "não; canal partilhado",
       "onde_se_encontra": "Santuário Branco, entre as duas campas paralelas",
@@ -4703,6 +5059,8 @@
         "max_percent": 0,
         "range_m": 2
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "tank",
       "soma_com_outro": "não; uma marca",
       "onde_se_encontra": "Brumal, na torre defendida por dois orcs",
@@ -4718,6 +5076,8 @@
         "max_percent": 0,
         "footsteps": 1
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "assassin",
       "soma_com_outro": "não; conserva uma pegada",
       "onde_se_encontra": "Selva Funda, na ponte dupla sob a copa",
@@ -4733,6 +5093,8 @@
         "max_percent": 0,
         "choices": 2
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "sorcerer",
       "soma_com_outro": "não; decisão conjunta",
       "onde_se_encontra": "Cidade Afogada, no banco duplo do observatório",
@@ -4748,6 +5110,8 @@
         "max_percent": 0,
         "symbols": 2
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "berserker",
       "soma_com_outro": "não; acessibilidade",
       "onde_se_encontra": "Fornalha, no balcão acima da arena do ferreiro",
@@ -4763,6 +5127,8 @@
         "max_percent": 0,
         "line_of_fire": true
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "batedor",
       "soma_com_outro": "não; uma linha",
       "onde_se_encontra": "Cimeira, no posto dos dois vigias congelados",
@@ -4778,6 +5144,8 @@
         "max_percent": 0,
         "split_meter": true
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "assassin",
       "soma_com_outro": "não; apresentação partilhada",
       "onde_se_encontra": "Campas Cinzentas, no sarcófago aberto por duas alavancas",
@@ -4793,6 +5161,8 @@
         "max_percent": 0,
         "route_until_revive": true
       },
+      "effect_type": "gameplay_cue_rule",
+      "client_id": "gameplay_cue",
       "afinidade": "universal",
       "soma_com_outro": "não; uma rota por queda",
       "onde_se_encontra": "A Raiz, entre os dois tronos vazios",
