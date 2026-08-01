@@ -8,7 +8,7 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 | **Universal Animation Library** | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-animation-library) | ⭐ ciclos de animação — é o que permite medir o risco do M1 |
 | **Ultimate Monsters** | Quaternius | CC0 1.0 | [quaternius.com](https://quaternius.com/packs/ultimatemonsters.html) | Orc, Orc Small e Orc Skull — lanceiro, brutamontes e Vorgar |
 | **KayKit — Adventurers** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-adventurers) | personagens jogáveis, alternativa de silhueta |
-| **KayKit — Dungeon Pack** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-dungeon-pack) | a Toca (dungeon da fatia 1) |
+| **KayKit — Dungeon Pack 1.1** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-dungeon-pack) | 25 módulos seleccionados para a entrada, três salas, dois atalhos e arena da Toca |
 | **KayKit — Skeletons** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-skeletons) | raça esqueleto (Campas Cinzentas) |
 | **Nature Kit** | Kenney | CC0 1.0 | [kenney.nl](https://kenney.nl/assets/nature-kit) | floresta de Brumal |
 | **Graveyard Kit** | Kenney | CC0 1.0 | [kenney.nl](https://kenney.nl/assets/graveyard-kit) | Campas Cinzentas |
@@ -23,6 +23,8 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 **Os onze packs trazem `License.txt` (ou `License_Standard.txt`) dentro da distribuição, com CC0 1.0 explícito.** Verifiquei um a um por leitura do ficheiro — uma página de download pode mudar; o ficheiro que veio com os assets é a prova, e fica junto deles.
 
 No caso de **Ultimate Monsters**, a distribuição oficial é a pasta Google Drive ligada pela página do pack. O `License.txt` interno foi lido e copiado para `game/assets/models/characters/quaternius-ultimate-monsters/License.txt`; declara literalmente **CC0 1.0 Universal / Public Domain Dedication**. Há uma gralha de empacotamento que não se esconde: o cabeçalho desse ficheiro diz “Ultimate Platformer Pack”, apesar de viver na pasta oficial Ultimate Monsters. A página oficial e os nomes dos modelos confirmam a origem; a concessão CC0 do próprio ficheiro é inequívoca.
+
+O subconjunto do **KayKit — Dungeon Pack 1.1** usado pela Toca vive em `game/assets/models/dungeon/`, junto de `License.txt` e da textura original do pack. A selecção deliberada traz e usa 25 dos 211 modelos disponíveis, sem importar o pack inteiro para o jogo.
 
 ## Onde vivem, e o que o Godot vê
 
