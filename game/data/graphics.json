@@ -2,6 +2,7 @@
   "_fonte": "spec/09-tecnico.md — Intel Iris Xe integrados, 8 GB partilhados com os graficos, 1080p @ 60 Hz.",
   "_lei_4": "Se for preciso escolher entre bonito e 60 fps, escolhe-se 60 fps. Estes presets sao o botao que faz essa escolha.",
   "_nota": "A nevoa nao e so estetica: encurta a distancia de visao e esconde o corte do mundo. E a aliada do desempenho (spec/10-fatia-1.md).",
+  "_densidade": "[CLAUDE] 01-08: os tree_count antigos (200/100/80) eram o travao que fazia o mapa parecer vazio. O mundo tem 210x210 m = 44.100 m2; 100 arvores davam UMA ARVORE A CADA 21 METROS — campo de golfe, nao floresta de Brumal. Os valores novos dao ~6,8 m (alto), ~8,8 m (medio) e ~11,9 m (baixo) entre arvores. Custa pouco porque o greybox usa MultiMeshInstance3D: 1600 arvores continuam a ser 3 draw calls. O que sobe e a contagem de vertices, nao as chamadas. MEDIR sempre depois de mexer aqui — e a Lei 4.",
 
   "default": "medio",
 
@@ -22,7 +23,7 @@
     "alto": {
       "shadows": true, "shadow_size": 2048, "shadow_distance": 45.0,
       "fog_density": 0.024, "view_distance": 95.0,
-      "tree_count": 200, "rock_count": 70,
+      "tree_count": 1600, "rock_count": 420,
       "grade_brightness": 0.96, "grade_contrast": 1.12, "grade_saturation": 0.84,
       "vignette_strength": 0.10,
       "msaa": 0, "render_scale": 1.0
@@ -30,7 +31,7 @@
     "medio": {
       "shadows": false, "shadow_size": 1024, "shadow_distance": 30.0,
       "fog_density": 0.032, "view_distance": 70.0,
-      "tree_count": 100, "rock_count": 32,
+      "tree_count": 950, "rock_count": 240,
       "grade_brightness": 0.95, "grade_contrast": 1.14, "grade_saturation": 0.82,
       "vignette_strength": 0.12,
       "msaa": 0, "render_scale": 1.0
@@ -38,7 +39,7 @@
     "baixo": {
       "shadows": false, "shadow_size": 512, "shadow_distance": 20.0,
       "fog_density": 0.048, "view_distance": 52.0,
-      "tree_count": 80, "rock_count": 28,
+      "tree_count": 520, "rock_count": 140,
       "grade_brightness": 0.96, "grade_contrast": 1.10, "grade_saturation": 0.84,
       "vignette_strength": 0.08,
       "msaa": 0, "render_scale": 0.85
