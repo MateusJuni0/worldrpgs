@@ -1,0 +1,96 @@
+{
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "after_unload": {
+    "nodes": 1030,
+    "peak_working_set_mib": 629.6,
+    "resources": 109,
+    "static_memory_mib": 70.3,
+    "video_memory_mib": 81.1,
+    "working_set_mib": 600.5
+  },
+  "baseline": {
+    "nodes": 27,
+    "peak_working_set_mib": 484.4,
+    "resources": 9,
+    "static_memory_mib": 56.9,
+    "video_memory_mib": 53.0,
+    "working_set_mib": 481.1
+  },
+  "candidate_peak": {
+    "nodes": 1030,
+    "peak_working_set_mib": 619.4,
+    "resources": 109,
+    "static_memory_mib": 70.4,
+    "video_memory_mib": 101.1,
+    "working_set_mib": 619.4
+  },
+  "case": "duas Brumal; geometria duplicada e assets partilhados; não representa Fojo final",
+  "date": "2026-08-01 18:40:57",
+  "engine": "4.7.1-stable (official)",
+  "gates": {
+    "p99_ms": 16.67,
+    "per_zone_mib": 512,
+    "working_set_mib": 2560,
+    "worst_ms": 20.0
+  },
+  "honest_limit": "esta máquina tem 16 GiB; repetir no i5-1334U/8 GiB do Rico antes de fechar a pergunta 50",
+  "initial_frames": {
+    "average_ms": 18.663,
+    "frames": 144,
+    "frames_over_16_67_ms": 62,
+    "frames_over_20_ms": 3,
+    "p99_ms": 48.646,
+    "worst_ms": 321.828
+  },
+  "manager_memory_records": {
+    "brumal": {
+      "admitted": true,
+      "charged_mib": 41,
+      "declared_mib": 512,
+      "frame_gate_passed": true,
+      "frame_gate_required": false,
+      "memory_gate_passed": true,
+      "policy_limit_mib": 512,
+      "publish_ms": 300.273,
+      "reported_build_ms": 300.122,
+      "static_delta_bytes": 13517225,
+      "video_delta_bytes": 29458880
+    },
+    "brumal_partilhada": {
+      "admitted": false,
+      "charged_mib": 27,
+      "declared_mib": 512,
+      "frame_gate_passed": false,
+      "frame_gate_required": true,
+      "memory_gate_passed": true,
+      "policy_limit_mib": 512,
+      "publish_ms": 113.004,
+      "reported_build_ms": 112.894,
+      "static_delta_bytes": 6319443,
+      "video_delta_bytes": 20988096
+    }
+  },
+  "one_zone": {
+    "nodes": 1030,
+    "peak_working_set_mib": 550.2,
+    "resources": 109,
+    "static_memory_mib": 69.8,
+    "video_memory_mib": 81.1,
+    "working_set_mib": 550.2
+  },
+  "physical_memory_gib": 15.73,
+  "policy": "current_and_transition",
+  "renderer": "mobile",
+  "resolution": "1920x1080",
+  "target_8_gib": false,
+  "transition_admitted": false,
+  "transition_failure": "publicacao_bloqueou_frame",
+  "transition_frames": {
+    "average_ms": 44.83,
+    "frames": 4,
+    "frames_over_16_67_ms": 3,
+    "frames_over_20_ms": 3,
+    "p99_ms": 117.064,
+    "worst_ms": 117.064
+  }
+}
