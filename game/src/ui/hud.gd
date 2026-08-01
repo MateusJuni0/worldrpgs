@@ -24,6 +24,9 @@ var _boss_label: Label
 var _help: Label
 var _toast: Label
 var _toast_time := 0.0
+var _prompt: Label
+var _save_status: Label
+var _save_status_time := 0.0
 
 
 func _ready() -> void:
@@ -76,6 +79,12 @@ func _build_labels() -> void:
 
 	_toast = _styled_label(Vector2(28, 792), 20)
 	_toast.add_theme_color_override("font_color", Color(1.0, 0.88, 0.5))
+	_prompt = _styled_label(Vector2(760, 840), 22)
+	_prompt.size = Vector2(400, 48)
+	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_save_status = _styled_label(Vector2(1580, 34), 16)
+	_save_status.size = Vector2(300, 40)
+	_save_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	_help = _styled_label(Vector2(1180, 120))
 	_help.visible = false
@@ -90,6 +99,10 @@ func _process(delta: float) -> void:
 		_toast_time -= delta
 		if _toast_time <= 0.0:
 			_toast.text = ""
+	if _save_status_time > 0.0:
+		_save_status_time -= delta
+		if _save_status_time <= 0.0:
+			_save_status.text = ""
 
 	if not is_instance_valid(player):
 		return
@@ -125,3 +138,12 @@ func _update_boss() -> void:
 func toast(message: String, seconds := 2.5) -> void:
 	_toast.text = message
 	_toast_time = seconds
+
+
+func set_prompt(message: String) -> void:
+	_prompt.text = message
+
+
+func indicate_save() -> void:
+	_save_status.text = "◆  PROGRESSO GUARDADO"
+	_save_status_time = 1.6

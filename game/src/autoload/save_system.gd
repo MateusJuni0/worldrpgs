@@ -4,7 +4,7 @@ extends Node
 ## O catalogo continua a viver no GameData; o save guarda apenas estado mutavel e
 ## ids estaveis que apontam para esse catalogo. Fonte: spec/59-saves.md.
 
-const CURRENT_FORMAT_VERSION := 1
+const CURRENT_FORMAT_VERSION := 2
 const SAVE_DIR := "user://saves"
 
 var last_error := ""
@@ -64,7 +64,7 @@ func create_save(profile_id: String, class_id: String, identity_overrides := {})
 				"weapon_upgrades": {},
 				"spell_upgrades": {},
 			},
-			"checkpoint": {"zone_id": "", "rest_point_id": ""},
+			"checkpoint": {"zone_id": "brumal", "rest_point_id": "brumal_clareira"},
 			"death": {"soul_stain": null},
 		},
 		"world": {
@@ -72,7 +72,7 @@ func create_save(profile_id: String, class_id: String, identity_overrides := {})
 			"cycle": 0,
 			"bosses_defeated": [],
 			"shortcuts_open": [],
-			"rest_points_discovered": [],
+			"rest_points_discovered": ["brumal_clareira"],
 			"chests_opened": [],
 			"enemy_respawns": {},
 			"loot_decks": {},
@@ -140,6 +140,115 @@ func load_slot(slot: int = 0) -> Dictionary:
 	if last_load_recovered:
 		recovery_completed.emit(path, last_recovery_source)
 	return state
+
+
+func has_save(slot: int) -> bool:
+	return String(_decode_candidate(slot_path(slot)).get("status", "")) == "ok"
+
+
+func latest_slot(max_slots := 3) -> int:
+	var result := -1
+	var newest := -1
+	for slot: int in range(max_slots):
+		var candidate := _decode_candidate(slot_path(slot))
+		if String(candidate.get("status", "")) != "ok":
+			continue
+		var state: Dictionary = candidate.get("state", {}) as Dictionary
+		var saved_at := int(state.get("saved_at_unix", 0))
+		if saved_at >= newest:
+			newest = saved_at
+			result = slot
+	return result
+
+
+func slot_metadata(slot: int) -> Dictionary:
+	var candidate := _decode_candidate(slot_path(slot))
+	if String(candidate.get("status", "")) != "ok":
+		return {}
+	var state: Dictionary = candidate.get("state", {}) as Dictionary
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var identity: Dictionary = character.get("identity", {}) as Dictionary
+	var checkpoint: Dictionary = character.get("checkpoint", {}) as Dictionary
+	return {
+		"slot": slot,
+		"name": String(identity.get("name", "")),
+		"class_id": String(identity.get("class_id", "warrior")),
+		"saved_at_unix": int(state.get("saved_at_unix", 0)),
+		"zone_id": String(checkpoint.get("zone_id", "")),
+		"rest_point_id": String(checkpoint.get("rest_point_id", "")),
+	}
+
+
+func commit_checkpoint(zone_id: String, rest_point_id: String, slot: int = -1) -> bool:
+	if zone_id == "" or rest_point_id == "":
+		return _fail("O ponto de descanso precisa de zona e ID")
+	var before := GameData.save_state_snapshot()
+	if before.is_empty():
+		return _fail("Nao existe save activo para guardar o descanso")
+	var working := before.duplicate(true)
+	var character: Dictionary = working.get("character", {}) as Dictionary
+	character["checkpoint"] = {"zone_id": zone_id, "rest_point_id": rest_point_id}
+	var world_state: Dictionary = working.get("world", {}) as Dictionary
+	var discovered: Array = world_state.get("rest_points_discovered", []) as Array
+	if not rest_point_id in discovered:
+		discovered.append(rest_point_id)
+	world_state["rest_points_discovered"] = discovered
+	return _commit_working(before, working, slot)
+
+
+func commit_death(zone_id: String, position: Vector3, slot: int = -1) -> bool:
+	var before := GameData.save_state_snapshot()
+	if before.is_empty():
+		return _fail("Nao existe save activo para guardar a morte")
+	var working := before.duplicate(true)
+	var character: Dictionary = working.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	var death: Dictionary = character.get("death", {}) as Dictionary
+	var previous_stain: Variant = death.get("soul_stain")
+	var sequence := 1
+	if typeof(previous_stain) == TYPE_DICTIONARY:
+		sequence = int((previous_stain as Dictionary).get("death_sequence", 0)) + 1
+	var profile_id := String(character.get("profile_id", "local"))
+	death["soul_stain"] = {
+		"stain_id": "%s:%d" % [profile_id, sequence],
+		"amount": int(progression.get("souls_held", 0)),
+		"zone_id": zone_id,
+		"position": [position.x, position.y, position.z],
+		"death_sequence": sequence,
+	}
+	progression["souls_held"] = 0
+	character["death"] = death
+	return _commit_working(before, working, slot)
+
+
+func commit_boss_defeat(boss_id: String, event_id: String, slot: int = -1) -> bool:
+	if boss_id == "" or event_id == "":
+		return _fail("A derrota de chefe precisa de boss_id e event_id")
+	var before := GameData.save_state_snapshot()
+	if before.is_empty():
+		return _fail("Nao existe save activo para guardar o chefe")
+	var working := before.duplicate(true)
+	var character: Dictionary = working.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	var claimed: Array = progression.get("boss_rewards_claimed", []) as Array
+	if not boss_id in claimed:
+		claimed.append(boss_id)
+	var applied: Array = progression.get("applied_event_ids", []) as Array
+	if not event_id in applied:
+		applied.append(event_id)
+	var world_state: Dictionary = working.get("world", {}) as Dictionary
+	var defeated: Array = world_state.get("bosses_defeated", []) as Array
+	if not boss_id in defeated:
+		defeated.append(boss_id)
+	return _commit_working(before, working, slot)
+
+
+func _commit_working(before: Dictionary, working: Dictionary, slot: int) -> bool:
+	GameData.replace_save_state(working)
+	if save_current(slot):
+		return true
+	GameData.replace_save_state(before)
+	return false
 
 
 func save_to_path(path: String, state: Dictionary) -> bool:
@@ -287,6 +396,10 @@ func _decode_candidate(path: String) -> Dictionary:
 				state = _migrate_v0_to_v1(state)
 				version = 1
 				migrated = true
+			1:
+				state = _migrate_v1_to_v2(state)
+				version = 2
+				migrated = true
 			_:
 				return {"status": "corrupt"}
 	if not _has_required_sections(state):
@@ -307,6 +420,22 @@ func _migrate_v0_to_v1(old_state: Dictionary) -> Dictionary:
 	var class_id := String(identity.get("class_id", "warrior"))
 	var migrated := _merge_with_defaults(create_save(profile_id, class_id), legacy)
 	migrated["format_version"] = 1
+	return migrated
+
+
+func _migrate_v1_to_v2(old_state: Dictionary) -> Dictionary:
+	var legacy := old_state.duplicate(true)
+	var character: Dictionary = legacy.get("character", {}) as Dictionary
+	var identity: Dictionary = character.get("identity", {}) as Dictionary
+	var profile_id := String(character.get("profile_id", "legacy"))
+	var class_id := String(identity.get("class_id", "warrior"))
+	var migrated := _merge_with_defaults(create_save(profile_id, class_id), legacy)
+	var migrated_character: Dictionary = migrated.get("character", {}) as Dictionary
+	var migrated_identity: Dictionary = migrated_character.get("identity", {}) as Dictionary
+	if typeof(migrated_identity.get("appearance")) != TYPE_DICTIONARY:
+		migrated_identity["appearance"] = (GameData.appearance.get(
+			"default", {}) as Dictionary).duplicate(true)
+	migrated["format_version"] = 2
 	return migrated
 
 

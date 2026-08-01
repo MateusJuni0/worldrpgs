@@ -45,6 +45,7 @@ func _ready() -> void:
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
 	_test_save_migration()
+	_test_save_events_and_latest_checkpoint()
 	_report()
 
 
@@ -610,6 +611,55 @@ func _test_save_migration() -> void:
 	_check(typeof(character.get("inventory")) == TYPE_DICTIONARY
 		and typeof((migrated.get("world", {}) as Dictionary).get("map")) == TYPE_DICTIONARY,
 		"save: migracao acrescenta campos novos com defaults")
+	_check(typeof((character.get("identity", {}) as Dictionary).get("appearance")) == TYPE_DICTIONARY,
+		"save v2: migracao acrescenta aparencia sem reabrir o criador")
+	_remove_save_artifacts(path)
+
+
+func _test_save_events_and_latest_checkpoint() -> void:
+	var path := "user://worldrpgs-self-test/events.json"
+	_remove_save_artifacts(path)
+	var previous_state := GameData.save_state_snapshot()
+	var previous_slot := SaveSystem.active_slot
+	var state := SaveSystem.create_save("events", "warrior")
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	progression["souls_held"] = 321
+	GameData.replace_save_state(state)
+	SaveSystem.active_slot = 91
+	var real_slot_path := SaveSystem.slot_path(91)
+	_remove_save_artifacts(real_slot_path)
+	_check(SaveSystem.commit_checkpoint("brumal", "toca_entrada", 91),
+		"autosave: descansar confirma zona e fogueira")
+	var after_rest := GameData.save_state_snapshot()
+	var checkpoint: Dictionary = ((after_rest.get("character", {}) as Dictionary).get(
+		"checkpoint", {}) as Dictionary)
+	_check(checkpoint.get("rest_point_id") == "toca_entrada",
+		"carregar: checkpoint guarda ID de descanso, nunca posicao livre")
+	_check(SaveSystem.commit_death("brumal", Vector3(4, 1, -8), 91),
+		"autosave: morte e sincronamente confirmada")
+	var after_death := GameData.save_state_snapshot()
+	var dead_character: Dictionary = after_death.get("character", {}) as Dictionary
+	var stain: Dictionary = ((dead_character.get("death", {}) as Dictionary).get(
+		"soul_stain", {}) as Dictionary)
+	_check(int((dead_character.get("progression", {}) as Dictionary).get("souls_held", -1)) == 0
+		and int(stain.get("amount", 0)) == 321,
+		"autosave: morte move almas para a mancha na mesma geracao")
+	_check(SaveSystem.commit_boss_defeat("vorgar", "boss:vorgar:0", 91),
+		"autosave: chefe publica mundo e recibo juntos")
+	var after_boss := GameData.save_state_snapshot()
+	_check(((after_boss.get("world", {}) as Dictionary).get("bosses_defeated", []) as Array).has("vorgar")
+		and (((after_boss.get("character", {}) as Dictionary).get("progression", {}) as Dictionary).get(
+			"applied_event_ids", []) as Array).has("boss:vorgar:0"),
+		"autosave: derrota de chefe e idempotente nos dois sacos")
+	var loaded := SaveSystem.load_slot(91)
+	var loaded_checkpoint: Dictionary = ((loaded.get("character", {}) as Dictionary).get(
+		"checkpoint", {}) as Dictionary)
+	_check(loaded_checkpoint.get("rest_point_id") == "toca_entrada",
+		"continuar: reabre o ultimo descanso mesmo depois da morte")
+	_remove_save_artifacts(real_slot_path)
+	SaveSystem.active_slot = previous_slot
+	GameData.replace_save_state(previous_state)
 	_remove_save_artifacts(path)
 
 

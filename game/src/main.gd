@@ -18,6 +18,8 @@ var _graphics: Dictionary = {}
 var _scene_kind := "zone"
 var _respawn_point := Vector3.ZERO
 var _respawning := false
+var _rest_points: Dictionary = {}
+var _nearest_rest_id := ""
 
 
 func _ready() -> void:
@@ -28,6 +30,7 @@ func _ready() -> void:
 	_scene_kind = Bench.scene_arg
 
 	_build_world()
+	_build_rest_points()
 	_build_player()
 	_build_hud()
 	_populate()
@@ -82,7 +85,10 @@ func _build_player() -> void:
 	player.name = "Player"
 	add_child(player)
 	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")))
-	player.global_position = world.spawn_point + Vector3(0, 0.6, 0)
+	var checkpoint: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
+		"checkpoint", {}) as Dictionary)
+	var rest_id := String(checkpoint.get("rest_point_id", "brumal_clareira"))
+	player.global_position = _rest_points.get(rest_id, world.spawn_point) + Vector3(0, 0.6, 0)
 	_respawn_point = player.global_position
 
 	var cam := PlayerCamera.new()
@@ -100,6 +106,7 @@ func _build_hud() -> void:
 	hud.name = "Hud"
 	add_child(hud)
 	hud.player = player
+	SaveSystem.save_completed.connect(_on_save_completed)
 	if not Bench.is_benchmarking():
 		hud.toast(GameData.ui_text("toast.start") % _preset.get("_name", "?"), 6.0)
 
@@ -160,9 +167,12 @@ func _populate_zone() -> void:
 	_spawn("orc_spearman", e + Vector3(0, 0.5, -10))
 	_spawn("orc_brute", e + Vector3(2, 0.5, -21))
 
-	boss = _spawn("vorgar", world.arena_center)
-	hud.boss = boss
-	boss.died.connect(_on_boss_died)
+	var defeated: Array = ((GameData.save_state.get("world", {}) as Dictionary).get(
+		"bosses_defeated", []) as Array)
+	if not "vorgar" in defeated:
+		boss = _spawn("vorgar", world.arena_center)
+		hud.boss = boss
+		boss.died.connect(_on_boss_died)
 
 
 # --- Morte e recomeco ---------------------------------------------------------
@@ -207,6 +217,8 @@ func _on_player_died() -> void:
 	if _respawning:
 		return
 	_respawning = true
+	if not SaveSystem.commit_death("brumal", player.global_position):
+		hud.toast("A morte não foi gravada: %s" % SaveSystem.last_error, 4.0)
 	hud.toast(GameData.ui_text("toast.death"), 1.5)
 	await get_tree().create_timer(
 		float(GameData.section("death").get("respawn_fade_seconds", 1.2))).timeout
@@ -227,7 +239,106 @@ func _respawn() -> void:
 
 
 func _on_boss_died(_e: Enemy) -> void:
+	var cycle := int((GameData.save_state.get("world", {}) as Dictionary).get("cycle", 0))
+	if not SaveSystem.commit_boss_defeat("vorgar", "boss:vorgar:%d" % cycle):
+		hud.toast("Vorgar caiu, mas o progresso não foi gravado.", 4.0)
+		return
 	hud.toast(GameData.ui_text("toast.boss_defeated"), 12.0)
+
+
+func _on_save_completed(_path: String) -> void:
+	if is_instance_valid(hud):
+		hud.indicate_save()
+
+
+# --- Pontos de descanso ------------------------------------------------------
+
+func _build_rest_points() -> void:
+	_rest_points = {
+		"brumal_clareira": world.spawn_point,
+		"toca_entrada": world.lair_entrance + Vector3(0, 0.0, 7.0),
+	}
+	for rest_id: String in _rest_points:
+		_build_bonfire(rest_id, _rest_points[rest_id])
+
+
+func _build_bonfire(rest_id: String, at: Vector3) -> void:
+	var root := Node3D.new()
+	root.name = "Rest_%s" % rest_id
+	root.position = at
+	add_child(root)
+	for index: int in range(8):
+		var stone := MeshInstance3D.new()
+		var mesh := SphereMesh.new()
+		mesh.radius = 0.22
+		mesh.height = 0.34
+		stone.mesh = mesh
+		var angle := TAU * float(index) / 8.0
+		stone.position = Vector3(sin(angle) * 0.7, 0.18, cos(angle) * 0.7)
+		root.add_child(stone)
+	var ember := MeshInstance3D.new()
+	var ember_mesh := CylinderMesh.new()
+	ember_mesh.top_radius = 0.16
+	ember_mesh.bottom_radius = 0.42
+	ember_mesh.height = 0.75
+	ember.mesh = ember_mesh
+	ember.position.y = 0.4
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("d57635")
+	material.emission_enabled = true
+	material.emission = Color("d65a24")
+	material.emission_energy_multiplier = 2.5
+	ember.material_override = material
+	root.add_child(ember)
+	var light := OmniLight3D.new()
+	light.position.y = 1.1
+	light.light_color = Color("ff9a55")
+	light.light_energy = 1.8
+	light.omni_range = 7.0
+	light.shadow_enabled = false
+	root.add_child(light)
+
+
+func _tick_rest_points() -> void:
+	if not is_instance_valid(player) or player.state == Player.State.DEAD:
+		return
+	var nearest := ""
+	var nearest_distance := 9999.0
+	for rest_id: String in _rest_points:
+		var distance := player.global_position.distance_to(_rest_points[rest_id])
+		if distance < nearest_distance:
+			nearest = rest_id
+			nearest_distance = distance
+	_nearest_rest_id = nearest if nearest_distance <= 2.5 else ""
+	if _nearest_rest_id == "":
+		hud.set_prompt("")
+		return
+	hud.set_prompt("%s — descansar" % _binding_label("interact"))
+	if Input.is_action_just_pressed("interact"):
+		_rest_at(_nearest_rest_id)
+
+
+func _rest_at(rest_id: String) -> void:
+	if not SaveSystem.commit_checkpoint("brumal", rest_id):
+		hud.toast("Não foi possível guardar este descanso.", 3.0)
+		return
+	_respawn_point = (_rest_points[rest_id] as Vector3) + Vector3(0, 0.6, 0)
+	player.health = player.max_health
+	player.stamina.current = player.stamina.maximum
+	player.mana = player.max_mana
+	player.flask_refill()
+	for node: Node in get_children():
+		var enemy := node as Enemy
+		if enemy != null and not enemy.is_boss:
+			enemy.full_reset()
+	hud.toast("Descansaste. Este é agora o teu ponto de regresso.", 3.0)
+
+
+func _binding_label(action_name: String) -> String:
+	var events := InputMap.action_get_events(action_name)
+	if events.is_empty():
+		return "?"
+	return (events[0] as InputEvent).as_text().replace(" (Physical)", "")
 
 
 # --- Teclas de sessao ---------------------------------------------------------
@@ -260,7 +371,10 @@ func _run_benchmark_pilot() -> void:
 var _pilot_t := 0.0
 
 func _process(delta: float) -> void:
-	if not Bench.is_benchmarking() or not is_instance_valid(player):
+	if not Bench.is_benchmarking():
+		_tick_rest_points()
+		return
+	if not is_instance_valid(player):
 		return
 	_pilot_t += delta
 	var angle := _pilot_t * 0.35
@@ -268,6 +382,13 @@ func _process(delta: float) -> void:
 	player.global_position = centre + Vector3(sin(angle) * 12.0, 0.6, cos(angle) * 12.0)
 	if player.camera != null:
 		player.camera.rotation.y = angle + PI
+
+
+func _exit_tree() -> void:
+	if SaveSystem.save_completed.is_connected(_on_save_completed):
+		SaveSystem.save_completed.disconnect(_on_save_completed)
+	if not GameData.save_state.is_empty():
+		SaveSystem.save_current()
 
 
 # --- Troca de classe (F6, ferramenta de teste) ---------------------------------

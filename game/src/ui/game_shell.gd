@@ -450,8 +450,15 @@ func _create_character() -> void:
 
 
 func _continue_last_save() -> void:
-	# A seleccao do ultimo save e o carregamento entram no bloco de persistencia.
-	_show_modal("CONTINUAR", "O carregamento do último descanso está a ser ligado.")
+	var slot := SaveSystem.latest_slot()
+	if slot < 0:
+		_show_modal("SEM SAVE", "Não existe uma gravação íntegra para continuar.")
+		return
+	var loaded := SaveSystem.load_slot(slot)
+	if loaded.is_empty():
+		_show_modal("NÃO FOI POSSÍVEL CARREGAR", SaveSystem.last_error)
+		return
+	_start_gameplay()
 
 
 func _start_gameplay() -> void:
@@ -654,7 +661,7 @@ func _make_theme() -> Theme:
 
 func _has_save() -> bool:
 	for slot: int in range(3):
-		if FileAccess.file_exists(SaveSystem.slot_path(slot)):
+		if SaveSystem.has_save(slot):
 			return true
 	return false
 
