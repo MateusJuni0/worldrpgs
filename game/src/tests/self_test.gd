@@ -12,6 +12,7 @@ var _passed := 0
 var _failed := 0
 
 const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
+const ExplorationMapScript = preload("res://src/world/exploration_map.gd")
 
 
 func _ready() -> void:
@@ -45,6 +46,7 @@ func _ready() -> void:
 	_test_pause_contract()
 	_test_settings_contract()
 	_test_inventory_and_spell_wheel_contract()
+	_test_exploration_map()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -211,6 +213,64 @@ func _test_inventory_and_spell_wheel_contract() -> void:
 	_check(not wheel_source.contains("Engine.time_scale =")
 		and not wheel_source.contains("get_tree().paused ="),
 		"roda: a interface nao abranda nem pausa o mundo")
+# --- spec/57: mapa como memoria, nunca GPS -----------------------------------
+
+func _test_exploration_map() -> void:
+	var cfg: Dictionary = ((GameData.world.get("map_reading", {}) as Dictionary).get(
+		"runtime", {}) as Dictionary)
+	_check(String(cfg.get("prototype_scope", "")).begins_with("[PROTO] por_zona"),
+		"mapa: pergunta 38 fica [PROTO] por zona, nao decidida pelo runtime")
+	_check(is_equal_approx(float(cfg.get("minimap_range_m", 0.0)), 40.0),
+		"minimapa: alcance de orientacao e 40 m")
+	_check(String(cfg.get("compass_equivalent", "")).begins_with("cardinais_no_aro")
+		and String(cfg.get("minimap_default", "")) == "roda_com_o_jogador",
+		"bússola: o aro dá norte e o mapa roda por defeito como manda a spec/57")
+	_check(InputMap.has_action("open_map")
+		and GameData.ui_text("map.title") != ""
+		and GameData.ui_text("map.close_hint") != "",
+		"mapa grande: abre por acção configurável e usa texto catalogado")
+	var map_has_key := false
+	var map_has_pad := false
+	for map_event: InputEvent in InputMap.action_get_events("open_map"):
+		map_has_key = map_has_key or map_event is InputEventKey
+		map_has_pad = map_has_pad or map_event is InputEventJoypadButton
+	_check(map_has_key and map_has_pad,
+		"mapa grande: default cobre teclado e comando sem tecla escrita na UI")
+	var explored: RefCounted = ExplorationMapScript.new()
+	explored.call("configure", "brumal", Rect2(-110, -110, 220, 220), 4.0)
+	_check(int(explored.get("width")) == 55 and int(explored.get("height")) == 55,
+		"mapa: Brumal usa grelha compacta 55x55, nao uma segunda camara")
+	_check(explored.call("reveal", Vector3(0, 0, 95), 7.0),
+		"mapa: pisar terreno revela celulas")
+	_check(explored.call("is_world_revealed", Vector3(0, 0, 95))
+		and not explored.call("is_world_revealed", Vector3(0, 0, -70)),
+		"mapa: mostra onde esteve e nao le a Toca a frente")
+	_check(explored.call("discover_landmark", "descanso_1_brumal")
+		and not explored.call("discover_landmark", "descanso_1_brumal"),
+		"mapa: um marco descoberto entra uma vez")
+	var map_block: Dictionary = explored.call("to_save_block")
+	var restored: RefCounted = ExplorationMapScript.new()
+	restored.call("configure", "brumal", Rect2(-110, -110, 220, 220), 4.0)
+	_check(restored.call("load_save_block", map_block)
+		and int(restored.call("revealed_count")) == int(explored.call("revealed_count"))
+		and restored.call("is_landmark_discovered", "descanso_1_brumal"),
+		"nevoeiro: bitset e marcos sobrevivem ao round-trip do save")
+	var incompatible_block := map_block.duplicate(true)
+	incompatible_block["cell_size_m"] = 8.0
+	_check(not restored.call("load_save_block", incompatible_block),
+		"nevoeiro: recusa grelha incompatível em vez de deslocar a memória")
+	var orientation: Dictionary = GameData.world.get("orientation_runtime", {}) as Dictionary
+	_check(String(orientation.get("method", "")) ==
+		"geometria_do_mundo_sem_marcadores_de_objectivo"
+		and float(orientation.get("path_width_m", 0.0)) >= 6.0,
+		"orientação: caminho largo vive no mundo, sem marcador de missão")
+	_check((orientation.get("first_five_sequence", []) as Array) == [
+		"orla_vazia", "um_lanceiro_de_costas", "dois_lanceiros_de_frente",
+		"brutamontes_no_arco", "descanso_e_bivaque"],
+		"orientação: os primeiros cinco minutos seguem a ordem do spec/27")
+	_check((orientation.get("path_promises", []) as Array).size() >= 2
+		and (orientation.get("distant_landmarks", []) as Array).size() == 3,
+		"orientação: ramificações prometem conteúdo e três silhuetas guiam à distância")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

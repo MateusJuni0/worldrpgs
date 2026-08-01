@@ -10,6 +10,7 @@ var _main: Node3D
 
 func run(main: Node3D) -> void:
 	_main = main
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_cam = Camera3D.new()
 	_cam.fov = 65.0
 	add_child(_cam)
@@ -46,6 +47,7 @@ func _shoot_all() -> void:
 			["01-spawn-3a-pessoa", world.spawn_point + Vector3(0, 2.2, 4.5), world.spawn_point + Vector3(0, 1.2, -2)],
 			["02-floresta-caminho", mid + Vector3(2, 1.7, 6), mid + Vector3(0, 1, -4)],
 			["03-floresta-alto", mid + Vector3(0, 14, 18), mid],
+			["03b-clareira-descanso", world.rest_point + Vector3(10, 4.5, 12), world.rest_point + Vector3(0, 1.2, 0)],
 			["04-entrada-toca", world.lair_entrance + Vector3(4, 2.0, 7), world.lair_entrance + Vector3(0, 0.5, 0)],
 			["05-arena-vorgar", world.arena_center + Vector3(0, 8, 14), world.arena_center + Vector3(0, 1, 0)],
 			["06-arena-rasante", world.arena_center + Vector3(5, 1.6, 7), world.arena_center + Vector3(0, 1.5, 0)],
@@ -58,7 +60,17 @@ func _shoot_all() -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(dir + String(s[0]) + ".png")
 		print("[photo] ", s[0])
-	print("[photo] done: ", shots.size(), " captures")
+	var capture_count := shots.size()
+	if Bench.scene_arg != "combat" and is_instance_valid(_main.navigation):
+		_main.navigation.call("reveal_route_for_capture")
+		_main.navigation.call("show_full_map")
+		await _wait(10)
+		var map_image := get_viewport().get_texture().get_image()
+		map_image.save_png(dir + "07-mapa-grande.png")
+		print("[photo] 07-mapa-grande")
+		_main.navigation.call("hide_full_map")
+		capture_count += 1
+	print("[photo] done: ", capture_count, " captures")
 	get_tree().quit()
 
 

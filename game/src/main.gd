@@ -8,10 +8,14 @@ extends Node3D
 ##   vorgar  arena final real: 2 jogadores + chefe + 2 orcs, para medir o pior caso
 ##   zone    a fatia: Brumal -> Toca -> Vorgar   (defeito)
 
+const NAVIGATION_HUD_SCRIPT = preload("res://src/ui/navigation_hud.gd")
+
 var world: Greybox
 var player: Player
+var partner: Player
 var hud: Hud
 var boss: Enemy
+var navigation: CanvasLayer
 
 var _preset: Dictionary = {}
 var _palette: Dictionary = {}
@@ -42,6 +46,7 @@ func _ready() -> void:
 	_build_hud()
 	_populate()
 	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
+	_build_navigation()
 
 	if "--photos" in OS.get_cmdline_user_args():
 		var tour: Node = load("res://src/tools/photo_tour.gd").new()
@@ -152,6 +157,15 @@ func _build_hud() -> void:
 			SettingsSystem.binding_label("toggle_help"), _preset.get("_name", "?")], 6.0)
 
 
+func _build_navigation() -> void:
+	if _scene_kind == "combat":
+		return
+	navigation = NAVIGATION_HUD_SCRIPT.new()
+	navigation.name = "Orientacao"
+	add_child(navigation)
+	navigation.call("initialize", player, partner, world, "brumal")
+
+
 # --- Povoamento ---------------------------------------------------------------
 
 func _spawn(enemy_id: String, at: Vector3) -> Enemy:
@@ -180,7 +194,7 @@ func _populate() -> void:
 			_spawn("orc_spearman", c + Vector3(6, 0.5, 2))
 			_spawn("orc_spearman", c + Vector3(-4, 0.5, 6))
 			_spawn("orc_brute", c + Vector3(2, 0.5, -6))
-			var partner := Player.new()
+			partner = Player.new()
 			partner.name = "Parceiro"
 			add_child(partner)
 			partner.setup("sorcerer", _palette)
@@ -209,21 +223,30 @@ func _populate() -> void:
 
 func _populate_zone() -> void:
 	var p := world.path_points
-	# Brumal: orcs ao longo do caminho. O lanceiro ensina a esquiva primeiro;
-	# o brutamontes aparece depois, quando ja ha esquiva para o ler.
-	var first_spear_position := p[1] + Vector3(5, 0.5, -2)
-	_spawn("orc_spearman", first_spear_position)
-	_spawn("orc_spearman", p[2] + Vector3(-6, 0.5, 3))
-	_spawn("orc_spearman", p[2] + Vector3(5, 0.5, -3))
-	var first_brute_position := p[3] + Vector3(2, 0.5, -2)
-	_spawn("orc_brute", first_brute_position)
-	_spawn("orc_spearman", p[4] + Vector3(5, 0.5, 2))
-	_spawn("orc_brute", p[4] + Vector3(-5, 0.5, -2))
-	_spawn("orc_spearman", p[5] + Vector3(4, 0.5, 4))
+	# spec/27, primeiros cinco minutos: vazio -> um de costas -> dois de frente
+	# -> brutamontes no arco -> descanso e bivaque ao longe.
+	var lone := _spawn("orc_spearman", p[1] + Vector3.UP * 0.5)
+	_face_enemy_towards(lone, p[2])
+	var approach := (p[2] - p[1]).normalized()
+	var right := Vector3(approach.z, 0.0, -approach.x)
+	var spear_left := _spawn("orc_spearman", p[2] - right * 2.6 + Vector3.UP * 0.5)
+	var spear_right := _spawn("orc_spearman", p[2] + right * 2.6 + Vector3.UP * 0.5)
+	_face_enemy_towards(spear_left, p[1])
+	_face_enemy_towards(spear_right, p[1])
+	var brute := _spawn("orc_brute", p[3] + Vector3.UP * 0.5)
+	_face_enemy_towards(brute, p[2])
+
+	for camp_offset: Vector3 in [Vector3(-3.2, 0.5, 1.5),
+			Vector3(3.0, 0.5, 1.2), Vector3(0.5, 0.5, -3.0)]:
+		var camper := _spawn("orc_spearman", world.camp_point + camp_offset)
+		_face_enemy_towards(camper, world.rest_point)
+
+	# Os pontos de aprendizagem sao as ancoras que o tutorial usa para ensinar no
+	# sitio certo. Vem do HEAD; apontam agora para a disposicao do spec/27.
 	_learning_points = {
-		"attack": first_spear_position,
+		"attack": p[1],
 		"dodge": p[2],
-		"parry": first_brute_position,
+		"parry": p[3],
 		"flask": p[4],
 	}
 
@@ -238,6 +261,13 @@ func _populate_zone() -> void:
 		boss = _spawn("vorgar", world.arena_center)
 		hud.boss = boss
 		boss.died.connect(_on_boss_died)
+
+
+func _face_enemy_towards(enemy: Enemy, point: Vector3) -> void:
+	var direction := point - enemy.global_position
+	direction.y = 0.0
+	if direction.length_squared() > 0.001:
+		enemy.rotation.y = atan2(-direction.x, -direction.z)
 
 
 # --- Morte e recomeco ---------------------------------------------------------
@@ -627,6 +657,11 @@ func _cycle_class() -> void:
 	cam.target = player
 	player.died.connect(_on_player_died)
 	hud.player = player
+	if is_instance_valid(navigation):
+		navigation.set("player", player)
+		var surface: Control = navigation.get("_minimap_surface")
+		if surface != null:
+			surface.set("player", player)
 	for node in get_children():
 		var e := node as Enemy
 		if e != null:

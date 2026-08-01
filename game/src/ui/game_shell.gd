@@ -41,6 +41,7 @@ const ACTION_LABELS := {
 	"reset_arena": "Reiniciar arena", "debug_class_next": "Classe de teste seguinte",
 	"pause_menu": "Pausa",
 	"inventory_menu": "Mochila / inventário",
+	"open_map": "Mapa da zona",
 }
 const INSTRUCTION_GROUPS := [
 	{"title": "MOVIMENTO E CÂMARA", "actions": [
@@ -55,7 +56,7 @@ const INSTRUCTION_GROUPS := [
 	{"title": "MUNDO E SISTEMA", "actions": [
 		"interact", "loadout_next", "loadout_prev", "toggle_perf",
 		"toggle_help", "toggle_mouse", "reset_arena", "debug_class_next",
-		"pause_menu", "inventory_menu"]},
+		"pause_menu", "inventory_menu", "open_map"]},
 ]
 const LEARNING_TIP_IDS := ["movement", "attack", "dodge", "parry", "flask"]
 const OPENING_LINES := [

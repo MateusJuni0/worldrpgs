@@ -270,6 +270,44 @@ corre sem capturas durante a amostra.
 
 ---
 
+## Minimapa 2D — custo isolado, 01-08-2026
+
+Mesmo executável, cena `zone`, preset médio, Mobile/Vulkan, 1920×1080,
+VSync desligado, 6 s de aquecimento + 30 s de amostra. O piloto percorre a zona;
+`--minimap=off` desliga o cliente sem mudar mundo, actores ou câmara.
+
+| | Sem minimapa | Com minimapa | Diferença |
+|---|---:|---:|---:|
+| FPS médio | 143,7 | **138,6** | −5,1 (−3,5%) |
+| Frame médio | 6,96 ms | **7,21 ms** | +0,25 ms |
+| 1% low | 83,2 fps | **81,9 fps** | −1,3 fps |
+| Pior frame | 46,93 ms | **32,42 ms** | ruído favorável ao mapa |
+| Frames >16,67 ms | 0,1% | **0,1%** | igual |
+| Draw calls | 19 | **25** | +6 |
+| Primitivas | 262 678 | **262 712** | +34 |
+| Memória estática | 85,3 MB | **85,5 MB** | +0,2 MB |
+
+**Veredito:** passa a Lei 4 com folga no ensaio sem VSync. O mapa não usa uma
+segunda câmara: é uma textura de **55×55** células que só recebe os novos pixels,
+mais o marcador do jogador. O custo medido é 0,25 ms médios; a estabilidade
+continua limitada pelo frame pacing já documentado, não pelo minimapa.
+
+Artefactos crus: `captures/orientacao-a-b-{sem,com}-minimapa-30s.json`
+(fora do git, como as restantes medições locais).
+
+## Caminho e marcos de orientação — 01-08-2026
+
+Depois de alargar o caminho, acrescentar os dois desvios e erguer arco,
+fumo/descanso, árvore da Toca e coroa da arena, repetiu-se a cena `zone` no
+mesmo Mobile/Vulkan 1920×1080 sem VSync, com 6 s de aquecimento + 30 s úteis.
+O resultado foi **143,2 fps médios**, **73,2 fps de 1% low**, 6,98 ms por frame,
+27 draw calls e 0,2% dos frames acima de 16,67 ms. O pior frame isolado foi
+48,46 ms, coerente com os picos de frame pacing já registados; a margem de 60
+fps manteve-se. Duas luzes omni dos faróis distantes foram removidas depois do
+primeiro ensaio curto: emissão bastava para os ler e evitou redesenhar árvores.
+
+Artefacto cru: `captures/orientacao-mundo-30s.json` (fora do git).
+
 ## Como estes números foram conseguidos
 
 Não foi por sorte. Três decisões deliberadas, todas por causa da Lei 4:

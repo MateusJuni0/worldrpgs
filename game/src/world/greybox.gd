@@ -46,6 +46,12 @@ var spawn_point := Vector3.ZERO
 var arena_center := Vector3.ZERO
 var lair_entrance := Vector3.ZERO
 var path_points: Array[Vector3] = []
+var map_path_segments: Array = []
+var rest_point := Vector3.ZERO
+var camp_point := Vector3.ZERO
+## Pontos que o mapa pode registar. A posicao existe no runtime; nome/tipo so
+## aparecem depois de o jogador chegar perto, segundo a regra do spec/57.
+var map_landmarks: Array[Dictionary] = []
 
 
 func build(p_preset: Dictionary, p_palette: Dictionary, layout: String, biome_id: String = "brumal") -> void:
@@ -291,6 +297,31 @@ func _add_block(centre: Vector3, size: Vector3, colour_key: String, shadows := t
 	add_child(body)
 
 
+func _add_oriented_block(node_name: String, centre: Vector3, size: Vector3,
+		colour_key: String, yaw: float, shadows := true, visible := true) -> void:
+	var transform := Transform3D(Basis(Vector3.UP, yaw), centre)
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var visual := MeshInstance3D.new()
+	visual.name = node_name
+	visual.mesh = mesh
+	visual.material_override = _material(colour_key)
+	visual.transform = transform
+	visual.visible = visible
+	if not shadows:
+		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(visual)
+	var body := StaticBody3D.new()
+	body.name = "%sCollision" % node_name
+	var collision := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = size
+	collision.shape = box
+	body.add_child(collision)
+	body.transform = transform
+	add_child(body)
+
+
 ## Muitas copias da mesma malha num so draw call.
 func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], colour_key: String, shadows: bool, variation := 0.0) -> void:
 	if transforms.is_empty():
@@ -342,22 +373,70 @@ func _add_asset_multimesh(mesh: Mesh, transforms: Array, shadows: bool, node_nam
 
 
 func _build_path_visual() -> void:
+	_build_path_underlay()
 	var path_mesh := _asset_mesh(GROUND_PATH, 0.90, Color("#76644f"), false)
 	if path_mesh == null:
 		return
 	var tiles: Array[Transform3D] = []
 	var tile_size := 3.5
-	for index: int in path_points.size() - 1:
-		var start := path_points[index]
-		var finish := path_points[index + 1]
-		var delta := finish - start
-		var yaw := atan2(delta.x, delta.z)
-		var count := maxi(1, ceili(delta.length() / tile_size))
-		for tile: int in count:
-			var t := (float(tile) + 0.5) / float(count)
-			var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * tile_size)
-			tiles.append(Transform3D(basis, start.lerp(finish, t) + Vector3(0, 0.025, 0)))
+	for segment_value: Variant in map_path_segments:
+		var segment := segment_value as PackedVector3Array
+		for index: int in segment.size() - 1:
+			var start := segment[index]
+			var finish := segment[index + 1]
+			var delta := finish - start
+			var yaw := atan2(delta.x, delta.z)
+			var count := maxi(1, ceili(delta.length() / tile_size))
+			for tile: int in count:
+				var t := (float(tile) + 0.5) / float(count)
+				var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * tile_size)
+				tiles.append(Transform3D(basis,
+					start.lerp(finish, t) + Vector3(0, 0.035, 0)))
 	_add_asset_multimesh(path_mesh, tiles, false, "KenneyPath")
+
+
+## Uma unica faixa de terra larga por baixo dos mosaicos Kenney. Continua a ser
+## um draw call, mas deixa de parecer dois carris finos no meio de 950 arvores.
+func _build_path_underlay() -> void:
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var indices := PackedInt32Array()
+	var width_m := float((GameData.world.get("orientation_runtime", {}) as Dictionary).get(
+		"path_width_m", 6.0))
+	for segment_value: Variant in map_path_segments:
+		var segment := segment_value as PackedVector3Array
+		for index: int in segment.size() - 1:
+			var start := segment[index]
+			var finish := segment[index + 1]
+			var forward := (finish - start).normalized()
+			var right := Vector3(forward.z, 0.0, -forward.x) * width_m * 0.5
+			var base := vertices.size()
+			vertices.append(start - right + Vector3.UP * 0.020)
+			vertices.append(start + right + Vector3.UP * 0.020)
+			vertices.append(finish + right + Vector3.UP * 0.020)
+			vertices.append(finish - right + Vector3.UP * 0.020)
+			for _normal: int in 4:
+				normals.append(Vector3.UP)
+			indices.append_array(PackedInt32Array([
+				base, base + 1, base + 2, base, base + 2, base + 3]))
+	if vertices.is_empty():
+		return
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var material := _material("trunk")
+	material.albedo_color = _colour("trunk").lightened(0.18)
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	var visual := MeshInstance3D.new()
+	visual.name = "CaminhoLargo"
+	visual.mesh = mesh
+	visual.material_override = material
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(visual)
 
 
 # --- Layouts ------------------------------------------------------------------
@@ -377,7 +456,8 @@ func _build_arena() -> void:
 func _build_brumal() -> void:
 	_add_ground(Vector2(220, 220), Vector3.ZERO)
 
-	# O caminho — uma curva simples com ~700 m andados de ponta a ponta.
+	# A coluna vertebral do Brumal. Os dois desvios na clareira prometem
+	# descanso e perigo sem seta nem marcador de missão.
 	path_points = [
 		Vector3(0, 0, 95),
 		Vector3(-14, 0, 68),
@@ -390,17 +470,50 @@ func _build_brumal() -> void:
 	spawn_point = path_points[0] + Vector3(0, 0.1, 0)
 	lair_entrance = path_points[path_points.size() - 1]
 	arena_center = lair_entrance + Vector3(0, 0, -26)
+	rest_point = path_points[4] + Vector3(17, 0, -1)
+	camp_point = path_points[4] + Vector3(5, 0, -19)
+	map_path_segments = [
+		PackedVector3Array(path_points),
+		PackedVector3Array([path_points[4], rest_point]),
+		PackedVector3Array([path_points[4], camp_point]),
+	]
+	map_landmarks = [
+		{
+			"id": "descanso_1_brumal", "name": "Descanso de Brumal", "type": "rest",
+			"position": rest_point, "discover_radius_m": 14.0,
+		},
+		{
+			"id": "bivaque_brumal", "name": "Bivaque de Brumal", "type": "place",
+			"position": camp_point, "discover_radius_m": 12.0,
+		},
+		{
+			"id": "entrada_toca", "name": "A Toca", "type": "lair",
+			"position": lair_entrance, "discover_radius_m": 18.0,
+		},
+		{
+			"id": "descanso_toca", "name": "Descanso da Toca", "type": "rest",
+			"position": lair_entrance + Vector3(0, 0, -18), "discover_radius_m": 12.0,
+		},
+		{
+			"id": "arena_vorgar", "name": "Arena de Vorgar", "type": "arena",
+			"position": arena_center, "discover_radius_m": 22.0,
+		},
+	]
 
 	_build_path_visual()
+	_build_world_guides()
 	_scatter_forest()
 	_scatter_ground_details()
 	_build_lair()
+	_build_arena_crown()
 
 
 func _distance_to_path(p: Vector3) -> float:
 	var best := 9999.0
-	for i in path_points.size() - 1:
-		best = minf(best, _distance_to_segment(p, path_points[i], path_points[i + 1]))
+	for segment_value: Variant in map_path_segments:
+		var segment := segment_value as PackedVector3Array
+		for i: int in segment.size() - 1:
+			best = minf(best, _distance_to_segment(p, segment[i], segment[i + 1]))
 	return best
 
 
@@ -408,6 +521,135 @@ func _distance_to_segment(p: Vector3, a: Vector3, b: Vector3) -> float:
 	var ab := b - a
 	var t := clampf((p - a).dot(ab) / maxf(ab.length_squared(), 0.001), 0.0, 1.0)
 	return p.distance_to(a + ab * t)
+
+
+func _build_world_guides() -> void:
+	_build_stone_arch(path_points[3], path_points[4] - path_points[3])
+	_build_rest_clearing()
+	_build_bivouac()
+	_build_cairns()
+
+
+func _build_stone_arch(at: Vector3, travel: Vector3) -> void:
+	var direction := travel.normalized()
+	var right := Vector3(direction.z, 0.0, -direction.x)
+	var yaw := atan2(direction.x, direction.z)
+	_add_oriented_block("ArcoPedraEsquerda", at - right * 3.25 + Vector3.UP * 2.5,
+		Vector3(1.45, 5.0, 1.65), "rock", yaw, true, false)
+	_add_oriented_block("ArcoPedraDireita", at + right * 3.25 + Vector3.UP * 2.5,
+		Vector3(1.45, 5.0, 1.65), "rock", yaw, true, false)
+	_add_oriented_block("ArcoPedraLintel", at + Vector3.UP * 5.35,
+		Vector3(8.0, 1.35, 1.65), "rock", yaw, true, false)
+	var doorway := _asset_mesh(DUNGEON_DOORWAY, 0.78, Color("#777b78"))
+	_add_asset_multimesh(doorway, [Transform3D(
+		Basis(Vector3.UP, yaw).scaled(Vector3(1.75, 1.45, 1.30)), at)],
+		bool(preset.get("shadows", true)), "ArcoPedraVestido")
+
+
+func _build_rest_clearing() -> void:
+	var stone := BoxMesh.new()
+	stone.size = Vector3(0.85, 0.34, 0.62)
+	var ring: Array[Transform3D] = []
+	for index: int in 10:
+		var angle := TAU * float(index) / 10.0
+		ring.append(Transform3D(Basis(Vector3.UP, -angle),
+			rest_point + Vector3(sin(angle) * 1.25, 0.20, cos(angle) * 1.25)))
+	_add_multimesh(stone, ring, "rock", false, 0.08)
+
+	var log_mesh := BoxMesh.new()
+	log_mesh.size = Vector3(3.6, 0.32, 0.42)
+	var logs: Array[Transform3D] = [
+		Transform3D(Basis(Vector3.UP, 0.65), rest_point + Vector3(0, 0.42, 0)),
+		Transform3D(Basis(Vector3.UP, -0.65), rest_point + Vector3(0, 0.45, 0)),
+	]
+	_add_multimesh(log_mesh, logs, "trunk", false, 0.05)
+	_add_guiding_flame(rest_point, 0.95, 17.0, 3.4, 0.64)
+	_add_smoke_column("FumoDescanso", rest_point, 13.0, 0.85, 0.14)
+
+
+func _build_bivouac() -> void:
+	var shelter_mesh := BoxMesh.new()
+	shelter_mesh.size = Vector3(3.8, 0.24, 2.8)
+	var shelters: Array[Transform3D] = [
+		Transform3D(Basis(Vector3.FORWARD, -0.55).rotated(Vector3.UP, 0.35),
+			camp_point + Vector3(3.0, 1.25, 1.0)),
+		Transform3D(Basis(Vector3.FORWARD, 0.55).rotated(Vector3.UP, -0.35),
+			camp_point + Vector3(-3.0, 1.25, 1.0)),
+	]
+	_add_multimesh(shelter_mesh, shelters, "trunk", false, 0.06)
+	_add_guiding_flame(camp_point, 0.70, 11.0, 2.2, 0.28, false)
+	_add_smoke_column("FumoBivaque", camp_point, 8.0, 0.55, 0.10)
+
+
+func _build_cairns() -> void:
+	var stone := BoxMesh.new()
+	stone.size = Vector3(0.72, 0.42, 0.64)
+	var transforms: Array[Transform3D] = []
+	for point_index: int in [1, 2, 4, 5]:
+		var point := path_points[point_index]
+		var forward := (path_points[point_index + 1] - path_points[point_index - 1]).normalized()
+		var right := Vector3(forward.z, 0.0, -forward.x)
+		var base := point + right * 3.7
+		for level: int in 3:
+			var scale := 1.0 - float(level) * 0.18
+			transforms.append(Transform3D(
+				Basis(Vector3.UP, float(level) * 0.7).scaled(Vector3.ONE * scale),
+				base + Vector3.UP * (0.22 + float(level) * 0.36)))
+	_add_multimesh(stone, transforms, "rock", false, 0.10)
+
+
+func _build_arena_crown() -> void:
+	var base := arena_center + Vector3(0, 0, -14.0)
+	var crown_mesh := BoxMesh.new()
+	crown_mesh.size = Vector3.ONE
+	var stones: Array[Transform3D] = [
+		Transform3D(Basis.IDENTITY.scaled(Vector3(1.4, 14.0, 1.4)),
+			base + Vector3(-3.0, 7.0, 0)),
+		Transform3D(Basis.IDENTITY.scaled(Vector3(1.4, 14.0, 1.4)),
+			base + Vector3(3.0, 7.0, 0)),
+		Transform3D(Basis.IDENTITY.scaled(Vector3(7.4, 1.4, 1.4)),
+			base + Vector3(0, 13.3, 0)),
+	]
+	_add_multimesh(crown_mesh, stones, "rock", bool(preset.get("shadows", true)), 0.04)
+	_add_guiding_flame(base, 15.0, 20.0, 3.2, 0.36, false)
+
+
+func _add_smoke_column(node_name: String, at: Vector3, height: float,
+		radius: float, alpha: float) -> void:
+	var mesh := SphereMesh.new()
+	mesh.radius = 1.0
+	mesh.height = 2.0
+	mesh.radial_segments = 8
+	mesh.rings = 4
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color.WHITE
+	material.vertex_color_use_as_albedo = true
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mesh.material = material
+	var puff_count := maxi(3, roundi(height / 2.2))
+	var multimesh := MultiMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.use_colors = true
+	multimesh.mesh = mesh
+	multimesh.instance_count = puff_count
+	for index: int in puff_count:
+		var progress := float(index) / float(maxi(puff_count - 1, 1))
+		var puff_radius := radius * (0.45 + progress * 0.65)
+		var offset := Vector3(sin(float(index) * 1.7), 0, cos(float(index) * 1.3)) \
+			* radius * 0.22
+		multimesh.set_instance_transform(index, Transform3D(
+			Basis(Vector3.UP, float(index) * 0.8).scaled(
+				Vector3(puff_radius, puff_radius * 0.65, puff_radius)),
+			at + offset + Vector3.UP * (1.5 + progress * height * 0.82)))
+		multimesh.set_instance_color(index,
+			Color(0.25, 0.28, 0.27, alpha * (1.0 - progress * 0.55)))
+	var smoke := MultiMeshInstance3D.new()
+	smoke.name = node_name
+	smoke.multimesh = multimesh
+	smoke.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(smoke)
 
 
 func _scatter_forest() -> void:
@@ -435,6 +677,9 @@ func _scatter_forest() -> void:
 		# O caminho tem de ficar livre — a floresta e fechada, o caminho nao.
 		if _distance_to_path(p) < 4.5:
 			continue
+		if p.distance_to(rest_point) < 11.0 or p.distance_to(camp_point) < 8.0 \
+				or p.distance_to(path_points[3]) < 5.0:
+			continue
 		if p.distance_to(arena_center) < 18.0:
 			continue
 		var scale := _rng.randf_range(0.8, 1.35)
@@ -460,6 +705,8 @@ func _scatter_forest() -> void:
 	for _i in rocks_wanted:
 		var p := Vector3(_rng.randf_range(-100, 100), 0, _rng.randf_range(-100, 100))
 		if _distance_to_path(p) < 3.0:
+			continue
+		if p.distance_to(rest_point) < 4.0 or p.distance_to(camp_point) < 3.5:
 			continue
 		var s := _rng.randf_range(0.6, 1.8)
 		var family := rock_count % rock_meshes.size()
@@ -587,9 +834,9 @@ func _build_lair() -> void:
 	var arena_beams: Array[Transform3D] = []
 
 	# A arvore morta que marca a fenda — o unico ponto de referencia.
-	_add_block(e + Vector3(2.4, 3.0, 1.2), Vector3(0.5, 6.0, 0.5), "trunk", true, false)
+	_add_block(e + Vector3(2.4, 5.0, 1.2), Vector3(0.65, 10.0, 0.65), "trunk", true, false)
 	_add_asset_multimesh(_asset_mesh(TREE_THIN, 0.92, Color("#5a5045")), [Transform3D(
-		Basis(Vector3.UP, -0.45).scaled(Vector3.ONE * 4.5),
+		Basis(Vector3.UP, -0.45).scaled(Vector3.ONE * 6.0),
 		e + Vector3(2.4, 0.0, 1.2))], false, "DeadTreeLandmark")
 
 	# Fenda na rocha: duas paredes com uma abertura no meio.
@@ -702,9 +949,17 @@ func _build_lair() -> void:
 
 
 func _add_torch(at: Vector3) -> void:
+	_add_guiding_flame(at, 2.52, 11.0, 2.4, 0.22)
+
+
+func _add_guiding_flame(at: Vector3, height: float, light_range: float,
+		energy: float, size: float, with_light := true) -> void:
 	var flame := MeshInstance3D.new()
-	var fm := BoxMesh.new()
-	fm.size = Vector3(0.22, 0.30, 0.22)
+	var fm := SphereMesh.new()
+	fm.radius = size * 0.5
+	fm.height = size * 1.5
+	fm.radial_segments = 8
+	fm.rings = 4
 	flame.mesh = fm
 	# A chama e a luz da tocha sao o ACENTO do bioma (spec/49 §2, cor 3) —
 	# em Brumal, o ambar das tochas e a assinatura da zona.
@@ -715,13 +970,15 @@ func _add_torch(at: Vector3) -> void:
 	fmat.emission_energy_multiplier = 2.6
 	fmat.albedo_color = accent.lightened(0.20)
 	flame.material_override = fmat
-	flame.position = at + Vector3(0, 2.52, 0)
+	flame.position = at + Vector3.UP * height
 	add_child(flame)
+	if not with_light:
+		return
 
 	var light := OmniLight3D.new()
 	light.light_color = accent
-	light.light_energy = 2.4
-	light.omni_range = 11.0
+	light.light_energy = energy
+	light.omni_range = light_range
 	light.shadow_enabled = false  # sombras de omni sao caras; a luz chega
-	light.position = at + Vector3(0, 2.48, 0)
+	light.position = at + Vector3.UP * maxf(height - 0.04, 0.1)
 	add_child(light)

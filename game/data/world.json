@@ -59,8 +59,35 @@
       "marcas_dos_jogadores"
     ],
     "scope_decision": "mapa_por_zona_ou_mundo_inteiro — donos, pergunta 38; o traçado local não depende da resposta",
+    "runtime": {
+      "prototype_scope": "[PROTO] por_zona_ate_os_donos_responderem_a_pergunta_38",
+      "zone_label": "BRUMAL",
+      "zone_bounds_m": { "min_x": -110.0, "min_z": -110.0, "size_x": 220.0, "size_z": 220.0 },
+      "cell_size_m": 4.0,
+      "reveal_radius_m": 7.0,
+      "minimap_range_m": 40.0,
+      "update_hz": 10.0,
+      "save_debounce_s": 4.0,
+      "projection_degrees": 40.0,
+      "minimap_default": "roda_com_o_jogador",
+      "minimap_can_disable": true,
+      "compass_equivalent": "cardinais_no_aro_do_minimapa_rodam_com_o_mundo"
+    },
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false
+  },
+  "orientation_runtime": {
+    "method": "geometria_do_mundo_sem_marcadores_de_objectivo",
+    "path_width_m": 6.0,
+    "first_five_sequence": [
+      "orla_vazia",
+      "um_lanceiro_de_costas",
+      "dois_lanceiros_de_frente",
+      "brutamontes_no_arco",
+      "descanso_e_bivaque"
+    ],
+    "path_promises": ["desvio_para_descanso", "desvio_para_bivaque"],
+    "distant_landmarks": ["fumo_do_descanso", "arvore_morta_da_toca", "coroa_da_arena"]
   },
   "world_scale": {
     "target_endpoint_minutes": 30,

@@ -2,11 +2,12 @@
   "_fonte": "spec/01-combate.md + spec/45-controlos-configuraveis.md + spec/73-fecho-dos-buracos-de-integracao.md.",
   "_nota": "O mapa e construido em runtime pelo GameData a partir deste ficheiro - remapear nao exige recompilar. Teclado+rato continua primario porque nenhuma das duas maquinas tem comando; o esquema de comando e um default completo e sintetico a provar em hardware no M2.",
   "_nota_cast": "O contrato corrente usa F/roda para percorrer os oito favoritos e C para conjurar; ambos sao remapeaveis.",
+  "_nota_mapa": "[PROTO] G abre o mapa porque M ja pertence a meditar. E apenas o default: a interface le sempre a ligacao corrente de open_map.",
 
   "gamepad_required": [
     "move_forward", "move_back", "move_left", "move_right", "attack", "heavy_mod",
     "block", "parry", "dodge_sprint", "lock_on", "next_spell", "cast", "meditate",
-    "use_item", "ability", "toggle_grip", "interact", "loadout_next", "loadout_prev",
+    "use_item", "ability", "toggle_grip", "interact", "open_map", "loadout_next", "loadout_prev",
     "look_left", "look_right", "look_up", "look_down"
   ],
 
@@ -36,6 +37,7 @@
     "toggle_grip":    [{ "type": "key", "key": "T" }, { "type": "joypad_button", "button": 3, "label": "Y/triangulo" }],
     "interact":       [{ "type": "key", "key": "E" }, { "type": "joypad_button", "button": 2, "label": "X/quadrado contextual" }],
     "inventory_menu": [{ "type": "key", "key": "I" }, { "type": "joypad_button", "button": 4, "label": "Select/View" }],
+    "open_map":       [{ "type": "key", "key": "G" }, { "type": "joypad_button", "button": 7, "label": "Botao do analogico esquerdo" }],
     "debug_class_next": [{ "type": "key", "key": "F6" }],
 
     "hotbar_1":       [{ "type": "key", "key": "1" }],
