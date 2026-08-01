@@ -1,5 +1,7 @@
 # 10 — Fatia 1 · o primeiro jogável
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** A aprovação da Fatia 1 abaixo é preservada, mas antecede as decisões que fecharam mana sem cargas, baralhos de dez, 12 zonas e os catálogos. Para construir hoje, começa no [`ESTADO.md`](../ESTADO.md) e aplica [`66`](66-catalogo-de-magia.md), [`67`](67-catalogo-do-bestiario.md), [`68`](68-catalogo-de-armas-armaduras-e-aneis.md), [`69`](69-catalogo-do-mundo.md), [`70`](70-fecho-dos-sistemas-de-combate.md) e [`72`](72-materiais-consumiveis-e-economia.md). Em divergência, esses documentos/dados mandam; o texto abaixo continua a explicar **por que existe** a fatia.
+
 > **WP0.** Este documento responde à pergunta 1 de [`99-perguntas-abertas.md`](99-perguntas-abertas.md): *qual é a fatia mais pequena disto que já é divertida a dois?* A proposta é minha `[FABLE]`; a confirmação é do Mateus e do Rico. Até esse sim, tudo aqui é provisório — mas é a linha que ordena todos os pacotes seguintes.
 
 ## A regra que define a fatia

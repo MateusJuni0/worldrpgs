@@ -1,5 +1,7 @@
 # 12 — Classes
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** As origens confirmadas e o raciocínio ficam preservados; a implementação actual é regida por [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`64`](64-criacao-de-personagem.md), [`66`](66-catalogo-de-magia.md), [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) e `game/data/attributes.json`. Classe é preset de arranque, nunca tranca. Em divergência, essas fontes mandam.
+
 > **WP3 · Fable** (31-07-2026). As oito classes nomeadas na sessão 1 (07:13 → 07:57), transformadas em fichas jogáveis sobre os atributos do WP2 ([`11-formulas.md`](11-formulas.md)) e as armas do WP1 ([`01-combate.md`](01-combate.md)). As seis da fatia foram confirmadas pelos dois a 31-07-2026. A `[TENSÃO]` das evoluções **foi decidida a 31-07: opção A** — ver no fim.
 
 ## As regras que já mandam nas classes

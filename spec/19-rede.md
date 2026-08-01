@@ -1,5 +1,7 @@
 # 19 — Multiplayer e rede
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** A arquitectura-base para dois amigos continua útil, mas progresso/save, voz, acessibilidade, ressurreição e recompensa receberam contratos posteriores em [`56`](56-voz-e-vendedores.md), [`59`](59-saves.md), [`62`](62-acessibilidade-auditiva.md), [`70`](70-fecho-dos-sistemas-de-combate.md) e [`72`](72-materiais-consumiveis-e-economia.md). As tensões de autoridade/progresso co-op continuam no [`99`](99-perguntas-abertas.md); este documento não as resolve por antiguidade.
+
 > **WP10 · Fable** (31-07-2026). O sistema mais complexo do jogo, descrito numa frase da gravação (12:34). Contexto que muda tudo: **são dois amigos concretos, em casas diferentes, sem intenção de publicar** — anti-cheat, matchmaking e escala estão fora por decisão do briefing. A rede serve duas pessoas que confiam uma na outra, e isso simplifica as escolhas certas. Tudo `[FABLE]` salvo indicação; os provisórios do WP0 formalizam-se aqui.
 
 ## Modelo de sessão

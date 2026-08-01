@@ -205,14 +205,13 @@ O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida
         └──► desbloqueia O CONTEÚDO ──► o motor é data-driven:
                                         o catálogo É o jogo
         ▼
-3. Os SISTEMAS que faltam  (saves: fundação ✅, faltam os clientes · interrupção ·
-        │                   contra-ataque · baralho · soft caps · piso de 30% ·
-        │                   carregamento por área)
+3. ✅ O NÚCLEO DOS SISTEMAS (combate/curvas/baralho/economia fechados nos 70/72;
+        │                   faltam clientes de UI, áudio, mundo e produção M2)
         ▼
 4. ✅ O CATÁLOGO DO MUNDO  (WP8: leitura, 12 biomas, círculos, atalhos e 30 portas)
         │                   faltam cenas, streaming, mapa e prova jogada
         ▼
-5. O ALINHAMENTO dos documentos antigos contra o DECISOES.md
+5. ✅ O ALINHAMENTO dos documentos antigos contra o DECISOES.md
 ```
 
 ### Porque é que as fichas vêm antes do catálogo
@@ -227,7 +226,7 @@ As imagens seguem a mesma ordem: os ícones de armas, dos três feitiços e das 
 
 ### E o alinhamento vem por último de propósito
 
-É limpeza — necessária, mas **não produz nada novo**, e metade dele resolve-se sozinho à medida que os catálogos se reescrevem.
+Foi concluído na Tarefa 4 sem apagar o registo: os onze documentos `10`–`20` abrem agora com um aviso histórico e apontam para as fontes que mandam hoje. A Fatia 1 deixa, assim, de poder reintroduzir cargas, seis zonas, loot sem baralho ou mochila limitada numa implementação nova.
 
 ---
 

@@ -40,7 +40,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 07 | [Multiplayer](spec/07-multiplayer.md) | Co-op, sincronização, recompensas | 🔵 substituído pelo 19 |
 | 08 | [Interface](spec/08-ui.md) | HUD, hotbar, mochila | 🔵 substituído pelo 20 |
 | 09 | [Técnico](spec/09-tecnico.md) | **Restrição de hardware** — as duas máquinas | 🟢 a tabela das máquinas continua a valer |
-| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável, com critérios de feito | 🟢 **aprovada pelos dois** |
+| 10 | [Fatia 1](spec/10-fatia-1.md) | O primeiro jogável, com critérios de feito | 🟢 **aprovada pelos dois**; camada histórica sinalizada e ligada aos catálogos actuais |
 
 ### Os 20 pacotes — a spec de execução
 

@@ -1,5 +1,7 @@
 # 14 — Armas e equipamento
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** O primeiro catálogo abaixo não é a lista de produção actual. Famílias, 120 armas, 68 armaduras, 70 anéis, golpes e estados vivem no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md); contra-ataque, empunhadura, bloqueio e carga no [`70`](70-fecho-dos-sistemas-de-combate.md); materiais no [`72`](72-materiais-consumiveis-e-economia.md). Em divergência, esses catálogos/dados mandam.
+
 > **WP5 · Fable** (31-07-2026). O catálogo completo, construído **por cima** dos números já fixados: frames e MV das armas da fatia no [`01-combate.md`](01-combate.md) (WP1), fórmula e pesos de escala no [`11-formulas.md`](11-formulas.md) (WP2), encantamentos no [`13-magia.md`](13-magia.md) (WP4). Nada daqui altera esses documentos — estende-os. Tudo `[FABLE]` salvo indicação; fontes dos modelos 3D no [`22-assets.md`](22-assets.md) (WP13).
 
 ## A Lei 3 em números (herdada, num sítio só)

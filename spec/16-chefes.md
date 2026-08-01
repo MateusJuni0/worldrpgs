@@ -1,5 +1,7 @@
 # 16 — Chefes
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** Preserva o sistema e a primeira ficha de Vorgar, mas a contagem/ritmo vigentes são os do [`53`](53-chefes-ritmo-e-o-mago-forte.md), as arenas seguem o [`61`](61-arenas-de-chefe.md) e a gramática de combate o [`70`](70-fecho-dos-sistemas-de-combate.md). O catálogo dos 12 guardiões restantes e do Ultra ainda é conteúdo WP7 por fechar; não se deve preencher a pirâmide antiga. Em divergência, as fontes novas mandam.
+
 > **WP7 · Fable** (31-07-2026). O sistema de chefes e a primeira ficha completa — **Vorgar, o Guarda-Portão**, o chefe da fatia 1. A pirâmide (~61) fica com **regras de camada** em vez de um roster inventado: 58 chefes com nome escritos por mim seriam exactamente o "inventar como se fosse deles" que este repositório proíbe. Os chefes desenham-se um a um, com eles, por cima destas regras. Tudo `[FABLE]` salvo indicação.
 
 > ⚠️ **ACTUALIZAÇÃO 01-08:** o [`53`](53-chefes-ritmo-e-o-mago-forte.md) substitui a contagem: **13 chefes verdadeiros** (12 guardiões + Ultra), 12 subchefes no mundo e ~36 nomeados. O sistema espacial actual é o [`61`](61-arenas-de-chefe.md): arena selada para guardião/Ultra, bolsa fugível para subchefe. O ×1,8 de PV abaixo continua apenas `[PROTO]`; a pergunta 24 não foi decidida.

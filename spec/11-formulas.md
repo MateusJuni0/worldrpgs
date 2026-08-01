@@ -1,5 +1,7 @@
 # 11 — Atributos e fórmulas
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** Conserva o exemplo e o raciocínio do WP2, mas os números actuais vêm de [`70`](70-fecho-dos-sistemas-de-combate.md) + `game/data/attributes.json`/`progression.json`: oito atributos, máximo 70, curvas diferentes por atributo, queda fatal a 20 m e ciclos PV/dano separados. A curva de custo vive no [`72`](72-materiais-consumiveis-e-economia.md). Em divergência, essas fontes mandam.
+
 > **WP2 · Fable** (31-07-2026). Este documento resolve a sobreposição de atributos da sessão 1, fixa a fórmula de dano, e escreve as curvas dos inimigos da fatia 1 **a partir das restrições que o WP1 impôs** ([`01-combate.md`](01-combate.md), secção Ataques). Tudo `[FABLE]` salvo indicação; valida-se no protótipo (marco 2) junto com os números do combate.
 
 ## Os atributos — de 4 nomes provisórios para 7 papéis claros

@@ -1,5 +1,7 @@
 # 17 — Mundo e mapa
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** A proposta de seis zonas/2–3 min abaixo é preservada para auditoria, mas não é o traçado actual. Hoje mandam [`57`](57-mapa-e-minimapa.md) e [`69`](69-catalogo-do-mundo.md): 12 zonas de 8–12 min, 21 ligações, dois círculos + atalho por zona, 30 portas e mapa inclinado que revela só o percorrido.
+
 > ⚠️ **SUPERADO em 01-08-2026 pelo [`69-catalogo-do-mundo.md`](69-catalogo-do-mundo.md).** A proposta abaixo preserva o raciocínio histórico de seis zonas/2–3 min e não é o traçado actual. Hoje valem: **12 zonas de 8–12 min, 21 ligações, dois círculos + um atalho por zona, 30 portas de história, minimapa desligável e mapa inclinado que só revela terreno percorrido**. Em divergência, manda o `69`.
 
 > **WP8 · Fable** (31-07-2026). O mundo em números. O que herda: mundo aberto com dungeons escondidas `[DECIDIDO]` (02:50 → 03:12), mapa grande `[DECIDIDO]` (12:13), biomas `[DECIDIDO]` (12:13 → 12:21), selva e floresta nomeadas (11:37), 3D (11:28). As duas perguntas vermelhas que vivem aqui — **"grande é quanto?" (4)** e **"biomas são níveis?" (2)** — são deles: este documento põe as propostas em formato de decisão e trabalha com o provisório marcado. Tudo `[FABLE]` salvo indicação.

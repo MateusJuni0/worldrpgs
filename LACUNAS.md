@@ -254,7 +254,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 
 | | Buraco | |
 |---|---|---|
-| 🟠 | ⭐ **A fatia 1 ([`10`](spec/10-fatia-1.md)) foi aprovada antes de ~40 decisões** | fala de cargas de magia que já não existem, de 6 zonas, de espólio sem baralho. **Precisa de uma passagem** |
+| ✅ | ~~⭐ **A fatia 1 foi aprovada antes de ~40 decisões**~~ **RESOLVIDO NA TAREFA 4** — o `10` e os WP2–WP11 (`11`–`20`) preservam o texto histórico, mas abrem agora com aviso e apontam às autoridades/dados actuais | [`10`](spec/10-fatia-1.md) · [`11`](spec/11-formulas.md)–[`20`](spec/20-interface.md) |
 | ✅ | ~~**Os ~36 "nomeados" que substituíram os chefes de campo**~~ **RESOLVIDO NA TAREFA 4** — 36 fichas, exactamente 3 por zona, com tipo-base, localização, multiplicadores curtos, um ataque extra e carta garantida | [`71`](spec/71-encontros-nomeados.md) |
 | ⏳ | **O Assassino** — proposta completa escrita e testada; **falta o Mateus confirmar** Passo Mudo, Corte Alternado, Cruz Carmesim e Entre Sombras | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §5 · pergunta 37 |
 

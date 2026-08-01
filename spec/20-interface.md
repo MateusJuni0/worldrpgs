@@ -1,5 +1,7 @@
 # 20 — Interface e configurações
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** A composição abaixo preserva o primeiro WP11, mas mochila limitada, magia em cargas e comandos fixos foram superados. Hoje mandam [`45`](45-controlos-configuraveis.md), [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`57`](57-mapa-e-minimapa.md), [`62`](62-acessibilidade-auditiva.md), [`64`](64-criacao-de-personagem.md), [`66`](66-catalogo-de-magia.md), [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) e [`72`](72-materiais-consumiveis-e-economia.md). O texto antigo continua histórico; não é mapa de implementação.
+
 > **WP11 · Fable** (31-07-2026). O ecrã inteiro, a 1920×1080 (a resolução das duas máquinas — pergunta 0). Herda: hotbar em baixo `[DECIDIDO]` (04:37), mochila limitada `[DECIDIDO]` (04:34), a dúvida das magias no ecrã (04:55/04:59), o HUD mínimo do [`08-ui.md`](08-ui.md), os comandos do WP1 e o feedback visual do WP12. Regra do documento: **o HUD diz o que o corpo não consegue dizer — e mais nada.** Tudo `[FABLE]` salvo indicação.
 
 ## HUD — o que está no ecrã durante o jogo

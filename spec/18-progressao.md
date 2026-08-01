@@ -1,5 +1,7 @@
 # 18 — Progressão, loot e economia
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** As hipóteses de XP, aleatório e ajuda abaixo antecedem almas, baralhos, saves e catálogos fechados. Hoje mandam [`58`](58-fim-do-jogo-ciclos-e-a-curva.md), [`59`](59-saves.md), [`67`](67-catalogo-do-bestiario.md), [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) e [`72`](72-materiais-consumiveis-e-economia.md). As políticas co-op que continuam dos donos estão no [`99`](99-perguntas-abertas.md); em divergência, não se decide por este retrato antigo.
+
 > **WP9 · Fable** (31-07-2026). O que se ganha, onde, e porquê. Herda: XP e nível do WP2 ([`11-formulas.md`](11-formulas.md)), a Lei 2 aplicada ao loot (chefes dão verbos — WP3/WP4/WP7), os segredos que pagam em opções (WP8), e as duas frases da gravação que mandam aqui: os drops em dupla (05:29 → 05:41, com a resposta do Mateus perdida no áudio) e a **recompensa menor ao ajudar** (12:34). Tudo `[FABLE]` salvo indicação.
 
 ## A regra que organiza a economia inteira

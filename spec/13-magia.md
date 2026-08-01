@@ -1,5 +1,7 @@
 # 13 — Magia, por dentro
 
+> ⚠️ **CAMADA HISTÓRICA DE EXECUÇÃO (31-07-2026).** Este foi o primeiro desenho de WP4. Cargas, slots, atributos, formas, catálogo e melhoria actuais são os de [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`55`](55-formas-de-feitico.md), [`66`](66-catalogo-de-magia.md), [`70`](70-fecho-dos-sistemas-de-combate.md) e [`72`](72-materiais-consumiveis-e-economia.md). A proposta histórica bem/mal continua legível; em divergência, as fontes novas mandam.
+
 > **WP4 · Fable** (31-07-2026). Primeira proposta de execução da magia, preservada pelo raciocínio de bem/mal, aprendizagem e encantamentos. **Cargas, atributos e o catálogo foram substituídos** pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md) + [`66`](66-catalogo-de-magia.md). O registo da sessão 1 continua em [`03-magia.md`](03-magia.md) — nada de lá muda. **A proposta bem/mal é a peça grande deste documento e pede confirmação dos dois** (pergunta 8): pode ser o sistema mais interessante do jogo, e não se carimba um desses sem os donos.
 
 ## O que eles decidiram (e este documento obedece)
