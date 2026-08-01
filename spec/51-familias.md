@@ -1,14 +1,14 @@
 # 51 — WP5 camada 1: as famílias de arma, os escudos, as peças de armadura e os kits
 
-> **Volta 3 · Fable** (31-07-2026). A camada que decide se o jogo é bom: **8 famílias de arma** (cada uma com a frase de onde é MÁ), **3 famílias de escudo**, **9 peças de armadura** e — instrução directa do Rico (31-07, ⏳ falta o Mateus) — **o kit inicial de cada classe** e as **regras de espólio de equipamento**. Base: [`41-estudo-armas-e-golpes.md`](41-estudo-armas-e-golpes.md) (ficha §9, golpes §1, interrupção §4) · [`48-arcos-bestas-escudos.md`](48-arcos-bestas-escudos.md) · [`46-coerencia-bioma-raca-item.md`](46-coerencia-bioma-raca-item.md). Tudo `[FABLE]` salvo indicação.
+> **Volta 3 · Fable** (31-07-2026). A camada que decide se o jogo é bom: **8 famílias de arma** (cada uma com a frase de onde é MÁ), **3 famílias de escudo**, **9 slots / 11 peças iniciais de armadura** e — instrução directa do Rico (31-07, ⏳ falta o Mateus) — **o kit inicial de cada classe** e as **regras de espólio de equipamento**. Base: [`41-estudo-armas-e-golpes.md`](41-estudo-armas-e-golpes.md) (ficha §9, golpes §1, interrupção §4) · [`48-arcos-bestas-escudos.md`](48-arcos-bestas-escudos.md) · [`46-coerencia-bioma-raca-item.md`](46-coerencia-bioma-raca-item.md). A camada completa está no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md).
 >
-> ⭐ **Vive também em [`game/data/weapons.json`](../game/data/weapons.json) (famílias + kits) e [`game/data/armor.json`](../game/data/armor.json) (novo), no mesmo PR.** As 5 armas da fatia ganham a família a que pertencem, e o motor valida: arma sem família, família sem "onde é má", ou kit com referência fantasma — **não arranca**.
+> ⭐ **Vive também em [`game/data/weapons.json`](../game/data/weapons.json), [`game/data/armor.json`](../game/data/armor.json) e no catálogo fechado [`equipment.json`](../game/data/equipment.json).** O motor valida família, kit, 88 golpes e todas as referências de espólio — qualquer fantasma impede o arranque.
 
 ---
 
 ## 1. Os 11 golpes — a grelha universal, e as excepções por família
 
-O [`41`](41-estudo-armas-e-golpes.md) §1 manda cada família declarar os onze. **Sete não existiam em lado nenhum.** A regra geral, para não escrever 88 células à mão — cada família herda isto e declara só as excepções:
+O [`41`](41-estudo-armas-e-golpes.md) §1 manda cada família declarar os onze. **Sete não existiam em lado nenhum.** A tabela abaixo conserva as constantes; o [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 materializa agora as **88 células**, com pergunta e excepção por família:
 
 | Golpe | Regra universal `[FABLE]` | Porquê |
 |---|---|---|
@@ -98,7 +98,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 
 | | |
 |---|---|
-| **Onde é boa** | é o que conjura ([`13-magia.md`](13-magia.md)) — e a pancada é o plano B sem custo de cargas |
+| **Onde é boa** | é o que conjura ([`13-magia.md`](13-magia.md)) — e a pancada é o plano B sem custo de mana |
 | ⭐ **Onde é MÁ** | como arma: MV 0,7, sem crítico, sem contra-bónus. **Um mago encostado à parede tem um pau na mão** |
 | Alcance · arco | 1,8 m · 80° |
 | Leve | 18+5+20 f (0,72 s) · MV 0,7 · 15 sta |
@@ -123,7 +123,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 
 | | |
 |---|---|
-| **Onde é boa** | ⭐ **nas mãos de toda a gente**: requisitos baixos e **zero escala** — o dano não depende de atributos. Uma mão: combina com escudo, arma ou cajado. É a resposta ao perto do mago sem gastar cargas |
+| **Onde é boa** | ⭐ **nas mãos de toda a gente**: requisitos baixos e **zero escala** — o dano não depende de atributos. Uma mão: combina com escudo, arma ou cajado. É uma resposta à distância que não gasta mana |
 | ⭐ **Onde é MÁ** | na cadência: **dois tempos** (carregar → disparar), e a recarga a meio do combate é um convite ao golpe |
 | Interrupção | **16** por virote |
 | A duas mãos | ganha mira ampliada |
@@ -190,11 +190,11 @@ A fatia já dava a arma ([`10-fatia-1.md`](10-fatia-1.md), `loadouts`); passa a 
 | **Guerreiro** | espada longa + escudo de madeira | peitoral de couro fervido · botas de couro | leve |
 | **Feiticeiro** | cajado | capa de lã encerada · cinto de bolsas | leve |
 | **Tanque** | espada longa + escudo de madeira | elmo de ferro rude · peitoral de ferro rude | ⭐ **médio** |
-| **Assassino** | adaga | máscara de pano escuro · botas de pano | leve |
+| **Assassino** | **duas adagas** | máscara de pano escuro · botas de pano | leve |
 | **Berserker** | machadão | ombreiras de couro com pelo — **e mais nada** (a pele à mostra é a identidade) | leve |
 | **Paladino** | espada longa + escudo de madeira | peitoral de ferro polido · capa de lã clara | leve |
 
-Cada peça tem `descrição visual` no [`armor.json`](../game/data/armor.json). **Fatia 1? ✅ nas 10 peças dos kits** — são as primeiras armaduras que o Claude gera.
+Cada peça tem `descrição visual` no [`armor.json`](../game/data/armor.json). **Fatia 1? ✅ nas 11 peças dos kits** — são as primeiras armaduras geradas.
 
 Na criação, a classe selecciona este kit como **preset**, não como restrição futura: qualquer origem pode equipar qualquer peça/arma que encontre. O acento cosmético do [`64`](64-criacao-de-personagem.md) altera só a zona secundária permitida; material, silhueta, peso e estatísticas continuam a vir desta ficha.
 
@@ -212,13 +212,9 @@ Na criação, a classe selecciona este kit como **preset**, não como restriçã
 
 ---
 
-## 7. Melhoria e estados alterados — as duas lacunas, propostas
+## 7. Melhoria e estados alterados — fechados pelo catálogo
 
-**Só direcção e números base** — o detalhe é da volta 8 (sistemas).
-
-**Melhoria** `[FABLE]`: **reforço** +1…+6 com a colheita do bioma ([`49`](49-biomas.md) §4: limalha em Brumal, ferro no Fojo, obsidiana na Fornalha…) — sobe números, ao ritmo da referência (~+10%/nível). **Infusão** troca a escala de atributo ou o tipo de dano — **não soma, troca** (Lei 2); infundir com material de outro bioma exige tê-lo trazido de lá (a viagem do item, [`46`](46-coerencia-bioma-raca-item.md) §4).
-
-**Estados alterados** `[FABLE]`: **veneno** (dano ao longo do tempo, lento), **sangramento** (rebenta em % de vida ao encher), **queimadura** (dano + assusta IA covarde). Regras duras: barra **visível** a encher no alvo (nunca invisível — cláusula 4 do [`38`](38-ataques-e-honestidade.md)) · inimigos usam-nos **connosco** pelas mesmas regras · cada um tem bioma de origem (Selva/Raizama, Campas, Fornalha).
+✅ O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §3–4 substitui esta proposta. A melhoria 0…6 abre **postura/moveset, arte, troca de escala ou conversão elemental** e nunca aumenta dano base. Veneno, sangramento e queimadura têm barra 0…100, decaimento, disparo, saída, som/visual equivalente e as mesmas regras para jogador e inimigo.
 
 ---
 
@@ -227,13 +223,13 @@ Na criação, a classe selecciona este kit como **preset**, não como restriçã
 | | |
 |---|---|
 | **Como se usa?** | armas: teclas do WP1 já no jogo · empurrão e artes: teclas reservadas no [`34`](34-catalogo-e-comandos.md), entram no mapa de fábrica do WP11 · equipar peças: ecrã do WP11 — **em dados desde já**, marcado `_estado: "por implementar"` como as habilidades fizeram |
-| **Como se prova?** | grupo 8 do `game_data.gd` (famílias completas, arma→família, kits sem referências fantasma, cargas correctas) + verificações novas no `self_test.gd` |
-| **De onde vem a arte?** | `descrição visual` nas 10 peças dos kits (armor.json, Fatia 1 ✅) → [`art/MANIFESTO.md`](../art/MANIFESTO.md); famílias novas (katana, haste, arco, besta) só geram imagem na camada 2, quando tiverem instâncias |
-| **Quanto custa?** | zero — volta 3 é dados e validação; nenhuma malha, animação ou efeito novo entra no render |
+| **Como se prova?** | grupos 8 e 11 do `game_data.gd` + `self_test.gd`: famílias, 88 golpes, catálogos, estados, anéis, kits e referências WP6 |
+| **De onde vem a arte?** | `descricao_visual` + `Fatia 1?` em todo o catálogo; 5 armas reutilizadas e 11 armaduras geradas; o resto espera |
+| **Quanto custa?** | esta fatia: 11 ícones; futuro: runtime M2/WP11 e imagens apenas quando a coluna mudar |
 
 ## O que fica dito e não está provado
 
-- **Nenhuma família nova tem instância jogável** — katana, haste, arco e besta são fichas; as armas concretas são a camada 2 (volta 6), e os frames delas `[FABLE]` afinam-se no protótipo como os do WP1.
+- **As 120 instâncias existem em catálogo, mas só cinco armas têm runtime/arte de Fatia 1** — os frames futuros `[FABLE]` afinam-se no protótipo como os do WP1.
 - **O equipar não está implementado** — os dados existem e validam; o ecrã é do WP11, a mecânica entra no M2.
 - Os 7 golpes universais novos (§1) estão declarados **sem protótipo** — o primeiro a implementar deve ser o **em corrida** (é o que muda mais o combate).
 

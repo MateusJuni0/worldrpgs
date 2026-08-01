@@ -1,14 +1,14 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, catálogo do bestiário.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, catálogo WP5 completo.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
-> **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
+> **Porque existe:** a spec tem 70 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
 ---
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **5737 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **7398 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,13 +44,13 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **69** em `spec/` | — | — |
-| Código e dados | 16 ficheiros `.gd` · 11 catálogos JSON | — | — |
-| Testes | **5737, todos a passar** | — | — |
-| Imagens curadas | **43** fora dos packs: 32 conceitos · 9 ícones · menu · céu | — | 11 ícones de armadura por gerar |
-| **Armas** | 5 instâncias · **8 famílias** ([`51`](spec/51-familias.md)) | ~120 | as instâncias (camada 2) |
-| **Armaduras** | **11 peças** · 9 slots · 3 cargas ([`51`](spec/51-familias.md)) | ~30 | ~19 |
-| **Anéis** | **0** | ~70 | **70** |
+| Documentos de spec | **70** em `spec/` | — | — |
+| Código e dados | 16 ficheiros `.gd` · 12 catálogos JSON | — | — |
+| Testes | **7398, todos a passar** | — | — |
+| Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
+| **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
+| **Armaduras** | **68 peças** · 9 slots · 3 cargas · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
+| **Anéis** | **70 fichas únicas** · 8 eixos · 2→10 dedos ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 70 | UI/save e imagens futuras |
 | **Feitiços** | **53 fichas · 3 executáveis/Fatia 1** ([`66`](spec/66-catalogo-de-magia.md)) | catálogo largo | 50 renderers/comportamentos e roda |
 | **Inimigos** | **33 tipos comuns · 100 ataques comuns · Vorgar migrado** ([`67`](spec/67-catalogo-do-bestiario.md)) | 12 raças + 61 chefes | modelos/animações dos 31 fora da Fatia 1 · chefes WP7 |
 | Habilidades de classe | 6 | 6 | ✅ |
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 5737 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 7398 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -119,7 +119,15 @@ O [`67`](spec/67-catalogo-do-bestiario.md) fecha **33 tipos comuns** (dentro da 
 
 As 12 zonas têm população de referência e orçamento recalculado pelo teste: **390→2 050 almas** na primeira limpeza e exactamente ×10 no limite recompensado. `GameplayCue` apresenta a mesma informação por som e geometria/glifo/bordo; padrões de IA e baralhos aceitam semente. Os três conceitos imediatos — lanceiro, brutamontes e Vorgar — foram auditados e reutilizados; as outras 31 fichas ficam sem imagem até `Fatia 1?` mudar.
 
-⚠️ O catálogo não finge WP9/WP15: morte ainda não compra/grava a carta, IDs de objecto fecham nos pacotes seguintes e os 31 inimigos futuros não têm modelo/animação/hitbox. As perguntas 23 e 29 do [`99`](spec/99-perguntas-abertas.md) continuam abertas; o `67` não escolheu por Mateus/Rico.
+⚠️ O catálogo não finge WP9/WP15: morte ainda não compra/grava a carta; armas, armaduras e anéis já resolvem no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), mas 40 materiais/17 consumíveis continuam WP9 e os 31 inimigos futuros não têm modelo/animação/hitbox. As perguntas 23 e 29 do [`99`](spec/99-perguntas-abertas.md) continuam abertas; o `67` não escolheu por Mateus/Rico.
+
+## 1k. ✅ O WP5 deixou de ser cinco armas e uma promessa de anéis
+
+O [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) fecha **120 armas, 68 armaduras e 70 anéis**. As oito famílias têm os onze golpes materializados (88 fichas), todos os IDs de equipamento prometidos pelos 330 cartões do bestiário resolvem, e cada item traz `descricao_visual` + `Fatia 1?`. Os 70 anéis cobrem oito eixos com efeitos únicos, condicionais/passivos, localização e afinidade sem tranca.
+
+A melhoria numérica foi revogada: base + seis níveis abrem postura/moveset, arte, troca de escala ou conversão elemental, sem subir dano base. Veneno, sangramento e queimadura têm barra, decaimento, disparo, saída, som/visual e regras simétricas. A proposta do Assassino passa os três guardas com Passo Mudo, Corte Alternado, Cruz Carmesim e Entre Sombras, mas **continua à espera da confirmação do Mateus** (pergunta 37).
+
+Os **11 ícones de armadura da Fatia 1** foram gerados, curados para alfa real e registados no manifesto; os cinco ícones de arma são reutilizados. Catálogo não é runtime: sete golpes, estados, offhand, equipar, votos e dedos adicionais continuam explicitamente em M2/WP11.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
@@ -190,7 +198,7 @@ As 12 zonas têm população de referência e orçamento recalculado pelo teste:
 
 ### E porque é que o catálogo vem antes dos sistemas
 
-As imagens seguem a mesma ordem: os ícones de armas e dos três feitiços da Fatia 1 já existem; os **11 ícones de armadura** continuam por gerar, e os itens fora da fatia esperam pela sua coluna. O motor é data-driven por desenho ([`44`](spec/44-prototipo.md) §2): *“nenhum número de combate vive em código”*. **Escrever o catálogo é, literalmente, produzir conteúdo jogável.**
+As imagens seguem a mesma ordem: os ícones de armas, dos três feitiços e das **11 armaduras** da Fatia 1 já existem; os itens fora da fatia esperam pela sua coluna. O motor é data-driven por desenho ([`44`](spec/44-prototipo.md) §2): *“nenhum número de combate vive em código”*. **Escrever o catálogo é, literalmente, produzir conteúdo jogável.**
 
 ### E o alinhamento vem por último de propósito
 
@@ -250,7 +258,7 @@ E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3)
 
 ## 6. O risco, dito uma vez
 
-Mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + ~70 anéis + catálogo de magia largo, **feito por duas pessoas e dois agentes**.
+Mundo vasto + ~61 chefes + 10+ biomas + 120 armas + 68 armaduras + 70 anéis + catálogo de magia largo, **feito por duas pessoas e dois agentes**.
 
 **Os donos sabem e decidiram avançar** — e a decisão é deles. Fica registado que a alavanca que dá vastidão sem custar produção são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8), e que a coluna `Fatia 1?` é o que impede o catálogo de virar um plano de dez anos.
 
@@ -260,11 +268,11 @@ Mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + ~70 anéis +
 
 | Quem | O quê |
 |---|---|
-| **Codex** | **tarefa 3.3 — armas e armaduras:** 7 golpes universais, melhoria sem +10%, estados, ~70 anéis e Assassino |
-| **Fable** | não duplicar o WP4: o [`66`](spec/66-catalogo-de-magia.md) já fechou o catálogo; a identidade do Assassino entra na tarefa 3.3 |
+| **Codex** | **tarefa 3.4 — mundo:** leitura do mapa antes do traçado, 12 biomas, travessias 8–12 min, círculos/atalhos, verticalidade e 24–36 portas de história |
+| **Fable** | não duplicar os catálogos 66/67/68; usar as localizações de anel do 68 ao desenhar o mundo |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
-| **Donos** | as perguntas 24, 28 e 32 do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
-| **Claude** | rever o que chega · ⭐ **gerar os 11 ícones de armadura** (fatia 1, prioridade sobre biomas e raças) |
+| **Donos** | as perguntas 24, 28, 32 e **37 (Assassino)** do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
+| **Claude** | rever o que chega; os 11 ícones de armadura já estão no manifesto |
 
 ### As três voltas de 31-07, e onde estão
 

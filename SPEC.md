@@ -49,7 +49,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | ⚠️ **sem soft caps e sem o piso de 30%** — [`39`](spec/39-estudo-profundo.md) §1–2 |
 | 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Primeira proposta de escolas/catálogo (WP4) | 🔵 substituído pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) + [`66`](spec/66-catalogo-de-magia.md) |
-| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | ⚠️ **por classe, devia ser por família** — [`35`](spec/35-estudo-referencia.md) §1 |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; catálogo completo no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 15 | [Bestiário — primeira camada](spec/15-inimigos.md) | IA e primeiros encontros (WP6) | 🔵 catálogo substituído pelo [`67`](spec/67-catalogo-do-bestiario.md); a máquina comum e a Fatia 1 continuam herdadas |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de zonas, dungeons, traçado (WP8) | ⚠️ **6 zonas contra 10+ biomas aprovados** |
@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–67)
+### Decisões e estudos (32–68)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 68 | [**Catálogo de armas, armaduras, estados e anéis**](spec/68-catalogo-de-armas-armaduras-e-aneis.md) | 120 armas · 68 armaduras · 70 anéis · 8×11 golpes · melhoria sem força · estados · Assassino | 🟢 WP5 fechado 01-08; 5 armas e 11 armaduras na Fatia 1; Assassino aguarda confirmação do Mateus |
 | 67 | [**Catálogo do bestiário**](spec/67-catalogo-do-bestiario.md) | 33 tipos · 100 ataques comuns · contacto/vector · 10 cartas · cues · massa · almas e 12 orçamentos | 🟢 WP6 fechado 01-08; recompensa, modelos/animações e colocação continuam WP9/WP15/WP8 |
 | 66 | [**Catálogo de magia: mana, formas e verbos**](spec/66-catalogo-de-magia.md) | 53 feitiços · 4 escolas · 12 formas · grelha sem vazios · custos · melhoria 0–5 · meditação/favoritos | 🟢 WP4 fechado 01-08; 3 da Fatia 1 executáveis, formas restantes por implementar |
 | 65 | [**Música e ambiente: atmosfera que nunca tapa informação**](spec/65-musica-e-ambiente.md) | Inventário dos 182 OGG · mapa por uso · estados/transições · ambiente · buses/ducking · prova de mascaramento | 🟢 sistema fechado 01-08; zero música/loops e audio director por construir |
@@ -100,7 +101,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 40 | [**Decisões: espólio, magia, inventário**](spec/40-decisoes-espolio-magia-inventario.md) | 15 decisões do Mateus | 🟢 registo |
 | 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, mundo, co-op, descoberta | 🟢 18 accionáveis |
 | 38 | [**Ataques e honestidade**](spec/38-ataques-e-honestidade.md) | As 5 fases e o contrato que faz a esquiva ser verdadeira | 🟢 contrato fixado |
-| 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, dano de queda | 🟠 catálogo por escrever |
+| 37 | [**Anéis e elementos**](spec/37-aneis-e-elementos.md) | 70 anéis / 10 dedos, tipos de dano, dano de queda | 🟢 catálogo de 70 entregue no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 36 | [**Física**](spec/36-fisica.md) | Gravidade, queda, balística, empurrão, colisão | 🟠 constantes validam-se no M2 |
 | 35 | [**Estudo da referência**](spec/35-estudo-referencia.md) | Números reais comparados com os nossos | 🟢 8 accionáveis |
 | 34 | [**Catálogo e comandos**](spec/34-catalogo-e-comandos.md) | A escala, e a regra de que toda a habilidade diz como se activa | 🟢 regra fixada |
@@ -136,7 +137,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 **Nada trava a construção.** O que falta são decisões que se tomam a jogar, não a escrever — estão no [`99`](spec/99-perguntas-abertas.md) e o [`ESTADO.md`](ESTADO.md) diz quais são mesmo urgentes.
 
-⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8).
+⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 chefes + 10+ biomas + 120 armas + 68 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8).
 
 ## Sessões
 

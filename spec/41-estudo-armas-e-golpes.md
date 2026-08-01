@@ -14,17 +14,17 @@ Antes de falar de famílias, é preciso saber **quantos golpes uma arma tem**. N
 |---|---|---|
 | **Leve** | toque no ataque | `LMB` ✅ |
 | **Pesado** | ataque forte | `Shift+LMB` ✅ |
-| **Cadeia leve** | leves seguidos, animação diferente do 1.º | ⬜ **falta declarar** |
-| **Leve → pesado** | encadeamento com propriedades próprias | ⬜ **falta** |
+| **Cadeia leve** | leves seguidos, animação diferente do 1.º | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| **Leve → pesado** | encadeamento com propriedades próprias | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
 | **A duas mãos** | conjunto **inteiro** diferente | ✅ decidido ([`34`](34-catalogo-e-comandos.md) §2b) |
-| **Em corrida** | golpe próprio, fecha distância | ⬜ **falta** |
-| **A rolar** | golpe próprio, sai do rolamento | ⬜ **falta** |
-| **A saltar** | golpe próprio, tem hiper-armadura | ⬜ **falta** |
-| **De cima** (queda) | crítico, é um dos quatro ([`39`](39-estudo-profundo.md) §5) | ⬜ **falta** |
-| **Pontapé / empurrão** | quebra a guarda de quem bloqueia | ⬜ **falta** |
+| **Em corrida** | golpe próprio, fecha distância | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| **A rolar** | golpe próprio, sai do rolamento | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| **A saltar** | golpe próprio, tem hiper-armadura | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| **De cima** (queda) | crítico, é um dos quatro ([`39`](39-estudo-profundo.md) §5) | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| **Pontapé / empurrão** | quebra a guarda de quem bloqueia | ✅ [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
 | **Arte da arma** | 1 mão e 2 mãos, custa **mana** — “energia” foi revogada pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md) | ✅ alinhado no [`66`](66-catalogo-de-magia.md) |
 
-⚠️ **Sete linhas por declarar.** E não são enfeite: **o golpe em corrida é o que torna a distância jogável**, e **o golpe a rolar é o que faz a esquiva ser ofensiva** em vez de só defensiva. Sem eles, o combate resume-se a *bate, recua, bate*.
+✅ **As sete linhas foram declaradas família a família no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md).** Não são enfeite: **o golpe em corrida é o que torna a distância jogável**, e **o golpe a rolar é o que faz a esquiva ser ofensiva** em vez de só defensiva. O runtime dos sete continua no M2.
 
 `→WP1`/`→WP5` — **cada família declara os onze.** Se um não existe naquela família, escreve-se *"não tem"* e diz-se porquê.
 

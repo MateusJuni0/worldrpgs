@@ -61,13 +61,9 @@ O modelo do WP1: escudo absorve **100% físico / 50% mágico**, custo de stamina
 | De ferro | 13 × peso | 60% | For 12 | — | ⬜ |
 | De torre | 11 × peso | 70% | For 16 | sprint −15% com ele equipado | ⬜ |
 
-## Melhoria de armas ⬜ (fatia 2, com a exploração)
+## Melhoria de armas ✅ (catálogo fechado)
 
-- Níveis **+1 a +5**, **+6% de dano base por nível** (tecto +30%).
-- Materiais: **Limalha** (+1 a +3 — baús e cantos de zona) e **Limalha Nobre** (+4/+5 — dungeons). **Encontram-se a explorar, nunca caem de inimigos repetíveis** — melhorar a arma não pode ser um motivo para farmar (Lei 1).
-- Faz-se no ponto de descanso; sem ferreiro enquanto o WP8B não decidir se há NPCs.
-- *Verificação do tecto:* atributo 50 em escala forte dá ×1,63 (WP2); com +30% chega a ~×2,1 sobre a arma de nível 1. Margem, não porta — e o chão do ×0,6 mantém qualquer arma utilizável. ✅
-- *Alternativa descartada:* árvores de forja com ramos elementais — os encantamentos (WP4: vêm no item, um por arma) já dão o sabor elemental sem UI nova.
+O modelo numérico acima foi revogado: comprar +6% por nível era precisamente a Lei 2 quebrada. O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §3 fecha **base + seis níveis** que dão postura/moveset, arte nova, troca de escala ou conversão elemental; nenhum aumenta dano base, defesa, velocidade ou janelas. Limalha abre +1…+3 e Limalha Nobre +4…+6 por exploração fixa, nunca por inimigo repetível.
 
 ## Cura e consumíveis — a proposta para a pergunta 7
 
@@ -84,17 +80,9 @@ O modelo do WP1: escudo absorve **100% físico / 50% mágico**, custo de stamina
 
 Outros consumíveis (facas de arremesso, bombas, antídotos) ⬜ — entram com a economia (WP9), debaixo da regra: consumível dá conveniência, **nunca a única resposta a um padrão**.
 
-## Armadura — a pergunta 14, em formato de decisão
+## Armadura ✅ — por peças, sem mexer nos i-frames
 
-Nunca dita na gravação. Duas opções:
-
-**Opção A — sem sistema de armadura.** Defesa vem da Constituição (WP2); cada classe tem vestes visuais próprias, fixas. *Ganha:* a esquiva é uma constante do jogo (Lei 1 sem asteriscos), custo de arte mínimo (Lei 4: 6 modelos, não 18), zero equilíbrio extra. *Perde:* uma gaveta clássica de loot de corpo.
-
-**Opção B — 3 arquétipos de peso** (leve/médio/pesado, conjunto único): o peso troca i-frames por defesa — e o WP1 já deixou escrito que, se armadura entrar, as classes de peso do rolamento definem-se **lá**. *Ganha:* uma escolha de corpo com sabor souls. *Perde:* triplica a arte de personagem e torna a leitura do parceiro variável.
-
-**A minha recomendação: A** — para duas pessoas com Iris Xe, a B compra uma gaveta de loot ao preço do triplo da arte e de uma esquiva com nota de rodapé. O loot de corpo pode vir de **talismãs** (acessórios sem malha — ver ideias).
-
-**Precisa de decisão de:** Mateus + Rico. Até lá, a spec segue com A (é o estado da fatia 1 no WP0).
+Esta pergunta foi superada pela decisão do Mateus registada no [`33`](33-morte-e-almas.md) e materializada no [`51`](51-familias.md): armadura existe, por **nove slots**, com carga leve/média/pesada. O peso paga-se na recuperação da esquiva e regeneração de stamina; **os i-frames nunca mudam**. O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) fecha 68 peças: 11 iniciais e 57 já visíveis nos inimigos.
 
 ## Montarias
 

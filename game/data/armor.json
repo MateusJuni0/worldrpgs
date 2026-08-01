@@ -1,6 +1,6 @@
 {
-  "_fonte": "spec/51-familias.md §4-§5 — os 9 slots, as 3 classes de carga, e as 10 pecas dos kits iniciais (instrucao do Rico, 31-07).",
-  "_estado": "por implementar — os dados validam desde ja; o ecra de equipar e do WP11, a mecanica entra no M2.",
+  "_fonte": "spec/51-familias.md §4-§5 + spec/68 §6 — 9 slots, 3 classes de carga e 11 pecas dos kits iniciais.",
+  "_estado": "as 11 pecas iniciais e os 57 drops vivem no catalogo; o ecra de equipar e do WP11 e a mecanica entra no M2.",
   "_regra": "A armadura muda COMO se joga, nunca quanto se aguenta de graca: peso e resistencias por tipo, com tecto por peca. Nada de defesa plana.",
 
   "slots": ["cabeca", "rosto", "ombros", "peito", "maos", "cintura", "pernas", "pes", "capa"],

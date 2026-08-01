@@ -21,7 +21,7 @@
 | 🔴 | ⭐ **A fórmula da estabilidade estava invertida** — eu escrevi `dano × (estabilidade/100)`, o que fazia o broquel de 50 bloquear melhor que o escudo grande de 85. ✅ **CORRIGIDO 01-08** para `× (1 − estabilidade/100)` | [`41`](spec/41-estudo-armas-e-golpes.md) §6 |
 | ✅ | ~~O espelho é mais fácil do que o parry~~ **RESOLVIDO 01-08** — janela de 0,25 s, recuperação se falhar, escala pelo instrumento, e recompensa maior quando acerta | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §4 |
 | ✅ | ~~O intervalo de 0,20 s entre atacantes não chega~~ **CORRIGIDO 01-08** — conta-se a partir de **quando o jogador pode agir**, não do relógio. E o tecto de 2 agressores passa a garantir **rota de fuga** em vez de um número | [`38`](spec/38-ataques-e-honestidade.md) §3 |
-| 🔴 | ⚠️ **Melhoria de armas (+10%/nível) é a Lei 2 quebrada** — números, não opções. *(A dos feitiços foi resolvida: o Voto passou a trocar verbos, [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §4)* | [`51`](spec/51-familias.md) |
+| ✅ | ~~⚠️ **Melhoria de armas (+10%/nível) era a Lei 2 quebrada**~~ **RESOLVIDO 01-08** — base + seis níveis abrem postura/moveset, arte, troca de escala ou conversão elemental; zero aumento de dano base | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §3 |
 | ✅ | ~~61 chefes = um encontro a cada 30–40 s~~ **DECIDIDO 01-08 pelo Mateus** — 13 verdadeiros + 12 subchefes + ~36 nomeados, travessia de 8–12 min, e **24–36 portas de história abertas** para crescer no futuro | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) |
 | ⏳ | ⭐ **Ordem de corte com menor perda**, se for preciso cortar: 1.ª pessoa → 48 chefes reclassificados → 5 slots de armadura → 6 slots de anel → armas acima de 24 → feitiços acima de 24. **Não cortar:** co-op, esquiva/parry/stamina, as 8 famílias, a identidade dos 12 biomas | auditoria §4 |
 
@@ -42,11 +42,13 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | **Os 7 golpes por declarar** — cadeia de leves, leve→pesado, em corrida, a rolar, a saltar, de cima, empurrão | [`41`](spec/41-estudo-armas-e-golpes.md) §1 |
-| 🟠 | **Melhoria de armas** — reforço e infusão. Nunca foi escrita | [`35`](spec/35-estudo-referencia.md) §6 |
-| 🟠 | **Estados alterados** — veneno, sangramento, queimadura. Nunca mencionados | [`35`](spec/35-estudo-referencia.md) §5 |
-| 🟠 | **Requisitos de atributo** — quanto é "não és tu que a usas" sem proibir (Lei 3) | [`41`](spec/41-estudo-armas-e-golpes.md) |
-| 🟠 | **Duas armas ao mesmo tempo, uma em cada mão** — existe no nosso jogo? | [`41`](spec/41-estudo-armas-e-golpes.md) |
+| ✅ | ~~**Os 7 golpes por declarar**~~ **RESOLVIDO 01-08** — 88 fichas, onze por cada uma das oito famílias; runtime continua abaixo | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §2 |
+| ✅ | ~~**Melhoria de armas**~~ **RESOLVIDO 01-08** — seis escolhas sem força | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §3 |
+| ✅ | ~~**Estados alterados**~~ **RESOLVIDO 01-08** — veneno, sangramento e queimadura com barra, disparo, saída e simetria | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §4 |
+| ✅ | ~~**Requisitos de atributo**~~ **RESOLVIDO** — abaixo do requisito continua utilizável a ×0,6 sem escala; nenhum catálogo passa 18 | [`11`](spec/11-formulas.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 🔴 | **Os sete golpes novos, estados e segunda adaga estão declarados mas não executam.** Leve/pesado/cadeia/bash são o runtime actual; corrida, rolar, saltar, queda, empurrão universal, artes, medidores e Corte Alternado entram no M2 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 🟠 | **Equipar, votos de melhoria, 2→10 dedos e persistência não têm UI/save.** Dados e invariantes existem; clientes são WP11 + save v2 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 🟠 | **O catálogo de armadura cresceu de ~30 para 68 peças** porque o WP6 já prometia 57 IDs além das 11 iniciais. A coluna `Fatia 1?` contém a produção (só 11 agora), mas o custo futuro ficou maior | [`67`](spec/67-catalogo-do-bestiario.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🔵 | **Como a mira do arco comunica a queda da flecha** — sem isso o jogador aprende "o arco falha às vezes" | [`36`](spec/36-fisica.md) §3 |
 
 ### Volta 4 — magia
@@ -80,7 +82,7 @@
 | ✅ | ~~**Massa de cada inimigo**~~ **RESOLVIDO 01-08** — 33 comuns + Vorgar, em kg, validada positiva | [`67`](spec/67-catalogo-do-bestiario.md) §3 |
 | ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
 | 🔴 | **Ligar morte → compra do baralho → recibo/save.** A ordem determinística, as 330 cartas e `world.loot_decks` existem; `Enemy.died` ainda não executa a transacção nem apresenta a recompensa | encontrado ao implementar o [`67`](spec/67-catalogo-do-bestiario.md) · `→WP9` |
-| 🟠 | **Resolver os IDs dos cartões nos catálogos de objectos.** Armas/armaduras/anéis entram na tarefa 3.3; materiais e consumíveis continuam WP9 | [`67`](spec/67-catalogo-do-bestiario.md) §5 |
+| 🟠 | **Resolver os IDs de materiais e consumíveis dos cartões.** As 32 armas, 57 armaduras e 3 anéis já resolvem no [`68`]; 40 materiais e 17 consumíveis continuam WP9 | [`67`](spec/67-catalogo-do-bestiario.md) §5 |
 | 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
 
 ### Volta 7 — chefes
@@ -249,7 +251,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 |---|---|---|
 | 🟠 | ⭐ **A fatia 1 ([`10`](spec/10-fatia-1.md)) foi aprovada antes de ~40 decisões** | fala de cargas de magia que já não existem, de 6 zonas, de espólio sem baralho. **Precisa de uma passagem** |
 | 🟠 | **Os ~36 "nomeados"** que substituíram os chefes de campo ([`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §1) | ninguém os desenhou ainda — são 36 fichas curtas |
-| 🟠 | **O Assassino** — furtividade, velocidade, sangramento | marcado no [`12`](spec/12-classes.md) pelo Fable, com os 3 guardas escritos. **Por desenhar** |
+| ⏳ | **O Assassino** — proposta completa escrita e testada; **falta o Mateus confirmar** Passo Mudo, Corte Alternado, Cruz Carmesim e Entre Sombras | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §5 · pergunta 37 |
 
 ---
 

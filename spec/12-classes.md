@@ -36,7 +36,7 @@ Nenhuma escala com atributos ou nível; custos e tempos fixos. *Teste da Lei 2, 
 | Guerreiro | **Ímpeto** | avanço de 6 m que termina em golpe (MV 1,2) — o gap closer que mais ninguém tem | 30 stamina · 15 s |
 | Feiticeiro | **Eco** | repete a última magia lançada **sem gastar carga** — "um feitiço a mais", como o Mateus disse (08:53) | 60 s |
 | Tanque | **Provocação** | inimigos num raio de 8 m atacam-no durante 4 s — a ferramenta de co-op ("segura o brutamontes") | 30 s |
-| Assassino | **Passo Sombra** ⚠️ **em revisão** | a próxima esquiva (janela de 3 s) atravessa o inimigo; o primeiro golpe pelas costas nos 2 s seguintes é backstab (MV 2,0) | 25 s |
+| Assassino | **Entre Sombras** ⏳ **proposta; Mateus pendente** | 3 s para a próxima esquiva atravessar o volume inimigo; se atravessar, abre Corte Cruzado por 2 s, sem mudar i-frames | 25 s |
 | Berserker | **Fúria** | 8 s de hiper-armadura em todos os golpes; **não pode bloquear nem esquivar enquanto dura** — troca a defesa por avanço | 45 s |
 | Paladino | **Julgamento** | 10 s com a arma carregada de **raio** — muda o tipo de dano, e com ele as fraquezas que contam (WP6) | 40 s |
 
@@ -46,11 +46,11 @@ Nenhuma escala com atributos ou nível; custos e tempos fixos. *Teste da Lei 2, 
 
 > *"o assassino tera furtividade velocidade e dano de sangramento, cria alguma habilidade especial, a arma de inicio do assassino pode ser duas adagas."* — Rico, 31-07-2026 (⏳ falta a confirmação do Mateus)
 
-**Já feito** ([`51-familias.md`](51-familias.md) §5): o kit inicial passou a **duas adagas** + máscara e botas de pano. A segunda adaga é `[PROTO]` cosmética — o offhand só tem mecânica de escudo hoje; o parry continua a funcionar porque a adaga está na lista do WP1.
+**Já feito** ([`51-familias.md`](51-familias.md) §5): o kit inicial passou a **duas adagas** + máscara e botas de pano. O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §5 declara o Corte Alternado da segunda adaga; o runtime do offhand continua no M2. O parry continua a funcionar porque a adaga está na lista do WP1.
 
-**Por fechar, e é a parte de desenho:** as três palavras dele — **furtividade**, **velocidade**, **dano de sangramento** — mais a habilidade especial nova. O `Passo Sombra` acima ou evolui para isso ou dá lugar; a decisão vem com a proposta, não antes. O sangramento liga ao estado alterado proposto em [`51-familias.md`](51-familias.md) §7: **o Assassino é a classe do sangramento**.
+**Proposta escrita, confirmação ainda aberta:** **Passo Mudo** suprime som/marca de passos apenas ao caminhar; **Corte Alternado** abre o ramo da adaga esquerda; **Cruz Carmesim** soma 35+35 à barra simétrica de sangramento; **Entre Sombras** liga travessia conquistada ao corte cruzado. A ficha completa e os números estão no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §4–5.
 
-⚠️ **Os três guardas que a proposta tem de passar:** a furtividade não pode obrigar a IA nova cara (Lei 4 — Iris Xe) · a velocidade não pode ser "+X%" (Lei 2 — opções, não números) · e nenhuma delas pode fazer do Assassino a classe *correcta* para alguma coisa (Lei 3).
+✅ **Os três guardas passam e são auto-testados:** furtividade não muda visão/alcance/estado da IA · velocidade é ramo novo, nunca “+X%” · qualquer origem pode aprender a técnica como loot de marco. ⏳ Isto prova a coerência da proposta, não substitui a confirmação do Mateus.
 
 ## Skills
 

@@ -18,7 +18,7 @@
 |---|---|---|
 | Anéis equipados | **4** | **10** |
 | Total | ~100 | ~70 |
-| Efeitos típicos | recuperação de stamina, carga, dano de postura, durabilidade | por escrever |
+| Efeitos típicos | recuperação de stamina, carga, dano de postura, durabilidade | **70 verbos no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §7** |
 
 **Fonte:** [Rings — DS2 Wiki](https://darksouls2.wiki.fextralife.com/Rings)
 
@@ -66,9 +66,9 @@ Para o WP5 ter onde começar, sem repetir:
 
 ⚠️ **Todos passivos ou condicionais** — a regra dos comandos ([`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §2). Nenhum anel gasta tecla.
 
-### O que o WP5 tem de entregar
+### ✅ O que o WP5 entregou
 
-Uma tabela de 70 linhas com: nome · eixo · efeito em verbo · números · afinidade de classe · **soma com outro?** · onde se encontra.
+O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §7 entrega as 70 linhas: nome · eixo · efeito em verbo · números · afinidade de classe · **soma com outro?** · onde se encontra · descrição visual · `Fatia 1?`. Os oito eixos aparecem, nenhum efeito se repete e nenhum anel consome tecla.
 
 **A coluna "onde se encontra" é o que faz o jogo do Mateus.** Um anel que se compra é uma linha na tabela; um anel que está atrás de um chefe opcional ou num sítio que só se descobre à quinta partida **é uma memória**. É disso que ele falou quando disse *"dá para zerar aquele jogo quinze vezes e ainda estás a descobrir coisas"*.
 

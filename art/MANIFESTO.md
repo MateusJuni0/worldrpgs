@@ -90,29 +90,29 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 
 ## Ícones de armadura — volta 3, **fatia 1** ([`../spec/51-familias.md`](../spec/51-familias.md) §5)
 
-> ⭐ **São as primeiras armaduras do jogo** — as 11 peças dos kits iniciais das 6 classes. Todas `Fatia 1 ✅`, todas com `descrição visual` em `game/data/armor.json`. **Prioridade sobre os conceitos de bioma e raça:** são a primeira coisa que 100% dos jogadores vê no ecrã de criação.
+> ⭐ **São as primeiras armaduras do jogo** — as 11 peças dos kits iniciais das 6 classes. Todas `Fatia 1 ✅`, todas com `descrição visual` em `game/data/armor.json`. Geradas uma a uma pelo [prompt 07](prompts/07-icones-armaduras.md), com chroma key removido para alfa real.
 
 | ID | Asset | Caminho | Dim. | Classe(s) | Estado |
 |---|---|---|---|---|---|
-| `ico_arm_couro_peitoral` | Peitoral de couro fervido | `art/ui/icons/armor/couro-peitoral.png` | 512×512 | Guerreiro | ⬜ |
-| `ico_arm_couro_botas` | Botas de couro | `art/ui/icons/armor/couro-botas.png` | 512×512 | Guerreiro | ⬜ |
-| `ico_arm_ferro_elmo` | Elmo de ferro rude | `art/ui/icons/armor/ferro-elmo.png` | 512×512 | Tanque | ⬜ |
-| `ico_arm_ferro_peitoral` | Peitoral de ferro rude | `art/ui/icons/armor/ferro-peitoral.png` | 512×512 | Tanque | ⬜ |
-| `ico_arm_ferro_peitoral_polido` | Peitoral de ferro polido | `art/ui/icons/armor/ferro-peitoral-polido.png` | 512×512 | Paladino | ⬜ |
-| `ico_arm_pano_mascara` | Máscara de pano escuro | `art/ui/icons/armor/pano-mascara.png` | 512×512 | Assassino | ⬜ |
-| `ico_arm_pano_botas` | Botas de pano | `art/ui/icons/armor/pano-botas.png` | 512×512 | Assassino | ⬜ |
-| `ico_arm_couro_ombreiras` | Ombreiras de couro com pelo | `art/ui/icons/armor/couro-ombreiras.png` | 512×512 | Berserker | ⬜ |
-| `ico_arm_la_capa` | Capa de lã encerada | `art/ui/icons/armor/la-capa.png` | 512×512 | Feiticeiro | ⬜ |
-| `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 512×512 | Paladino | ⬜ |
-| `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 512×512 | Feiticeiro | ⬜ |
+| `ico_arm_couro_peitoral` | Peitoral de couro fervido | `art/ui/icons/armor/couro-peitoral.png` | 1254×1254 | Guerreiro | ✅ |
+| `ico_arm_couro_botas` | Botas de couro | `art/ui/icons/armor/couro-botas.png` | 1254×1254 | Guerreiro | ✅ |
+| `ico_arm_ferro_elmo` | Elmo de ferro rude | `art/ui/icons/armor/ferro-elmo.png` | 1254×1254 | Tanque | ✅ |
+| `ico_arm_ferro_peitoral` | Peitoral de ferro rude | `art/ui/icons/armor/ferro-peitoral.png` | 1254×1254 | Tanque | ✅ |
+| `ico_arm_ferro_peitoral_polido` | Peitoral de ferro polido | `art/ui/icons/armor/ferro-peitoral-polido.png` | 1254×1254 | Paladino | ✅ |
+| `ico_arm_pano_mascara` | Máscara de pano escuro | `art/ui/icons/armor/pano-mascara.png` | 1254×1254 | Assassino | ✅ |
+| `ico_arm_pano_botas` | Botas de pano | `art/ui/icons/armor/pano-botas.png` | 1254×1254 | Assassino | ✅ |
+| `ico_arm_couro_ombreiras` | Ombreiras de couro com pelo | `art/ui/icons/armor/couro-ombreiras.png` | 1254×1254 | Berserker | ✅ |
+| `ico_arm_la_capa` | Capa de lã encerada | `art/ui/icons/armor/la-capa.png` | 1254×1254 | Feiticeiro | ✅ |
+| `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 1254×1254 | Paladino | ✅ |
+| `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 1254×1254 | Feiticeiro | ✅ |
 
-**Total: 43 imagens geradas** (25 da fatia 1 + 7 do bestiário + **11 conceitos de bioma**) **+ 10 ícones de interface.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+**Total: 54 assets arquivados** — 32 conceitos · 20 ícones · fundo de menu · céu. Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
-> **Modelo:** `nano_banana_pro` (Nano Banana Pro — o modelo de imagem do Gemini) via Higgsfield CLI, 2 créditos cada. **Todas as 25 saíram do mesmo gerador**, que é o que mantém a consistência de pé. Os 5 cenários foram primeiro feitos com gpt-image pelo browser e depois regenerados aqui, por decisão do Mateus — não misturar.
+> **Proveniência:** os 43 assets históricos saíram do pipeline Nano Banana/Higgsfield registado nesta versão do manifesto. Os 11 ícones de armadura foram gerados pelo pipeline integrado `imagegen`, mantendo literalmente a mesma frase de estilo e um objecto por prompt; o prompt 07 conserva a reprodução exacta.
 >
-> **Ícones:** gerados a 2048² com fundo cinzento chapado e depois passados pelo removedor de fundo do Higgsfield (1 crédito cada) — ficam RGBA com transparência real. Ao importar no runtime, o limite é **512²**; o manifesto regista acima a dimensão real da fonte, não a dimensão comprimida da hotbar.
+> **Ícones:** os históricos vivem a 2048²; as 11 armaduras vivem a 1254². As armaduras foram geradas sobre chroma key e passadas pelo helper `remove_chroma_key.py`: todas RGBA, alfa 0–255 e fundo realmente transparente. Ao importar no runtime, o limite continua **512²**; o manifesto regista a dimensão real da fonte.
 
 
 ## Bestiário — as 7 raças do WP6 (fatia 2+)

@@ -19,6 +19,7 @@ var abilities: Dictionary = {}
 var biomes: Dictionary = {}
 var races: Dictionary = {}
 var armor: Dictionary = {}
+var equipment: Dictionary = {}
 var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
@@ -35,6 +36,7 @@ func _ready() -> void:
 	biomes = _load_json("biomes.json")
 	races = _load_json("races.json")
 	armor = _load_json("armor.json")
+	equipment = _load_json("equipment.json")
 	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
@@ -77,6 +79,18 @@ func weapon(id: String) -> Dictionary:
 
 func enemy(id: String) -> Dictionary:
 	return enemies.get(id, {}) as Dictionary
+
+
+func ring(id: String) -> Dictionary:
+	return (equipment.get("rings", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func equipment_weapon(id: String) -> Dictionary:
+	return (equipment.get("weapons", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func equipment_armor(id: String) -> Dictionary:
+	return (equipment.get("armor", {}) as Dictionary).get(id, {}) as Dictionary
 
 
 ## O JSON guarda declaracoes compactas de ataques, mas o runtime recebe sempre
@@ -693,6 +707,85 @@ func _validate() -> void:
 		_fail("[SPEC] bestiario tem %d tipos comuns; spec/67 fecha 33" % common_enemy_count)
 	if (enemies.get("_zone_budgets", {}) as Dictionary).size() != 12:
 		_fail("[SPEC] bestiario sem orcamento de almas para as 12 zonas")
+	checks += 1
+
+	# 11. WP5 completo (spec/68): catálogo fechado e todas as promessas do
+	# bestiário resolvem. A validação duplica de propósito a fronteira do teste:
+	# uma build normal também se recusa a arrancar com espólio fantasma.
+	var catalogue_weapons: Dictionary = equipment.get("weapons", {}) as Dictionary
+	var catalogue_armor: Dictionary = equipment.get("armor", {}) as Dictionary
+	var catalogue_rings: Dictionary = equipment.get("rings", {}) as Dictionary
+	if catalogue_weapons.size() != 120:
+		_fail("[SPEC] catálogo WP5 tem %d armas; spec/68 diz 120" % catalogue_weapons.size())
+	if catalogue_armor.size() != 68:
+		_fail("[SPEC] catálogo WP5 tem %d armaduras; spec/68 diz 68" % catalogue_armor.size())
+	if catalogue_rings.size() != 70:
+		_fail("[SPEC] catálogo WP5 tem %d anéis; spec/68 diz 70" % catalogue_rings.size())
+	for catalogue: Dictionary in [catalogue_weapons, catalogue_armor, catalogue_rings]:
+		for item_id: String in catalogue.keys():
+			var item := catalogue[item_id] as Dictionary
+			if String(item.get("descricao_visual", "")).length() < 40:
+				_fail("[SPEC] item '%s' sem descrição visual gerável" % item_id)
+			if typeof(item.get("fatia_1")) != TYPE_BOOL:
+				_fail("[SPEC] item '%s' sem Fatia 1? booleana" % item_id)
+
+	var family_movesets: Dictionary = equipment.get("family_movesets", {}) as Dictionary
+	const REQUIRED_STRIKES: Array[String] = ["leve", "pesado", "cadeia", "leve_para_pesado",
+		"em_corrida", "a_rolar", "a_saltar", "de_cima", "empurrao", "arte_1mao", "arte_2maos"]
+	if family_movesets.size() != 8:
+		_fail("[SPEC] catálogo WP5 sem os oito movesets")
+	for family_id: String in family_movesets.keys():
+		var moveset := family_movesets[family_id] as Dictionary
+		for strike: String in REQUIRED_STRIKES:
+			if not moveset.has(strike) or (moveset[strike] as Dictionary).is_empty():
+				_fail("[SPEC] família '%s' sem golpe '%s'" % [family_id, strike])
+
+	var improvement_levels: Array = (equipment.get("weapon_improvement", {}) as Dictionary).get("levels", []) as Array
+	if improvement_levels.size() != 7:
+		_fail("[SPEC] melhoria de arma não declara base + seis níveis")
+	for level: int in range(improvement_levels.size()):
+		var improvement := improvement_levels[level] as Dictionary
+		if int(improvement.get("level", -1)) != level or bool(improvement.get("increases_base_damage", true)):
+			_fail("[SPEC] melhoria %d fora de ordem ou compra força" % level)
+
+	var status_effects: Dictionary = equipment.get("status_effects", {}) as Dictionary
+	for status_id: String in ["veneno", "sangramento", "queimadura"]:
+		var status := status_effects.get(status_id, {}) as Dictionary
+		if String(status.get("applies_to", "")) != "jogador_e_inimigo":
+			_fail("[SPEC] estado '%s' não é simétrico" % status_id)
+		for status_field: String in ["meter_max", "decay", "trigger", "effect", "escape", "visual_cue"]:
+			if str(status.get(status_field, "")) == "":
+				_fail("[SPEC] estado '%s' sem '%s'" % [status_id, status_field])
+
+	var ring_axes: Dictionary = {}
+	var ring_effects: Dictionary = {}
+	for ring_id: String in catalogue_rings.keys():
+		var catalogue_ring := catalogue_rings[ring_id] as Dictionary
+		ring_axes[String(catalogue_ring.get("eixo", ""))] = true
+		var ring_effect := String(catalogue_ring.get("efeito", ""))
+		if ring_effects.has(ring_effect):
+			_fail("[SPEC] anel '%s' repete um efeito" % ring_id)
+		ring_effects[ring_effect] = true
+		if catalogue_ring.has("input_action"):
+			_fail("[SPEC] anel '%s' consome tecla" % ring_id)
+		if float((catalogue_ring.get("numeros", {}) as Dictionary).get("max_percent", 0.0)) > 10.0:
+			_fail("[SPEC] anel '%s' passa o tecto de 10%%" % ring_id)
+	if ring_axes.size() != 8:
+		_fail("[SPEC] os anéis só cobrem %d/8 eixos" % ring_axes.size())
+
+	for loot_enemy_id: String in enemies.keys():
+		if loot_enemy_id.begins_with("_") or bool(enemy(loot_enemy_id).get("is_boss", false)):
+			continue
+		for loot_card_value: Variant in enemy(loot_enemy_id).get("loot_cards", []):
+			var split: PackedStringArray = String(loot_card_value).split(":", false, 1)
+			if split.size() != 2:
+				continue
+			if split[0] == "arma" and not catalogue_weapons.has(split[1]):
+				_fail("[SPEC] espólio arma '%s' não resolve" % split[1])
+			elif split[0] == "armadura" and not catalogue_armor.has(split[1]):
+				_fail("[SPEC] espólio armadura '%s' não resolve" % split[1])
+			elif split[0] == "anel" and not catalogue_rings.has(split[1]):
+				_fail("[SPEC] espólio anel '%s' não resolve" % split[1])
 	checks += 1
 
 	if load_errors.is_empty():

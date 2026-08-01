@@ -5,8 +5,8 @@
   "_fonte_familias": "spec/51-familias.md §1-§3 (volta 3) — a camada 1. Cada familia tem de trazer 'onde e ma'; sem essa frase esta listada, nao desenhada.",
 
   "golpes_universais": {
-    "_fonte": "spec/51 §1 — os 7 golpes que o 41 §1 dava por declarar. Regra geral; cada familia so declara excepcoes.",
-    "_estado": "por implementar — so leve, pesado e cadeia estao no prototipo (WP1).",
+    "_fonte": "spec/51 §1 + spec/68 §2 — constantes universais; equipment.json materializa os 11 golpes nas 8 familias.",
+    "_estado": "catalogo fechado; no prototipo so leve, pesado, cadeia e bash executam. Os outros entram no M2.",
     "leve_para_pesado": { "corte_arranque_pct": 0.25 },
     "em_corrida":       { "avanco_m": 2.5, "postura_mult": 1.5, "_nota": "e o que torna a distancia jogavel" },
     "a_rolar":          { "arranque_delta_frames": -4, "mv_mult": 0.85, "_nota": "faz a esquiva ser ofensiva" },
@@ -49,7 +49,7 @@
       "arte_1mao": "varrimento baixo", "arte_2maos": "carga de lanca", "fatia_1": false
     },
     "cajado": {
-      "nome": "Cajados", "onde_boa": "e o que conjura; a pancada e o plano B sem custo de cargas",
+      "nome": "Cajados", "onde_boa": "e o que conjura; a pancada e o plano B sem custo de mana",
       "onde_ma": "como arma: MV 0,7, sem critico e sem contra-bonus — um mago encostado a parede tem um pau",
       "interrupcao": 8, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
       "arte_1mao": "rajada de bruma", "arte_2maos": "conjuracao firmada", "fatia_1": true
@@ -158,7 +158,7 @@
     "light": { "startup": 18, "active": 5, "recovery": 20, "stamina": 15, "mv": 0.7 },
     "heavy": { "startup": 30, "active": 7, "recovery": 28, "stamina": 25, "mv": 1.1 },
     "combo": { "max": 2, "final_mv": null },
-    "_nota": "Plano B do mago: pancada sem custo de CARGAS (custa stamina). A Lei 1 nunca fica refem do contador de cargas."
+    "_nota": "Plano B do mago: pancada sem custo de mana (custa stamina). A Lei 1 nunca fica refem do reservatorio de mana."
   },
 
   "shield": {
@@ -185,7 +185,7 @@
     "sorcerer":  { "main": "staff",     "offhand": null,      "pecas": ["la_capa", "couro_cinto"],               "carga": "leve" },
     "tank":      { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_elmo", "ferro_peitoral"],         "carga": "medio" },
     "assassin":  { "main": "dagger",    "offhand": "dagger",  "pecas": ["pano_mascara", "pano_botas"],           "carga": "leve",
-      "_duas_adagas": "instrucao do Rico (31-07): o assassino comeca com DUAS adagas. [PROTO] cosmetico ate o golpe alternado existir — hoje o offhand so tem mecanica de escudo (spec/51 §5)." },
+      "_duas_adagas": "instrucao do Rico (31-07): o assassino comeca com DUAS adagas. O Corte Alternado esta declarado no spec/68; o runtime do offhand continua para o M2." },
     "berserker": { "main": "greataxe",  "offhand": null,      "pecas": ["couro_ombreiras"],                      "carga": "leve" },
     "paladin":   { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_peitoral_polido", "la_capa_clara"], "carga": "leve" }
   },

@@ -4,7 +4,7 @@
 >
 > Mostra **os links reais entre documentos**. Um documento muito citado é uma fundação: mexer nele mexe em tudo o que aponta para lá.
 
-**116 documentos · 17 966 linhas**
+**118 documentos · 18 185 linhas**
 
 ## ⭐ As fundações — o que mais se cita
 
@@ -12,8 +12,8 @@ Mexer num destes obriga a rever o que aponta para lá.
 
 | Documento | Citado por | Cita | Linhas |
 |---|---|---|---|
-| [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) — Perguntas em aberto | **34** | 44 | 172 |
-| [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md) — Ataques dos inimigos e o contrato de honestidade | **30** | 11 | 277 |
+| [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) — Perguntas em aberto | **34** | 46 | 173 |
+| [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md) — Ataques dos inimigos e o contrato de honestidade | **29** | 11 | 277 |
 | [`spec/01-combate.md`](spec/01-combate.md) — Combate | **28** | 4 | 237 |
 | [`spec/39-estudo-profundo.md`](spec/39-estudo-profundo.md) — Estudo profundo: como o jogo de referência funciona por dentro | **23** | 10 | 483 |
 | [`spec/62-acessibilidade-auditiva.md`](spec/62-acessibilidade-auditiva.md) — Acessibilidade auditiva: a mesma informação por outro canal | **23** | 14 | 279 |
@@ -33,21 +33,21 @@ Mexer num destes obriga a rever o que aponta para lá.
 |---|---|---|
 | [`BRAIN.md`](BRAIN.md) — BRAIN — WorldRPGs | 78 | 1 |
 | [`CLAUDE.md`](CLAUDE.md) — CLAUDE.md — contexto do repositório | 87 | 9 |
-| [`COORDENACAO.md`](COORDENACAO.md) — Coordenação — quem está a fazer o quê | 175 | 11 |
+| [`COORDENACAO.md`](COORDENACAO.md) — Coordenação — quem está a fazer o quê | 176 | 11 |
 | [`CREDITS.md`](CREDITS.md) — Créditos de assets externos | 29 | 7 |
 | [`DECISOES.md`](DECISOES.md) — Registo de decisões | 217 | 16 |
-| [`ESTADO.md`](ESTADO.md) — ESTADO — o que é verdade hoje | 276 | 10 |
-| [`LACUNAS.md`](LACUNAS.md) — LACUNAS — o que falta, e ninguém está a fazer | 270 | 8 |
-| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 180 | 2 |
+| [`ESTADO.md`](ESTADO.md) — ESTADO — o que é verdade hoje | 284 | 10 |
+| [`LACUNAS.md`](LACUNAS.md) — LACUNAS — o que falta, e ninguém está a fazer | 272 | 9 |
+| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 182 | 2 |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) — Rico, lê isto primeiro | 94 | 3 |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) — Ponte Claude — guia do Rico | 62 | 2 |
 | [`README.md`](README.md) — WorldRPGs | 73 | 2 |
-| [`SPEC.md`](SPEC.md) — WorldRPGs — Especificação | 147 | 8 |
+| [`SPEC.md`](SPEC.md) — WorldRPGs — Especificação | 148 | 8 |
 | [`README.md`](design/README.md) — design/ | 17 | 2 |
 | [`2026-07-31_0006__2026-07-30-23-52-46.ideas.md`](design/ideas/2026-07-31_0006__2026-07-30-23-52-46.ideas.md) — Ideias — 2026-07-30 23-52-46 | 108 | 1 |
 | [`2026-07-31_0006__2026-07-30-23-52-46.md`](design/transcripts/2026-07-31_0006__2026-07-30-23-52-46.md) — Transcricao — 2026-07-30 23-52-46 | 179 | 2 |
 
-### spec/ — a especificação — 69 ficheiros
+### spec/ — a especificação — 70 ficheiros
 
 | Documento | Linhas | Citado por |
 |---|---|---|
@@ -65,7 +65,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`11-formulas.md`](spec/11-formulas.md) — Atributos e fórmulas | 124 | 18 |
 | [`12-classes.md`](spec/12-classes.md) — Classes | 116 | 12 |
 | [`13-magia.md`](spec/13-magia.md) — Magia, por dentro | 96 | 11 |
-| [`14-equipamento.md`](spec/14-equipamento.md) — Armas e equipamento | 128 | 10 |
+| [`14-equipamento.md`](spec/14-equipamento.md) — Armas e equipamento | 116 | 11 |
 | [`15-inimigos.md`](spec/15-inimigos.md) — Inimigos: o bestiário | 156 | 15 |
 | [`16-chefes.md`](spec/16-chefes.md) — Chefes | 111 | 16 |
 | [`17-mundo.md`](spec/17-mundo.md) — Mundo e mapa | 96 | 10 |
@@ -84,15 +84,15 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`30-qualidade-visual.md`](spec/30-qualidade-visual.md) — A barra de qualidade visual | 54 | 13 |
 | [`31-referencias.md`](spec/31-referencias.md) — Como usar o Dark Souls como referência | 93 | 19 |
 | [`32-construcao.md`](spec/32-construcao.md) — A fase de construção | 59 | 7 |
-| [`33-morte-e-almas.md`](spec/33-morte-e-almas.md) — Morte, almas e ressurreição | 171 | 14 |
+| [`33-morte-e-almas.md`](spec/33-morte-e-almas.md) — Morte, almas e ressurreição | 171 | 15 |
 | [`34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md) — A escala do catálogo, e a regra dos comandos | 152 | 18 |
 | [`35-estudo-referencia.md`](spec/35-estudo-referencia.md) — Estudo da referência: números reais e o que eles nos dizem | 147 | 10 |
 | [`36-fisica.md`](spec/36-fisica.md) — Física, projécteis e matemática do mundo | 161 | 18 |
-| [`37-aneis-e-elementos.md`](spec/37-aneis-e-elementos.md) — Anéis e elementos | 187 | 12 |
-| [`38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md) — Ataques dos inimigos e o contrato de honestidade | 277 | 30 |
+| [`37-aneis-e-elementos.md`](spec/37-aneis-e-elementos.md) — Anéis e elementos | 187 | 13 |
+| [`38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md) — Ataques dos inimigos e o contrato de honestidade | 277 | 29 |
 | [`39-estudo-profundo.md`](spec/39-estudo-profundo.md) — Estudo profundo: como o jogo de referência funciona por dentro | 483 | 23 |
 | [`40-decisoes-espolio-magia-inventario.md`](spec/40-decisoes-espolio-magia-inventario.md) — Decisões: espólio garantido, magia, inventário e carregamento | 302 | 16 |
-| [`41-estudo-armas-e-golpes.md`](spec/41-estudo-armas-e-golpes.md) — Estudo: armas, golpes, e o que separa uma família da outra | 242 | 14 |
+| [`41-estudo-armas-e-golpes.md`](spec/41-estudo-armas-e-golpes.md) — Estudo: armas, golpes, e o que separa uma família da outra | 242 | 15 |
 | [`42-estudo-magia.md`](spec/42-estudo-magia.md) — Estudo: magia, do princípio ao fim | 247 | 17 |
 | [`43-estudo-espolio-inventario-mundo.md`](spec/43-estudo-espolio-inventario-mundo.md) — Estudo: espólio, inventário, segredos e carregamento | 224 | 17 |
 | [`44-prototipo.md`](spec/44-prototipo.md) — O protótipo: o que já está provado | 103 | 9 |
@@ -102,7 +102,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`48-arcos-bestas-escudos.md`](spec/48-arcos-bestas-escudos.md) — Arcos, bestas e escudos: as três famílias sem cobertura | 146 | 5 |
 | [`49-biomas.md`](spec/49-biomas.md) — As 12 fichas de bioma | 296 | 13 |
 | [`50-racas.md`](spec/50-racas.md) — As 12 fichas de raça | 250 | 8 |
-| [`51-familias.md`](spec/51-familias.md) — WP5 camada 1: as famílias de arma, os escudos, as peças de armadura e  | 243 | 10 |
+| [`51-familias.md`](spec/51-familias.md) — WP5 camada 1: as famílias de arma, os escudos, as peças de armadura e  | 239 | 11 |
 | [`52-mago-do-mal.md`](spec/52-mago-do-mal.md) — O mago do mal: a escola vermelha | 373 | 12 |
 | [`53-chefes-ritmo-e-o-mago-forte.md`](spec/53-chefes-ritmo-e-o-mago-forte.md) — 13 chefes com portas abertas, o ritmo da travessia, e o mago forte | 181 | 11 |
 | [`54-mana-meditacao-e-tracos-de-classe.md`](spec/54-mana-meditacao-e-tracos-de-classe.md) — Mana, meditação, e o traço de classe | 188 | 17 |
@@ -118,8 +118,9 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`64-criacao-de-personagem.md`](spec/64-criacao-de-personagem.md) — Criação de personagem: escolher um começo, não uma prisão | 249 | 13 |
 | [`65-musica-e-ambiente.md`](spec/65-musica-e-ambiente.md) — Música e ambiente: atmosfera que nunca tapa informação | 321 | 13 |
 | [`66-catalogo-de-magia.md`](spec/66-catalogo-de-magia.md) — Catálogo de magia: mana, formas e verbos | 234 | 16 |
-| [`67-catalogo-do-bestiario.md`](spec/67-catalogo-do-bestiario.md) — Catálogo do bestiário | 230 | 14 |
-| [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) — Perguntas em aberto | 172 | 34 |
+| [`67-catalogo-do-bestiario.md`](spec/67-catalogo-do-bestiario.md) — Catálogo do bestiário | 230 | 15 |
+| [`68-catalogo-de-armas-armaduras-e-aneis.md`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) — Catálogo de armas, armaduras, estados e anéis | 194 | 11 |
+| [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) — Perguntas em aberto | 173 | 34 |
 
 ### prompts/ — instruções para agentes — 7 ficheiros
 
@@ -150,11 +151,11 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`PERGUNTAS.md`](game/PERGUNTAS.md) — Perguntas que NAO decidi | 134 | 3 |
 | [`README.md`](game/README.md) — WorldRPGs — protótipo da fatia 1 | 148 | 1 |
 
-### art/ — a arte — 10 ficheiros
+### art/ — a arte — 11 ficheiros
 
 | Documento | Linhas | Citado por |
 |---|---|---|
-| [`MANIFESTO.md`](art/MANIFESTO.md) — Manifesto de assets — fatia 1 | 135 | 11 |
+| [`MANIFESTO.md`](art/MANIFESTO.md) — Manifesto de assets — fatia 1 | 135 | 10 |
 | [`PIPELINE.md`](art/PIPELINE.md) — art/PIPELINE.md — como as imagens são feitas | 93 | 4 |
 | [`README.md`](art/README.md) — art/ | 20 | 1 |
 | [`00-estilo.md`](art/prompts/00-estilo.md) — A frase de estilo | 34 | 7 |
@@ -164,6 +165,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`04-icones-armas.md`](art/prompts/04-icones-armas.md) — Ícones das 5 armas (512×512 · PNG · fundo transparente) | 28 | 2 |
 | [`05-icones-magias.md`](art/prompts/05-icones-magias.md) — Ícones das 3 magias + poção (512×512 · PNG · fundo transparente) | 32 | 2 |
 | [`06-ui-ceu.md`](art/prompts/06-ui-ceu.md) — Menu e céu (2 imagens · 1536×1024 · PNG) | 26 | 2 |
+| [`07-icones-armaduras.md`](art/prompts/07-icones-armaduras.md) — Ícones das 11 armaduras da Fatia 1 | 26 | 2 |
 
 ### memory/ — registo — 8 ficheiros
 

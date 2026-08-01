@@ -31,6 +31,7 @@ func _ready() -> void:
 	_test_biomes()
 	_test_races()
 	_test_families_and_kits()
+	_test_equipment_catalogue()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -207,6 +208,121 @@ func _test_families_and_kits() -> void:
 		"carga pesada custa regeneracao de stamina")
 	_check(int((carga["leve"] as Dictionary).get("recuperacao_esquiva_frames", -1)) == 0,
 		"carga leve nao penaliza a recuperacao da esquiva")
+
+
+# --- spec/68 · catálogo WP5 completo -----------------------------------------
+
+func _test_equipment_catalogue() -> void:
+	var equipment_value: Variant = GameData.get("equipment")
+	_check(typeof(equipment_value) == TYPE_DICTIONARY,
+		"WP5: equipment.json e carregado pelo GameData")
+	var equipment: Dictionary = equipment_value as Dictionary if typeof(equipment_value) == TYPE_DICTIONARY else {}
+	var catalogue_weapons: Dictionary = equipment.get("weapons", {}) as Dictionary
+	var catalogue_armor: Dictionary = equipment.get("armor", {}) as Dictionary
+	var rings: Dictionary = equipment.get("rings", {}) as Dictionary
+	_check(catalogue_weapons.size() == 120, "WP5: catalogo fecha 120 armas")
+	_check(catalogue_armor.size() == 68, "WP5: catalogo fecha 68 pecas (11 iniciais + 57 de inimigos)")
+	_check(rings.size() == 70, "WP5: catalogo fecha 70 aneis")
+
+	# Tudo o que um dia gera imagem tem matéria, silhueta e prioridade declaradas.
+	for group_value: Variant in [catalogue_weapons, catalogue_armor, rings]:
+		var group := group_value as Dictionary
+		for item_id: String in group.keys():
+			var item := group[item_id] as Dictionary
+			_check(String(item.get("descricao_visual", "")).length() >= 40,
+				"WP5/%s: descricao visual geravel" % item_id)
+			_check(typeof(item.get("fatia_1")) == TYPE_BOOL,
+				"WP5/%s: Fatia 1? booleana" % item_id)
+
+	var first_slice_armor: Array[String] = []
+	for item_id: String in catalogue_armor.keys():
+		if bool((catalogue_armor[item_id] as Dictionary).get("fatia_1", false)):
+			first_slice_armor.append(item_id)
+	_check(first_slice_armor.size() == 11, "WP5: so as 11 armaduras iniciais geram primeiro")
+	var first_slice_rings := rings.values().filter(func(r: Dictionary) -> bool: return bool(r.get("fatia_1", false)))
+	_check(first_slice_rings.is_empty(), "WP5: nenhum anel cresce a Fatia 1")
+
+	# As oito famílias resolvem os onze golpes; sete deixam de ser apenas uma regra global.
+	var movesets: Dictionary = equipment.get("family_movesets", {}) as Dictionary
+	var eleven := ["leve", "pesado", "cadeia", "leve_para_pesado", "em_corrida", "a_rolar",
+		"a_saltar", "de_cima", "empurrao", "arte_1mao", "arte_2maos"]
+	var seven := ["leve_para_pesado", "em_corrida", "a_rolar", "a_saltar", "de_cima", "empurrao", "arte_1mao"]
+	_check(movesets.size() == 8, "WP5: oito movesets de familia")
+	for family_id: String in movesets.keys():
+		var moveset := movesets[family_id] as Dictionary
+		for strike: String in eleven:
+			_check(moveset.has(strike) and not (moveset[strike] as Dictionary).is_empty(),
+				"WP5/%s: golpe '%s' declarado" % [family_id, strike])
+		for strike: String in seven:
+			_check(String((moveset[strike] as Dictionary).get("pergunta", "")) != "",
+				"WP5/%s/%s: golpe muda uma decisao" % [family_id, strike])
+
+	# Melhorar abre verbos; nunca compra +10% de força.
+	var upgrade: Dictionary = equipment.get("weapon_improvement", {}) as Dictionary
+	var levels: Array = upgrade.get("levels", []) as Array
+	_check(levels.size() == 7, "WP5: melhoria declara base + seis niveis")
+	var allowed_axes := ["base", "postura", "arte_nova", "troca_escala", "conversao_elemental"]
+	for level: int in range(levels.size()):
+		var row := levels[level] as Dictionary
+		_check(int(row.get("level", -1)) == level, "WP5: melhoria nivel %d em ordem" % level)
+		_check(String(row.get("axis", "")) in allowed_axes, "WP5: melhoria nivel %d abre eixo permitido" % level)
+		_check(not bool(row.get("increases_base_damage", true)), "WP5: melhoria nivel %d nao sobe forca" % level)
+
+	# Estados são legíveis, simétricos e têm saída; nunca acontecem sem barra.
+	var statuses: Dictionary = equipment.get("status_effects", {}) as Dictionary
+	var status_ids: Array = statuses.keys()
+	status_ids.sort()
+	_check(status_ids == ["queimadura", "sangramento", "veneno"],
+		"WP5: veneno, sangramento e queimadura fechados")
+	for status_id: String in statuses.keys():
+		var status := statuses[status_id] as Dictionary
+		for field: String in ["meter_max", "decay", "trigger", "effect", "escape", "applies_to",
+				"sound_cue", "visual_cue", "descricao_visual", "fatia_1"]:
+			_check(str(status.get(field, "")) != "", "WP5/%s: estado declara '%s'" % [status_id, field])
+		_check(String(status.get("applies_to", "")) == "jogador_e_inimigo",
+			"WP5/%s: mesmas regras dos dois lados" % status_id)
+
+	# A proposta do Assassino responde às três palavras sem IA nova, percentagem de
+	# velocidade nem exclusividade de classe; a aprovação continua pendente.
+	var assassin: Dictionary = equipment.get("assassin_proposal", {}) as Dictionary
+	_check(String(assassin.get("approval", "")).contains("Mateus pendente"),
+		"Assassino: proposta nao finge a decisao do dono")
+	_check(bool(assassin.get("no_new_ai", false)), "Assassino: furtividade sem IA nova cara")
+	_check(bool(assassin.get("speed_is_new_branch", false)), "Assassino: velocidade e ramo, nao +X%")
+	_check(bool(assassin.get("class_affinity_not_lock", false)), "Assassino: afinidade nunca fecha outras origens")
+	_check(String(((GameData.weapons.get("loadouts", {}) as Dictionary).get("assassin", {}) as Dictionary).get("offhand", "")) == "dagger",
+		"Assassino: segunda adaga mecanicamente declarada")
+
+	# Os 70 anéis são descobertas únicas e condicionais, não mais uma barra de atalhos.
+	var axes: Dictionary = {}
+	var effects: Dictionary = {}
+	for ring_id: String in rings.keys():
+		var ring := rings[ring_id] as Dictionary
+		for field: String in ["nome", "eixo", "efeito", "numeros", "afinidade", "soma_com_outro",
+				"onde_se_encontra", "descricao_visual", "fatia_1"]:
+			_check(ring.has(field) and str(ring.get(field, "")) != "", "anel/%s: declara '%s'" % [ring_id, field])
+		_check(not ring.has("input_action"), "anel/%s: passivo/condicional, sem tecla" % ring_id)
+		_check(float((ring.get("numeros", {}) as Dictionary).get("max_percent", 0.0)) <= 10.0,
+			"anel/%s: nenhum numero passa 10%%" % ring_id)
+		axes[String(ring.get("eixo", ""))] = true
+		var effect_key := String(ring.get("efeito", ""))
+		_check(not effects.has(effect_key), "anel/%s: efeito nao se repete" % ring_id)
+		effects[effect_key] = true
+	_check(axes.size() == 8, "WP5: os oito eixos dos aneis aparecem")
+
+	# O baralho do WP6 não promete equipamento fantasma.
+	for enemy_id: String in GameData.enemies.keys():
+		if enemy_id.begins_with("_") or bool(GameData.enemy(enemy_id).get("is_boss", false)):
+			continue
+		for card_value: Variant in GameData.enemy(enemy_id).get("loot_cards", []):
+			var card := String(card_value)
+			var split := card.split(":", false, 1)
+			if split.size() != 2:
+				continue
+			match split[0]:
+				"arma": _check(catalogue_weapons.has(split[1]), "espólio arma '%s' resolve" % split[1])
+				"armadura": _check(catalogue_armor.has(split[1]), "espólio armadura '%s' resolve" % split[1])
+				"anel": _check(rings.has(split[1]), "espólio anel '%s' resolve" % split[1])
 
 
 # --- spec/50-racas.md (volta 2) · as 12 fichas de raca ------------------------
