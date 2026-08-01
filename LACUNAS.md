@@ -184,18 +184,18 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 |---|---|---|
 | ✅ | ~~*"do 70 ao 100 custa 3× tudo o que gastaste do 1 ao 70"*~~ **ERRO MEU, CORRIGIDO** — somei só o termo cúbico e ignorei `3,06N²` e `105,6N`, que pesam mais nos níveis baixos. **A conta certa é 1,92×** (680 663 contra 1 308 518). Refiz-a e confirma | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §2 |
 | ✅ | ~~⭐ **Meditação infinita + artes a gastar “energia” revogada**~~ **RESOLVIDO 01-08** — 2 tentativas por descanso, consumidas ao sentar; 40 s/100% preservados por serem decisão dos donos; interrupção guarda o parcial; artes gastam mana | [`66`](spec/66-catalogo-de-magia.md) §3 · runtime testado |
-| 🔴 | ⭐ **Uma mão / duas mãos não tem comando nem estado.** Cada arma declara duas artes e **não há forma de trocar** — é conteúdo que não pode ser seleccionado. É a regra do fio solto a apanhar-nos. Precisa de input, estado e transição (~12 frames, interrompível) | [`34`](spec/34-catalogo-e-comandos.md) §2b |
+| ✅ | ~~⭐ **Uma mão / duas mãos não tinha comando nem estado**~~ **RESOLVIDO NA TAREFA 4** — `T`/`Y`, estado próprio de 12 f interrompível, offhand recolhido e arte seleccionada pela empunhadura | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §2 · 8268 testes |
 | ✅ | ~~⭐ **8 favoritos mudáveis a qualquer momento**~~ **RESOLVIDO NO CONTRATO 01-08** — só mudam fora de combate/no descanso; a UI que aplica a regra está registada acima como construção em falta | [`66`](spec/66-catalogo-de-magia.md) §3 |
-| 🟠 | ⚠️ **Parry com 4 frames de arranque é reactivo demais** — no DS3 o mais rápido começa aos **8**. Com 4, aparas depois de já veres o golpe. **Subir para 8–12** | [`01`](spec/01-combate.md) |
-| 🟠 | ⚠️ **Soft cap de 40 em tudo é errado** — DS2/DS3 usam curvas diferentes por atributo. Proposta: **vida 20/50 · stamina 20/40 · mana 35 · dano 40/60 · carga 30/50/70** | [`39`](spec/39-estudo-profundo.md) §2 |
-| 🟠 | **Queda fatal aos 25 m** — o DS2 mata aos 19,5 m e os limiares do género rondam os 20. **Baixar para 20 m** | [`37`](spec/37-aneis-e-elementos.md) §3 |
-| 🟠 | ⚠️ **Falta o estado de sobrecarga (>100%)** — hoje um jogador a 71% e outro a 140% movem-se igual. **Acima de 100%: sem rolamento nem sprint, só marcha** | [`39`](spec/39-estudo-profundo.md) §3 |
-| 🟠 | **NG+ com +40% em vida E dano é demasiado grosseiro** — separar. Proposta: **+30% vida / +15% dano**, ciclos seguintes **+5%/+3%** | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §5 |
-| 🟠 | **Contra-ataque +30% universal** — no DS3 é **só para perfuração**. Proposta: ×1,30 perfuração · ×1,40 lança · ×1,45 só na estocada da katana | [`41`](spec/41-estudo-armas-e-golpes.md) §3 |
-| 🟠 | ⭐ **Separar "contra-ataque" de "instável"** — apanhar alguém a meio do ataque e apanhar alguém desequilibrado são coisas diferentes. Instável só em guarda quebrada, parry falhado e aterragem pesada | [`41`](spec/41-estudo-armas-e-golpes.md) §3 |
-| 🟠 | ⭐ **Não há ressalto contra paredes nem escudos.** Um golpe que bate numa parede devia ser cancelado com 12–18 frames de recuo. **Sem isto, o espaço quase não interage com o combate** | [`38`](spec/38-ataques-e-honestidade.md) |
-| 🟠 | **O piso de 30% aplicado a escudos elimina os escudos de 100% físico** — misturámos absorção de armadura com bloqueio. **São sistemas diferentes** | [`48`](spec/48-arcos-bestas-escudos.md) §3 |
-| 🔵 | **Regeneração de stamina: o DS3 não penaliza entre 30–70%** — a nossa penalização de −10% no escalão médio não existe lá | [`41`](spec/41-estudo-armas-e-golpes.md) §5 |
+| ✅ | ~~⚠️ **Parry com 4 frames de arranque**~~ **CORRIGIDO** — baseline executável **8/8/40**, falha total 56 f | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
+| ✅ | ~~⚠️ **Soft cap de 40 em tudo**~~ **CORRIGIDO** — Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
+| ✅ | ~~**Queda fatal aos 25 m**~~ **CORRIGIDO** — zero até 5 m, progressiva abaixo de 20 m, fatal absoluta aos 20 m | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 · `progression.json` |
+| ✅ | ~~⚠️ **Faltava sobrecarga (>100%)**~~ **RESOLVIDO** — sem esquiva/corrida/sprint; marcha 3 m/s e regen 26/s | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1.1 |
+| ✅ | ~~**NG+ somava vida e dano por igual**~~ **CORRIGIDO** — +30% PV/+15% dano, depois +5%/+3% até +7 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
+| ✅ | ~~**Contra-ataque +30% universal**~~ **CORRIGIDO** — só perfuração: ×1,30; haste ×1,40; só estocada da katana ×1,45 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §3 |
+| ✅ | ~~⭐ **Contra-ataque e instável estavam misturados**~~ **SEPARADOS** — instável ×1,25 só nas quatro fontes declaradas | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §3 |
+| ✅ | ~~⭐ **Ressalto não tinha contrato**~~ **ESCRITO** — parede/deflexão/corpo duro, primeira colisão e 12–18 f; varredura geométrica continua M2 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §3 |
+| ✅ | ~~**O piso corporal estava aplicado a escudos**~~ **SEPARADO** — seleccionados chegam a 100% físico; estabilidade continua ≤85 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §3 |
+| ✅ | ~~**Carga média perdia 10% de regeneração**~~ **CORRIGIDO** — leve/média 40/s; pesada 31/s | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1.1 |
 
 ### ⭐ Gramática de combate que nos falta (secção 4 da auditoria)
 
@@ -203,13 +203,13 @@ Vocabulário de situações que o DS tem e a nossa spec **não menciona em lado 
 
 | | |
 |---|---|
-| 🟠 | **Ataques inimigos que atravessam escudo** |
-| 🟠 | **Esmagamento de guarda dedicado** — um golpe cujo trabalho é abrir quem bloqueia |
-| 🟠 | ⭐ **Mesmo aviso, dois tempos de largada** — o inimigo faz a mesma pose e larga mais tarde. **É o que ensina a não rolar por reflexo** |
-| 🟠 | **Ramos condicionais de combo** — a sequência muda conforme o que tu fazes |
-| 🟠 | ⭐ **Falsa recuperação** — parece que acabou, e não acabou |
-| 🟠 | ⭐ **Castigo de cura** — o inimigo reage a ver-te beber |
-| 🟠 | **Fingir morte, e atacar ao levantar** |
+| ✅ | ~~**Ataques inimigos que atravessam escudo**~~ — `sea_orc_hookbearer/hook_pull`, 40% |
+| ✅ | ~~**Esmagamento de guarda dedicado**~~ — `orc_brute/slam`, custo ×2,5 |
+| ✅ | ~~⭐ **Mesmo aviso, dois tempos de largada**~~ — `vorgar/overhead_crush`, f56/f72 com segundo sinal |
+| ✅ | ~~**Ramos condicionais de combo**~~ — `orc_spearman/double_thrust`, distância/ângulo, nunca input |
+| ✅ | ~~⭐ **Falsa recuperação**~~ — `skeleton_swordsman/bone_rattle`, pose diferente e extensão legível |
+| ✅ | ~~⭐ **Castigo de cura**~~ — `orc_spearman/closing_lunge`, estado visível + LOS + 9 f |
+| ✅ | ~~**Fingir morte e atacar ao levantar**~~ — `ancient_skeleton/black_cut`, colocação determinística |
 
 ### E os sistemas deles que o Codex diz para **não** copiar
 

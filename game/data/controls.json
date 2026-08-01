@@ -21,6 +21,7 @@
     "meditate":       [{ "type": "key", "key": "M" }],
     "use_item":       [{ "type": "key", "key": "R" }],
     "ability":        [{ "type": "key", "key": "V" }],
+    "toggle_grip":    [{ "type": "key", "key": "T" }, { "type": "joypad_button", "button": 3, "label": "Y/triangulo" }],
     "interact":       [{ "type": "key", "key": "E" }],
     "debug_class_next": [{ "type": "key", "key": "F6" }],
 

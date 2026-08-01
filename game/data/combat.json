@@ -1,5 +1,5 @@
 {
-  "_fonte": "spec/01-combate.md (WP1). Todos os valores sao lei. Nao alterar sem mudar a spec primeiro.",
+  "_fonte": "spec/01-combate.md (WP1) + spec/70 (correccoes canonicas da Tarefa 4). Nao alterar sem mudar a spec primeiro.",
   "_nota_frames": "Tempos em segundos derivam de 60 fps de referencia. A logica de combate corre em _physics_process a 60 Hz fixos, por isso frame == tick de fisica.",
 
   "reference_fps": 60,
@@ -30,7 +30,7 @@
   },
 
   "parry": {
-    "startup_frames": 4,
+    "startup_frames": 8,
     "active_frames": 8,
     "whiff_recovery_frames": 40,
     "stamina_cost": 10.0,
@@ -39,7 +39,17 @@
     "riposte_duration": 0.9,
     "riposte_has_iframes": true,
     "weapons_that_parry": ["dagger", "shield"],
-    "_nota": "133 ms de janela contra 667 ms de castigo. Nao escala com nada."
+    "_nota": "133 ms de compromisso antes da janela, 133 ms activa e 667 ms de recuperacao. Falhar ocupa 56 frames; nao escala com nada."
+  },
+
+  "grip": {
+    "switch_frames": 12,
+    "interruptible": true,
+    "stamina_cost": 0.0,
+    "starts_only_from": "free",
+    "two_handed_hides_offhand": true,
+    "damage_multiplier": 1.0,
+    "_nota": "spec/70 §2: escolhe arte/moveset e disponibilidade da mao secundaria; nao inventa bonus numerico."
   },
 
   "block": {
@@ -100,6 +110,12 @@
     "heavy_cancelable": false,
     "light_cancel_into": ["dodge", "block"],
     "_nota": "A janela de encadear abre nos ultimos 40% da recuperacao. A recuperacao de um leve e cancelavel em esquiva ou bloqueio a partir de 60% dela. O pesado nao se cancela (o carregado do machadao pode soltar cedo). Ataque nunca cancela ataque fora da janela de combo."
+  },
+
+  "damage_states": {
+    "counter_piercing": { "base_multiplier": 1.30, "polearm_multiplier": 1.40, "katana_thrust_multiplier": 1.45, "damage_type": "perfuracao" },
+    "unstable": { "multiplier": 1.25, "sources": ["guard_break", "failed_parry", "heavy_landing", "declared_recovery"] },
+    "recoil": { "min_frames": 12, "max_frames": 18, "wall_first_cancels_damage": true }
   },
 
   "input_buffer": {

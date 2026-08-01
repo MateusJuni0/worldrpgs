@@ -471,6 +471,8 @@ func _try_hit() -> void:
 	var info := DamageInfo.make(raw, self, weight)
 	info.parryable = bool(_atk.get("parryable", false))
 	info.is_aoe = bool(_atk.get("is_aoe", false))
+	info.shield_pierce_fraction = clampf(float(_atk.get("shield_pierce_fraction", 0.0)), 0.0, 1.0)
+	info.guard_stamina_multiplier = maxf(float(_atk.get("guard_stamina_multiplier", 1.0)), 1.0)
 	info.attack_id = String(_atk.get("id", ""))
 	if target.has_method("take_damage"):
 		target.call("take_damage", info)

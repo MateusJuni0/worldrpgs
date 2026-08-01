@@ -1,16 +1,17 @@
 {
-  "_fonte": "spec/51-familias.md §4-§5 + spec/68 §6 — 9 slots, 3 classes de carga e 11 pecas dos kits iniciais.",
+  "_fonte": "spec/51-familias.md §4-§5 + spec/68 §6 + spec/70 §1.1 — 9 slots, 4 estados de carga e 11 pecas dos kits iniciais.",
   "_estado": "as 11 pecas iniciais e os 57 drops vivem no catalogo; o ecra de equipar e do WP11 e a mecanica entra no M2.",
   "_regra": "A armadura muda COMO se joga, nunca quanto se aguenta de graca: peso e resistencias por tipo, com tecto por peca. Nada de defesa plana.",
 
   "slots": ["cabeca", "rosto", "ombros", "peito", "maos", "cintura", "pernas", "pes", "capa"],
 
   "carga": {
-    "_fonte": "spec/51 §4. Os i-frames NUNCA mudam (Lei 1) — o peso paga-se na recuperacao e na regeneracao.",
-    "limite_base": 50,
+    "_fonte": "spec/70 §1.1. Os i-frames NUNCA mudam (Lei 1); acima de 100% a accao de esquiva deixa de estar disponivel.",
+    "limite_base_carga_8": 50,
     "leve":   { "max_fraccao": 0.30, "recuperacao_esquiva_frames": 0, "regen_stamina_mult": 1.0 },
-    "medio":  { "max_fraccao": 0.70, "recuperacao_esquiva_frames": 4, "regen_stamina_mult": 0.9 },
-    "pesado": { "max_fraccao": 1.00, "recuperacao_esquiva_frames": 8, "regen_stamina_mult": 0.8 }
+    "medio":  { "max_fraccao": 0.70, "recuperacao_esquiva_frames": 4, "regen_stamina_mult": 1.0 },
+    "pesado": { "max_fraccao": 1.00, "recuperacao_esquiva_frames": 8, "regen_stamina_mult": 0.775 },
+    "sobrecarregado": { "min_fraccao_exclusiva": 1.00, "recuperacao_esquiva_frames": null, "regen_stamina_mult": 0.65, "pode_esquivar": false, "pode_correr": false, "pode_sprintar": false, "velocidade_maxima_m_s": 3.0 }
   },
 
   "pieces": {

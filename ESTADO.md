@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8231 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8268 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,12 +44,12 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **71** em `spec/` | — | — |
-| Código e dados | 17 ficheiros `.gd` · 13 catálogos JSON | — | — |
-| Testes | **8231, todos a passar** | — | — |
+| Documentos de spec | **72** em `spec/` | — | — |
+| Código e dados | 17 ficheiros `.gd` · 14 catálogos JSON | — | — |
+| Testes | **8268, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
-| **Armaduras** | **68 peças** · 9 slots · 3 cargas · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
+| **Armaduras** | **68 peças** · 9 slots · 4 estados de carga · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
 | **Anéis** | **70 fichas únicas** · 8 eixos · 2→10 dedos ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 70 | UI/save e imagens futuras |
 | **Feitiços** | **53 fichas · 3 executáveis/Fatia 1** ([`66`](spec/66-catalogo-de-magia.md)) | catálogo largo | 50 renderers/comportamentos e roda |
 | **Inimigos** | **33 tipos comuns · 100 ataques comuns · Vorgar migrado** ([`67`](spec/67-catalogo-do-bestiario.md)) | 12 raças + 61 chefes | modelos/animações dos 31 fora da Fatia 1 · chefes WP7 |
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8231 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8268 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -137,6 +137,14 @@ Cada zona tem curva de 12–20 comuns, 3–5 elites, 2–3 nomeados, subchefe, g
 
 Os 12 conceitos de bioma já estavam arquivados; Brumal reutiliza também `brumal-caminho` e `toca-entrada`, portanto o bloco não inventou produção visual nova da Fatia 1. Catálogo não é nível: hoje só há o greybox curto de Brumal; topologia, streaming, mapa, atalhos e as outras onze zonas continuam por implementar e medir.
 
+## 1m. ✅ O núcleo de combate deixou de contradizer a auditoria
+
+O [`70`](spec/70-fecho-dos-sistemas-de-combate.md) passa a ser a autoridade das correcções: parry **8/8/40**, curvas diferentes por atributo, Carga como oitavo atributo, queda fatal absoluta aos **20 m**, quatro estados de carga incluindo sobrecarga, NG+ com PV/dano separados, contra-ataque só em perfuração, instabilidade separada e bloqueio físico de 100% fora do piso corporal.
+
+`T` ou `Y/triângulo` muda a empunhadura em 12 frames interrompíveis. `hook_pull` atravessa 40% do escudo e `slam` custa ×2,5 stamina de guarda no runtime. O bestiário liga ainda duas largadas, ramo de combo, falsa recuperação, castigo de cura, fingir morte e corpo duro a fichas concretas. Estes ramos avançados estão especificados e testados como dados; animação/IA completa e ressalto geométrico continuam construção M2 conhecida.
+
+Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8268/8268** testes passam neste ponto.
+
 ## 2. Decisões que mudaram documentos de execução antigos
 
 **~35 decisões, das quais estas são as que mais mudam trabalho já escrito.** A lista completa e por ordem está no [`DECISOES.md`](DECISOES.md).
@@ -144,9 +152,9 @@ Os 12 conceitos de bioma já estavam arquivados; Brumal reutiliza também `bruma
 | Decisão | Onde está | O que atinge |
 |---|---|---|
 | ⭐ **Piso de 30%** — nenhuma defesa reduz um golpe abaixo disso | [`39`](spec/39-estudo-profundo.md) §1 | WP2 |
-| ⭐ **Soft cap aos ~40** — sem ele o nível 100 ganha jogos | [`39`](spec/39-estudo-profundo.md) §2 | WP2, WP9 |
+| ⭐ **Curvas por atributo** — Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 | WP2, WP9 |
 | ⭐ **Interrupção e hiper-armadura** — sem isto armas lentas não existem | [`39`](spec/39-estudo-profundo.md) §4, [`41`](spec/41-estudo-armas-e-golpes.md) §4 | WP1, WP5 |
-| ⭐ **Contra-ataque +30%** por bater enquanto o inimigo ataca | [`41`](spec/41-estudo-armas-e-golpes.md) §3 | WP1 |
+| ⭐ **Contra-ataque só em perfuração + instabilidade separada** | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §3 | WP1 |
 | ⭐ **Sem slots: mana sem regeneração + meditação; artes gastam mana** | [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md), [`66`](spec/66-catalogo-de-magia.md) | WP4, WP5, WP11 |
 | ⭐ **Espólio garantido — baralho de 10 sem reposição** | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §3, [`43`](spec/43-estudo-espolio-inventario-mundo.md) §2 | WP6, WP7, WP9 |
 | ⭐ **Descanso recarrega o mapa · 10 reaparições · não se farma** | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §1 | WP6, WP9 |

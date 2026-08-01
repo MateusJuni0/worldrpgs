@@ -21,6 +21,7 @@ var races: Dictionary = {}
 var armor: Dictionary = {}
 var equipment: Dictionary = {}
 var world: Dictionary = {}
+var progression: Dictionary = {}
 var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
@@ -39,6 +40,7 @@ func _ready() -> void:
 	armor = _load_json("armor.json")
 	equipment = _load_json("equipment.json")
 	world = _load_json("world.json")
+	progression = _load_json("progression.json")
 	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
@@ -221,6 +223,54 @@ func class_attributes(class_id: String) -> Dictionary:
 	return (attributes.get("classes", {}) as Dictionary).get(class_id, {}) as Dictionary
 
 
+# --- Progressao e fisica corrigidas na spec/70 -------------------------------
+
+func cycle_multipliers(cycle: int) -> Vector2:
+	var cfg: Dictionary = progression.get("cycles", {}) as Dictionary
+	var bounded := clampi(cycle, int(cfg.get("min", 1)), int(cfg.get("max", 7)))
+	if bounded <= 1:
+		return Vector2.ONE
+	var first: Dictionary = cfg.get("ng_plus", {}) as Dictionary
+	var later: Dictionary = cfg.get("each_cycle_after_ng_plus", {}) as Dictionary
+	var extra_cycles := bounded - 2
+	return Vector2(
+		float(first.get("health_multiplier", 1.30)) + extra_cycles * float(later.get("health_add", 0.05)),
+		float(first.get("damage_multiplier", 1.15)) + extra_cycles * float(later.get("damage_add", 0.03))
+	)
+
+
+func fall_is_fatal(height_m: float) -> bool:
+	var cfg: Dictionary = progression.get("fall", {}) as Dictionary
+	return height_m >= float(cfg.get("fatal_min_m", 20.0))
+
+
+func fall_damage(height_m: float, maximum_health: float, load_fraction: float = 0.0,
+		fall_reduction: float = 0.0) -> float:
+	var cfg: Dictionary = progression.get("fall", {}) as Dictionary
+	if height_m <= float(cfg.get("no_damage_max_m", 5.0)):
+		return 0.0
+	if fall_is_fatal(height_m):
+		return INF
+	var knots: Array = cfg.get("damage_knots", []) as Array
+	var lower: Dictionary = knots[0] as Dictionary
+	var upper: Dictionary = knots[-1] as Dictionary
+	for index in range(1, knots.size()):
+		upper = knots[index] as Dictionary
+		if height_m <= float(upper.get("height_m", 20.0)):
+			lower = knots[index - 1] as Dictionary
+			break
+	var lower_h := float(lower.get("height_m", 5.0))
+	var upper_h := float(upper.get("height_m", 20.0))
+	var t := inverse_lerp(lower_h, upper_h, height_m)
+	var fixed := lerpf(float(lower.get("fixed", 0.0)), float(upper.get("fixed", 0.0)), t)
+	var proportional := lerpf(float(lower.get("max_health_fraction", 0.0)),
+		float(upper.get("max_health_fraction", 0.0)), t)
+	var base_damage := fixed + proportional * maximum_health
+	var load_at_full := float(cfg.get("load_damage_multiplier_at_100_pct", 1.40))
+	var load_multiplier := lerpf(1.0, load_at_full, clampf(load_fraction, 0.0, 1.0))
+	return base_damage * load_multiplier * (1.0 - clampf(fall_reduction, 0.0, 0.95))
+
+
 # --- Formulas do WP2 (spec/11-formulas.md) ------------------------------------
 
 func _dmg_cfg() -> Dictionary:
@@ -231,27 +281,52 @@ func _formula(name: String) -> Dictionary:
 	return (attributes.get("formulas", {}) as Dictionary).get(name, {}) as Dictionary
 
 
-## PV = 200 + 22 x Vida   (acima do soft cap, +8/ponto)
+## Soma uma curva por bandas absolutas. Cada banda vale desde o limite anterior
+## ate `until`; o ultimo valor continua depois do ultimo limite.
+func _piecewise_total(value: float, bands: Array) -> float:
+	var remaining := maxf(value, 0.0)
+	var previous_until := 0.0
+	var total := 0.0
+	for band_value: Variant in bands:
+		var band := band_value as Dictionary
+		var until := float(band.get("until", previous_until))
+		var width := maxf(until - previous_until, 0.0)
+		var in_band := minf(remaining, width)
+		total += in_band * float(band.get("per_point", 0.0))
+		remaining -= in_band
+		previous_until = until
+		if remaining <= 0.0:
+			return total
+	if remaining > 0.0 and not bands.is_empty():
+		total += remaining * float((bands[-1] as Dictionary).get("per_point", 0.0))
+	return total
+
+
+## PV pela curva de Vida 20/50 (spec/70 §1).
 func max_health_for(vida: int) -> float:
 	var f := _formula("health")
-	var soft: int = attributes.get("soft_cap", 30)
-	var base: float = f.get("base", 200.0)
-	var per: float = f.get("per_point", 22.0)
-	var per_after: float = f.get("per_point_after_soft_cap", 8.0)
-	if vida <= soft:
-		return base + per * float(vida)
-	return base + per * float(soft) + per_after * float(vida - soft)
+	return float(f.get("base", 200.0)) + _piecewise_total(float(vida), f.get("bands", []) as Array)
 
 
-## STA = 80 + 2 x Stamina.  A regeneracao (40/s) nao escala — Lei 1.
+## Reserva de stamina pela curva 20/40. A regeneracao nao escala — Lei 1.
 func max_stamina_for(stamina_attr: int) -> float:
 	var f := _formula("stamina")
-	return float(f.get("base", 80.0)) + float(f.get("per_point", 2.0)) * float(stamina_attr)
+	return float(f.get("base", 80.0)) \
+		+ _piecewise_total(float(stamina_attr), f.get("bands", []) as Array)
 
 
-## DEF = 2 x Constituicao
+## DEF pela curva propria de Constituicao 25/50.
 func defense_for(constituicao: int) -> float:
-	return float(_formula("defense").get("per_point", 2.0)) * float(constituicao)
+	var f := _formula("defense")
+	return float(f.get("base", 0.0)) \
+		+ _piecewise_total(float(constituicao), f.get("bands", []) as Array)
+
+
+## Capacidade de carga: Carga 8 preserva os 50 pontos dos kits iniciais.
+func load_capacity_for(carga_attr: int) -> float:
+	var f := _formula("load_capacity")
+	return float(f.get("base", 42.0)) \
+		+ _piecewise_total(float(carga_attr), f.get("bands", []) as Array)
 
 
 ## A reserva de mana cresce com o melhor dos dois atributos de conjuracao.
@@ -286,14 +361,16 @@ func casting_attribute_for(school_id: String, attrs: Dictionary) -> float:
 			return intelligence
 
 
-## escala = 1 + 0,015 x (atributo - 8) x peso_da_escala
+## Escala de dano com breakpoints absolutos 40/60. Calcula apenas o ganho acima
+## do atributo base para conservar escala 1,0 no valor 8.
 func attribute_scale(attr_value: float, weight_name: String) -> float:
 	var cfg := _dmg_cfg()
-	var coef: float = cfg.get("scale_coefficient", 0.015)
 	var weights: Dictionary = cfg.get("scale_weights", {}) as Dictionary
 	var w: float = weights.get(weight_name, 0.6)
 	var base_attr: float = float(attributes.get("base_value", 8))
-	return 1.0 + coef * (attr_value - base_attr) * w
+	var bands: Array = cfg.get("scale_bands", []) as Array
+	var gain := _piecewise_total(attr_value, bands) - _piecewise_total(base_attr, bands)
+	return 1.0 + gain * w
 
 
 ## O jogador cumpre os requisitos da arma?
@@ -372,6 +449,10 @@ func _event_from_binding(binding: Dictionary, action_name: String) -> InputEvent
 			var mb := InputEventMouseButton.new()
 			mb.button_index = int(binding.get("button", 1)) as MouseButton
 			return mb
+		"joypad_button":
+			var joy := InputEventJoypadButton.new()
+			joy.button_index = int(binding.get("button", 0)) as JoyButton
+			return joy
 	_fail("Tipo de ligacao desconhecido em '%s'" % action_name)
 	return null
 
@@ -565,7 +646,7 @@ func _validate() -> void:
 	# Toda a arma da fatia declara a familia a que pertence, e ela existe.
 	for w_id: String in weapons.keys():
 		if w_id.begins_with("_") or w_id in ["familias", "familias_escudo", "loadouts",
-				"test_loadouts", "golpes_universais"]:
+				"test_loadouts", "golpes_universais", "modificadores_de_combate"]:
 			continue
 		var w: Dictionary = weapons[w_id]
 		if w.has("familia"):
@@ -602,14 +683,15 @@ func _validate() -> void:
 		if not kit.has("pecas") or (kit.get("pecas", []) as Array).is_empty():
 			_fail("[SPEC] kit '%s' sem pecas (instrucao do Rico, spec/51 §5)" % class_id)
 
-	# Os i-frames NUNCA mudam com o peso (Lei 1, spec/51 §4).
+	# Os i-frames NUNCA mudam dentro de uma esquiva. Sobrecarregado perde a
+	# accao inteira, nao recebe uma janela diferente (spec/70 §1.1).
 	var carga: Dictionary = armor.get("carga", {}) as Dictionary
-	for load_name: String in ["leve", "medio", "pesado"]:
+	for load_name: String in ["leve", "medio", "pesado", "sobrecarregado"]:
 		var c: Dictionary = carga.get(load_name, {}) as Dictionary
 		if c.is_empty():
-			_fail("[SPEC] classe de carga '%s' em falta (spec/51 §4)" % load_name)
+			_fail("[SPEC] classe de carga '%s' em falta (spec/70 §1.1)" % load_name)
 		elif c.has("iframe_start_frame") or c.has("iframe_end_frame"):
-			_fail("[SPEC] carga '%s' mexe nos i-frames — a Lei 1 nao deixa (spec/51 §4)" % load_name)
+			_fail("[SPEC] carga '%s' mexe nos i-frames — a Lei 1 nao deixa (spec/70 §1.1)" % load_name)
 	checks += 1
 
 	# 9. WP4 completo (spec/66): quatro escolas, 12 formas usadas, ficha de

@@ -18,6 +18,8 @@ func _ready() -> void:
 	print("\n=== AUTO-TESTE CONTRA A SPEC ===\n")
 	_test_dodge_iframes()
 	_test_parry_window()
+	_test_task4_combat_closures()
+	_test_progression_closures()
 	_test_weapon_frames()
 	_test_stamina()
 	_test_damage_worked_example()
@@ -166,10 +168,15 @@ func _test_families_and_kits() -> void:
 		_check(String((fams[id] as Dictionary).get("onde_ma", "")).length() > 20,
 			"familia '%s' diz onde e ma" % id)
 
-	# A katana e a arma do contra-ataque: tem de bater mais do que a base.
-	var base_counter := int((fams["espada_recta"] as Dictionary).get("contra_ataque_pct", 0))
-	_check(int((fams["katana"] as Dictionary).get("contra_ataque_pct", 0)) > base_counter,
-		"katana: contra-ataque acima da base (a arma do tempo do inimigo)")
+	# Contra-ataque so existe em perfuracao; haste e estocada da katana sobem.
+	var base_counter := float(((fams["espada_recta"] as Dictionary).get("contra_perfurante", {}) as Dictionary).get("multiplicador", 0.0))
+	var katana_counter := float(((fams["katana"] as Dictionary).get("contra_perfurante", {}) as Dictionary).get("multiplicador", 0.0))
+	var polearm_counter := float(((fams["haste"] as Dictionary).get("contra_perfurante", {}) as Dictionary).get("multiplicador", 0.0))
+	_check(absf(base_counter - 1.30) < 0.001 and absf(polearm_counter - 1.40) < 0.001
+		and absf(katana_counter - 1.45) < 0.001,
+		"contra-perfurante: base x1,30, haste x1,40, katana/estocada x1,45")
+	_check(((fams["pesada_corte"] as Dictionary).get("contra_perfurante", {}) as Dictionary).get("golpes", []).is_empty(),
+		"corte pesado nao recebe contra-ataque universal")
 	# A besta e a Lei 3 em objecto: nao escala com nada.
 	_check(String((fams["besta"] as Dictionary).get("escala", "")) == "nenhuma",
 		"besta: zero escala (Lei 3)")
@@ -181,6 +188,9 @@ func _test_families_and_kits() -> void:
 	# Escudos: nenhum passa o tecto de 85, e o grande nao apara.
 	var shields: Dictionary = GameData.weapons.get("familias_escudo", {}) as Dictionary
 	_check(int(shields.get("estabilidade_maxima", 0)) == 85, "tecto de estabilidade = 85")
+	_check(int(shields.get("defesa_fisica_maxima_pct", 0)) == 100
+		and int((shields["escudo_medio"] as Dictionary).get("defesa_fisica_pct", 0)) == 100,
+		"escudo seleccionado pode bloquear 100% fisico; piso corporal nao se mistura")
 	_check((shields["escudo_grande"] as Dictionary).get("parry_delta_frames") == null,
 		"escudo grande nao apara")
 
@@ -207,6 +217,15 @@ func _test_families_and_kits() -> void:
 	var carga: Dictionary = GameData.armor.get("carga", {}) as Dictionary
 	_check(float((carga["pesado"] as Dictionary).get("regen_stamina_mult", 1.0)) < 1.0,
 		"carga pesada custa regeneracao de stamina")
+	_check(absf(float((carga["medio"] as Dictionary).get("regen_stamina_mult", 0.0)) - 1.0) < 0.001,
+		"carga media conserva 40/s de regeneracao")
+	_check(absf(float((carga["pesado"] as Dictionary).get("regen_stamina_mult", 0.0)) - 0.775) < 0.001,
+		"carga pesada regenera 31/s")
+	var overloaded: Dictionary = carga.get("sobrecarregado", {}) as Dictionary
+	_check(not bool(overloaded.get("pode_esquivar", true))
+		and not bool(overloaded.get("pode_correr", true))
+		and not bool(overloaded.get("pode_sprintar", true)),
+		"sobrecarga >100%: sem esquiva, corrida ou sprint")
 	_check(int((carga["leve"] as Dictionary).get("recuperacao_esquiva_frames", -1)) == 0,
 		"carga leve nao penaliza a recuperacao da esquiva")
 
@@ -776,7 +795,7 @@ func _test_dodge_iframes() -> void:
 func _test_parry_window() -> void:
 	var p := _make_player()
 	var cfg := GameData.section("parry")
-	var startup := int(cfg.get("startup_frames", 4))
+	var startup := int(cfg.get("startup_frames", 8))
 	var active := int(cfg.get("active_frames", 8))
 
 	p.state = Player.State.PARRY
@@ -795,9 +814,122 @@ func _test_parry_window() -> void:
 		"parry: janela de %.0f ms (spec: 133 ms)" % (GameData.frames_to_seconds(float(active)) * 1000.0))
 
 	var total := startup + active + int(cfg.get("whiff_recovery_frames", 40))
-	_check(total == 52, "parry falhado: %d frames no total (4+8+40)" % total)
+	_check(startup == 8, "parry: 8 frames de arranque obrigam a antecipar")
+	_check(total == 56, "parry falhado: %d frames no total (8+8+40)" % total)
 	_check(absf(GameData.frames_to_seconds(40.0) - 0.667) < 0.005, "parry falhado: 0,667 s exposto")
 	p.free()
+
+
+# --- spec/70 · fecho dos sistemas de combate ---------------------------------
+
+func _test_task4_combat_closures() -> void:
+	var grip := GameData.section("grip")
+	_check(int(grip.get("switch_frames", 0)) == 12 and bool(grip.get("interruptible", false)),
+		"empunhadura: transicao de 12 frames e interrompivel")
+	var events := InputMap.action_get_events("toggle_grip")
+	var has_key := false
+	var has_pad := false
+	for event: InputEvent in events:
+		has_key = has_key or event is InputEventKey
+		has_pad = has_pad or event is InputEventJoypadButton
+	_check(has_key and has_pad, "empunhadura: T e Y/triangulo entram no mapa remapeavel")
+
+	var p := _make_player()
+	_check(not p.is_two_handed and p.grip_uses_offhand(),
+		"empunhadura: espada + escudo arranca a uma mao")
+	p._start_grip_switch()
+	_check(p.state == Player.State.GRIP_SWITCH, "empunhadura: estado proprio inicia em LIVRE")
+	p.state_frame = 11
+	p._tick_grip_switch(1.0 / 60.0)
+	_check(not p.is_two_handed, "empunhadura: ainda nao troca no frame 11")
+	p.state_frame = 12
+	p._tick_grip_switch(1.0 / 60.0)
+	_check(p.is_two_handed and not p.grip_uses_offhand() and p.state == Player.State.FREE,
+		"empunhadura: troca no frame 12 e recolhe a mao secundaria")
+	p._start_grip_switch()
+	var interrupt := DamageInfo.make(40.0, null, "light")
+	interrupt.source_position = p.global_position + Vector3(0.0, 0.0, -1.0)
+	p.take_damage(interrupt)
+	_check(p.state == Player.State.HITSTUN, "empunhadura: dano interrompe a transicao")
+	p.free()
+
+	var pierced := _make_player()
+	pierced.state = Player.State.BLOCK
+	var pierce_info := DamageInfo.make(100.0, null, "light")
+	pierce_info.source_position = pierced.global_position + Vector3(0.0, 0.0, -1.0)
+	pierce_info.shield_pierce_fraction = 0.40
+	var health_before := pierced.health
+	pierced.take_damage(pierce_info)
+	_check(absf((health_before - pierced.health) - 24.0) < 0.01,
+		"ATRAVESSA_ESCUDO: 40% passa pelo escudo e depois encontra DEF")
+	pierced.free()
+
+	var crushed := _make_player()
+	crushed.state = Player.State.BLOCK
+	var crush_info := DamageInfo.make(100.0, null, "light")
+	crush_info.source_position = crushed.global_position + Vector3(0.0, 0.0, -1.0)
+	crush_info.guard_stamina_multiplier = 2.5
+	var stamina_before := crushed.stamina.current
+	crushed.take_damage(crush_info)
+	_check(absf((stamina_before - crushed.stamina.current) - 37.5) < 0.01,
+		"ESMAGA_GUARDA: custo normal de bloqueio x2,5")
+	crushed.free()
+
+	var grammar_contract := {
+		"sea_orc_hookbearer": ["hook_pull", "ATRAVESSA_ESCUDO"],
+		"orc_brute": ["slam", "ESMAGA_GUARDA"],
+		"vorgar": ["overhead_crush", "DUAS_LARGADAS"],
+		"orc_spearman": ["double_thrust", "RAMO_COMBO"],
+		"skeleton_swordsman": ["bone_rattle", "FALSA_RECUPERACAO"],
+		"ancient_skeleton": ["black_cut", "FINGE_MORTE"],
+		"minotaur_quarry_bull": ["stone_stomp", "CORPO_DURO"],
+	}
+	for enemy_id: String in grammar_contract.keys():
+		var expected: Array = grammar_contract[enemy_id]
+		var attack := _catalogue_attack(enemy_id, String(expected[0]))
+		_check((attack.get("gramatica", []) as Array).has(String(expected[1])),
+			"gramatica: %s/%s liga %s" % [enemy_id, expected[0], expected[1]])
+	var heal_attack := _catalogue_attack("orc_spearman", "closing_lunge")
+	var heal_rule: Dictionary = heal_attack.get("heal_punish", {}) as Dictionary
+	_check((heal_attack.get("gramatica", []) as Array).has("CASTIGO_CURA")
+		and int(heal_rule.get("reaction_latency_frames", 0)) >= 9
+		and bool(heal_rule.get("requires_line_of_sight", false))
+		and not bool(heal_rule.get("reads_input", true)),
+		"gramatica: castigo de cura le animacao visivel, LOS e >=9 f; nunca o input")
+	var releases := _catalogue_attack("vorgar", "overhead_crush")
+	var release_frames: Array = releases.get("release_variants_frames", []) as Array
+	_check(release_frames.size() == 2 and int(release_frames[0]) == 56 and int(release_frames[1]) == 72
+		and not (releases.get("late_release_signal", {}) as Dictionary).is_empty(),
+		"duas largadas: mesmo aviso, f56/f72 e segundo sinal antes dos activos")
+	var breath: Dictionary = GameData.spell("folego_roubado")
+	_check(int(breath.get("base_damage", -1)) == 0 and int(breath.get("posture_damage_base", 0)) > 0
+		and absf(float(breath.get("stamina_return_fraction_of_effect", 0.0)) - 0.50) < 0.001,
+		"Folego Roubado usa postura/guarda e nao stamina inimiga fantasma")
+
+
+func _test_progression_closures() -> void:
+	_check(GameData.fall_damage(5.0, 420.0) == 0.0, "queda: zero dano ate 5 m")
+	_check(GameData.fall_is_fatal(20.0) and is_inf(GameData.fall_damage(20.0, 2000.0)),
+		"queda: 20 m mata sempre, independentemente da vida")
+	var low_health_damage := GameData.fall_damage(12.0, 420.0)
+	var high_health_damage := GameData.fall_damage(12.0, 1000.0)
+	_check(low_health_damage / 420.0 > high_health_damage / 1000.0,
+		"queda nao fatal: Vida continua a fazer diferenca como os donos decidiram")
+	_check(GameData.fall_damage(12.0, 420.0, 1.0) > low_health_damage,
+		"queda nao fatal: carga aumenta o dano sem mexer no limiar fatal")
+	_check(GameData.cycle_multipliers(1) == Vector2.ONE
+		and GameData.cycle_multipliers(2).is_equal_approx(Vector2(1.30, 1.15))
+		and GameData.cycle_multipliers(7).is_equal_approx(Vector2(1.55, 1.30)),
+		"ciclos: NG+ separa PV/dano e soma +5%/+3% ate +7")
+	var resurrection: Dictionary = GameData.progression.get("coop_resurrection", {}) as Dictionary
+	_check(int(resurrection.get("shared_uses_per_attempt_or_rest", 0)) == 1
+		and absf(float(resurrection.get("revived_health_fraction", 0.0)) - 0.50) < 0.001,
+		"co-op: uma ressurreicao partilhada por tentativa, a 50% de vida")
+	var ember: Dictionary = GameData.progression.get("ember", {}) as Dictionary
+	_check(not bool(ember.get("purchasable", true))
+		and int(ember.get("already_rewarded_clear_souls", -1)) == 0
+		and not bool(ember.get("resets_loot_deck", true)),
+		"Brasa: desafio local sem loja, almas repetidas ou reset do baralho")
 
 
 # --- spec/01-combate.md · tabela das armas ------------------------------------
@@ -880,6 +1012,15 @@ func _test_damage_worked_example() -> void:
 	_check(GameData.max_health_for(10) == 420.0, "formula de PV: Vida 10 -> 420")
 	_check(GameData.max_stamina_for(10) == 100.0, "formula de STA: Stamina 10 -> 100")
 	_check(GameData.defense_for(10) == 20.0, "formula de DEF: Con 10 -> 20")
+	_check(GameData.max_health_for(20) == 640.0 and GameData.max_health_for(50) == 1000.0,
+		"Vida usa breakpoints proprios 20/50")
+	_check(GameData.max_stamina_for(20) == 120.0 and GameData.max_stamina_for(40) == 140.0,
+		"Stamina usa breakpoints proprios 20/40")
+	_check(GameData.defense_for(25) == 50.0 and GameData.defense_for(50) == 75.0,
+		"Constituicao usa breakpoints proprios 25/50")
+	_check(GameData.load_capacity_for(8) == 50.0 and GameData.load_capacity_for(30) == 72.0
+		and GameData.load_capacity_for(70) == 87.0,
+		"Carga usa breakpoints 30/50/70 e preserva 50 no arranque")
 
 	# As fichas do WP3 (spec/12-classes.md), a letra.
 	var sheets := {
@@ -909,6 +1050,10 @@ func _test_damage_worked_example() -> void:
 
 	var scale := GameData.attribute_scale(12.0, "medio")
 	_check(absf(scale - 1.036) < 0.001, "escala For 12 / peso medio = 1,036 (deu %.4f)" % scale)
+	var gain_40_60 := GameData.attribute_scale(60.0, "forte") - GameData.attribute_scale(40.0, "forte")
+	var gain_20_40 := GameData.attribute_scale(40.0, "forte") - GameData.attribute_scale(20.0, "forte")
+	_check(gain_40_60 < gain_20_40 and GameData.attribute_scale(70.0, "forte") - GameData.attribute_scale(60.0, "forte") < gain_40_60,
+		"dano satura em bandas diferentes aos 40/60")
 
 	var dmg := GameData.compute_damage(1.0, "longsword", warrior, 4.0)
 	_check(absf(dmg - 37.4) < 0.6, "leve de espada no lanceiro = ~37 (deu %.1f)" % dmg)
@@ -1140,7 +1285,16 @@ func _test_movement_speeds() -> void:
 func _make_player() -> Player:
 	var p := Player.new()
 	p.setup("warrior", {})
+	add_child(p)
 	return p
+
+
+func _catalogue_attack(enemy_id: String, attack_id: String) -> Dictionary:
+	for attack_value: Variant in GameData.enemy(enemy_id).get("attacks", []):
+		var attack := attack_value as Dictionary
+		if String(attack.get("id", "")) == attack_id:
+			return attack
+	return {}
 
 
 func _remove_save_artifacts(path: String) -> void:

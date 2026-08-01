@@ -13,7 +13,7 @@ extends CharacterBody3D
 signal died
 signal state_changed(state: int)
 
-enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING }
+enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING, GRIP_SWITCH }
 
 # Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
 var _buffer_life := 24        # 400 ms
@@ -46,6 +46,7 @@ var favorite_spells: Array[String] = []
 var main_weapon := "longsword"
 var offhand_weapon := "shield"
 var _loadout_index := 0
+var is_two_handed := false
 
 var camera: PlayerCamera
 var lock_on: LockOn
@@ -120,6 +121,7 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
 	main_weapon = loadout.get("main", "longsword")
 	offhand_weapon = loadout.get("offhand", "") if loadout.get("offhand") != null else ""
+	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
 
 	var buf := GameData.section("input_buffer")
 	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
@@ -237,6 +239,8 @@ func _read_input() -> void:
 		_buffer("flask")
 	if Input.is_action_just_pressed("ability"):
 		_buffer("ability")
+	if Input.is_action_just_pressed("toggle_grip"):
+		_buffer("toggle_grip")
 	if Input.is_action_just_pressed("lock_on"):
 		lock_on.toggle()
 	if Input.is_action_just_pressed("next_spell"):
@@ -311,6 +315,7 @@ func _tick_state(delta: float) -> void:
 		State.USING_ITEM: _tick_flask(delta)
 		State.ABILITY:   _tick_ability(delta)
 		State.MEDITATING: _tick_meditating(delta)
+		State.GRIP_SWITCH: _tick_grip_switch(delta)
 		State.HITSTUN:   _tick_locked(delta, _hitstun_frames)
 		State.GUARD_BREAK:
 			_tick_locked(delta, int(GameData.section("block").get("guard_break_duration", 1.5) * 60.0))
@@ -335,6 +340,7 @@ func _tick_free(delta: float) -> void:
 		"meditate": _start_meditation()
 		"flask":  _start_flask()
 		"ability": _start_ability()
+		"toggle_grip": _start_grip_switch()
 
 
 func _tick_block(delta: float) -> void:
@@ -345,7 +351,7 @@ func _tick_block(delta: float) -> void:
 	# Ataque leve com o escudo levantado = bash (spec da o bash ao escudo mas nao lhe da botao).
 	match _take_buffered():
 		"light":
-			if offhand_weapon == "shield":
+			if offhand_weapon == "shield" and not is_two_handed:
 				_start_attack("bash")
 			else:
 				_start_attack("light")
@@ -484,7 +490,7 @@ func has_iframes() -> bool:
 
 func _can_parry() -> bool:
 	var list: Array = GameData.section("parry").get("weapons_that_parry", [])
-	return list.has(main_weapon) or list.has(offhand_weapon)
+	return list.has(main_weapon) or (not is_two_handed and list.has(offhand_weapon))
 
 
 func _start_parry() -> void:
@@ -498,7 +504,7 @@ func parry_window_open() -> bool:
 	if state != State.PARRY:
 		return false
 	var cfg := GameData.section("parry")
-	var start: int = cfg.get("startup_frames", 4)
+	var start: int = cfg.get("startup_frames", 8)
 	return state_frame >= start and state_frame < start + int(cfg.get("active_frames", 8))
 
 
@@ -508,7 +514,7 @@ func _tick_parry(delta: float) -> void:
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
 	var cfg := GameData.section("parry")
-	var total: int = int(cfg.get("startup_frames", 4)) + int(cfg.get("active_frames", 8)) \
+	var total: int = int(cfg.get("startup_frames", 8)) + int(cfg.get("active_frames", 8)) \
 		+ int(cfg.get("whiff_recovery_frames", 40))
 	if state_frame >= total:
 		_change_state(State.FREE)
@@ -539,12 +545,35 @@ func _tick_riposte(delta: float) -> void:
 # --- Bloqueio -----------------------------------------------------------------
 
 func _block_source() -> String:
-	if offhand_weapon == "shield":
+	if not is_two_handed and offhand_weapon == "shield":
 		return "shield"
 	var w := GameData.weapon(main_weapon)
 	if bool(w.get("can_block", false)):
 		return "onehand"
 	return ""
+
+
+# --- Empunhadura --------------------------------------------------------------
+
+func _start_grip_switch() -> void:
+	# Armas de duas maos nao podem entrar num estado que viola o seu requisito.
+	if int(GameData.weapon(main_weapon).get("hands", 1)) >= 2:
+		return
+	_change_state(State.GRIP_SWITCH)
+
+
+func _tick_grip_switch(delta: float) -> void:
+	velocity.x = move_toward(velocity.x, 0.0, delta * 20.0)
+	velocity.z = move_toward(velocity.z, 0.0, delta * 20.0)
+	var frames := int(GameData.section("grip").get("switch_frames", 12))
+	if state_frame >= frames:
+		is_two_handed = not is_two_handed
+		_combo_index = 0
+		_change_state(State.FREE)
+
+
+func grip_uses_offhand() -> bool:
+	return not is_two_handed and offhand_weapon != ""
 
 
 func _can_block() -> bool:
@@ -853,7 +882,10 @@ func take_damage(info: DamageInfo) -> void:
 			cost_mult = b.get("onehand_cost_multiplier", 1.5)
 
 		var weight_key := "blow_weight_heavy" if info.weight == "heavy" else "blow_weight_light"
-		var cost: float = float(b.get("stamina_per_blow", 15.0)) * float(b.get(weight_key, 1.0)) * cost_mult
+		if source == "shield" and not info.is_magic:
+			absorb *= 1.0 - clampf(info.shield_pierce_fraction, 0.0, 1.0)
+		var cost: float = float(b.get("stamina_per_blow", 15.0)) * float(b.get(weight_key, 1.0)) \
+			* cost_mult * maxf(info.guard_stamina_multiplier, 1.0)
 		stamina.spend(cost)
 		amount *= (1.0 - absorb)
 		Sfx.play("hit_block")
@@ -938,6 +970,7 @@ func _cycle_loadout(direction: int) -> void:
 	var l: Dictionary = order[_loadout_index]
 	main_weapon = l.get("main", "longsword")
 	offhand_weapon = l.get("offhand", "") if l.get("offhand") != null else ""
+	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
 	_combo_index = 0
 
 
@@ -945,9 +978,9 @@ func loadout_label() -> String:
 	var main_name: String = GameData.weapon(main_weapon).get("display_name", main_weapon)
 	if not GameData.meets_requirements(main_weapon, attrs):
 		main_name += " (abaixo do requisito, dano x0,6)"
-	if offhand_weapon != "":
+	if offhand_weapon != "" and not is_two_handed:
 		return "%s + %s" % [main_name, GameData.weapon(offhand_weapon).get("display_name", offhand_weapon)]
-	return main_name
+	return "%s (duas maos)" % main_name if is_two_handed else main_name
 
 
 # --- Leitura visual -----------------------------------------------------------
@@ -975,6 +1008,7 @@ func state_name() -> String:
 		State.ATTACK: return "ataque"
 		State.DODGE: return "esquiva"
 		State.BLOCK: return "bloqueio"
+		State.GRIP_SWITCH: return "troca de empunhadura"
 		State.PARRY: return "parry"
 		State.CASTING: return "conjuracao"
 		State.HITSTUN: return "hit-stun"

@@ -14,6 +14,12 @@ var parryable := false
 var is_magic := false
 var is_aoe := false
 
+# Excepcoes de bloqueio declaradas na ficha do ataque (spec/70 §4).
+# `shield_pierce_fraction` remove essa fraccao da absorcao fisica do escudo;
+# `guard_stamina_multiplier` torna um golpe um esmagador de guarda dedicado.
+var shield_pierce_fraction := 0.0
+var guard_stamina_multiplier := 1.0
+
 var posture_damage := 0.0
 var attack_id := ""
 

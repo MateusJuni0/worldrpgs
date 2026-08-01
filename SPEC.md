@@ -70,6 +70,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 70 | [**Fecho dos sistemas de combate**](spec/70-fecho-dos-sistemas-de-combate.md) | parry 8/8/40 · curvas por atributo · sobrecarga · empunhadura · gramática inimiga | 🟢 contrato canónico da Tarefa 4; dados e invariantes executáveis |
 | 69 | [**Catálogo do mundo: doze círculos que se aprendem**](spec/69-catalogo-do-mundo.md) | leitura antes do traçado · 12 zonas de 8–12 min · 21 ligações · círculos horizontais/verticais · atalhos por dentro · 30 portas de história | 🟢 WP8 fechado 01-08; mapa, streaming e 11 zonas continuam por construir |
 | 68 | [**Catálogo de armas, armaduras, estados e anéis**](spec/68-catalogo-de-armas-armaduras-e-aneis.md) | 120 armas · 68 armaduras · 70 anéis · 8×11 golpes · melhoria sem força · estados · Assassino | 🟢 WP5 fechado 01-08; 5 armas e 11 armaduras na Fatia 1; Assassino aguarda confirmação do Mateus |
 | 67 | [**Catálogo do bestiário**](spec/67-catalogo-do-bestiario.md) | 33 tipos · 100 ataques comuns · contacto/vector · 10 cartas · cues · massa · almas e 12 orçamentos | 🟢 WP6 fechado 01-08; recompensa, modelos/animações e colocação continuam WP9/WP15/WP8 |

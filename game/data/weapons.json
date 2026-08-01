@@ -16,48 +16,54 @@
     "arte_da_arma":     { "custo": "mana", "repoe_interrupcao_pct": 100 }
   },
 
+  "modificadores_de_combate": {
+    "contra_perfurante": { "tipo_dano": "perfuracao", "multiplicador_base": 1.30, "haste": 1.40, "katana_estocada": 1.45 },
+    "instavel": { "multiplicador": 1.25, "estados": ["guarda_quebrada", "parry_falhado", "aterragem_pesada", "recuperacao_declarada"] },
+    "ressalto": { "recoil_frames": [12, 18], "parede_antes_do_alvo_cancela": true }
+  },
+
   "familias": {
     "_fonte": "spec/51 §2 e §3. 'onde_ma' e obrigatorio — o game_data recusa arrancar sem ele.",
     "espada_recta": {
       "nome": "Espadas rectas", "onde_boa": "em todo o lado — e a regua contra a qual tudo se mede",
       "onde_ma": "nunca e a melhor arma numa situacao lida: quem domina uma leitura ganha mais com outra familia",
-      "interrupcao": 14, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "interrupcao": 14, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.30,"golpes":["estocada"]}, "critico": "normal",
       "arte_1mao": "estocada perfurante", "arte_2maos": "golpe circular", "fatia_1": true
     },
     "adaga": {
       "nome": "Adagas", "onde_boa": "criticos nas costas e depois do parry — o multiplicador mais alto do jogo",
       "onde_ma": "de frente contra armadura pesada: interrupcao 10, dez golpes para o que o espadao faz em tres",
-      "interrupcao": 10, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "alto",
+      "interrupcao": 10, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.30,"golpes":["estocada"]}, "critico": "alto",
       "arte_1mao": "apunhalar", "arte_2maos": "danca de laminas", "fatia_1": true
     },
     "pesada_corte": {
       "nome": "Pesadas de corte", "onde_boa": "interromper, varrer grupos e trocar no meio do golpe dele",
       "onde_ma": "contra quem nao falha: 34 f de recuperacao sao meio segundo de janela aberta a cada erro",
-      "interrupcao": 31, "hiper_armadura": true, "contra_ataque_pct": 30, "critico": "normal",
+      "interrupcao": 31, "hiper_armadura": true, "contra_perfurante": {"multiplicador":1.30,"golpes":[]}, "critico": "normal",
       "arte_1mao": "salto esmagador", "arte_2maos": "rodopio", "fatia_1": true
     },
     "katana": {
       "nome": "Katanas", "onde_boa": "a bater enquanto ele bate: contra-ataque +45% e o golpe em corrida mais forte",
       "onde_ma": "nas maos de quem nao le: sem contra-ataques e uma espada recta pior (MV 0,9)",
-      "interrupcao": 13, "hiper_armadura": false, "contra_ataque_pct": 45, "critico": "normal",
+      "interrupcao": 13, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.45,"golpes":["estocada"]}, "critico": "normal",
       "arte_1mao": "iai", "arte_2maos": "corte duplo", "fatia_1": false
     },
     "haste": {
       "nome": "Hastes", "onde_boa": "estocar a 2,8 m com o escudo levantado — ataca sem baixar a guarda",
       "onde_ma": "colada ao corpo: dentro de 1,2 m os golpes falham por dentro",
-      "interrupcao": 14, "hiper_armadura": false, "contra_ataque_pct": 40, "critico": "normal",
+      "interrupcao": 14, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.40,"golpes":["estocada"]}, "critico": "normal",
       "arte_1mao": "varrimento baixo", "arte_2maos": "carga de lanca", "fatia_1": false
     },
     "cajado": {
       "nome": "Cajados", "onde_boa": "e o que conjura; a pancada e o plano B sem custo de mana",
       "onde_ma": "como arma: MV 0,7, sem critico e sem contra-bonus — um mago encostado a parede tem um pau",
-      "interrupcao": 8, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "interrupcao": 8, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.30,"golpes":[]}, "critico": "normal",
       "arte_1mao": "rajada de bruma", "arte_2maos": "conjuracao firmada", "fatia_1": true
     },
     "arco": {
       "nome": "Arcos", "onde_boa": "abrir o combate, cabecas (critico automatico) e marcar para o parceiro",
       "onde_ma": "ao perto: a mirar anda-se devagar e nao se dispara em movimento; e cada flecha custa",
-      "interrupcao": 8, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "alto",
+      "interrupcao": 8, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.30,"golpes":[]}, "critico": "alto",
       "municao": ["comum", "pesada", "farpada", "fogo", "gelo", "sinalizadora"],
       "arte_1mao": "disparo firmado", "arte_2maos": "chuva de flechas", "fatia_1": false,
       "_fora_da_fatia": "ataque a distancia seguro mata a esquiva e o parry (WP0)"
@@ -65,19 +71,19 @@
     "besta": {
       "nome": "Bestas", "onde_boa": "nas maos de toda a gente: requisitos baixos e ZERO escala — a Lei 3 em objecto",
       "onde_ma": "na cadencia: dois tempos, e a recarga a meio do combate e um convite ao golpe",
-      "interrupcao": 16, "hiper_armadura": false, "contra_ataque_pct": 30, "critico": "normal",
+      "interrupcao": 16, "hiper_armadura": false, "contra_perfurante": {"multiplicador":1.30,"golpes":[]}, "critico": "normal",
       "escala": "nenhuma", "arte_1mao": "tiro rapido", "arte_2maos": "mira ampliada", "fatia_1": false
     }
   },
 
   "familias_escudo": {
-    "_fonte": "spec/51 §3 (do 48 §3). Tecto de estabilidade 85: bloquear custa SEMPRE.",
+    "_fonte": "spec/51 §3 + spec/70 §3. Tecto de estabilidade 85; o piso corporal nao se aplica a bloqueio.",
     "estabilidade_maxima": 85,
-    "defesa_fisica_maxima_pct": 90,
+    "defesa_fisica_maxima_pct": 100,
     "penalidade_espreitar": true,
-    "broquel":       { "estabilidade": 50, "peso": 1.5, "parry_delta_frames": 2,  "onde_ma": "aguenta mal um pesado — a guarda parte depressa", "fatia_1": false },
-    "escudo_medio":  { "estabilidade": 70, "peso": 5.0, "parry_delta_frames": 0,  "onde_ma": "nao brilha em nada — e o padrao", "fatia_1": true },
-    "escudo_grande": { "estabilidade": 85, "peso": 14.0, "parry_delta_frames": null, "onde_ma": "tira a carga leve E nao apara — a escolha doi dos dois lados", "fatia_1": false }
+    "broquel":       { "estabilidade": 50, "peso": 1.5, "defesa_fisica_pct": 85, "deflexao": "leve", "parry_delta_frames": 2,  "onde_ma": "aguenta mal um pesado — a guarda parte depressa", "fatia_1": false },
+    "escudo_medio":  { "estabilidade": 70, "peso": 5.0, "defesa_fisica_pct": 100, "deflexao": "media", "parry_delta_frames": 0,  "onde_ma": "nao brilha em nada — e o padrao", "fatia_1": true },
+    "escudo_grande": { "estabilidade": 85, "peso": 14.0, "defesa_fisica_pct": 100, "deflexao": "pesada", "parry_delta_frames": null, "onde_ma": "tira a carga leve E nao apara — a escolha doi dos dois lados", "fatia_1": false }
   },
 
   "dagger": {

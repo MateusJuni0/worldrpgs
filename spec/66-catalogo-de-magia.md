@@ -2,6 +2,8 @@
 
 > **Tarefa 3.1 · Codex · 01-08-2026.** Este documento fecha o WP4 sobre as decisões mais recentes. O catálogo executável é [`game/data/spells.json`](../game/data/spells.json); o auto-teste recusa fichas incompletas.
 
+> **CORRECÇÃO CANÓNICA DA TAREFA 4 — ver [`70`](70-fecho-dos-sistemas-de-combate.md) §5.** A linha antiga de **Fôlego Roubado** abaixo fica como registo, mas “stamina do inimigo” está revogado: causa dano de postura/guarda e devolve stamina igual a 50% do efeito realmente conseguido. Os dados já contêm o contrato executável.
+
 ## 1. O que manda e o que foi substituído
 
 - [`54`](54-mana-meditacao-e-tracos-de-classe.md) manda: **não há slots nem cargas de magia**; há mana sem regeneração passiva.
