@@ -51,11 +51,11 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 **Gráficos:** ecrã inteiro/janela · resolução (nativa por omissão) · escala dinâmica on/off (on) · limite de fps (60) · brilho · **sem presets de qualidade** — o jogo tem um alvo único (Lei 4); *alternativa descartada:* low/medium/high — três combinações a equilibrar e testar para duas máquinas conhecidas é trabalho sem cliente.
 
-**Áudio:** 5 canais separados (geral, música, efeitos, ambiente, vozes — WP12) · o aviso sonoro de telegrafia **não tem slider próprio**: vive em "efeitos", que nunca deve ir a zero (aviso ao tentar).
+**Áudio:** 5 canais separados (geral, música, efeitos, ambiente, vozes — WP12), todos podem ir a **zero**. A telegrafia vive em “efeitos”, mas o evento continua a produzir o equivalente visual do [`62`](62-acessibilidade-auditiva.md); o jogo não bloqueia silêncio nem mostra aviso de dificuldade.
 
 **Comandos:** remapeamento total de teclado e rato (o mapa do WP1 é a omissão) · sensibilidade do rato · inverter Y · o esquema de comando (WP1) aparece se um comando for ligado.
 
-**Jogo:** tamanho do HUD (×1,0 / ×1,25 / ×1,5) · mostrar pistas de interacção (on) · legendas das pistas sonoras (off — escreve "passos atrás", "grito de alerta"; a acessibilidade que faz falta a eles é bem-vinda, conformidade formal não é objectivo) · idioma: **português, único** (briefing: jogam os dois em português).
+**Jogo/Acessibilidade:** tamanho do HUD (×1,0 / ×1,25 / ×1,5) · mostrar pistas de interacção (on) · **sinais visuais de jogo** essenciais/reforçados · tamanho 100/125/150% · opacidade 60–100% · reduzir flashes · paleta. Não há legendas de combate do tipo “passos atrás”: presença, direcção, timing e resposta têm formas próprias no [`62`](62-acessibilidade-auditiva.md). Legendas de diálogo são um sistema separado. Idioma: **português, único**.
 
 **Rede:** nome de anfitrião · porta (omissão 27890) · código de sessão para juntar (WP10).
 
@@ -63,7 +63,7 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 1. **Nada de tutorial em janela** — o ensino é do mundo (WP11B/27-aprendizagem); a UI no máximo mostra a tecla contextual uma vez.
 2. **Tempo real em tudo** — nenhum menu pára o mundo. O único ecrã seguro é o descanso.
-3. **Toda a informação de combate vive no corpo primeiro** (telegrafia, WP12) **e no HUD segundo** — o HUD confirma, não substitui.
+3. **Toda a informação de combate vive no evento e no corpo primeiro** (telegrafia, WP12). O HUD/sinal confirma a origem visível e **substitui o canal auditivo quando ele não está disponível**, sem substituir uma animação má.
 4. Navegação completa por teclado; rato opcional nos menus.
 5. Fonte: uma família só, ≥ 18 px em 1080p em qualquer texto; números tabulares nas quantidades.
 
@@ -84,4 +84,4 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 ## Ligações
 
-[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md)
+[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)

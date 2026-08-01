@@ -191,7 +191,7 @@
 | **Como trata as outras raças** | não reage a nada que não se aproxime da porta; os élites que descem à Raiz desaparecem |
 | **O que faz com os mortos** | não se encontram Sem-Rosto mortos. Nunca *(→WP6: não largam nada do corpo — o espólio da Raiz vem do que os outros lá deixaram)* |
 | **Como se veste** | placas de pedra negra amarradas com raiz — não se sabe onde acaba a roupa |
-| **Como luta** | **pesado** de longo alcance, e **em silêncio**: no bioma do escuro absoluto, o único som que fazem é o do ataque a começar — a telegrafia dos 0,50 s ([`38`](38-ataques-e-honestidade.md)) mantém-se, e é a única coisa que se ouve |
+| **Como luta** | **pesado** de longo alcance, e **em silêncio**: no bioma do escuro absoluto, o único som que fazem é o do ataque a começar. A telegrafia dos 0,50 s ([`38`](38-ataques-e-honestidade.md)) mantém som **e** sinal visual equivalente ([`62`](62-acessibilidade-auditiva.md)); silêncio atmosférico nunca esconde o golpe |
 | **Uma coisa que ninguém sabe** | têm rosto, debaixo das placas. É igual ao teu |
 | **Descrição visual** | silhueta alta de placas de pedra negra sem cabeça visível, bruma pálida a escapar das juntas |
 | **Fatia 1?** | ⬜ |

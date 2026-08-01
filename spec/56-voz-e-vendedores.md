@@ -71,6 +71,7 @@
 | ⭐ **Voz posicional**, com botão para a pôr plana | `[CLAUDE]` `→WP10`/`→WP11` |
 | **Aviso de auscultadores** na primeira ligação | `→WP11` |
 | ⚠️ **Se a voz falhar, o jogo continua** — nunca é dependência | regra |
+| **JUNTAR · ESPERA · AJUDA · OLHA** — quatro pings visuais posicionais substituem coordenação mínima quando a voz não se ouve | [`62`](62-acessibilidade-auditiva.md) `→WP10`/`→WP11` |
 
 ---
 
@@ -161,4 +162,4 @@ exploras ──► encontras o TOMO DAS CINZAS numa dungeon
 
 ## Ligações
 
-[`19-rede.md`](19-rede.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`54-mana-meditacao-e-tracos-de-classe.md`](54-mana-meditacao-e-tracos-de-classe.md) · [`52-mago-do-mal.md`](52-mago-do-mal.md) · [`18-progressao.md`](18-progressao.md) · [`20-interface.md`](20-interface.md)
+[`19-rede.md`](19-rede.md) · [`39-estudo-profundo.md`](39-estudo-profundo.md) · [`43-estudo-espolio-inventario-mundo.md`](43-estudo-espolio-inventario-mundo.md) · [`54-mana-meditacao-e-tracos-de-classe.md`](54-mana-meditacao-e-tracos-de-classe.md) · [`52-mago-do-mal.md`](52-mago-do-mal.md) · [`18-progressao.md`](18-progressao.md) · [`20-interface.md`](20-interface.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)

@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, arenas de chefe.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, acessibilidade auditiva.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -44,7 +44,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 63 · 9801 linhas | — | — |
+| Documentos de spec | 64 · 10 086 linhas | — | — |
 | Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
 | Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
@@ -72,6 +72,14 @@ O [`61`](spec/61-arenas-de-chefe.md) fecha a gramática espacial dos chefes: tam
 **O sistema está escrito; o conteúdo não é fingido:** Vorgar é a primeira instância e precisa de fechar a sua ficha no greybox. As outras **12 arenas seladas** nascem com os 11 guardiões restantes e o Ultra; os 12 subchefes recebem bolsas de combate abertas no mundo, sem porta nem música, como manda o [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md).
 
 ⚠️ A escala de PV a dois continua `[TENSÃO]`, pergunta 24 do [`99`](spec/99-perguntas-abertas.md). O desenho espacial não a decide.
+
+## 1e. ✅ Ouvir deixou de ser requisito para jogar
+
+O [`62`](spec/62-acessibilidade-auditiva.md) corrige a tranca criada pelo [`38`](spec/38-ataques-e-honestidade.md) e pela primeira pessoa: cada som informativo passa a ser uma apresentação de um evento que também produz **forma, direcção, timing e duração visuais equivalentes**. Ataques, projécteis, áreas, alerta, estado do jogador, co-op, segredos e confirmações têm substituto próprio; não se usa uma legenda genérica em combate.
+
+**A regra entrou na fundação agora:** a ficha de ataque passa de 11 para **12 colunas**, com `sinal_visual_equivalente`. O áudio pode ir a zero. O perfil é local e a roda JUNTAR/ESPERA/AJUDA/OLHA mantém coordenação mínima sem voz.
+
+⚠️ **Desenho não é runtime:** o protótipo ainda toca um `telegraph` único e não desenha o novo canal. Emissor comum, renderer e migração dos 12 ataques actuais estão registados no [`LACUNAS`](LACUNAS.md) antes de o catálogo WP6 crescer.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 

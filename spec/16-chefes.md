@@ -4,6 +4,8 @@
 
 > ⚠️ **ACTUALIZAÇÃO 01-08:** o [`53`](53-chefes-ritmo-e-o-mago-forte.md) substitui a contagem: **13 chefes verdadeiros** (12 guardiões + Ultra), 12 subchefes no mundo e ~36 nomeados. O sistema espacial actual é o [`61`](61-arenas-de-chefe.md): arena selada para guardião/Ultra, bolsa fugível para subchefe. O ×1,8 de PV abaixo continua apenas `[PROTO]`; a pergunta 24 não foi decidida.
 
+> ⚠️ **ACESSIBILIDADE:** as tabelas de Vorgar abaixo são anteriores à 12.ª coluna do [`38`](38-ataques-e-honestidade.md). O [`62`](62-acessibilidade-auditiva.md) §4 mapeia já cada família existente para o sinal visual equivalente; novas fichas trazem som **e** visual na própria linha.
+
 ## A pirâmide — a pergunta 13 arrumada, não decidida
 
 O que foi dito: 1 + 10 + 20 + 30 (Rico, 03:25) vs 1 + 30 + 20 (Mateus, 11:54); "a gente vai acertar isso" (12:05). **A decisão do total é deles.** O que a spec pode fixar já é o que **distingue uma camada da outra** — porque isso é desenho, não contagem:

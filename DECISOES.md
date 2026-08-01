@@ -176,7 +176,7 @@ Ordem inversa: **o mais recente primeiro.**
 
 ### Perspectiva → [`spec/29-perspectiva.md`](spec/29-perspectiva.md)
 - **Primeira ou terceira pessoa, à escolha do jogador**
-- ⚠️ Em 1.ª pessoa não há visão periférica → **todo o ataque anunciado por som direccional antes de entrar no ecrã**
+- ⚠️ Em 1.ª pessoa não há visão periférica → **todo o ataque anunciado antes de entrar no ecrã**. O [`62`](spec/62-acessibilidade-auditiva.md) corrige o canal exclusivo: o mesmo evento produz som direccional **e** sinal visual equivalente; ouvir nunca é requisito
 - **Plataforma: PC**
 - **Substitui:** *"terceira pessoa"* em 6 documentos. ⏳ O bestiário do PR #11 ainda não tem os sons por ataque
 

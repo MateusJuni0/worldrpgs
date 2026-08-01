@@ -4,8 +4,8 @@
 
 ## As regras herdadas — nenhum inimigo escapa a estas
 
-1. **Telegrafia ≥ 0,5 s legível na silhueta** em todo o ataque (WP1). O aviso é pose + som distinto (WP12); a cara não conta, a cor sozinha não conta.
-2. ⚠️ **Som direccional antes do campo de visão** — acrescentado por [`29-perspectiva.md`](29-perspectiva.md) depois deste documento ter sido escrito. O jogador pode estar em **primeira pessoa**, e aí não tem visão periférica: **todo o ataque que venha de fora do ecrã tem de ser anunciado por som direccional antes de entrar**. Sem isto, um golpe de fora do enquadramento é injusto — e injusto é o que a Lei 1 recusa. Cada ficha do bestiário tem de dizer **que som anuncia cada ataque**, ao lado da telegrafia visual. `[CLAUDE]` — a completar pelo autor do WP6.
+1. **Telegrafia ≥ 0,5 s legível na silhueta** em todo o ataque (WP1). O aviso é pose + evento com som distinto **e equivalente visual** ([`62`](62-acessibilidade-auditiva.md)); a cara não conta, a cor sozinha não conta.
+2. ⚠️ **Fora do campo de visão há dois canais equivalentes** — acrescentado por [`29-perspectiva.md`](29-perspectiva.md) e fechado pelo [`62`](62-acessibilidade-auditiva.md). O jogador pode estar em **primeira pessoa**, e aí não tem visão periférica: todo o ataque emite som direccional **e** cunha visual no mesmo início/compromisso. Cada ficha declara ambos nas doze colunas do [`38`](38-ataques-e-honestidade.md); preencher só som não fecha a ficha.
 
 3. **Cada ataque traz a marca `aparável` ou `só esquiva`** (WP1). A língua visual é fixa (WP12): `só esquiva` = brilho vermelho curto; aparável = silhueta sem vermelho.
 4. **Velocidade:** patrulha < 5,0 m/s — **fugir a correr é sempre possível e grátis** (WP1). Perseguição ≤ 5,0 m/s sustentada; só o **fecho** (anti-kite dos 4 s, WP1) pode ser mais rápido, e é curto e telegrafado.

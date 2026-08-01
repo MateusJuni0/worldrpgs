@@ -133,7 +133,7 @@ Um empurrão normal iniciado **fora** da faixa nunca lança alguém para a morte
 - Névoa, escuridão e partículas não podem esconder o bordo.
 - Não há objecto apanhável, ponto de entrada, refúgio ou zona de reunião dentro da faixa.
 - A colisão termina exactamente onde o chão termina. Uma parede invisível sobre um precipício ensina que a imagem mente; uma colisão mais curta mata antes do bordo visível.
-- O bordo continua legível com efeitos reduzidos e sem som. A regra de acessibilidade auditiva da tarefa 2.2 completa a redundância; não é desculpa para adiar o sinal visual.
+- O bordo continua legível com efeitos reduzidos e sem som. A acessibilidade auditiva do [`62`](62-acessibilidade-auditiva.md) completa a redundância; não é desculpa para adiar o sinal visual.
 
 ---
 

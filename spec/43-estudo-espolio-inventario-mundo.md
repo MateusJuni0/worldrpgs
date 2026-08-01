@@ -136,7 +136,7 @@ Isso valida a regra que já escrevemos no [`39`](39-estudo-profundo.md) §9 — 
 
 ⚠️ **E a pista das paredes falsas é um problema nosso.** Lá, aprende-se que existem **porque outros jogadores deixam mensagens**. Nós somos dois, e não temos isso.
 
-**Proposta `[CLAUDE]` `→WP8`:** a nossa parede falsa tem sempre **um sinal no próprio cenário** — uma marca, uma corrente de ar, um som atrás. Sem mensagens de estranhos, **o cenário tem de fazer o trabalho todo**, senão ninguém encontra nada e o conteúdo escondido é conteúdo que não existe.
+**Proposta `[CLAUDE]` `→WP8`:** a nossa parede falsa tem sempre **um sinal no próprio cenário** — uma marca, pó/vegetação puxados pela corrente de ar e, como redundância, som atrás. O [`62`](62-acessibilidade-auditiva.md) proíbe que o som seja a única pista. Sem mensagens de estranhos, **o cenário tem de fazer o trabalho todo**, senão ninguém encontra nada e o conteúdo escondido é conteúdo que não existe.
 
 ⭐ **E a coisa que vale mais copiar de todas:** uma parede falsa que esconde **uma zona inteira**. É o pico da recompensa por atenção, e é a resposta directa ao *"a gente nunca zera"* ([`39`](39-estudo-profundo.md) §12).
 

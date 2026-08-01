@@ -153,7 +153,7 @@ Quando o **mal** entrar (pergunta 8): o preço em PV **tem de se ver** — motas
 
 ## 6 · Som
 
-Regra que manda: **um chefe lê-se de ouvido.** Cada ataque tem som de antecipação **distinto**; de olhos fechados distingue-se o aparável do não aparável — o não aparável **arrasta grave** (a pancada vertical do brutamontes), o agarrão **assobia agudo**. É o par áudio das duas línguas visuais fixas, e é pista extra para a Lei 1.
+Regra que manda: **um chefe lê-se por áudio ou por visual, sem perder informação.** Cada ataque tem som de antecipação **distinto**; de olhos fechados distingue-se o aparável do não aparável — o não aparável **arrasta grave**, o agarrão **assobia agudo**. O [`62`](62-acessibilidade-auditiva.md) dá a cada um equivalente de forma, direcção e timing: ouvir é pista extra para a Lei 1, nunca requisito físico para a cumprir.
 
 ### Música — 6 peças + 3 stingers (~14 min compostos)
 
@@ -184,8 +184,8 @@ Regra que manda: **um chefe lê-se de ouvido.** Cada ataque tem som de antecipa�
 
 ### Mistura
 
-- **Prioridades (de cima para baixo):** telegrafias de ataque > golpes no jogador > parry/Cambaleio > vozes do jogador > impactos gerais > música > ambiente. Tecto de 24 vozes simultâneas; corta-se de baixo.
-- **Ducking:** telegrafia de chefe baixa a música −4 dB por 0,5 s; pausa baixa tudo −8 dB menos UI. Canais separados nas opções (WP11): geral, música, efeitos, ambiente, vozes.
+- **Prioridades (de cima para baixo):** telegrafias de ataque > golpes no jogador > parry/Cambaleio > vozes do jogador > impactos gerais > música > ambiente. Tecto de 24 vozes simultâneas; corta-se de baixo. O corte de uma voz nunca corta o evento visual equivalente.
+- **Ducking:** telegrafia de chefe baixa a música −4 dB por 0,5 s; pausa baixa tudo −8 dB menos UI. Canais separados nas opções (WP11): geral, música, efeitos, ambiente, vozes — todos podem ir a zero porque os sinais do [`62`](62-acessibilidade-auditiva.md) não dependem da mistura.
 - Música em streaming; SFX residentes ≤ **150 MB** (dentro do working set do §2). Licença por ficheiro no manifesto — regras do WP13, sem excepções.
 
 ## O que este documento não fecha
@@ -197,4 +197,4 @@ Regra que manda: **um chefe lê-se de ouvido.** Cada ataque tem som de antecipa�
 
 ## Ligações
 
-[`09-tecnico.md`](09-tecnico.md) (restrição-mãe + medição 0b) · [`01-combate.md`](01-combate.md) (durações-contrato) · [`13-magia.md`](13-magia.md) · [`22-assets.md`](22-assets.md) (fontes/licenças) · [`25-controlo.md`](25-controlo.md) (hit-stop) · [`10-fatia-1.md`](10-fatia-1.md)
+[`09-tecnico.md`](09-tecnico.md) (restrição-mãe + medição 0b) · [`01-combate.md`](01-combate.md) (durações-contrato) · [`13-magia.md`](13-magia.md) · [`22-assets.md`](22-assets.md) (fontes/licenças) · [`25-controlo.md`](25-controlo.md) (hit-stop) · [`10-fatia-1.md`](10-fatia-1.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)

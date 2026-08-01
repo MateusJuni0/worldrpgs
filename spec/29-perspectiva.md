@@ -27,8 +27,8 @@ A troca faz-se **fora de combate**, ou com uma transição curta (≤ 0,3 s). Tr
 Não é impossível — Chivalry, Mordhau e Dark Messiah fazem combate corpo a corpo em primeira pessoa e funciona. Mas exige coisas que a terceira pessoa não exige:
 
 1. **Modelo de braços e arma em primeira pessoa** (*viewmodel*) — um conjunto de animações **separado** do corpo em terceira pessoa. É trabalho a dobrar nas animações de combate, e é a razão nº1 pela qual jogos escolhem uma perspectiva só.
-2. **Feedback de estado sem corpo visível** — o jogador tem de saber que está em i-frames, que a stamina acabou, que o parry saiu. Em terceira pessoa a animação diz; em primeira pessoa tem de ser som + interface + efeito de ecrã (`→WP1B`, `→WP11`, `→WP12`).
-3. **Telegrafia dos inimigos ainda mais legível** — com FOV alto e sem visão periférica do próprio corpo, um ataque vindo de fora do ecrã é injusto. O WP6 herda: **em primeira pessoa, todo o ataque tem de ser anunciado por som direccional antes de entrar no campo de visão**.
+2. **Feedback de estado sem corpo visível** — o jogador tem de saber que está em i-frames, que a stamina acabou, que o parry saiu. Em terceira pessoa a animação diz; em primeira pessoa tem de ser evento com som **e** equivalente de interface/efeito ([`62`](62-acessibilidade-auditiva.md)); nenhum canal é obrigatório para o jogador.
+3. **Telegrafia dos inimigos ainda mais legível** — com FOV alto e sem visão periférica do próprio corpo, um ataque vindo de fora do ecrã é injusto. O WP6 herda: **todo o ataque fora do campo de visão emite som direccional e cunha visual com o mesmo compromisso**. Assim, primeira pessoa não fica trancada por audição.
 
 ### Lock-on (`→WP1`, `→WP1B`)
 
@@ -51,7 +51,7 @@ O HUD tem de funcionar nas duas. Em primeira pessoa o ecrã está mais cheio (a 
 
 1. **A escolha é do jogador**, e faz-se nas opções e fora de combate
 2. **Terceira pessoa é a perspectiva de referência** — é nela que os números do combate se afinam primeiro (WP15B), porque é a que dá leitura completa
-3. **Primeira pessoa não pode ser desvantagem competitiva**: se o teste do WP15B mostrar que é mais difícil vencer o Vorgar em primeira pessoa, o problema é de feedback, não do jogador — corrige-se em som e interface, nunca a baixar a dificuldade
+3. **Primeira pessoa não pode ser desvantagem competitiva**: se o teste do WP15B mostrar que é mais difícil vencer o Vorgar em primeira pessoa, o problema é de feedback, não do jogador — corrige-se nos dois canais do [`62`](62-acessibilidade-auditiva.md), nunca a baixar a dificuldade
 
 ## O que fica em aberto
 
@@ -61,4 +61,4 @@ O HUD tem de funcionar nas duas. Em primeira pessoa o ecrã está mais cheio (a 
 
 ## Ligações
 
-[`25-controlo.md`](25-controlo.md) · [`01-combate.md`](01-combate.md) · [`00-visao.md`](00-visao.md) · [`30-qualidade-visual.md`](30-qualidade-visual.md)
+[`25-controlo.md`](25-controlo.md) · [`01-combate.md`](01-combate.md) · [`00-visao.md`](00-visao.md) · [`30-qualidade-visual.md`](30-qualidade-visual.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)

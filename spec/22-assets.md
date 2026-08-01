@@ -70,7 +70,7 @@ Um souls-like **é** animação. A telegrafia do brutamontes, o armar do parry, 
 | Música (menu, Brumal, Toca, Vorgar ×2 fases) | Kevin MacLeod (CC-BY) · OGA CC0 | CC-BY / CC0 | CC-BY → linha no `CREDITS.md`. **4–5 faixas chegam para a fatia** |
 | UI (confirmar, cancelar, subir nível, apanhar item) | Kenney Interface | CC0 | Commit ok |
 
-`→WP12` define a lista fecho-a-fecho de sons e a regra "um chefe lê-se de ouvido".
+`→WP12` define a lista fecho-a-fecho de sons. A regra completa é **“um chefe lê-se por áudio ou visual”**: o [`62`](62-acessibilidade-auditiva.md) dá equivalente próprio a todo o som informativo.
 
 ## O que fica explicitamente adiado
 

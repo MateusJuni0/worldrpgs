@@ -72,7 +72,8 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | ⚠️ **O som que anuncia cada ataque** — obrigatório pela regra da 1.ª pessoa, e continua por escrever em todas as fichas | [`38`](spec/38-ataques-e-honestidade.md) §3 |
+| 🟠 | ⚠️ **Preencher som + sinal visual em cada ataque do catálogo** — a ficha já tem as 12 colunas e a língua por tipo; falta conteúdo ataque a ataque | [`38`](spec/38-ataques-e-honestidade.md) §3 · [`62`](spec/62-acessibilidade-auditiva.md) |
+| 🔴 | ⭐ **Implementar `GameplayCue` + renderer visual e migrar os 12 ataques actuais** — hoje `Sfx` toca o mesmo `telegraph` em todos; fazer antes de o WP6 multiplicar fichas | encontrado ao escrever o [`62`](spec/62-acessibilidade-auditiva.md) |
 | 🟠 | **Massa de cada inimigo**, para o empurrão | [`36`](spec/36-fisica.md) §4 |
 | 🟠 | **Almas por inimigo, e o total por zona** — com o tecto de 10 reaparições, cada zona tem orçamento fixo | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §2 |
 
@@ -224,7 +225,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ✅ | ~~⚠️ **Desligar a meio de um chefe**~~ **RESOLVIDO 01-08** — sem progresso parcial; commit autoritativo em HP zero; recibo persistente e idempotente para a queda depois da morte | [`59`](spec/59-saves.md) §8 |
 | 🔵 | **Medir p95 da escrita com o mapa completo na máquina do Rico** — a fixture actual tem guarda < 64 KiB; o orçamento cheio é 2 MiB e ainda não existe conteúdo para o medir | [`59`](spec/59-saves.md) §10 |
 | 🟠 | **Música e ambiente** | o [`21`](spec/21-arte-render.md) propõe; existem **12 sons sintetizados** e mais nada |
-| 🟠 | ⭐ **Acessibilidade auditiva** | ⚠️ o [`38`](spec/38-ataques-e-honestidade.md) §3 **obriga** a que cada ataque se anuncie por som, e a 1.ª pessoa depende disso. **Quem não ouve bem fica trancado** — precisa de indicador visual equivalente |
+| ✅ | ~~⭐ **Acessibilidade auditiva**~~ **ESCRITA 01-08** — cada tipo de som informativo tem equivalente próprio de forma/direcção/timing; sem legendas genéricas e com ficha de ataque alterada já | [`62`](spec/62-acessibilidade-auditiva.md) |
 | 🔵 | **Onde vivem os textos** | português decidido; falta dizer se as strings estão em ficheiro ou no código |
 | 🔵 | **Comando / gamepad** | [`45`](spec/45-controlos-configuraveis.md) §5 propõe nascer agnóstico da fonte; por confirmar |
 | 🔵 | **Os vendedores morrem?** | na referência alguns morrem e perde-se o stock. ⏳ donos |

@@ -4,6 +4,8 @@
 
 Este documento existe por causa dessa frase. **É o mais importante do combate depois do WP1**, porque descreve a diferença entre um jogo difícil e um jogo que engana.
 
+> ⚠️ **ACTUALIZAÇÃO 01-08:** som informativo sem equivalente visual trancava a primeira pessoa a quem não ouve. O [`62`](62-acessibilidade-auditiva.md) torna **som + sinal visual equivalente** parte do mesmo evento; nenhuma ficha futura pode preencher só um canal.
+
 ---
 
 ## 1. A anatomia de um ataque — cinco fases
@@ -186,7 +188,7 @@ O molde: **um que se apara, um que só se esquiva, e um que obriga a mexer o pé
 
 ### Cada ataque traz uma ficha completa
 
-`→WP6` e `→WP7`. **Nenhum ataque entra na spec sem estas onze colunas:**
+`→WP6` e `→WP7`. **Nenhum ataque entra na spec sem estas doze colunas:**
 
 | Coluna | Exemplo |
 |---|---|
@@ -199,6 +201,7 @@ O molde: **um que se apara, um que só se esquiva, e um que obriga a mexer o pé
 | Aparável? | ✅ sim |
 | **Como se escapa** | rolar para qualquer lado, ou parry |
 | **Som que o anuncia** | grunhido grave + arrastar de metal *(obrigatório — 1.ª pessoa)* |
+| **Sinal visual equivalente** | chevrons APARAR presos à arma; fora do ecrã, cunha que fecha no mesmo compromisso ([`62`](62-acessibilidade-auditiva.md)) |
 | Alcance / arco | 2,4 m · 60° à frente |
 | Janela de castigo | 0,60 s no regresso |
 
@@ -217,7 +220,7 @@ O **círculo de agressão** do WP6 (máximo 2 a atacar) já resolve a maior part
 > Ou seja: o segundo inimigo só entra na fase 3 quando o primeiro golpe já libertou o jogador **e passaram ≥ 0,20 s**.
 
 ⚠️ **E a segunda parte, que também é da auditoria:** com um tecto de dois atacantes, os outros **ficam a orbitar à espera da vez** — e vê-se, e parece uma fila. **A correcção não é deixar atacar mais; é deixá-los pressionar sem atacar** — fechar ângulos, avançar, ameaçar. **O que se garante é uma rota de fuga**, não um número de agressores. `→WP6`
-- **Ataques de fora do ecrã anunciam-se por som** ([`29-perspectiva.md`](29-perspectiva.md)) — em primeira pessoa não há visão periférica
+- **Ataques de fora do ecrã anunciam-se pelo mesmo evento em dois canais:** som direccional **e** indicador visual equivalente ([`29-perspectiva.md`](29-perspectiva.md), [`62`](62-acessibilidade-auditiva.md)) — em primeira pessoa não há visão periférica
 
 ---
 
@@ -266,6 +269,6 @@ O **círculo de agressão** do WP6 (máximo 2 a atacar) já resolve a maior part
 
 ## Ligações
 
-[`01-combate.md`](01-combate.md) · [`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`36-fisica.md`](36-fisica.md) · [`28-testes.md`](28-testes.md) · [`29-perspectiva.md`](29-perspectiva.md)
+[`01-combate.md`](01-combate.md) · [`15-inimigos.md`](15-inimigos.md) · [`16-chefes.md`](16-chefes.md) · [`36-fisica.md`](36-fisica.md) · [`28-testes.md`](28-testes.md) · [`29-perspectiva.md`](29-perspectiva.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)
 
 **Fontes:** [Anatomy of an Enemy Attack in Dark Souls 3 — Game Developer](https://www.gamedeveloper.com/game-platforms/anatomy-of-an-enemy-attack-in-dark-souls-3) · [How to read boss attack patterns](https://nextgamenavigator.com/en/how-to-read-boss-attack-patterns-counter-any-boss)
