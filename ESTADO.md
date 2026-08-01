@@ -153,9 +153,9 @@ O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida
 
 ⚠️ A política de destinatário em co-op continua a pergunta 29 do [`99`](spec/99-perguntas-abertas.md). A infraestrutura recebe um destinatário explícito e, por isso, não decidiu à socapa se cai uma ou duas cartas.
 
-## 1o. ⭐ Fecho honesto da Tarefa 4
+## 1o. ⭐ Fecho da Tarefa 4, reaberto pela Revisão 1
 
-**A spec de sistemas está completa o suficiente para implementar sem inventar regras pelo caminho.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) fecha magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, fronteira técnica da voz e migração histórica de `sabedoria`. O `10`–`20` preserva história com avisos; a auditoria DS2/DS3 já não deixa parry reactivo, soft cap único, queda a 25 m ou ausência de sobrecarga; as sete situações de combate estão ligadas a ataques concretos. Não resta nenhuma linha `🔴` aberta no [`LACUNAS`](LACUNAS.md).
+**A Tarefa 4 fechou os contratos nucleares, mas a Revisão 1 provou que “implementar sem inventar regras” ainda era forte demais.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) continua a fechar magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, voz e migração. Porém, o [`LACUNAS`](LACUNAS.md) voltou a ter **três linhas `🔴`**: mecanismos de onze feitiços utilitários, melhorias genéricas/numericamente incompatíveis com a Lei 2 e absorção elemental de escudos sem representação executável.
 
 Também deixou de haver uma incógnita sem número na animação: UAL Standard em Mobile/Vulkan, Iris Xe, 1920×1080, deu **60,0 fps médios com 5 e com 10 esqueletos animados**. O p95 de ~18,5 ms impede triunfalismo: é um spike isolado, não a cena final. Artefacto em [`medicoes/animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json).
 
@@ -167,9 +167,9 @@ Também deixou de haver uma incógnita sem número na animação: UAL Standard e
 | retarget KayKit/Quaternius dentro do nível completo | o spike mediu o custo do esqueleto, mas não prova encaixe, IA, efeitos e duas perspectivas juntos |
 | `TuningRecorder` e três sessões de feel | 8433 testes provam coerência; não provam prazer nem confirmam os baselines |
 | identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
-| políticas co-op, mapa, Assassino, invocados e vendedores | perguntas 24, 28, 29, 32 e 35–40 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
+| políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto e escudos elementais | perguntas 24, 28, 29, 32 e 35–43 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
 
-Portanto, **não se declara o jogo completo nem toda a produção de conteúdo fechada**. Declara-se completa a camada técnica/sistémica sob autoridade dos agentes, com os vazios criativos e decisões dos donos explicitamente isolados. A lacuna importante que resta é o catálogo mecânico/narrativo dos doze confrontos finais; ficou aberto porque a identidade depende dos donos, não porque foi esquecido.
+Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura e os escudos elementais precisam das decisões/mecanismos agora isolados, além do catálogo mecânico/narrativo dos doze confrontos finais.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
