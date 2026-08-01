@@ -23,7 +23,10 @@
     "alto": {
       "shadows": true, "shadow_size": 2048, "shadow_distance": 45.0,
       "fog_density": 0.024, "view_distance": 95.0,
-      "tree_count": 1600, "rock_count": 420,
+      "tree_count": 1400, "rock_count": 380,
+      "grass_detail_count": 900, "bush_detail_count": 220,
+      "mushroom_count": 90, "fallen_log_count": 20,
+      "pebble_count": 340, "flower_count": 120,
       "grade_brightness": 0.96, "grade_contrast": 1.12, "grade_saturation": 0.84,
       "vignette_strength": 0.10,
       "msaa": 0, "render_scale": 1.0
@@ -31,7 +34,10 @@
     "medio": {
       "shadows": false, "shadow_size": 1024, "shadow_distance": 30.0,
       "fog_density": 0.032, "view_distance": 70.0,
-      "tree_count": 950, "rock_count": 240,
+      "tree_count": 850, "rock_count": 220,
+      "grass_detail_count": 1100, "bush_detail_count": 220,
+      "mushroom_count": 120, "fallen_log_count": 22,
+      "pebble_count": 360, "flower_count": 140,
       "grade_brightness": 0.95, "grade_contrast": 1.14, "grade_saturation": 0.82,
       "vignette_strength": 0.12,
       "msaa": 0, "render_scale": 1.0
@@ -39,7 +45,10 @@
     "baixo": {
       "shadows": false, "shadow_size": 512, "shadow_distance": 20.0,
       "fog_density": 0.048, "view_distance": 52.0,
-      "tree_count": 520, "rock_count": 140,
+      "tree_count": 460, "rock_count": 130,
+      "grass_detail_count": 390, "bush_detail_count": 90,
+      "mushroom_count": 38, "fallen_log_count": 10,
+      "pebble_count": 140, "flower_count": 48,
       "grade_brightness": 0.96, "grade_contrast": 1.10, "grade_saturation": 0.84,
       "vignette_strength": 0.08,
       "msaa": 0, "render_scale": 0.85

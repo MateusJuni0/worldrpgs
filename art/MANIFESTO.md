@@ -65,6 +65,10 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 | `ico_arma_cajado` | Cajado | `art/ui/icons/items/cajado.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
 | `ico_arma_adaga` | Adaga | `art/ui/icons/items/adaga.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
 | `ico_arma_machadao` | Machadão | `art/ui/icons/items/machadao.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_katana` | Katana — família | `art/ui/icons/items/katana.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_haste` | Haste — família | `art/ui/icons/items/haste.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_arco` | Arco — família | `art/ui/icons/items/arco.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_besta` | Besta — família | `art/ui/icons/items/besta.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
 | `ico_item_pocao_vida` | Poção de vida | `art/ui/icons/items/pocao-vida.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
 | `ico_magia_dardo` | Dardo (projéctil directo) | `art/ui/icons/spells/dardo.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
 | `ico_magia_ruina` | Ruína (dano de área) | `art/ui/icons/spells/ruina.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
@@ -108,21 +112,20 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 | `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 1254×1254 | Paladino | ✅ |
 | `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 1254×1254 | Feiticeiro | ✅ |
 
-**Total: 54 assets arquivados** — 32 conceitos · 20 ícones · fundo de menu · céu. Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+**Total: 58 assets arquivados** — 32 conceitos · 24 ícones · fundo de menu · céu. Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
-> **Proveniência:** os 43 assets históricos saíram do pipeline Nano Banana/Higgsfield registado nesta versão do manifesto. Os 11 ícones de armadura foram gerados pelo pipeline integrado `imagegen`, mantendo literalmente a mesma frase de estilo e um objecto por prompt; o prompt 07 conserva a reprodução exacta.
+> **Proveniência:** os 43 assets históricos saíram do pipeline Nano Banana/Higgsfield registado nesta versão do manifesto. Os 11 ícones de armadura foram gerados pelo pipeline integrado `imagegen`, mantendo literalmente a mesma frase de estilo e um objecto por prompt; o prompt 07 conserva a reprodução exacta. Em 01-08-2026, os quatro ícones de família que faltavam (`katana`, `haste`, `arco`, `besta`) foram gerados no Higgsfield CLI com `nano_banana_pro` 2K e passados por `image_background_remover` (12 créditos). Jobs de geração: `320f6c5d`, `9ac3ef8f`, `1e24e1e3`, `91d2599d`; remoção: `bcedb068`, `36fcf6b3`, `882cae89`, `871ef908`.
 >
-> **Ícones:** os históricos vivem a 2048²; as 11 armaduras vivem a 1254². As armaduras foram geradas sobre chroma key e passadas pelo helper `remove_chroma_key.py`: todas RGBA, alfa 0–255 e fundo realmente transparente. Ao importar no runtime, o limite continua **512²**; o manifesto regista a dimensão real da fonte.
+> **Ícones:** os históricos e as quatro novas famílias vivem a 2048²; as 11 armaduras vivem a 1254². As armaduras foram geradas sobre chroma key e passadas pelo helper `remove_chroma_key.py`; as quatro famílias novas passaram pelo removedor Higgsfield. As 15 imagens são RGBA, alfa 0–255 e têm os quatro cantos a alfa 0. Ao importar no runtime, o limite continua **512²**; o manifesto regista a dimensão real da fonte.
 >
-> **Auditoria do executor de arte, 01-08-2026:** o catálogo da Fatia 1 pede
-> `espada_recta`, `adaga`, `pesada_corte`, `cajado`, `escudo_medio` e as 11
-> peças acima. Os **16 ícones já existiam**, portanto não foram gerados
-> duplicados nem gastos créditos. Todos passaram a validação técnica: PNG RGBA,
-> alfa 0–255, quatro cantos a alfa 0 e silhueta inequívoca num contacto a
-> 64×64 px. `katana`, `haste`, `arco` e `besta` ficaram deliberadamente sem
-> ícone nesta passagem porque o catálogo marca `fatia_1: false`.
+> **Auditoria do executor de qualidade, 01-08-2026:** os 16 ícones da Fatia 1
+> (`espada_recta`, `adaga`, `pesada_corte`, `cajado`, `escudo_medio` e as 11
+> peças) já existiam e não foram duplicados. A instrução posterior de fechar as
+> **oito famílias de arma** acrescentou `katana`, `haste`, `arco` e `besta`,
+> mesmo marcadas `fatia_1: false`. As 20 imagens auditadas passaram a validação
+> técnica de PNG RGBA, alfa 0–255 e quatro cantos a alfa 0.
 
 
 ## Bestiário — as 7 raças do WP6 (fatia 2+)

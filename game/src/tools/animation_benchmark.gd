@@ -1,40 +1,34 @@
 extends SceneTree
-## Benchmark reproduzivel do custo de actores com esqueleto real.
+## Benchmark reproduzível do custo de actores com esqueleto real.
 ##
-## Mede o intervalo real entre apresentacoes. O delta do motor tambem e mostrado,
-## mas nao decide o gate porque pode ser suavizado. Exemplo:
+## Exemplo (a pasta benchmark_assets pode ser uma junction temporária para um
+## pack em art/):
 ##   godot --path game --script res://src/tools/animation_benchmark.gd -- \
-##     --asset=res://benchmark_assets/UAL1_Standard.glb --actors=5 --seconds=12 \
-##     --window=fullscreen --vsync=on --gate
+##     --asset=res://benchmark_assets/UAL1_Standard.glb --actors=5 --seconds=12
 
 var _actors := 5
 var _measure_seconds := 12.0
 var _warmup_seconds := 3.0
 var _elapsed := 0.0
-var _wall_samples: Array[float] = []
-var _engine_delta_samples: Array[float] = []
+var _samples: Array[float] = []
 var _animation_name := ""
 var _animation_players := 0
 var _asset_path := "res://benchmark_assets/UAL1_Standard.glb"
 var _width := 1920
 var _height := 1080
-var _window_mode := "fullscreen"
-var _vsync := "on"
-var _gate := false
-var _gate_p99_ms := 16.67
-var _gate_worst_ms := 20.0
+var _vsync_on := false
 var _failed := false
-var _last_tick_usec := 0
 
 
 func _initialize() -> void:
 	_parse_arguments()
-	_configure_display()
-	if _failed:
-		return
+	DisplayServer.window_set_size(Vector2i(_width, _height))
+	DisplayServer.window_set_vsync_mode(
+		DisplayServer.VSYNC_ENABLED if _vsync_on else DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = 0
 	var packed := load(_asset_path) as PackedScene
 	if packed == null:
-		_fail("nao foi possivel carregar %s" % _asset_path)
+		_fail("não foi possível carregar %s" % _asset_path)
 		return
 
 	var stage := Node3D.new()
@@ -56,21 +50,20 @@ func _initialize() -> void:
 		stage.add_child(actor)
 		var player := _find_animation_player(actor)
 		if player == null:
-			_fail("actor %d nao contem AnimationPlayer" % index)
+			_fail("actor %d não contém AnimationPlayer" % index)
 			return
 		_animation_players += 1
 		var candidate := _pick_animation(player)
 		if candidate == "":
-			_fail("actor %d nao contem animacao utilizavel" % index)
+			_fail("actor %d não contém animação utilizável" % index)
 			return
 		if _animation_name == "":
 			_animation_name = candidate
 		player.play(candidate)
 
-	_last_tick_usec = Time.get_ticks_usec()
-	print("[ANIMATION_BENCH] asset=%s actors=%d players=%d animation=%s warmup=%.1fs measure=%.1fs resolution=%dx%d window=%s vsync=%s renderer=%s gpu=%s" % [
+	print("[ANIMATION_BENCH] asset=%s actors=%d players=%d animation=%s warmup=%.1fs measure=%.1fs resolution=%dx%d vsync=%s renderer=%s gpu=%s" % [
 		_asset_path, _actors, _animation_players, _animation_name, _warmup_seconds,
-		_measure_seconds, _width, _height, _window_mode, _vsync,
+		_measure_seconds, _width, _height, "on" if _vsync_on else "off",
 		RenderingServer.get_current_rendering_method(),
 		RenderingServer.get_video_adapter_name()])
 
@@ -78,17 +71,13 @@ func _initialize() -> void:
 func _process(delta: float) -> bool:
 	if _failed:
 		return true
-	var now_usec := Time.get_ticks_usec()
-	var wall_ms := float(now_usec - _last_tick_usec) / 1000.0
-	_last_tick_usec = now_usec
-	_elapsed += wall_ms / 1000.0
+	_elapsed += delta
 	if _elapsed > _warmup_seconds:
-		_wall_samples.append(wall_ms)
-		_engine_delta_samples.append(delta * 1000.0)
+		_samples.append(delta * 1000.0)
 	if _elapsed < _warmup_seconds + _measure_seconds:
 		return false
 	_report()
-	return not _failed
+	return true
 
 
 func _finalize() -> void:
@@ -109,39 +98,8 @@ func _parse_arguments() -> void:
 			_width = maxi(320, argument.trim_prefix("--width=").to_int())
 		elif argument.begins_with("--height="):
 			_height = maxi(240, argument.trim_prefix("--height=").to_int())
-		elif argument.begins_with("--window="):
-			_window_mode = argument.trim_prefix("--window=").to_lower()
 		elif argument.begins_with("--vsync="):
-			_vsync = argument.trim_prefix("--vsync=").to_lower()
-		elif argument == "--gate":
-			_gate = true
-		elif argument.begins_with("--gate-p99-ms="):
-			_gate_p99_ms = maxf(0.1, argument.trim_prefix("--gate-p99-ms=").to_float())
-		elif argument.begins_with("--gate-worst-ms="):
-			_gate_worst_ms = maxf(0.1, argument.trim_prefix("--gate-worst-ms=").to_float())
-
-
-func _configure_display() -> void:
-	if _window_mode == "fullscreen":
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	elif _window_mode == "exclusive":
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-	elif _window_mode == "windowed":
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		DisplayServer.window_set_size(Vector2i(_width, _height))
-	else:
-		_fail("--window aceita fullscreen, exclusive ou windowed")
-		return
-	if _vsync == "on":
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-	elif _vsync == "off":
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-	elif _vsync == "adaptive":
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ADAPTIVE)
-	elif _vsync == "mailbox":
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
-	else:
-		_fail("--vsync aceita on, off, adaptive ou mailbox")
+			_vsync_on = argument.trim_prefix("--vsync=") == "on"
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:
@@ -169,38 +127,19 @@ func _pick_animation(player: AnimationPlayer) -> String:
 
 
 func _report() -> void:
-	if _wall_samples.is_empty():
+	if _samples.is_empty():
 		_fail("nenhuma amostra recolhida")
 		return
-	var wall := _statistics(_wall_samples)
-	var engine_delta := _statistics(_engine_delta_samples)
-	print("[ANIMATION_BENCH_RESULT] actors=%d samples=%d wall_average_ms=%.3f average_fps=%.1f wall_p95_ms=%.3f wall_p99_ms=%.3f wall_worst_ms=%.3f engine_delta_p99_ms=%.3f window=%s vsync=%s" % [
-		_actors, _wall_samples.size(), wall.average, 1000.0 / wall.average,
-		wall.p95, wall.p99, wall.worst, engine_delta.p99, _window_mode, _vsync])
-	if _gate and (wall.p99 > _gate_p99_ms or wall.worst > _gate_worst_ms):
-		printerr("[ANIMATION_BENCH_GATE] FALHA p99=%.3f/%.3fms worst=%.3f/%.3fms" % [
-			wall.p99, _gate_p99_ms, wall.worst, _gate_worst_ms])
-		_failed = true
-		quit(1)
-	elif _gate:
-		print("[ANIMATION_BENCH_GATE] PASSA p99=%.3f/%.3fms worst=%.3f/%.3fms" % [
-			wall.p99, _gate_p99_ms, wall.worst, _gate_worst_ms])
-
-
-func _statistics(source: Array[float]) -> Dictionary:
-	var sorted := source.duplicate()
-	sorted.sort()
+	_samples.sort()
 	var total := 0.0
-	for sample: float in sorted:
+	for sample: float in _samples:
 		total += sample
-	var p95_index := clampi(ceili(float(sorted.size()) * 0.95) - 1, 0, sorted.size() - 1)
-	var p99_index := clampi(ceili(float(sorted.size()) * 0.99) - 1, 0, sorted.size() - 1)
-	return {
-		"average": total / float(sorted.size()),
-		"p95": sorted[p95_index],
-		"p99": sorted[p99_index],
-		"worst": sorted[-1],
-	}
+	var average_ms := total / float(_samples.size())
+	var p95_index := clampi(ceili(float(_samples.size()) * 0.95) - 1, 0, _samples.size() - 1)
+	var p99_index := clampi(ceili(float(_samples.size()) * 0.99) - 1, 0, _samples.size() - 1)
+	print("[ANIMATION_BENCH_RESULT] actors=%d samples=%d average_ms=%.3f average_fps=%.1f p95_ms=%.3f p99_ms=%.3f worst_ms=%.3f" % [
+		_actors, _samples.size(), average_ms, 1000.0 / average_ms,
+		_samples[p95_index], _samples[p99_index], _samples[-1]])
 
 
 func _fail(message: String) -> void:

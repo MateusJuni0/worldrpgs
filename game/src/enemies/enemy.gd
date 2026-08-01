@@ -53,7 +53,7 @@ var _phase := 1
 var _patrol_points: Array[Vector3] = []
 var _patrol_index := 0
 
-var _visual: CharacterVisual
+var _visual: MonsterVisual
 var _palette: Dictionary = {}
 
 
@@ -105,63 +105,18 @@ func _build_body() -> void:
 	add_child(col)
 
 	# A malha e visual; a CapsuleShape3D acima continua a ser a unica colisao.
-	# Os tres inimigos reutilizam o mesmo esqueleto Quaternius e distinguem-se
-	# pela escala, cor de estado e silhueta exterior.
-	_visual = CharacterVisual.new()
+	# Os tres papeis usam criaturas CC0 distintas; escala e cor nao voltam a
+	# transformar um corpo humano despido num monstro.
+	_visual = MonsterVisual.new()
 	add_child(_visual)
-	_visual.setup(height, Color.WHITE, false)
-
-	if is_boss:
-		_dress_boss(height, body_radius)
+	# No preset médio a luz direccional já não desenha sombras, portanto esta
+	# flag não custa um passe. No alto conserva-se o contacto com o chão em vez
+	# de cortar qualidade silenciosamente.
+	_visual.setup(enemy_id, height, Color.WHITE, true)
 
 	collision_layer = 4
 	collision_mask = 1
 	add_to_group("enemies")
-
-
-## Silhueta de chefe: chifres, ombreiras e o machadao. Material proprio e escuro
-## que NAO muda com o estado — o corpo continua a ser o semaforo, a silhueta e
-## so identidade. Um chefe tem de se reconhecer em contraluz (regra souls).
-func _dress_boss(height: float, radius: float) -> void:
-	var dark := StandardMaterial3D.new()
-	dark.albedo_color = Color(0.16, 0.14, 0.13)
-	dark.roughness = 1.0
-	dark.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
-
-	for side in [-1.0, 1.0]:
-		var horn := MeshInstance3D.new()
-		var hm := BoxMesh.new()
-		hm.size = Vector3(0.16, 0.75, 0.16)
-		horn.mesh = hm
-		horn.position = Vector3(0.34 * side, height + 0.28, 0)
-		horn.rotation_degrees = Vector3(0, 0, -24.0 * side)
-		horn.material_override = dark
-		add_child(horn)
-
-		var pauldron := MeshInstance3D.new()
-		var pm := BoxMesh.new()
-		pm.size = Vector3(0.55, 0.28, 0.72)
-		pauldron.mesh = pm
-		pauldron.position = Vector3((radius + 0.18) * side, height * 0.78, 0)
-		pauldron.material_override = dark
-		add_child(pauldron)
-
-	var haft := MeshInstance3D.new()
-	var haft_m := BoxMesh.new()
-	haft_m.size = Vector3(0.12, 2.1, 0.12)
-	haft.mesh = haft_m
-	haft.position = Vector3(radius + 0.45, height * 0.55, 0.1)
-	haft.rotation_degrees = Vector3(0, 0, 12)
-	haft.material_override = dark
-	add_child(haft)
-
-	var head_blade := MeshInstance3D.new()
-	var blade_m := BoxMesh.new()
-	blade_m.size = Vector3(0.55, 0.6, 0.14)
-	head_blade.mesh = blade_m
-	head_blade.position = Vector3(radius + 0.68, height * 0.55 + 0.95, 0.1)
-	head_blade.material_override = dark
-	add_child(head_blade)
 
 
 func _make_patrol_route() -> void:
@@ -522,9 +477,10 @@ func full_reset() -> void:
 func _refresh_colour() -> void:
 	if _visual == null:
 		return
-	var key: String = "enemy_idle_default"
-	var custom := String(data.get("color_idle", ""))
-	var colour := Color(custom) if custom != "" else Color(String(_palette.get(key, "#8fa07a")))
+	# Os monstros ja trazem pele, couro e metal pintados na textura. O tom plano
+	# usado pelos antigos corpos-base escurecia todos esses materiais e apagava a
+	# leitura da silhueta. Branco preserva a arte; os estados continuam a tingir.
+	var colour := Color.WHITE
 
 	match state:
 		State.DEAD:
