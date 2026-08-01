@@ -50,6 +50,7 @@ var is_two_handed := false
 
 var camera: PlayerCamera
 var lock_on: LockOn
+var input_enabled := true
 
 # --- Ataque em curso ----------------------------------------------------------
 var _atk: Dictionary = {}
@@ -67,6 +68,11 @@ var _combo_index := 0
 # --- Esquiva ------------------------------------------------------------------
 var _dodge_dir := Vector3.FORWARD
 var _dodge_travelled := 0.0
+var _dodge_recovery_extra := 0
+var _load_can_dodge := true
+var _load_can_run := true
+var _load_can_sprint := true
+var _load_max_speed := 999.0
 
 # --- Magia --------------------------------------------------------------------
 var _cast_spell: Dictionary = {}
@@ -86,11 +92,12 @@ var _hitstun_frames := 0
 var _visual: CharacterVisual
 var _palette: Dictionary = {}
 var _frame := 0
+var _waking_up := false
 
 
 # --- Arranque -----------------------------------------------------------------
 
-func setup(p_class_id: String, palette: Dictionary) -> void:
+func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> void:
 	class_id = p_class_id
 	_palette = palette
 	attrs = GameData.class_attributes(class_id).duplicate()
@@ -126,11 +133,11 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
 	_buffer_life_parry = int(float(buf.get("parry_life_ms", 80)) * 0.06)
 
-	_build_body()
+	_build_body(body_id)
 	_build_children()
 
 
-func _build_body() -> void:
+func _build_body(body_id: String) -> void:
 	var cfg := GameData.section("player")
 	var height: float = cfg.get("capsule_height", 1.8)
 	var radius: float = cfg.get("capsule_radius", 0.35)
@@ -147,7 +154,7 @@ func _build_body() -> void:
 	# mede os mesmos 1,8 m e usa animacao sem root motion.
 	_visual = CharacterVisual.new()
 	add_child(_visual)
-	_visual.setup(height)
+	_visual.setup(height, Color.WHITE, true, body_id)
 
 	collision_layer = 2
 	collision_mask = 1
@@ -178,8 +185,11 @@ func _physics_process(delta: float) -> void:
 	state_frame += 1
 
 	if state != State.DEAD:
-		_read_input()
-		lock_on.tick(delta)
+		if input_enabled:
+			_read_input()
+			lock_on.tick(delta)
+		else:
+			_buffered = ""
 		stamina.tick(delta, state == State.BLOCK)
 		if _ability_cd > 0.0:
 			_ability_cd = maxf(0.0, _ability_cd - delta)
@@ -226,8 +236,6 @@ func _read_input() -> void:
 		_buffer("toggle_grip")
 	if Input.is_action_just_pressed("lock_on"):
 		lock_on.toggle()
-	if Input.is_action_just_pressed("next_spell"):
-		_cycle_spell()
 	if Input.is_action_just_pressed("loadout_next"):
 		_cycle_loadout(1)
 	if Input.is_action_just_pressed("loadout_prev"):
@@ -236,7 +244,7 @@ func _read_input() -> void:
 	# Space: toque = esquiva, segurar = sprint (spec/01-combate.md, tabela de comandos).
 	if Input.is_action_pressed("dodge_sprint"):
 		_space_held_frames += 1
-		if _space_held_frames > 9 and _move_input().length() > 0.1:
+		if _space_held_frames > 9 and _move_input().length() > 0.1 and _load_can_sprint:
 			_sprinting = true
 	else:
 		if _space_held_frames > 0 and _space_held_frames <= 9:
@@ -354,14 +362,15 @@ func _tick_locked(delta: float, total_frames: int) -> void:
 
 func _speed_for_mode() -> float:
 	var m := GameData.section("movement")
-	if _sprinting and stamina.can_act():
-		return m.get("sprint_speed", 7.0)
+	if _sprinting and stamina.can_act() and _load_can_sprint:
+		return minf(float(m.get("sprint_speed", 7.0)), _load_max_speed)
 	if is_instance_valid(lock_on.target):
 		var input := _move_input()
 		# Andar de lado ou para tras com alvo engatado e mais lento — e o strafe da spec.
 		if absf(input.x) > 0.3 or input.y > 0.3:
-			return m.get("strafe_speed", 4.0)
-	return m.get("run_speed", 5.0)
+			return minf(float(m.get("strafe_speed", 4.0)), _load_max_speed)
+	var free_speed: float = m.get("run_speed", 5.0) if _load_can_run else m.get("walk_speed", 3.0)
+	return minf(free_speed, _load_max_speed)
 
 
 var _step_accum := 0.0
@@ -412,7 +421,7 @@ func _facing() -> Vector3:
 # --- Esquiva ------------------------------------------------------------------
 
 func _start_dodge() -> void:
-	if not stamina.can_act():
+	if not stamina.can_act() or not _load_can_dodge:
 		return
 	var cfg := GameData.section("dodge")
 	if _fury_time > 0.0:
@@ -445,8 +454,12 @@ func _tick_dodge(delta: float) -> void:
 	velocity.x = _dodge_dir.x * (step / delta)
 	velocity.z = _dodge_dir.z * (step / delta)
 
-	if state_frame >= total:
+	if state_frame >= total + _dodge_recovery_extra:
 		_change_state(State.FREE)
+		return
+	if state_frame >= total:
+		velocity.x = move_toward(velocity.x, 0.0, delta * 40.0)
+		velocity.z = move_toward(velocity.z, 0.0, delta * 40.0)
 		return
 
 	# Cancelavel a partir de 0,45 s, em ataque leve / bloqueio / nova esquiva.
@@ -767,11 +780,53 @@ func _tick_meditating(delta: float) -> void:
 		mana = max_mana
 		_change_state(State.FREE)
 
-func _cycle_spell() -> void:
+func cycle_spell() -> void:
 	if favorite_spells.is_empty():
 		return
 	var i := favorite_spells.find(selected_spell)
 	selected_spell = favorite_spells[(i + 1) % favorite_spells.size()]
+
+
+# Compatibilidade com os testes de combate que exercitam a maquina por dentro.
+func _cycle_spell() -> void:
+	cycle_spell()
+
+
+func select_spell(spell_id: String) -> bool:
+	if not favorite_spells.has(spell_id):
+		return false
+	selected_spell = spell_id
+	return true
+
+
+func cast_selected_spell() -> bool:
+	if state != State.FREE:
+		return false
+	_buffer("cast")
+	return true
+
+
+func set_waking_up(enabled: bool) -> void:
+	_waking_up = enabled
+	input_enabled = not enabled
+	velocity = Vector3.ZERO
+
+
+func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
+	main_weapon = String(equipment.get("main", ""))
+	offhand_weapon = String(equipment.get("offhand", ""))
+	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	favorite_spells.clear()
+	for spell_value: Variant in equipment.get("spell_favorites", []):
+		favorite_spells.append(String(spell_value))
+	if not favorite_spells.has(selected_spell):
+		selected_spell = favorite_spells[0] if not favorite_spells.is_empty() else ""
+	_dodge_recovery_extra = int(load_profile.get("recovery_frames", 0))
+	_load_can_dodge = bool(load_profile.get("can_dodge", true))
+	_load_can_run = bool(load_profile.get("can_run", true))
+	_load_can_sprint = bool(load_profile.get("can_sprint", true))
+	_load_max_speed = float(load_profile.get("max_speed", 999.0))
+	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
 
 
 func _start_cast() -> void:
@@ -987,6 +1042,9 @@ func _refresh_colour() -> void:
 
 func _refresh_animation() -> void:
 	if _visual == null:
+		return
+	if _waking_up:
+		_visual.play_animation("Sitting_Idle")
 		return
 	match state:
 		State.DEAD:

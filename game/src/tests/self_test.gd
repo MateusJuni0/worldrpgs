@@ -40,11 +40,177 @@ func _ready() -> void:
 	_test_families_and_kits()
 	_test_equipment_catalogue()
 	_test_world_catalogue()
+	_test_game_shell_and_character_creation()
+	_test_opening_context()
+	_test_pause_contract()
+	_test_settings_contract()
+	_test_inventory_and_spell_wheel_contract()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
 	_test_save_migration()
+	_test_save_events_and_latest_checkpoint()
 	_report()
+
+
+# --- spec/64: menu inicial e criacao de personagem ---------------------------
+
+func _test_game_shell_and_character_creation() -> void:
+	_check(GameShell.CLASS_IDS.size() == 6,
+		"criacao: mostra exactamente as seis origens confirmadas")
+	for class_id: String in GameShell.CLASS_IDS:
+		_check(not GameData.class_attributes(class_id).is_empty(),
+			"criacao/%s: origem deriva atributos do catalogo" % class_id)
+		_check(not ((GameData.weapons.get("loadouts", {}) as Dictionary).get(
+			class_id, {}) as Dictionary).is_empty(),
+			"criacao/%s: origem deriva kit do catalogo" % class_id)
+		_check(not GameData.ability(class_id).is_empty(),
+			"criacao/%s: origem deriva habilidade do catalogo" % class_id)
+	var options: Dictionary = GameData.appearance.get("options", {}) as Dictionary
+	_check((options.get("body_id", []) as Array).size() == 2,
+		"criacao: corpo masculino e feminino estao disponiveis")
+	_check(ResourceLoader.exists(
+		"res://assets/models/characters/quaternius/Superhero_Female_FullBody.gltf"),
+		"criacao: modelo feminino Quaternius e importavel")
+	for key: String in ["skin_tone_id", "hair_id", "hair_color_id", "brows_id", "accent_id", "voice_id"]:
+		_check(not (options.get(key, []) as Array).is_empty(),
+			"criacao: eixo %s tem opcoes finitas" % key)
+	for good_name: String in ["A", "Ana Maria", "D'Ávila", "João-Luz", "Á".repeat(24)]:
+		_check(bool(GameShell.validate_character_name(good_name).get("valid")),
+			"criacao: nome valido '%s' passa" % good_name)
+	for bad_name: String in ["", "Ana  Maria", "Ana/../save", "<b>Ana</b>", "A".repeat(25), "Rico2"]:
+		_check(not bool(GameShell.validate_character_name(bad_name).get("valid")),
+			"criacao: nome inseguro '%s' falha" % bad_name)
+	var identity := {
+		"name": "Ari",
+		"appearance": (GameData.appearance.get("default", {}) as Dictionary).duplicate(true),
+	}
+	identity.appearance["body_id"] = "body_female"
+	var first := SaveSystem.create_save("profile-a", "warrior", identity)
+	var second := SaveSystem.create_save("profile-b", "warrior", identity)
+	_check(first.character.profile_id != second.character.profile_id
+		and first.character.identity.name == second.character.identity.name,
+		"criacao: nomes e origens repetidos conservam ids distintos")
+	_check(first.character.identity.appearance.body_id == "body_female",
+		"criacao: corpo feminino entra no estado atomico")
+
+
+func _test_opening_context() -> void:
+	var joined := " ".join(GameShell.OPENING_LINES)
+	for required: String in ["Brumal", "bruma", "orcs", "Toca", "Vorgar", "forasteiro"]:
+		_check(joined.contains(required),
+			"abertura: o contexto minimo conserva '%s'" % required)
+	var shell_source := FileAccess.get_file_as_string("res://src/ui/game_shell.gd")
+	_check(shell_source.contains("SaveSystem.new_game") and shell_source.contains("show_opening()"),
+		"abertura: novo jogo passa pelo prologo depois do save atomico")
+	var main_source := FileAccess.get_file_as_string("res://src/main.gd")
+	var player_source := FileAccess.get_file_as_string("res://src/player/player.gd")
+	_check(main_source.contains("REST_SPAWN_OFFSET")
+		and main_source.contains("CLAREIRA DE BRUMAL"),
+		"despertar: o corpo nasce ao lado da fogueira identificada")
+	_check(player_source.contains("Sitting_Idle") and player_source.contains("_waking_up"),
+		"despertar: a personagem acorda sentada antes de receber controlo")
+
+
+func _test_pause_contract() -> void:
+	_check(InputMap.has_action("pause_menu"),
+		"pausa: tem accao dedicada e remapeavel")
+	var events := InputMap.action_get_events("pause_menu")
+	_check(not events.is_empty() and events[0] is InputEventKey
+		and (events[0] as InputEventKey).physical_keycode == KEY_ESCAPE,
+		"pausa: Escape e a omissao visivel")
+	_check(GameShell.pause_world_for_mode(false),
+		"pausa: a solo para a arvore do mundo")
+	_check(not GameShell.pause_world_for_mode(true),
+		"pausa: em co-op o mundo continua")
+
+
+func _test_settings_contract() -> void:
+	var graphics_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/graphics.json"))
+	var graphics: Dictionary = graphics_value as Dictionary
+	var presets: Dictionary = graphics.get("presets", {}) as Dictionary
+	_check(presets.has("alto") and presets.has("medio") and presets.has("baixo"),
+		"configuracoes: alto, medio e baixo estao expostos")
+	_check(float((presets.get("baixo", {}) as Dictionary).get("render_scale", 1.0)) <
+		float((presets.get("medio", {}) as Dictionary).get("render_scale", 0.0)),
+		"configuracoes: baixo reduz de facto a resolucao 3D")
+	_check(SettingsSystem.control_value("mouse_sensitivity", 0.0) is float
+		and float(SettingsSystem.control_value("fov", 0.0)) >= 45.0,
+		"configuracoes: sensibilidade, inversao e campo de visao pertencem ao perfil")
+	for bus_name: String in SettingsSystem.AUDIO_BUSES:
+		_check(AudioServer.get_bus_index(bus_name) >= 0,
+			"configuracoes: canal de audio %s existe" % bus_name)
+	var declared_actions: Dictionary = GameData.controls.get("actions", {}) as Dictionary
+	_check(GameShell.ACTION_LABELS.size() == declared_actions.size(),
+		"configuracoes: todas as accoes declaradas aparecem no ecra")
+	var instruction_actions := GameShell.instruction_actions()
+	_check(instruction_actions.size() == declared_actions.size(),
+		"instrucoes: esquema unico cobre todas as accoes")
+	for action_name: String in declared_actions:
+		_check(GameShell.ACTION_LABELS.has(action_name),
+			"configuracoes: %s e remapeavel com nome legivel" % action_name)
+		_check(instruction_actions.count(action_name) == 1,
+			"instrucoes: %s aparece exactamente uma vez" % action_name)
+	var test_event := InputEventKey.new()
+	test_event.physical_keycode = KEY_F12
+	var original_parry_events := InputMap.action_get_events("parry")
+	InputMap.action_erase_events("parry")
+	InputMap.action_add_event("parry", test_event)
+	_check(SettingsSystem.find_conflict(test_event, "cast") == "parry",
+		"configuracoes: conflito diz qual e a outra accao")
+	_check(SettingsSystem.binding_label("parry", true).contains("F12"),
+		"configuracoes: texto consulta o mapa actual, nao a tecla de fabrica")
+	_check(GameShell.tutorial_tip_text("parry").contains("F12"),
+		"aprendizagem: dica contextual consulta a tecla actual")
+	_check(GameShell.LEARNING_TIP_IDS.size() == 5 and SettingsSystem.data.has("learning"),
+		"aprendizagem: cinco batidas podem ser desligadas e lembradas por perfil")
+	var encoded := SettingsSystem.encode_event(test_event)
+	var decoded := SettingsSystem.decode_event(encoded)
+	_check(decoded != null and SettingsSystem.events_match(test_event, decoded),
+		"configuracoes: remapeamento persiste fora do save da personagem")
+	InputMap.action_erase_events("parry")
+	for original_event: InputEvent in original_parry_events:
+		InputMap.action_add_event("parry", original_event)
+
+
+func _test_inventory_and_spell_wheel_contract() -> void:
+	_check(InputMap.has_action("inventory_menu"),
+		"mochila: tem accao dedicada e remapeavel")
+	var state := SaveSystem.create_save("inventory-test", "warrior")
+	var inventory: Dictionary = (state.character as Dictionary).inventory as Dictionary
+	var items: Dictionary = inventory.items as Dictionary
+	_check(int(items.get("arma:longsword", 0)) == 1
+		and int(items.get("arma:shield", 0)) == 1,
+		"mochila: o kit inicial existe como posse, nao apenas como loadout")
+	_check(int(items.get("armadura:couro_peitoral", 0)) == 1,
+		"mochila: armadura inicial entra no inventario sem limite")
+	var defaults: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"default_favorites", []) as Array
+	_check(state.character.progression.known_spells == defaults
+		and state.character.inventory.equipment.spell_favorites == defaults,
+		"roda: novo jogo conhece e equipa os tres favoritos da Fatia 1")
+	for index: int in 240:
+		items["material:prova_%03d" % index] = 999
+	inventory["items"] = items
+	state.character["inventory"] = inventory
+	InventorySystem.normalise_state(state)
+	_check((state.character.inventory.items as Dictionary).size() >= 244,
+		"mochila: 240 pilhas extra nao encontram limite de peso nem slots")
+	var before_load := InventorySystem.load_profile(state)
+	state.character.inventory.items["armadura:ferro_peitoral"] = 999
+	var after_load := InventorySystem.load_profile(state)
+	_check(is_equal_approx(float(before_load.weight), float(after_load.weight)),
+		"carga: objectos na mochila nao pesam; so o equipado conta")
+	_check(String(before_load["class"]) == "leve"
+		and int(before_load["recovery_frames"]) == 0,
+		"carga: kit declarado leve conserva recuperacao de esquiva")
+	_check(InventorySystem.MAX_SPELL_FAVORITES == 8,
+		"roda: capacidade fechada em oito favoritos")
+	var wheel_source := FileAccess.get_file_as_string("res://src/ui/spell_wheel.gd")
+	_check(not wheel_source.contains("Engine.time_scale =")
+		and not wheel_source.contains("get_tree().paused ="),
+		"roda: a interface nao abranda nem pausa o mundo")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------
@@ -567,6 +733,55 @@ func _test_save_migration() -> void:
 	_check(typeof(character.get("inventory")) == TYPE_DICTIONARY
 		and typeof((migrated.get("world", {}) as Dictionary).get("map")) == TYPE_DICTIONARY,
 		"save: migracao acrescenta campos novos com defaults")
+	_check(typeof((character.get("identity", {}) as Dictionary).get("appearance")) == TYPE_DICTIONARY,
+		"save v2: migracao acrescenta aparencia sem reabrir o criador")
+	_remove_save_artifacts(path)
+
+
+func _test_save_events_and_latest_checkpoint() -> void:
+	var path := "user://worldrpgs-self-test/events.json"
+	_remove_save_artifacts(path)
+	var previous_state := GameData.save_state_snapshot()
+	var previous_slot := SaveSystem.active_slot
+	var state := SaveSystem.create_save("events", "warrior")
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	progression["souls_held"] = 321
+	GameData.replace_save_state(state)
+	SaveSystem.active_slot = 91
+	var real_slot_path := SaveSystem.slot_path(91)
+	_remove_save_artifacts(real_slot_path)
+	_check(SaveSystem.commit_checkpoint("brumal", "toca_entrada", 91),
+		"autosave: descansar confirma zona e fogueira")
+	var after_rest := GameData.save_state_snapshot()
+	var checkpoint: Dictionary = ((after_rest.get("character", {}) as Dictionary).get(
+		"checkpoint", {}) as Dictionary)
+	_check(checkpoint.get("rest_point_id") == "toca_entrada",
+		"carregar: checkpoint guarda ID de descanso, nunca posicao livre")
+	_check(SaveSystem.commit_death("brumal", Vector3(4, 1, -8), 91),
+		"autosave: morte e sincronamente confirmada")
+	var after_death := GameData.save_state_snapshot()
+	var dead_character: Dictionary = after_death.get("character", {}) as Dictionary
+	var stain: Dictionary = ((dead_character.get("death", {}) as Dictionary).get(
+		"soul_stain", {}) as Dictionary)
+	_check(int((dead_character.get("progression", {}) as Dictionary).get("souls_held", -1)) == 0
+		and int(stain.get("amount", 0)) == 321,
+		"autosave: morte move almas para a mancha na mesma geracao")
+	_check(SaveSystem.commit_boss_defeat("vorgar", "boss:vorgar:0", 91),
+		"autosave: chefe publica mundo e recibo juntos")
+	var after_boss := GameData.save_state_snapshot()
+	_check(((after_boss.get("world", {}) as Dictionary).get("bosses_defeated", []) as Array).has("vorgar")
+		and (((after_boss.get("character", {}) as Dictionary).get("progression", {}) as Dictionary).get(
+			"applied_event_ids", []) as Array).has("boss:vorgar:0"),
+		"autosave: derrota de chefe e idempotente nos dois sacos")
+	var loaded := SaveSystem.load_slot(91)
+	var loaded_checkpoint: Dictionary = ((loaded.get("character", {}) as Dictionary).get(
+		"checkpoint", {}) as Dictionary)
+	_check(loaded_checkpoint.get("rest_point_id") == "toca_entrada",
+		"continuar: reabre o ultimo descanso mesmo depois da morte")
+	_remove_save_artifacts(real_slot_path)
+	SaveSystem.active_slot = previous_slot
+	GameData.replace_save_state(previous_state)
 	_remove_save_artifacts(path)
 
 

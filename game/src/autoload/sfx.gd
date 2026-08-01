@@ -17,11 +17,12 @@ var _rng := RandomNumberGenerator.new()
 func _ready() -> void:
 	for i in 4:
 		var f := AudioStreamPlayer.new()
-		f.bus = "Master"
+		f.bus = "Efeitos"
 		add_child(f)
 		_flat_pool.append(f)
 	for i in 12:
 		var p := AudioStreamPlayer3D.new()
+		p.bus = "Efeitos"
 		p.max_distance = 42.0
 		p.unit_size = 6.0
 		add_child(p)

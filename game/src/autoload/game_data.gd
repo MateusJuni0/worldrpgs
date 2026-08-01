@@ -24,6 +24,7 @@ var world: Dictionary = {}
 var progression: Dictionary = {}
 var named_catalog: Dictionary = {}
 var economy: Dictionary = {}
+var appearance: Dictionary = {}
 var ui_strings: Dictionary = {}
 var save_state: Dictionary = {}
 
@@ -46,6 +47,7 @@ func _ready() -> void:
 	progression = _load_json("progression.json")
 	named_catalog = _load_json("named_encounters.json")
 	economy = _load_json("economy.json")
+	appearance = _load_json("appearance.json")
 	ui_strings = _load_json("strings.pt.json")
 	_expand_enemy_catalog()
 	_build_input_map()
@@ -596,6 +598,10 @@ func _build_input_map() -> void:
 			var event := _event_from_binding(binding as Dictionary, action_name)
 			if event != null:
 				InputMap.action_add_event(action_name, event)
+
+
+func reset_input_map_to_defaults() -> void:
+	_build_input_map()
 
 
 func _event_from_binding(binding: Dictionary, action_name: String) -> InputEvent:

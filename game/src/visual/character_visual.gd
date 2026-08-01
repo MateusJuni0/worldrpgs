@@ -6,8 +6,10 @@ extends Node3D
 ## O GLB de animacao e a variante sem root motion: deslocar o actor continua a
 ## ser responsabilidade do CharacterBody3D e dos numeros de combate.
 
-const BODY_SCENE: PackedScene = preload(
-	"res://assets/models/characters/quaternius/Superhero_Male_FullBody.gltf")
+const BODY_PATHS := {
+	"body_male": "res://assets/models/characters/quaternius/Superhero_Male_FullBody.gltf",
+	"body_female": "res://assets/models/characters/quaternius/Superhero_Female_FullBody.gltf",
+}
 const ANIMATION_PATH := "res://assets/models/animations/quaternius/UAL1_Standard.glb"
 const SOURCE_HEIGHT := 1.819586
 
@@ -20,9 +22,14 @@ var _base_colours: Array[Color] = []
 var _current_animation := ""
 
 
-func setup(target_height: float, tint := Color.WHITE, casts_shadow := true) -> void:
+func setup(target_height: float, tint := Color.WHITE, casts_shadow := true,
+		body_id := "body_male") -> void:
 	name = "CharacterVisual"
-	var body := BODY_SCENE.instantiate()
+	var body_scene := load(String(BODY_PATHS.get(body_id, BODY_PATHS["body_male"]))) as PackedScene
+	if body_scene == null:
+		push_error("[CharacterVisual] Corpo desconhecido: %s" % body_id)
+		return
+	var body := body_scene.instantiate()
 	body.name = "Body"
 	# Os ficheiros Godot/UE chegam a olhar para +Z; o combate do projecto usa
 	# -Z como frente (a antiga capsula tinha o bico nesse eixo).

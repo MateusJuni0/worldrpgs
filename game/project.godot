@@ -16,7 +16,9 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 GameData="*res://src/autoload/game_data.gd"
 SaveSystem="*res://src/autoload/save_system.gd"
+InventorySystem="*res://src/autoload/inventory_system.gd"
 Bench="*res://src/autoload/bench.gd"
+SettingsSystem="*res://src/autoload/settings_system.gd"
 Sfx="*res://src/autoload/sfx.gd"
 
 [debug]

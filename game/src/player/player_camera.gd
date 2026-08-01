@@ -21,6 +21,8 @@ var lock_target: Node3D
 
 var _yaw := 0.0
 var _pitch := -0.22
+var _base_sensitivity := 0.0022
+var _invert_y := false
 var _arm: SpringArm3D
 var _camera: Camera3D
 
@@ -33,6 +35,7 @@ func _ready() -> void:
 	distance = cfg.get("distance", 4.0)
 	distance_locked_on = cfg.get("distance_locked_on", 4.8)
 	gamepad_look_radians_per_second = cfg.get("gamepad_look_radians_per_second", 2.5)
+	_base_sensitivity = sensitivity
 
 	_arm = SpringArm3D.new()
 	_arm.spring_length = distance
@@ -47,6 +50,8 @@ func _ready() -> void:
 	_camera.fov = float(cfg.get("fov", 55.0))
 	_camera.near = 0.08
 	_arm.add_child(_camera)
+	_apply_control_preferences()
+	SettingsSystem.controls_changed.connect(_apply_control_preferences)
 
 
 func set_view_distance(d: float) -> void:
@@ -57,7 +62,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mm := event as InputEventMouseMotion
 		_yaw -= mm.relative.x * sensitivity
-		_pitch = clampf(_pitch - mm.relative.y * sensitivity,
+		var vertical_sign := -1.0 if _invert_y else 1.0
+		_pitch = clampf(_pitch - mm.relative.y * sensitivity * vertical_sign,
 			deg_to_rad(MIN_PITCH), deg_to_rad(MAX_PITCH))
 
 
@@ -68,7 +74,8 @@ func _physics_process(delta: float) -> void:
 		var gamepad_look := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 		if gamepad_look.length_squared() > 0.01:
 			_yaw -= gamepad_look.x * gamepad_look_radians_per_second * delta
-			_pitch = clampf(_pitch - gamepad_look.y * gamepad_look_radians_per_second * delta,
+			var vertical_sign := -1.0 if _invert_y else 1.0
+			_pitch = clampf(_pitch - gamepad_look.y * gamepad_look_radians_per_second * delta * vertical_sign,
 				deg_to_rad(MIN_PITCH), deg_to_rad(MAX_PITCH))
 
 	var focus := target.global_position + Vector3.UP * follow_height
@@ -108,3 +115,11 @@ func right_flat() -> Vector3:
 
 func get_camera() -> Camera3D:
 	return _camera
+
+
+func _apply_control_preferences() -> void:
+	sensitivity = _base_sensitivity * float(SettingsSystem.control_value(
+		"mouse_sensitivity", 1.0))
+	_invert_y = bool(SettingsSystem.control_value("invert_y", false))
+	if is_instance_valid(_camera):
+		_camera.fov = float(SettingsSystem.control_value("fov", 55.0))
