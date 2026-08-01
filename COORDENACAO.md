@@ -41,6 +41,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Volta 1 | `spec/49-biomas.md` + `game/data/biomes.json` | Fable | 31-07 | ✅ entregue — PR #14 |
 | Volta 2 | `spec/50-racas.md` + `game/data/races.json` | Fable | 31-07 | ✅ entregue — PR #15 |
 | Volta 3 | `spec/51-familias.md` + `game/data/weapons.json`/`armor.json` | Fable | 31-07 | ✅ entregue — 8 famílias, 3 escudos, 9 slots, 6 kits, espólio do Rico |
+| Tarefa 4 | `spec/70`–`72` + alinhamento dos documentos antigos | Codex | 01-08 | 🔨 em curso — fechar lacunas de spec sem decidir `[TENSÃO]` |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
@@ -100,7 +101,10 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 67 | Codex | bestiário, ataques, espólio e almas (tarefa 3.2) |
 | 68 | Codex | armas, armaduras, estados, anéis e Assassino (tarefa 3.3) |
 | 69 | Codex | catálogo do mundo, travessias, círculos, atalhos e portas de história (tarefa 3.4) |
-| **69+** | **livre** | |
+| 70 | Codex | fecho dos sistemas de combate e gramática inimiga (tarefa 4.1–4.2) |
+| 71 | Codex | catálogo dos encontros nomeados (tarefa 4.4) |
+| 72 | Codex | catálogo de materiais, consumíveis e economia (tarefa 4.4) |
+| **73+** | **livre** | |
 
 ⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
 
