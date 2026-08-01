@@ -670,3 +670,26 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🔴 | ⭐ **O kit inicial existe nos dados e nunca chega ao jogador.** `weapons.json` tem `loadouts` e `armor.json` tem `pieces`; **nenhuma linha de código os concede**. Procurado: `starting_items`, `grant_starting`, `equip_starting` — nada | dono: agente `kit-e-morte` |
 | 🔴 | ⭐ **A 7.ª origem não existe.** O Mago do Mal está `[DECIDIDO]` (Mateus, 01-08) e `attributes.json` tem **seis** classes | dono: agente `mago-do-mal` |
 | 🟠 | ⚠️ **Alvos visuais gerados para a magia** em `art/concept/magia/` — dardo a sair do cajado, impacto, e a escola vermelha. São o alvo, não o asset | `art/concept/README.md` |
+---
+
+## 🧪 Kit inicial e morte repetida — prova desta árvore (01-08-2026)
+
+### Verdade encontrada
+
+- ✅ **O kit já está ligado no `main` recebido:** `SaveSystem.create_save()` materializa arma, offhand e peças; `InventorySystem.normalise_current()` completa frasco, favoritos e ranhuras ao entrar no mundo. A cena nova provou as seis origens e, no jogo real, o Assassino com duas adagas, magia e frasco visíveis.
+- ✅ **Não foi reproduzido defeito em `main.gd:311–333`:** duas mortes consecutivas completam o fade, regressam ao lado da fogueira em vez do ponto da queda, repõem vida/frascos, reactivam o inimigo derrotado e gravam uma segunda sequência. O guarda `_respawning` é libertado.
+
+### As quatro perguntas do fio solto
+
+1. **Como usa o jogador:** entra no mundo com o kit já equipado; `loadout_next`, `loadout_prev`, `next_spell` e `use_item`, todos remapeáveis, operam as quatro ranhuras existentes.
+2. **Como se prova:** `game/src/tests/kit_respawn_integration.tscn` executa 55 verificações sobre as seis origens e duas mortes reais; 55/55 passaram.
+3. **De onde vêm arte e som:** a prova reutiliza a caixa existente, modelos CC0 já importados e os sons sintetizados já carregados pelo jogo; não acrescenta arte, áudio ou binário.
+4. **Quanto custa na máquina do Rico:** zero custo no runtime, porque esta árvore só acrescenta a cena de teste. Não houve mudança de render, logo não se atribui nem inventa um delta de FPS.
+
+### Ligação que pertence ao dono de `game/VERIFICAR.bat`
+
+| Estado | Trabalho fora desta árvore | Alteração exacta |
+|---|---|---|
+| 🔴 | **Incluir a cena nova no corredor obrigatório.** A posse desta árvore permite `game/src/tests/`, mas proíbe alterar `game/VERIFICAR.bat`; por isso a ordem “um teste que ninguém corre não é um teste” fica aberta para integração. | Em `game/VERIFICAR.bat:49`, antes da guarda da spec, acrescentar `"%GODOT%" --headless --audio-driver Dummy --path . src/tests/kit_respawn_integration.tscn || set FALHOU=1`; mudar os seis rótulos `N/6` para `N/7` e a guarda actual de `6/6` para `7/7`. |
+| 🟠 | **A guarda encontra uma `[TENSÃO]` sem registo no índice de perguntas.** Esta árvore não possui a spec e não decide a tensão. | O dono de `spec/75-artes-de-arma-e-movesets.md` deve referir a tensão em `spec/99-perguntas-abertas.md`, preservando proposta, razão e alternativa até decisão do Mateus. |
+| 🟠 | **As cenas que instanciam `Gameplay` deixam instâncias Godot no fecho headless.** A cena anterior `repro-inicio.tscn` termina verde com `10 ObjectDB instances were leaked`; a nova reduz para 6 depois de esperar a libertação do mundo/áudio, mas não elimina a dívida. Não altera o resultado dos testes. | O dono do ciclo de vida de `main.gd`/visuais/áudio deve localizar as seis instâncias com uma sonda dedicada; não esconder o aviso nem libertar nós de jogo a partir do teste. |
