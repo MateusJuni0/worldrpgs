@@ -1,0 +1,19 @@
+{
+  "date": "2026-08-01",
+  "machine": "Intel Iris Xe integrada, 1920x1080",
+  "renderer": "Godot 4.7.1, Mobile/Vulkan, VSync desligado",
+  "scene": "prova isolada idêntica, cinco actores animados, duas luzes sem sombra e chão; 4 s de aquecimento + 12 s úteis",
+  "background_state": "sete instâncias headless de selftest de outros agentes estavam activas; não havia outro processo Godot com renderer durante os quatro ensaios",
+  "runs": [
+    {"order":1,"implementation":"monster","avg_fps":437.1,"p95_frame_ms":3.719,"p99_frame_ms":4.996,"worst_frame_ms":6.045,"draw_calls":17,"primitives":17340,"video_mem_mb":72.3},
+    {"order":2,"implementation":"current","avg_fps":452.7,"p95_frame_ms":3.514,"p99_frame_ms":4.609,"worst_frame_ms":5.929,"draw_calls":29,"primitives":17964,"video_mem_mb":71.7},
+    {"order":3,"implementation":"current","avg_fps":422.0,"p95_frame_ms":4.002,"p99_frame_ms":5.129,"worst_frame_ms":6.281,"draw_calls":29,"primitives":17964,"video_mem_mb":73.0},
+    {"order":4,"implementation":"monster","avg_fps":437.3,"p95_frame_ms":3.768,"p99_frame_ms":4.936,"worst_frame_ms":5.441,"draw_calls":17,"primitives":17340,"video_mem_mb":71.8}
+  ],
+  "paired_average": {
+    "current": {"avg_fps":437.4,"p95_frame_ms":3.758,"p99_frame_ms":4.869,"draw_calls":29,"primitives":17964,"video_mem_mb":72.4},
+    "monster": {"avg_fps":437.2,"p95_frame_ms":3.744,"p99_frame_ms":4.966,"draw_calls":17,"primitives":17340,"video_mem_mb":72.1},
+    "monster_minus_current": {"avg_fps":-0.2,"p95_frame_ms":-0.014,"p99_frame_ms":0.097,"draw_calls":-12,"primitives":-624,"video_mem_mb":-0.3}
+  },
+  "verdict": "Custo isolado indistinguível do ruído de ordem: média igual e +0,097 ms no p99; a superfície combinada reduz 12 draw calls e 624 primitivas. A arena integrada continua por medir depois de o dono de enemy.gd ligar MonsterVisual."
+}
