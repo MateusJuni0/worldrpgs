@@ -118,7 +118,7 @@ Isso transforma a ressurreição naquilo que deve ser: **uma jogada, não um bot
 - **As almas do morto:** ver a matriz dos quatro casos abaixo — está toda definida
 - **Itens largados** `[DECIDIDO]` (31-07): além das almas, quem morre larga itens que o parceiro pode apanhar. O corpo passa a ser um **sítio de decisão** — arriscar os 5–7 s para ressuscitar, ou pegar no que caiu e continuar sozinho? Ver [`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §3
 - **A barra do minuto** vê-se? `[CLAUDE]` propõe: o morto vê o tempo dele; o parceiro vê um indicador no corpo
-- **O chefe reage ao ressuscitador?** É o alvo natural durante os 5 s — decisão do WP7
+- **O chefe reage ao ressuscitador?** É o alvo natural durante os **5–7 s** — decisão do WP7
 
 ### Os quatro casos das almas `[DECIDIDO]` (Mateus, 31-07-2026)
 

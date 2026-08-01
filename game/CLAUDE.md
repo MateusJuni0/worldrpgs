@@ -36,7 +36,7 @@ Quando construir revelar que um número da spec não funciona — **e vai revela
 ## Antes de dizer que está feito
 
 ```bash
-# auto-teste corrente: 8434 verificações contra a spec e os catálogos
+# auto-teste corrente: 8435 verificações contra a spec e os catálogos
 godot --headless --path . scenes/selftest.tscn
 ```
 

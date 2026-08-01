@@ -5,6 +5,8 @@ O núcleo do jogo. É aqui que o pilar "habilidade acima de nível" vive ou morr
 > **WP1 · reescrito pelo Fable** (31-07-2026). Tudo o que era `[EM ABERTO]` neste documento tem agora um número. **Todos os números são pontos de partida `[FABLE]`**, escritos para o protótipo de combate os validar (marco 2 do plano de construção, WP15) — o que o protótipo desmentir, volta aqui e muda-se **neste documento primeiro**. Fronteira com o WP1B (`spec/25-controlo.md`, do Claude): este documento define **o que as acções fazem e quando**; o WP1B define **como se sentem** — câmara, guarda de entrada (*input buffer*), orçamento de latência, paragem de impacto. Nada aqui duplica isso.
 >
 > ⚠️ **Autoridade posterior de magia:** o [`54`](54-mana-meditacao-e-tracos-de-classe.md) revogou cargas/slots. Feitiços e artes gastam **mana**, paga no arranque; não há regeneração passiva; o [`66`](66-catalogo-de-magia.md) fecha meditação e catálogo.
+>
+> ⚠️ **Autoridade posterior de combate:** o [`70`](70-fecho-dos-sistemas-de-combate.md) substitui os números que corrigiu neste retrato, incluindo parry **8/8/40**, curvas por atributo, carga, queda e NG+. Os valores já reconciliados abaixo repetem esse contrato; em divergência futura, manda o `70` + `game/data/`.
 
 ## O que eles decidiram
 
@@ -88,7 +90,7 @@ Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunt
 
 | Parâmetro | Valor |
 |---|---|
-| Arranque | 4 f (0,067 s) |
+| Arranque | **8 f (0,133 s)** |
 | **Janela activa** | **8 f (0,133 s)** |
 | Falhou | 40 f (0,667 s) exposto, sem defesa |
 | Custo | 10 stamina (na tentativa, acerte ou falhe) |
@@ -97,7 +99,7 @@ Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunt
 
 **O que se apara:** o WP6 marca cada ataque inimigo como `aparável` ou `só esquiva` (projécteis grandes, agarrões e pancadas de área não se aparam — a esquiva cobre-os). O brutamontes é o professor: todos os golpes dele são aparáveis e lentos.
 
-*Teste da Lei 1:* risco e recompensa puros — 133 ms de janela contra 667 ms de castigo. Não escala com nada: o parry do nível 1 é o parry do nível 100. Um jogador excelente mata o Vorgar à base de parry sem gastar um ponto. A janela é generosa de propósito no arranque (Dark Souls anda pelos 100–167 ms); **aperta-se no protótipo se for trivial** — nunca por nível. ✅
+*Teste da Lei 1:* 133 ms de antecipação + 133 ms de janela contra 667 ms de recuperação exposta. Não escala com nada: o parry do nível 1 é o parry do nível 100. Um jogador excelente mata o Vorgar à base de parry sem gastar um ponto. O arranque de 8 f impede aparar só por reacção ao contacto; a janela activa conserva-se — nunca se altera por nível. ✅
 
 ## Bloqueio
 
@@ -188,7 +190,7 @@ Formaliza o provisório da fatia 1 ([`10-fatia-1.md`](10-fatia-1.md)):
 - Renasces no **último ponto de descanso**; em Brumal, a entrada e a boca da Toca são os primeiros pontos disponíveis. O contrato completo vive no [`33`](33-morte-e-almas.md).
 - ⚠️ **ACTUALIZADO:** ~~não se perde nada~~ → **perdem-se as almas**, que ficam no sítio onde se morreu. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md), que substitui esta linha. Vida, stamina, mana e tentativas de meditação são restauradas; inimigos normais renascem; o chefe faz reset total.
 - Morrer no Vorgar → nova tentativa em **< 30 s**, também em co-op (critério 4 da fatia).
-- ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro fica 5 s em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4. Se a janela acabar, renasce no último descanso e a mancha conserva as almas; a escala de PV do chefe continua a `[TENSÃO]` da pergunta 24.
+- ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro canaliza **5–7 s** em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4 e [`34`](34-catalogo-e-comandos.md) §3. Se a janela acabar, renasce no último descanso e a mancha conserva as almas; a escala de PV do chefe continua a `[TENSÃO]` da pergunta 24.
 
 A **pergunta 10 está decidida**: a morte larga as almas numa mancha e uma segunda morte antes da recolha substitui-a. O [`33`](33-morte-e-almas.md) manda no desenho e o [`59`](59-saves.md) na persistência atómica.
 

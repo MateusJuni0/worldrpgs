@@ -84,7 +84,7 @@
 | ✅ | ~~⭐ **`GameplayCue` + renderer e migração**~~ **RESOLVIDO 01-08** — faixa/área, glifo no mundo, bordo fora do ecrã, cancelamento 0,15 s e cinco perfis sonoros | [`67`](spec/67-catalogo-do-bestiario.md) §7 |
 | ✅ | ~~**Massa de cada inimigo**~~ **RESOLVIDO 01-08** — 33 comuns + Vorgar, em kg, validada positiva | [`67`](spec/67-catalogo-do-bestiario.md) §3 |
 | ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
-| ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 8434 testes correntes |
+| ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 8435 testes correntes |
 | ✅ | ~~**Resolver os IDs de materiais e consumíveis dos cartões**~~ **RESOLVIDO NA TAREFA 4** — 40 materiais; os 17 tokens antigos eram 15 objectos + Brasa ilegal + grafia acentuada duplicada, ambos corrigidos | [`72`](spec/72-materiais-consumiveis-e-economia.md) §§2–3 |
 | 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
 
@@ -189,7 +189,7 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 |---|---|---|
 | ✅ | ~~*"do 70 ao 100 custa 3× tudo o que gastaste do 1 ao 70"*~~ **ERRO MEU, CORRIGIDO** — somei só o termo cúbico e ignorei `3,06N²` e `105,6N`, que pesam mais nos níveis baixos. **A conta certa é 1,92×** (680 663 contra 1 308 518). Refiz-a e confirma | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §2 |
 | ✅ | ~~⭐ **Meditação infinita + artes a gastar “energia” revogada**~~ **RESOLVIDO 01-08** — 2 tentativas por descanso, consumidas ao sentar; 40 s/100% preservados por serem decisão dos donos; interrupção guarda o parcial; artes gastam mana | [`66`](spec/66-catalogo-de-magia.md) §3 · runtime testado |
-| ✅ | ~~⭐ **Uma mão / duas mãos não tinha comando nem estado**~~ **RESOLVIDO NA TAREFA 4** — `T`/`Y`, estado próprio de 12 f interrompível, offhand recolhido e arte seleccionada pela empunhadura | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §2 · 8434 testes correntes |
+| ✅ | ~~⭐ **Uma mão / duas mãos não tinha comando nem estado**~~ **RESOLVIDO NA TAREFA 4** — `T`/`Y`, estado próprio de 12 f interrompível, offhand recolhido e arte seleccionada pela empunhadura | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §2 · 8435 testes correntes |
 | ✅ | ~~⭐ **8 favoritos mudáveis a qualquer momento**~~ **RESOLVIDO NO CONTRATO 01-08** — só mudam fora de combate/no descanso; a UI que aplica a regra está registada acima como construção em falta | [`66`](spec/66-catalogo-de-magia.md) §3 |
 | ✅ | ~~⚠️ **Parry com 4 frames de arranque**~~ **CORRIGIDO** — baseline executável **8/8/40**, falha total 56 f | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
 | ✅ | ~~⚠️ **Soft cap de 40 em tudo**~~ **CORRIGIDO** — Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
@@ -251,7 +251,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ✅ | ~~**Música e ambiente**~~ **ESCRITO 01-08** — inventário real, mapa de uso, estados/transições, camadas, buses, ducking e prova; produção em falta fica vermelha acima | [`65`](spec/65-musica-e-ambiente.md) |
 | ✅ | ~~⭐ **Acessibilidade auditiva**~~ **ESCRITA 01-08** — cada tipo de som informativo tem equivalente próprio de forma/direcção/timing; sem legendas genéricas e com ficha de ataque alterada já | [`62`](spec/62-acessibilidade-auditiva.md) |
 | ✅ | ~~**Onde vivem os textos**~~ — `strings.<locale>.json` por ID estável; HUD/toasts já consomem português e IDs obrigatórios falham o teste | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §4 · `strings.pt.json` |
-| ✅ | ~~**Comando / gamepad**~~ — todas as acções nucleares, incluindo câmara, têm teclado/rato + botão/eixo, construídos do mesmo catálogo; conforto/deadzone esperam comando físico no M2 | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §5 · 8434 testes correntes |
+| ✅ | ~~**Comando / gamepad**~~ — todas as acções nucleares, incluindo câmara, têm teclado/rato + botão/eixo, construídos do mesmo catálogo; conforto/deadzone esperam comando físico no M2 | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §5 · 8435 testes correntes |
 | ⏳ | **Os vendedores morrem?** — não decidido pelo agente; morte pode destruir stock e é irreversível | pergunta 39 dos donos |
 | ✅ | ~~**Voz: Godot faz nativamente?**~~ — captura/microfone sim; Opus/AEC/jitter/transporte completos exigem integração e possível GDExtension nativa, com spike/licença no WP14 | [`56`](spec/56-voz-e-vendedores.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §6 |
 

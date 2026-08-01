@@ -8,7 +8,7 @@
 
 ## 1. ⭐ Porque é que isto vale mais do que parece
 
-**Temos 8434 auto-testes. Eles verificam que os números do código batem certo com os da spec.** É útil, e é estático.
+**Temos 8435 auto-testes. Eles verificam que os números do código batem certo com os da spec.** É útil, e é estático.
 
 ⚠️ **O que eles não conseguem verificar é se o jogo cumpre as leis.**
 

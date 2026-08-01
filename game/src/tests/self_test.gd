@@ -1069,6 +1069,12 @@ func _test_progression_closures() -> void:
 		and GameData.cycle_multipliers(7).is_equal_approx(Vector2(1.55, 1.30)),
 		"ciclos: NG+ separa PV/dano e soma +5%/+3% ate +7")
 	var resurrection: Dictionary = GameData.progression.get("coop_resurrection", {}) as Dictionary
+	var channel_range: Array = resurrection.get("channel_seconds_range", []) as Array
+	_check(channel_range.size() == 2
+		and absf(float(channel_range[0]) - 5.0) < 0.001
+		and absf(float(channel_range[1]) - 7.0) < 0.001
+		and absf(float(resurrection.get("window_seconds", 0.0)) - 60.0) < 0.001,
+		"co-op: ressurreicao canaliza 5-7 s dentro da janela de 60 s")
 	_check(int(resurrection.get("shared_uses_per_attempt_or_rest", 0)) == 1
 		and absf(float(resurrection.get("revived_health_fraction", 0.0)) - 0.50) < 0.001,
 		"co-op: uma ressurreicao partilhada por tentativa, a 50% de vida")

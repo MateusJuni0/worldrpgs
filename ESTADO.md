@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 5–23 inclusivos, **317 ms**, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8434 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 5–23 inclusivos, **317 ms**, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8435 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -35,7 +35,7 @@ O código está em [`game/`](game/) desde 31-07 (PR #13), com os 8 commits origi
 
 ```
 $ godot --headless --path game/ scenes/selftest.tscn
-=== 8434 passaram, 0 falharam ===
+=== 8435 passaram, 0 falharam ===
 ```
 
 ## 1b. ⭐ O que temos, em números
@@ -46,7 +46,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 |---|---|---|---|
 | Documentos de spec | **75** em `spec/` | — | — |
 | Código e dados | **18** ficheiros `.gd` · **17** catálogos JSON | — | — |
-| Testes | **8434, todos a passar** | — | — |
+| Testes | **8435, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
 | **Armaduras** | **68 peças** · 9 slots · 4 estados de carga · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8434 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8435 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -143,7 +143,7 @@ O [`70`](spec/70-fecho-dos-sistemas-de-combate.md) passa a ser a autoridade das 
 
 `T` ou `Y/triângulo` muda a empunhadura em 12 frames interrompíveis. `hook_pull` atravessa 40% do escudo e `slam` custa ×2,5 stamina de guarda no runtime. O bestiário liga ainda duas largadas, ramo de combo, falsa recuperação, castigo de cura, fingir morte e corpo duro a fichas concretas. Estes ramos avançados estão especificados e testados como dados; animação/IA completa e ressalto geométrico continuam construção M2 conhecida.
 
-Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8434/8434** testes passam no fecho corrente.
+Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8435/8435** testes passam no fecho corrente.
 
 ## 1n. ✅ Os vazios entre comuns, chefes e recompensa estão fechados
 
@@ -165,7 +165,7 @@ Também deixou de haver uma incógnita sem número na animação: UAL Standard e
 |---|---|
 | runtime dos sete golpes/estados/artes; 50 feitiços; favoritos; criador/save v2; directores/áudio; mundo/streaming/mapa | é produção M2/WP8/WP11/WP12/15, já com autoridade e prova de saída no `73`; construir tudo seria outra fase, não “fechar spec” |
 | retarget KayKit/Quaternius dentro do nível completo | o spike mediu o custo do esqueleto, mas não prova encaixe, IA, efeitos e duas perspectivas juntos |
-| `TuningRecorder` e três sessões de feel | 8434 testes provam coerência; não provam prazer nem confirmam os baselines |
+| `TuningRecorder` e três sessões de feel | 8435 testes provam coerência; não provam prazer nem confirmam os baselines |
 | identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
 | políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto, escudos elementais e o salto ~30→68 armaduras | perguntas 24, 28, 29, 32 e 35–44 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
 

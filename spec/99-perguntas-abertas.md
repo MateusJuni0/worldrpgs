@@ -118,19 +118,19 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 → [`02-personagem.md`](02-personagem.md), [`12-classes.md`](12-classes.md), [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md)
 
 ### 10. ~~O que acontece quando se morre?~~ ✅ RESPONDIDA
-`[DECIDIDO]` (Mateus, 31-07-2026) — **perdem-se as almas** (a moeda e a experiência ao mesmo tempo), que ficam no sítio onde se morreu; morrer outra vez antes de as apanhar perde-as de vez. Renasce-se no último ponto de descanso. **Em co-op**: ficas no mundo do parceiro e ele tem **1 minuto** para te ressuscitar, ficando **5 segundos** em cima do corpo. Detalhe em [`33-morte-e-almas.md`](33-morte-e-almas.md).
+`[DECIDIDO]` (Mateus, 31-07-2026) — **perdem-se as almas** (a moeda e a experiência ao mesmo tempo), que ficam no sítio onde se morreu; morrer outra vez antes de as apanhar perde-as de vez. Renasce-se no último ponto de descanso. **Em co-op**: ficas no mundo do parceiro e ele tem **1 minuto** para te ressuscitar, canalizando **5–7 segundos** em cima do corpo. Detalhe em [`33-morte-e-almas.md`](33-morte-e-almas.md) e [`34`](34-catalogo-e-comandos.md) §3.
 
 *(a pergunta original, para registo:)*
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
 
-**→ Contrato corrente:** renascimento no último descanso; almas numa mancha persistida atomicamente; segunda morte substitui-a; em co-op há 1 minuto para ressuscitar durante 5 s. O retry de chefe continua < 30 s. Ver [`33`](33-morte-e-almas.md) e [`59`](59-saves.md).
+**→ Contrato corrente:** renascimento no último descanso; almas numa mancha persistida atomicamente; segunda morte substitui-a; em co-op há 1 minuto para ressuscitar durante **5–7 s**. O retry de chefe continua < 30 s. Ver [`33`](33-morte-e-almas.md), [`34`](34-catalogo-e-comandos.md) §3 e [`59`](59-saves.md).
 → [`01-combate.md`](01-combate.md)
 
 ---
 
 ## 🟡 Precisam de resposta antes de construir
 
-11. **Números do combate** — *baseline canónico no [`70`](70-fecho-dos-sistemas-de-combate.md)* `[CODEX]`: esquiva 0,60 s com frames 5–23 inclusivos de invencibilidade (**317 ms**), parry **8/8/40**, stamina 100 e curvas próprias por atributo. O [`63`](63-como-se-afinam-os-numeros.md) fecha **como** se valida feel: baseline, ordem causal, um valor por A/B, três sessões e artefacto; i-frames/parry não são botões de dificuldade. Os números executáveis passam **8434 testes**, mas continuam ponto de partida até o `TuningRecorder` e o marco 2 os medirem a jogar. → [`70`](70-fecho-dos-sistemas-de-combate.md), [`28-testes.md`](28-testes.md)
+11. **Números do combate** — *baseline canónico no [`70`](70-fecho-dos-sistemas-de-combate.md)* `[CODEX]`: esquiva 0,60 s com frames 5–23 inclusivos de invencibilidade (**317 ms**), parry **8/8/40**, stamina 100 e curvas próprias por atributo. O [`63`](63-como-se-afinam-os-numeros.md) fecha **como** se valida feel: baseline, ordem causal, um valor por A/B, três sessões e artefacto; i-frames/parry não são botões de dificuldade. Os números executáveis passam **8435 testes**, mas continuam ponto de partida até o `TuningRecorder` e o marco 2 os medirem a jogar. → [`70`](70-fecho-dos-sistemas-de-combate.md), [`28-testes.md`](28-testes.md)
 12. **Vida e Constituição fazem o quê, cada um?** — *respondida no WP2* `[FABLE]`: Vida = PV (margem total), Constituição = defesa por golpe (dureza). E entraram Força/Destreza para os requisitos de arma que eles pediram (06:14). → [`11-formulas.md`](11-formulas.md)
 13. ~~**Hierarquia de chefes: 1+10+20+30 ou 1+30+20?**~~ ✅ **DECIDIDA 01-08** — a `[TENSÃO]` original do [`04`](04-inimigos-chefes.md) e a conta intermédia de 61 foram reclassificadas pelo Mateus no [`53`](53-chefes-ritmo-e-o-mago-forte.md): **13 chefes verdadeiros** (12 guardiões + Ultra), **12 subchefes** no mundo e **~36 nomeados** que reutilizam inimigos comuns. O [`61`](61-arenas-de-chefe.md) dá arena selada aos 13 verdadeiros e bolsa de combate fugível aos subchefes; não volta a transformar os nomeados em chefes de produção completa. → [`16-chefes.md`](16-chefes.md), [`53-chefes-ritmo-e-o-mago-forte.md`](53-chefes-ritmo-e-o-mago-forte.md)
 14. ~~**Existe armadura?**~~ ✅ **DECIDIDA pelo Mateus** — por peças, nove slots, carga leve/média/pesada e resistências por tipo; o peso muda recuperação/regen, **nunca os i-frames**. O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) fecha 68 peças. → [`33`](33-morte-e-almas.md), [`51`](51-familias.md)
