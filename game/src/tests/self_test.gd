@@ -42,6 +42,7 @@ func _ready() -> void:
 	_test_world_catalogue()
 	_test_game_shell_and_character_creation()
 	_test_pause_contract()
+	_test_settings_contract()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -103,6 +104,42 @@ func _test_pause_contract() -> void:
 		"pausa: a solo para a arvore do mundo")
 	_check(not GameShell.pause_world_for_mode(true),
 		"pausa: em co-op o mundo continua")
+
+
+func _test_settings_contract() -> void:
+	var graphics_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/graphics.json"))
+	var graphics: Dictionary = graphics_value as Dictionary
+	var presets: Dictionary = graphics.get("presets", {}) as Dictionary
+	_check(presets.has("alto") and presets.has("medio") and presets.has("baixo"),
+		"configuracoes: alto, medio e baixo estao expostos")
+	_check(float((presets.get("baixo", {}) as Dictionary).get("render_scale", 1.0)) <
+		float((presets.get("medio", {}) as Dictionary).get("render_scale", 0.0)),
+		"configuracoes: baixo reduz de facto a resolucao 3D")
+	_check(SettingsSystem.control_value("mouse_sensitivity", 0.0) is float
+		and float(SettingsSystem.control_value("fov", 0.0)) >= 45.0,
+		"configuracoes: sensibilidade, inversao e campo de visao pertencem ao perfil")
+	for bus_name: String in SettingsSystem.AUDIO_BUSES:
+		_check(AudioServer.get_bus_index(bus_name) >= 0,
+			"configuracoes: canal de audio %s existe" % bus_name)
+	var declared_actions: Dictionary = GameData.controls.get("actions", {}) as Dictionary
+	_check(GameShell.ACTION_LABELS.size() == declared_actions.size(),
+		"configuracoes: todas as accoes declaradas aparecem no ecra")
+	for action_name: String in declared_actions:
+		_check(GameShell.ACTION_LABELS.has(action_name),
+			"configuracoes: %s e remapeavel com nome legivel" % action_name)
+	var test_event := InputEventKey.new()
+	test_event.physical_keycode = KEY_F12
+	InputMap.action_add_event("parry", test_event)
+	_check(SettingsSystem.find_conflict(test_event, "cast") == "parry",
+		"configuracoes: conflito diz qual e a outra accao")
+	_check(SettingsSystem.binding_label("parry", true).contains("F12"),
+		"configuracoes: texto consulta o mapa actual, nao a tecla de fabrica")
+	var encoded := SettingsSystem.encode_event(test_event)
+	var decoded := SettingsSystem.decode_event(encoded)
+	_check(decoded != null and SettingsSystem.events_match(test_event, decoded),
+		"configuracoes: remapeamento persiste fora do save da personagem")
+	InputMap.action_erase_event("parry", test_event)
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

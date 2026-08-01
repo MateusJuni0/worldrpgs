@@ -23,6 +23,24 @@ const CLASS_ROLES := {
 	"berserker": ["Pressão bruta sem escudo.", "Troca segurança por avanço.", "Cada erro deixa uma recuperação longa."],
 	"paladin": ["Ferro e magia de raio.", "Muda o tipo de resposta sem ganhar dano grátis.", "Divide os atributos no arranque."],
 }
+const ACTION_LABELS := {
+	"move_forward": "Mover para a frente", "move_back": "Mover para trás",
+	"move_left": "Mover para a esquerda", "move_right": "Mover para a direita",
+	"look_left": "Câmara à esquerda", "look_right": "Câmara à direita",
+	"look_up": "Câmara para cima", "look_down": "Câmara para baixo",
+	"attack": "Ataque leve", "heavy_mod": "Ataque pesado (manter)",
+	"block": "Bloquear (manter)", "parry": "Aparar (tocar)",
+	"dodge_sprint": "Esquivar (tocar) / correr (manter)", "lock_on": "Fixar alvo",
+	"next_spell": "Magia seguinte / roda", "cast": "Conjurar", "meditate": "Meditar",
+	"use_item": "Usar item", "ability": "Habilidade de origem",
+	"toggle_grip": "Uma / duas mãos", "interact": "Interagir / descansar",
+	"hotbar_1": "Atalho 1", "hotbar_2": "Atalho 2", "hotbar_3": "Atalho 3",
+	"hotbar_4": "Atalho 4", "hotbar_5": "Atalho 5",
+	"loadout_next": "Equipamento seguinte", "loadout_prev": "Equipamento anterior",
+	"toggle_perf": "Mostrar FPS", "toggle_help": "Instruções", "toggle_mouse": "Libertar rato",
+	"reset_arena": "Reiniciar arena", "debug_class_next": "Classe de teste seguinte",
+	"pause_menu": "Pausa",
+}
 
 var _layer: CanvasLayer
 var _screen: Control
@@ -43,6 +61,19 @@ var _capture_screen := ""
 var _capture_frames := 0
 var _pause_layer: CanvasLayer
 var _pause_open := false
+var _settings_layer: CanvasLayer
+var _settings_root: Control
+var _settings_origin := "main"
+var _settings_tab := "graphics"
+var _settings_fps_label: Label
+var _settings_content: Control
+var _binding_action := ""
+var _binding_add_secondary := false
+var _binding_prompt: Control
+var _pending_binding_event: InputEvent
+var _pending_binding_action := ""
+var _pending_binding_add := false
+var _selected_control_action := ""
 
 
 func _ready() -> void:
@@ -52,7 +83,11 @@ func _ready() -> void:
 	if _capture_screen != "":
 		Bench.set_overlay_visible(false)
 	var measured_screen := Bench.scene_arg if Bench.is_benchmarking() else ""
-	if measured_screen == "ui-main" or _capture_screen == "main":
+	if measured_screen.begins_with("ui-settings") or _capture_screen.begins_with("settings"):
+		show_main_menu()
+		_settings_tab = _settings_variant(measured_screen if measured_screen != "" else _capture_screen)
+		_show_settings("main")
+	elif measured_screen == "ui-main" or _capture_screen == "main":
 		show_main_menu()
 	elif measured_screen == "ui-creation" or _capture_screen == "creation":
 		show_character_creation()
@@ -77,11 +112,30 @@ func _unhandled_input(_event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _input(event: InputEvent) -> void:
+	if _binding_action == "" or not event.is_pressed():
+		return
+	if event is InputEventKey and (event as InputEventKey).echo:
+		return
+	if event is InputEventKey and (event as InputEventKey).physical_keycode == KEY_ESCAPE:
+		_cancel_binding_capture()
+		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton \
+			or (event is InputEventJoypadMotion and absf(
+				(event as InputEventJoypadMotion).axis_value) >= 0.5):
+		_finish_binding_capture(event)
+		get_viewport().set_input_as_handled()
+
+
 func _process(_delta: float) -> void:
 	if _capture_screen == "":
 		return
 	_capture_frames += 1
-	if _capture_frames < 30:
+	# Os controlos criam a lista remapeavel no primeiro frame. Esperar tres
+	# segundos faz a captura mostrar o FPS sustentado, nao o custo unico de montagem.
+	var target_frames := 180 if _capture_screen.begins_with("settings") else 30
+	if _capture_frames < target_frames:
 		return
 	var directory := ProjectSettings.globalize_path("res://captures")
 	DirAccess.make_dir_recursive_absolute(directory)
@@ -142,7 +196,7 @@ func show_main_menu() -> void:
 	menu.add_child(new_button)
 
 	var settings_button := _menu_button("CONFIGURAÇÕES", "Gráficos, controlos e áudio")
-	settings_button.pressed.connect(_settings_placeholder)
+	settings_button.pressed.connect(_show_settings.bind("main"))
 	menu.add_child(settings_button)
 
 	var quit_button := _menu_button("SAIR", "Fechar o jogo")
@@ -191,7 +245,7 @@ func show_character_creation() -> void:
 	access.text = "ACESSIBILIDADE"
 	access.position = Vector2(1660, 22)
 	access.size = Vector2(220, 46)
-	access.pressed.connect(_settings_placeholder)
+	access.pressed.connect(_show_settings.bind("creation"))
 	_screen.add_child(access)
 
 	var left := _panel(Vector2(40, 92), Vector2(430, 870))
@@ -547,7 +601,7 @@ func _show_pause_menu() -> void:
 	menu.add_child(resume)
 	var settings := _menu_button("CONFIGURAÇÕES", "Gráficos, controlos e áudio")
 	settings.custom_minimum_size.x = 588
-	settings.pressed.connect(_settings_placeholder)
+	settings.pressed.connect(_show_settings.bind("pause"))
 	menu.add_child(settings)
 	var leave := _menu_button("SAIR PARA O MENU", "Guarda os eventos confirmados e abandona o mundo")
 	leave.custom_minimum_size.x = 588
@@ -591,14 +645,447 @@ static func pause_world_for_mode(is_coop: bool) -> bool:
 
 
 func _binding_label_for_ui(action_name: String) -> String:
-	var events := InputMap.action_get_events(action_name)
-	if events.is_empty():
-		return "?"
-	return (events[0] as InputEvent).as_text().replace(" (Physical)", "").to_upper()
+	return SettingsSystem.binding_label(action_name).to_upper()
+
+
+func _show_settings(origin: String) -> void:
+	if is_instance_valid(_settings_layer):
+		return
+	_settings_origin = origin
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_settings_layer = CanvasLayer.new()
+	_settings_layer.layer = 500
+	_settings_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_settings_layer)
+	_settings_root = Control.new()
+	_settings_root.theme = _theme
+	_settings_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_settings_layer.add_child(_settings_root)
+	var background := ColorRect.new()
+	background.color = Color("091217")
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_settings_root.add_child(background)
+	var title := Label.new()
+	title.text = "CONFIGURAÇÕES"
+	title.position = Vector2(48, 28)
+	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_color_override("font_color", Color("eadbb9"))
+	_settings_root.add_child(title)
+	var tabs := HBoxContainer.new()
+	tabs.position = Vector2(48, 92)
+	tabs.size = Vector2(1030, 58)
+	tabs.add_theme_constant_override("separation", 8)
+	_settings_root.add_child(tabs)
+	for tab_data: Array in [["graphics", "GRÁFICOS"], ["controls", "CONTROLOS"], ["audio", "ÁUDIO"]]:
+		var tab := Button.new()
+		tab.text = String(tab_data[1])
+		tab.custom_minimum_size = Vector2(230, 52)
+		tab.toggle_mode = true
+		tab.button_pressed = _settings_tab == String(tab_data[0])
+		tab.pressed.connect(_set_settings_tab.bind(String(tab_data[0])))
+		tabs.add_child(tab)
+	var close := Button.new()
+	close.text = "VOLTAR"
+	close.position = Vector2(1660, 30)
+	close.size = Vector2(210, 54)
+	close.pressed.connect(_close_settings)
+	_settings_root.add_child(close)
+	_settings_content = Panel.new()
+	_settings_content.position = Vector2(48, 170)
+	_settings_content.size = Vector2(1260, 850)
+	_settings_root.add_child(_settings_content)
+	var monitor := Panel.new()
+	monitor.position = Vector2(1330, 170)
+	monitor.size = Vector2(540, 850)
+	_settings_root.add_child(monitor)
+	_build_settings_monitor(monitor)
+	_build_settings_tab()
+	var timer := Timer.new()
+	timer.wait_time = 0.35
+	timer.autostart = true
+	timer.process_callback = Timer.TIMER_PROCESS_IDLE
+	timer.timeout.connect(_update_settings_fps)
+	_settings_root.add_child(timer)
+	_update_settings_fps()
+
+
+func _build_settings_monitor(panel: Panel) -> void:
+	var label := Label.new()
+	label.text = "LEI 4 · EFEITO AO VIVO"
+	label.position = Vector2(34, 34)
+	label.add_theme_font_size_override("font_size", 17)
+	label.add_theme_color_override("font_color", Color("d4b36f"))
+	panel.add_child(label)
+	_settings_fps_label = Label.new()
+	_settings_fps_label.position = Vector2(30, 88)
+	_settings_fps_label.size = Vector2(480, 108)
+	_settings_fps_label.add_theme_font_size_override("font_size", 36)
+	_settings_fps_label.add_theme_color_override("font_color", Color("9fc59f"))
+	panel.add_child(_settings_fps_label)
+	var explanation := RichTextLabel.new()
+	explanation.bbcode_enabled = true
+	explanation.position = Vector2(34, 226)
+	explanation.size = Vector2(472, 550)
+	explanation.add_theme_font_size_override("normal_font_size", 19)
+	explanation.add_theme_font_size_override("bold_font_size", 21)
+	panel.add_child(explanation)
+	var preset := _graphics_preset()
+	explanation.text = "[b]Preset activo: %s[/b]\n\nEscala 3D: %d%%\nDistância de visão: %d m\nÁrvores no próximo carregamento: %d\nSombras: %s\n\n[color=#d4b36f]BAIXO[/color] reduz a resolução 3D para 85%%, encurta a vista e corta sombras. A interface mantém a resolução nativa para continuar legível.\n\nAs alterações visuais aplicam-se já; densidade do cenário aplica-se ao próximo carregamento." % [
+		SettingsSystem.graphics_preset_name().to_upper(),
+		int(float(preset.get("render_scale", 1.0)) * 100.0),
+		int(preset.get("view_distance", 70)), int(preset.get("tree_count", 100)),
+		"sim" if bool(preset.get("shadows", false)) else "não",
+	]
+
+
+func _build_settings_tab() -> void:
+	match _settings_tab:
+		"controls": _build_controls_settings()
+		"audio": _build_audio_settings()
+		_: _build_graphics_settings()
+
+
+func _settings_heading(title: String, description: String) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.position = Vector2(34, 28)
+	box.size = Vector2(1192, 780)
+	box.add_theme_constant_override("separation", 12)
+	_settings_content.add_child(box)
+	var heading := Label.new()
+	heading.text = title
+	heading.add_theme_font_size_override("font_size", 28)
+	heading.add_theme_color_override("font_color", Color("eadbb9"))
+	box.add_child(heading)
+	var detail := Label.new()
+	detail.text = description
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail.custom_minimum_size = Vector2(1160, 52)
+	detail.add_theme_color_override("font_color", Color("96a3a4"))
+	box.add_child(detail)
+	return box
+
+
+func _build_graphics_settings() -> void:
+	var box := _settings_heading("GRÁFICOS",
+		"Escolhe desempenho com um botão. A alteração é visível sem reiniciar o jogo.")
+	var current := SettingsSystem.graphics_preset_name()
+	var presets: Dictionary = _graphics_catalogue().get("presets", {}) as Dictionary
+	for preset_name: String in ["alto", "medio", "baixo"]:
+		var preset: Dictionary = presets.get(preset_name, {}) as Dictionary
+		var button := Button.new()
+		button.text = "%s%s\n%d%% resolução 3D · vista %d m · %s" % [
+			"◆  " if current == preset_name else "", preset_name.to_upper(),
+			int(float(preset.get("render_scale", 1.0)) * 100.0),
+			int(preset.get("view_distance", 70)),
+			"sombras" if bool(preset.get("shadows", false)) else "sem sombras",
+		]
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.custom_minimum_size = Vector2(1120, 80)
+		button.pressed.connect(_select_graphics_preset.bind(preset_name))
+		box.add_child(button)
+	var graphics: Dictionary = SettingsSystem.data.get("graphics", {}) as Dictionary
+	var fullscreen := CheckButton.new()
+	fullscreen.text = "Ecrã inteiro"
+	fullscreen.button_pressed = bool(graphics.get("fullscreen", true))
+	fullscreen.toggled.connect(SettingsSystem.set_fullscreen)
+	box.add_child(fullscreen)
+	var show_fps := CheckButton.new()
+	show_fps.text = "Mostrar FPS durante o jogo"
+	show_fps.button_pressed = bool(graphics.get("show_fps", true))
+	show_fps.toggled.connect(SettingsSystem.set_show_fps)
+	box.add_child(show_fps)
+	var fps_row := HBoxContainer.new()
+	fps_row.add_theme_constant_override("separation", 18)
+	box.add_child(fps_row)
+	var fps_label := Label.new()
+	fps_label.text = "Limite de FPS"
+	fps_label.custom_minimum_size = Vector2(260, 48)
+	fps_row.add_child(fps_label)
+	var fps_option := OptionButton.new()
+	for limit: int in [30, 60, 120, 0]:
+		fps_option.add_item("Sem limite" if limit == 0 else str(limit), limit)
+		if int(graphics.get("fps_limit", 60)) == limit:
+			fps_option.select(fps_option.item_count - 1)
+	fps_option.item_selected.connect(_fps_limit_selected.bind(fps_option))
+	fps_row.add_child(fps_option)
+
+
+func _build_controls_settings() -> void:
+	var box := _settings_heading("CONTROLOS",
+		"Tudo é remapeável. Alterar conserva a ligação de comando; Adicionar permite uma segunda tecla.")
+	var preferences := HBoxContainer.new()
+	preferences.custom_minimum_size = Vector2(1120, 58)
+	preferences.add_theme_constant_override("separation", 12)
+	box.add_child(preferences)
+	var controls: Dictionary = SettingsSystem.data.get("controls", {}) as Dictionary
+	var sensitivity_label := Label.new()
+	sensitivity_label.text = "Sensibilidade"
+	sensitivity_label.custom_minimum_size.x = 126
+	preferences.add_child(sensitivity_label)
+	var sensitivity_slider := HSlider.new()
+	sensitivity_slider.min_value = 25
+	sensitivity_slider.max_value = 200
+	sensitivity_slider.step = 5
+	sensitivity_slider.value = float(controls.get("mouse_sensitivity", 1.0)) * 100.0
+	sensitivity_slider.custom_minimum_size.x = 190
+	preferences.add_child(sensitivity_slider)
+	var sensitivity_value := Label.new()
+	sensitivity_value.text = "%d%%" % int(sensitivity_slider.value)
+	sensitivity_value.custom_minimum_size.x = 58
+	preferences.add_child(sensitivity_value)
+	sensitivity_slider.value_changed.connect(_sensitivity_changed.bind(sensitivity_value))
+	var invert := CheckButton.new()
+	invert.text = "Inverter Y"
+	invert.button_pressed = bool(controls.get("invert_y", false))
+	invert.custom_minimum_size.x = 150
+	invert.toggled.connect(SettingsSystem.set_invert_y)
+	preferences.add_child(invert)
+	var fov_label := Label.new()
+	fov_label.text = "Campo de visão"
+	fov_label.custom_minimum_size.x = 142
+	preferences.add_child(fov_label)
+	var fov_slider := HSlider.new()
+	fov_slider.min_value = 45
+	fov_slider.max_value = 75
+	fov_slider.step = 1
+	fov_slider.value = float(controls.get("fov", 55.0))
+	fov_slider.custom_minimum_size.x = 180
+	preferences.add_child(fov_slider)
+	var fov_value := Label.new()
+	fov_value.text = "%d°" % int(fov_slider.value)
+	fov_value.custom_minimum_size.x = 55
+	preferences.add_child(fov_value)
+	fov_slider.value_changed.connect(_fov_changed.bind(fov_value))
+	var toolbar := HBoxContainer.new()
+	toolbar.custom_minimum_size = Vector2(1120, 48)
+	toolbar.add_theme_constant_override("separation", 8)
+	box.add_child(toolbar)
+	var reset := Button.new()
+	reset.text = "REPOR VALORES DE FÁBRICA"
+	reset.custom_minimum_size = Vector2(330, 48)
+	reset.pressed.connect(_reset_controls)
+	toolbar.add_child(reset)
+	var change := Button.new()
+	change.text = "ALTERAR SELECCIONADO"
+	change.custom_minimum_size = Vector2(270, 48)
+	change.pressed.connect(_start_selected_binding.bind(false))
+	toolbar.add_child(change)
+	var add := Button.new()
+	add.text = "+ SEGUNDA LIGAÇÃO"
+	add.custom_minimum_size = Vector2(250, 48)
+	add.pressed.connect(_start_selected_binding.bind(true))
+	toolbar.add_child(add)
+	var list := Tree.new()
+	list.custom_minimum_size = Vector2(1170, 500)
+	list.columns = 2
+	list.column_titles_visible = true
+	list.set_column_title(0, "ACÇÃO")
+	list.set_column_title(1, "LIGAÇÕES ACTUAIS — selecciona uma linha para alterar")
+	list.set_column_custom_minimum_width(0, 390)
+	list.select_mode = Tree.SELECT_ROW
+	list.hide_root = true
+	box.add_child(list)
+	var root := list.create_item()
+	var action_names: Array = (GameData.controls.get("actions", {}) as Dictionary).keys()
+	action_names.sort_custom(func(a: Variant, b: Variant) -> bool:
+		return String(ACTION_LABELS.get(a, a)) < String(ACTION_LABELS.get(b, b)))
+	for action_value: Variant in action_names:
+		var action_name := String(action_value)
+		var item := list.create_item(root)
+		item.set_text(0, String(ACTION_LABELS.get(action_name,
+			action_name.replace("_", " ").capitalize())))
+		item.set_text(1, SettingsSystem.binding_label(action_name, true))
+		item.set_metadata(0, action_name)
+	_selected_control_action = String(action_names[0]) if not action_names.is_empty() else ""
+	if root.get_first_child() != null:
+		root.get_first_child().select(0)
+	list.item_selected.connect(_control_action_selected.bind(list))
+
+
+func _build_audio_settings() -> void:
+	var box := _settings_heading("ÁUDIO",
+		"Cada canal pode ir a zero. O equivalente visual de combate continua activo.")
+	var labels := {"Master": "Geral", "Musica": "Música", "Efeitos": "Efeitos",
+		"Ambiente": "Ambiente", "Vozes": "Vozes"}
+	var audio: Dictionary = SettingsSystem.data.get("audio", {}) as Dictionary
+	for bus_name: String in SettingsSystem.AUDIO_BUSES:
+		var row := HBoxContainer.new()
+		row.custom_minimum_size = Vector2(1120, 88)
+		row.add_theme_constant_override("separation", 20)
+		box.add_child(row)
+		var name_label := Label.new()
+		name_label.text = String(labels.get(bus_name, bus_name)).to_upper()
+		name_label.custom_minimum_size = Vector2(260, 60)
+		row.add_child(name_label)
+		var slider := HSlider.new()
+		slider.min_value = 0
+		slider.max_value = 100
+		slider.step = 1
+		slider.value = float(audio.get(bus_name, 1.0)) * 100.0
+		slider.custom_minimum_size = Vector2(680, 60)
+		row.add_child(slider)
+		var value_label := Label.new()
+		value_label.text = "%d%%" % int(slider.value)
+		value_label.custom_minimum_size = Vector2(100, 60)
+		row.add_child(value_label)
+		slider.value_changed.connect(_audio_value_changed.bind(bus_name, value_label))
+
+
+func _set_settings_tab(tab_name: String) -> void:
+	_settings_tab = tab_name
+	_rebuild_settings()
+
+
+func _rebuild_settings() -> void:
+	var origin := _settings_origin
+	if is_instance_valid(_settings_layer):
+		_settings_layer.free()
+	_settings_layer = null
+	_settings_root = null
+	_show_settings(origin)
+
+
+func _close_settings() -> void:
+	_cancel_binding_capture()
+	if is_instance_valid(_settings_layer):
+		_settings_layer.free()
+	_settings_layer = null
+	_settings_root = null
+	_settings_fps_label = null
+
+
+func _select_graphics_preset(preset_name: String) -> void:
+	SettingsSystem.set_graphics_preset(preset_name)
+	_rebuild_settings()
+
+
+func _fps_limit_selected(index: int, option: OptionButton) -> void:
+	SettingsSystem.set_fps_limit(option.get_item_id(index))
+
+
+func _audio_value_changed(value: float, bus_name: String, value_label: Label) -> void:
+	value_label.text = "%d%%" % int(value)
+	SettingsSystem.set_audio(bus_name, value / 100.0)
+
+
+func _sensitivity_changed(value: float, value_label: Label) -> void:
+	value_label.text = "%d%%" % int(value)
+	SettingsSystem.set_mouse_sensitivity(value / 100.0)
+
+
+func _fov_changed(value: float, value_label: Label) -> void:
+	value_label.text = "%d°" % int(value)
+	SettingsSystem.set_fov(value)
+
+
+func _control_action_selected(list: Tree) -> void:
+	var selected := list.get_selected()
+	if selected != null:
+		_selected_control_action = String(selected.get_metadata(0))
+
+
+func _start_selected_binding(add_secondary: bool) -> void:
+	if _selected_control_action != "":
+		_start_binding_capture(_selected_control_action, add_secondary)
+
+
+func _update_settings_fps() -> void:
+	if not is_instance_valid(_settings_fps_label):
+		return
+	var fps := Engine.get_frames_per_second()
+	_settings_fps_label.text = "%d FPS\n%.2f ms" % [fps, 1000.0 / maxf(float(fps), 1.0)]
+	_settings_fps_label.add_theme_color_override("font_color",
+		Color("9fc59f") if fps >= 60 else Color("db8d7c"))
+
+
+func _start_binding_capture(action_name: String, add_secondary: bool) -> void:
+	_binding_action = action_name
+	_binding_add_secondary = add_secondary
+	_binding_prompt = ColorRect.new()
+	(_binding_prompt as ColorRect).color = Color(0.0, 0.0, 0.0, 0.9)
+	_binding_prompt.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_settings_root.add_child(_binding_prompt)
+	var label := Label.new()
+	label.text = "PRIME A NOVA TECLA OU BOTÃO\n%s\n\nESCAPE cancela" % String(
+		ACTION_LABELS.get(action_name, action_name))
+	label.position = Vector2(560, 390)
+	label.size = Vector2(800, 300)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 28)
+	label.add_theme_color_override("font_color", Color("eadbb9"))
+	_binding_prompt.add_child(label)
+
+
+func _cancel_binding_capture() -> void:
+	_binding_action = ""
+	_binding_add_secondary = false
+	if is_instance_valid(_binding_prompt):
+		_binding_prompt.free()
+	_binding_prompt = null
+
+
+func _finish_binding_capture(event: InputEvent) -> void:
+	var action_name := _binding_action
+	var add_secondary := _binding_add_secondary
+	var conflict := SettingsSystem.find_conflict(event, action_name)
+	_cancel_binding_capture()
+	if conflict == "":
+		SettingsSystem.remap_action(action_name, event, add_secondary)
+		_rebuild_settings()
+		return
+	_pending_binding_event = event.duplicate()
+	_pending_binding_action = action_name
+	_pending_binding_add = add_secondary
+	var confirmation := ConfirmationDialog.new()
+	confirmation.title = "CONFLITO DE CONTROLO"
+	confirmation.dialog_text = "%s já usa %s. Retirar de %s e atribuir a %s?" % [
+		event.as_text().replace(" (Physical)", ""),
+		String(ACTION_LABELS.get(conflict, conflict)),
+		String(ACTION_LABELS.get(conflict, conflict)),
+		String(ACTION_LABELS.get(action_name, action_name)),
+	]
+	confirmation.min_size = Vector2i(720, 260)
+	confirmation.confirmed.connect(_confirm_pending_binding)
+	_settings_root.add_child(confirmation)
+	confirmation.popup_centered()
+
+
+func _confirm_pending_binding() -> void:
+	if _pending_binding_event == null or _pending_binding_action == "":
+		return
+	SettingsSystem.remap_action(_pending_binding_action, _pending_binding_event,
+		_pending_binding_add, true)
+	_pending_binding_event = null
+	_pending_binding_action = ""
+	_pending_binding_add = false
+	_rebuild_settings()
+
+
+func _reset_controls() -> void:
+	SettingsSystem.reset_controls()
+	_rebuild_settings()
+
+
+func _graphics_catalogue() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/graphics.json"))
+	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
+
+
+func _graphics_preset() -> Dictionary:
+	return ((_graphics_catalogue().get("presets", {}) as Dictionary).get(
+		SettingsSystem.graphics_preset_name(), {}) as Dictionary)
+
+
+func _settings_variant(value: String) -> String:
+	if value.contains("controls"):
+		return "controls"
+	if value.contains("audio"):
+		return "audio"
+	return "graphics"
 
 
 func _settings_placeholder() -> void:
-	_show_modal("CONFIGURAÇÕES", "O menu completo abre neste mesmo ecrã sem perder as escolhas.")
+	_show_settings("main")
 
 
 func _show_modal(title: String, message: String) -> void:

@@ -600,6 +600,10 @@ func _build_input_map() -> void:
 				InputMap.action_add_event(action_name, event)
 
 
+func reset_input_map_to_defaults() -> void:
+	_build_input_map()
+
+
 func _event_from_binding(binding: Dictionary, action_name: String) -> InputEvent:
 	match binding.get("type", ""):
 		"key":

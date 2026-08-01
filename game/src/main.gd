@@ -34,6 +34,7 @@ func _ready() -> void:
 	_build_player()
 	_build_hud()
 	_populate()
+	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
 
 	if "--photos" in OS.get_cmdline_user_args():
 		var tour: Node = load("res://src/tools/photo_tour.gd").new()
@@ -55,7 +56,7 @@ func _load_graphics() -> Dictionary:
 
 func _pick_preset() -> Dictionary:
 	var presets: Dictionary = _graphics.get("presets", {})
-	var name := String(_graphics.get("default", "medio"))
+	var name := SettingsSystem.graphics_preset_name()
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--quality="):
 			name = a.split("=")[1]
@@ -63,6 +64,35 @@ func _pick_preset() -> Dictionary:
 	p = p.duplicate()
 	p["_name"] = name
 	return p
+
+
+func _apply_graphics_live(preset_name: String) -> void:
+	var presets: Dictionary = _graphics.get("presets", {}) as Dictionary
+	var next: Dictionary = (presets.get(preset_name, {}) as Dictionary).duplicate(true)
+	if next.is_empty():
+		return
+	next["_name"] = preset_name
+	_preset = next
+	get_viewport().scaling_3d_scale = float(next.get("render_scale", 1.0))
+	if is_instance_valid(player) and player.camera != null:
+		player.camera.set_view_distance(float(next.get("view_distance", 70.0)))
+	var world_environment := world.get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if world_environment != null and world_environment.environment != null:
+		var environment := world_environment.environment
+		environment.fog_density = float(next.get("fog_density", 0.032))
+		environment.adjustment_brightness = float(next.get("grade_brightness", 0.95))
+		environment.adjustment_contrast = float(next.get("grade_contrast", 1.14))
+		environment.adjustment_saturation = float(next.get("grade_saturation", 0.82))
+	var sun := world.get_node_or_null("Sun") as DirectionalLight3D
+	if sun != null:
+		sun.shadow_enabled = bool(next.get("shadows", false))
+		sun.directional_shadow_max_distance = float(next.get("shadow_distance", 30.0))
+	var vignette := world.get_node_or_null("ScreenGrade/Vignette") as ColorRect
+	if vignette != null and vignette.material is ShaderMaterial:
+		(vignette.material as ShaderMaterial).set_shader_parameter(
+			"strength", float(next.get("vignette_strength", 0.12)))
+	if is_instance_valid(hud):
+		hud.toast("Gráficos: %s · efeito aplicado" % preset_name, 2.0)
 
 
 func _build_world() -> void:
@@ -335,10 +365,7 @@ func _rest_at(rest_id: String) -> void:
 
 
 func _binding_label(action_name: String) -> String:
-	var events := InputMap.action_get_events(action_name)
-	if events.is_empty():
-		return "?"
-	return (events[0] as InputEvent).as_text().replace(" (Physical)", "")
+	return SettingsSystem.binding_label(action_name)
 
 
 # --- Teclas de sessao ---------------------------------------------------------
@@ -385,6 +412,8 @@ func _process(delta: float) -> void:
 func _exit_tree() -> void:
 	if SaveSystem.save_completed.is_connected(_on_save_completed):
 		SaveSystem.save_completed.disconnect(_on_save_completed)
+	if SettingsSystem.graphics_changed.is_connected(_apply_graphics_live):
+		SettingsSystem.graphics_changed.disconnect(_apply_graphics_live)
 	if not GameData.save_state.is_empty():
 		SaveSystem.save_current()
 
