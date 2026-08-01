@@ -80,9 +80,10 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | ⚠️ **Desenho de arena de chefe** — tamanho, obstáculos, onde o jogador se refugia. **Sem cobertura nenhuma** | [`48`](spec/48-arcos-bestas-escudos.md) |
+| ✅ | ~~⚠️ **Desenho de arena de chefe**~~ **RESOLVIDO 01-08** — tamanho por camada, obstáculos/refúgios, duas rotas e perguntas SEPARAR/JUNTAR para co-op | [`61`](spec/61-arenas-de-chefe.md) |
 | 🟠 | **Um subchefe pode ser fugido de vez, ou reaparece?** | [`46`](spec/46-coerencia-bioma-raca-item.md) §6 |
-| 🟠 | **Arenas com precipícios** — quais, e como se sinaliza o bordo | [`36`](spec/36-fisica.md) §4 |
+| ✅ | ~~**Como se sinaliza um precipício**~~ **RESOLVIDO 01-08** — faixa ≥ empurrão máximo + 0,5 m, padrão sem depender de cor, silhueta, movimento e som redundante | [`61`](spec/61-arenas-de-chefe.md) §5 |
+| 🟠 | **As 12 fichas de arena depois de Vorgar** — 11 guardiões + Ultra; quais usam queda, obstáculos, SEPARAR/JUNTAR e prova em ambas as perspectivas | [`61`](spec/61-arenas-de-chefe.md) §7 |
 
 ### Volta 8 — sistemas
 
@@ -215,7 +216,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🔴 | ⭐ **A animação de esqueleto CONTINUA POR MEDIR** — é o único risco técnico real, aberto desde o [`44`](spec/44-prototipo.md) (*"cápsulas não são personagens animados"*). ⭐ **A ferramenta chegou:** a *Universal Animation Library* (CC0, esqueleto partilhado) está em `art/models/`. Falta pôr N personagens animados em cena e medir na Iris Xe. **Sem esse número, a folga de 6× do M1 é orçamento, não garantia** | fase 1.2, 01-08 |
 | 🔵 | **120 MB dos 410 são formatos que o Godot não usa** — `.fbx`, `.obj`, `.mtl`, `.stl`, `.dae`, duplicados do `.glb` que já lá está. Entraram porque a decisão foi *"tudo no repositório"*, e limpar depois obriga a reescrever a história. *Se algum dia se reescrever o histórico por outra razão, aproveita-se* | fase 1.2, 01-08 |
 | ⏳ | ~~⭐ **Onde vivem os modelos CC0: no repositório ou em `_local/`?**~~ ✅ **DECIDIDO 01-08 pelo Rico** — no repositório, com o custo à vista. Custo real medido: **410 MB** empacotados, 6451 ficheiros. *(registo do que era:)* O [`22`](spec/22-assets.md) diz que CC0 *pode* entrar, mas ninguém pesou o tamanho nem o facto de o git nunca esquecer. **É decisão dos donos** porque é praticamente irreversível: 1 pack Kenney ≈ 2–10 MB, mas o conjunto de personagens+animações+natureza+dungeon anda pelas **centenas de MB**, e um `git clone` passa a custar isso a toda a gente, para sempre. *Proposta: `art/models/` no repo só para o que o jogo carrega mesmo (poucos MB, optimizado), e os packs crus em `_local/`* | encontrado 01-08 |
-| 🟠 | ⭐ **Desenho de arena de chefe** | 13 chefes precisam de 13 arenas. Sem regras, saem 13 círculos vazios |
+| ✅ | ~~⭐ **Desenho de arena de chefe**~~ **ESCRITO 01-08** — 13 arenas seladas, bolsas abertas para subchefes, bordo legível, nevoeiro/carregamento e espaço desenhado para dois | [`61`](spec/61-arenas-de-chefe.md) |
 | ✅ | ~~O fim do jogo~~ **ESCRITO 01-08** — escolha final que **os dois têm de concordar**; estrutura fixada, conteúdo depende das 7 perguntas de narrativa | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | ✅ | ~~Ciclo novo (NG+)~~ **ESCRITO 01-08** — +40% no NG+, +8% por ciclo, ⚠️ **tecto no NG+7**. E a **Brasa** sobe UMA zona sem recomeçar o jogo | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | 🟠 | **Criação de personagem** | escolhe-se classe, e mais? Aspecto, nome, o primeiro ecrã do jogo |

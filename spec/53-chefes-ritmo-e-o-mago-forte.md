@@ -21,6 +21,8 @@
 
 ⭐ **O "nomeado" é a peça que salva o número.** Não é produção nova: é o lanceiro da zona, maior, com nome próprio, um ataque que os outros não têm, e um espólio garantido. **Custa uma variante; sente-se como um acontecimento.**
 
+O desenho das **13 arenas seladas** e das bolsas abertas dos subchefes fica no [`61`](61-arenas-de-chefe.md): tamanho, obstáculos, refúgios, bordo, carregamento e espaço para dois jogadores.
+
 *O que o Codex apanhou e estava certo:* com 61 chefes a sério em zonas de 2–3 minutos, havia **um encontro de chefe a cada 30–40 segundos**. Isso não é densidade — é ruído. Perde-se preparação, surpresa e escala.
 
 ---

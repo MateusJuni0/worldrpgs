@@ -51,7 +51,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 13 | [Magia, por dentro](spec/13-magia.md) | Escolas, catálogo, cargas (WP4) | ⚠️ **o maior buraco** — falta tudo o que está no [`42`](spec/42-estudo-magia.md) |
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | ⚠️ **por classe, devia ser por família** — [`35`](spec/35-estudo-referencia.md) §1 |
 | 15 | [Bestiário](spec/15-inimigos.md) | IA, as 7 raças, encontros (WP6) | ⚠️ **falta o baralho de espólio e o som por ataque** |
-| 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ **falta a ficha de 11 colunas por ataque** — [`38`](spec/38-ataques-e-honestidade.md) |
+| 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de zonas, dungeons, traçado (WP8) | ⚠️ **6 zonas contra 10+ biomas aprovados** |
 | 18 | [Progressão e loot](spec/18-progressao.md) | Curva, loot, economia (WP9) | ⚠️ **curva linear, devia ser cúbica** · "XP" devia ser "almas" |
 | 19 | [Multiplayer e rede](spec/19-rede.md) | Autoridade, transporte, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte aguarda os dois |
@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas, sintomas (WP15B) | ⚠️ **falta o teste do rolamento** — [`38`](spec/38-ataques-e-honestidade.md) §2 |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–60)
+### Decisões e estudos (32–61)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 61 | [**Arenas de chefe: o espaço também luta**](spec/61-arenas-de-chefe.md) | Tamanho por camada · obstáculos/refúgios · bordo letal legível · nevoeiro como carregamento · ataques para separar e juntar dois jogadores | 🟢 sistema fechado 01-08; 12 fichas de guardião + Ultra são conteúdo do WP7 |
 | 60 | [**O agente que joga**](spec/60-o-agente-que-joga.md) | Banco de ensaio automático: guiões, modo macaco, varrimento de 1728 combinações · ⏳ constrói-se depois do catálogo | 🟢 desenhado 01-08 |
 | 59 | [**Saves: progresso que não volta atrás**](spec/59-saves.md) | Campos de personagem/mundo · autosave na morte · escrita atómica · recuperação · migrações · tensão do progresso co-op | 🟢 spec + código + testes 01-08 |
 | 58 | [**O fim do jogo, os ciclos e a curva**](spec/58-fim-do-jogo-ciclos-e-a-curva.md) | Porque é que aos 70 estás forte e é assim que deve ser · a Brasa que resolve a pergunta 22 · NG+ com tecto no 7 · as portas que abrem no segundo percurso | 🟢 01-08 |

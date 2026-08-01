@@ -2,6 +2,8 @@
 
 > **WP7 · Fable** (31-07-2026). O sistema de chefes e a primeira ficha completa — **Vorgar, o Guarda-Portão**, o chefe da fatia 1. A pirâmide (~61) fica com **regras de camada** em vez de um roster inventado: 58 chefes com nome escritos por mim seriam exactamente o "inventar como se fosse deles" que este repositório proíbe. Os chefes desenham-se um a um, com eles, por cima destas regras. Tudo `[FABLE]` salvo indicação.
 
+> ⚠️ **ACTUALIZAÇÃO 01-08:** o [`53`](53-chefes-ritmo-e-o-mago-forte.md) substitui a contagem: **13 chefes verdadeiros** (12 guardiões + Ultra), 12 subchefes no mundo e ~36 nomeados. O sistema espacial actual é o [`61`](61-arenas-de-chefe.md): arena selada para guardião/Ultra, bolsa fugível para subchefe. O ×1,8 de PV abaixo continua apenas `[PROTO]`; a pergunta 24 não foi decidida.
+
 ## A pirâmide — a pergunta 13 arrumada, não decidida
 
 O que foi dito: 1 + 10 + 20 + 30 (Rico, 03:25) vs 1 + 30 + 20 (Mateus, 11:54); "a gente vai acertar isso" (12:05). **A decisão do total é deles.** O que a spec pode fixar já é o que **distingue uma camada da outra** — porque isso é desenho, não contagem:
@@ -46,7 +48,7 @@ Guardião (camada 3) da **Toca**, fatia 1. Orc de guerra a 1,6× a escala do bru
 | XP | 400 | 400 a cada um |
 | Recompensa | skill **Investida do Guarda** + abre o portão | idem (loot instanciado, WP0) |
 
-**Arena:** a última sala da Toca — círculo de 20 × 16 m, 2 pilares de pedra, tochas nas paredes (âmbar alto — WP12). Os pilares **param a investida dele** e partem-se ao segundo choque: a arena abre ao longo da luta. Chão limpo, sem buracos — a morte aqui é dele, não da câmara (WP1B).
+**Arena:** a última sala da Toca — círculo de 20 × 16 m, 2 pilares de pedra, tochas nas paredes (âmbar alto — WP12). Os pilares **param a investida dele** e partem-se ao segundo choque: a arena abre ao longo da luta. Chão limpo, sem buracos — a morte aqui é dele, não da câmara (WP1B). O [`61`](61-arenas-de-chefe.md) §7 trata-a como a primeira ficha: faltam marcar dois flancos/refúgios e as perguntas SEPARAR/JUNTAR no greybox.
 
 **Skill que larga — Investida do Guarda** `[FABLE]`: avanço de ombro de 3 m (0,5 s), 30 de dano de postura, quebra guardas erguidas; 20 stamina, qualquer classe. O verbo dele, herdado por quem o vence. *Alternativa descartada:* largar o machado dele como arma — órfão de família de animação (WP12 não orça uma família para um item), fica em "ideias" no WP5.
 
@@ -97,9 +99,9 @@ Mantém 1, 3 e 4. O 2 e o 5 saem; entram:
 
 ## O que continua aberto
 
-- **Pergunta 13** — o total e a forma final da pirâmide: deles, com o mapa à frente
-- **Pergunta 6** — o ×1,8 é provisório da fatia; fecha-se a jogar
+- **Pergunta 24** — o ×1,8 é provisório da fatia; recomenda-se ≤ +40%, dano igual e escala que desce quando um cai, mas decidem os donos
 - Ceifador e Minotauro ⏳ confirmação do Mateus; fichas completas com as zonas deles
+- As outras 12 fichas de arena — conteúdo do WP7 pelo molde do [`61`](61-arenas-de-chefe.md), não uma nova regra por inventar
 
 ## Ligações
 

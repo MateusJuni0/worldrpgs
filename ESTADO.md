@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, sistema de saves.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, arenas de chefe.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -44,7 +44,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 62 · 9563 linhas | — | — |
+| Documentos de spec | 63 · 9801 linhas | — | — |
 | Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
 | Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
@@ -64,6 +64,14 @@ $ godot --headless --path game/ scenes/selftest.tscn
 O [`59`](spec/59-saves.md) define e o `SaveSystem` implementa: estado separado de personagem/mundo ligado ao `GameData`, autosave sem botão de recarregar, escrita `.tmp` + rename, geração `.bak`, checksum, recuperação de corrupção e migrações de formato. **19 verificações novas** cobrem round-trip, interrupção, corrupção silenciosa e v0→v1.
 
 ⚠️ **Isto desbloqueia, mas não finge que os clientes já existem:** o greybox ainda não tem almas, mochila ou mapa persistentes. Quando cada sistema entrar, chama a fronteira única do save. A regra de progresso de chefe no mundo alheio continua `[TENSÃO]`, pergunta 32 do [`99`](spec/99-perguntas-abertas.md).
+
+## 1d. ✅ A arena deixou de ser um círculo vazio
+
+O [`61`](spec/61-arenas-de-chefe.md) fecha a gramática espacial dos chefes: tamanho por camada, obstáculos com função, dois refúgios temporários, bordo letal anunciado antes do empurrão, porta de nevoeiro como carregamento sincronizado e duas perguntas próprias de co-op — **SEPARAR** e **JUNTAR**.
+
+**O sistema está escrito; o conteúdo não é fingido:** Vorgar é a primeira instância e precisa de fechar a sua ficha no greybox. As outras **12 arenas seladas** nascem com os 11 guardiões restantes e o Ultra; os 12 subchefes recebem bolsas de combate abertas no mundo, sem porta nem música, como manda o [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md).
+
+⚠️ A escala de PV a dois continua `[TENSÃO]`, pergunta 24 do [`99`](spec/99-perguntas-abertas.md). O desenho espacial não a decide.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 
