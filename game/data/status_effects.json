@@ -1,0 +1,445 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "spec_sources": [
+      "spec/38-ataques-e-honestidade.md",
+      "spec/62-acessibilidade-auditiva.md",
+      "spec/68-catalogo-de-armas-armaduras-e-aneis.md"
+    ],
+    "applies_to": "jogador_e_inimigo",
+    "combat_numbers_live_here": true
+  },
+  "_design_decision": {
+    "tag": "[CODEX]",
+    "choice": "Implementar veneno, sangramento e queimadura como estados de barra.",
+    "reason": "São os três estados já fechados no spec/68, têm origem em biomas de Brumal e saídas existentes no catálogo; cada um faz uma pergunta diferente ao jogador.",
+    "discarded_alternative": "Adicionar gelo e maldição. Gelo já é elemento e perigo de exposição; maldição não tem saída, cura nem contrato aprovado e criaria punição sem aviso recuperável.",
+    "active_rebuild_policy": {
+      "tag": "[CODEX]",
+      "choice": "Uma barra não volta a acumular enquanto o seu estado de duração está ativo.",
+      "reason": "Evita preparar às escondidas um segundo disparo enquanto a barra está vazia e o jogador gere a saída atual.",
+      "discarded_alternative": "Deixar acumular durante o efeito; permitiria encadear veneno ou queimadura sem um novo ciclo visível de reação."
+    }
+  },
+  "catalogue_integrations": {
+    "consumables": [
+      "agua_lustral",
+      "antidoto_selva",
+      "musgo_seco",
+      "sal_gelo"
+    ],
+    "rings": [
+      "fome_do_musgo",
+      "seiva_inversa",
+      "osso_sem_sangue",
+      "carvao_fendido",
+      "sangue_em_dueto"
+    ],
+    "source_files": [
+      "game/data/economy.json",
+      "game/data/equipment.json"
+    ],
+    "ring_behaviors": {
+      "carvao_fendido": {
+        "event": "dodge_finished",
+        "clear_status": "queimadura",
+        "surface_tags": ["agua", "cinza_fria"],
+        "feedback": {
+          "visual": {
+            "color": "#8ed7e8",
+            "pattern": "brasas_apagadas",
+            "description": "as quatro brasas apagam-se da frente para trás durante a esquiva"
+          },
+          "sound": {
+            "profile": "carvao_fendido_apaga",
+            "wave": "noise",
+            "frequency_hz": 130.8,
+            "duration_s": 0.16,
+            "volume_db": -9.0,
+            "description": "chiado curto de brasa em água"
+          }
+        }
+      },
+      "seiva_inversa": {
+        "event": "buildup",
+        "status_id": "veneno",
+        "presentation": "mirror_to_source_weapon"
+      },
+      "osso_sem_sangue": {
+        "event": "immune",
+        "status_id": "sangramento",
+        "presentation": "replace_meter_with_immunity_material"
+      },
+      "sangue_em_dueto": {
+        "event": "buildup",
+        "status_id": "sangramento",
+        "presentation": "split_meter_by_source"
+      },
+      "fome_do_musgo": {
+        "event": "consumable_used",
+        "consumable_id": "antidoto_selva",
+        "external_action": "reveal_matching_plants"
+      }
+    }
+  },
+  "presentation": {
+    "audio_mix_rate_hz": 22050,
+    "playback_enabled": true,
+    "minimum_bar_width_px": 240.0,
+    "bar_height_px": 18.0,
+    "label_width_px": 112.0,
+    "row_gap_px": 6,
+    "panel_gap_px": 8,
+    "background_color": "#15191dcc",
+    "background_corner_radius_px": 4,
+    "fallback_sound": {
+      "wave": "triangle",
+      "frequency_hz": 220.0,
+      "duration_s": 0.10,
+      "volume_db": -12.0
+    },
+    "benchmark": {
+      "viewport_width_px": 1920,
+      "viewport_height_px": 1080,
+      "warmup_frames": 120,
+      "measured_frames": 600,
+      "percentile": 0.95,
+      "meter_fill": 35.0,
+      "update_iterations": 1000,
+      "update_status_id": "sangramento",
+      "update_amount": 1.0,
+      "target_fps": 60.0
+    }
+  },
+  "global_exits": {
+    "rest": {
+      "clear_all": true,
+      "feedback": {
+        "visual": {
+          "color": "#d8c794",
+          "pattern": "medidores_a_dissolver",
+          "description": "todos os medidores dissolvem-se para o centro da marca de descanso"
+        },
+        "sound": {
+          "profile": "estados_descanso",
+          "wave": "sine",
+          "frequency_hz": 261.6,
+          "duration_s": 0.18,
+          "volume_db": -11.0,
+          "description": "sino baixo único ao limpar os estados"
+        }
+      }
+    }
+  },
+  "effects": {
+    "veneno": {
+      "display_name": "Veneno",
+      "applies_to": "jogador_e_inimigo",
+      "origin": ["selva_funda", "raizama"],
+      "fatia_1": false,
+      "meter": {
+        "maximum": 100.0,
+        "decay_delay_s": 2.0,
+        "decay_per_s": 10.0
+      },
+      "immunity_tags": ["morto_vivo"],
+      "buildup_while_active": false,
+      "trigger": {
+        "mode": "duration",
+        "reset_meter_to": 0.0,
+        "duration_s": 12.0,
+        "tick_interval_s": 2.0,
+        "tick_consequences": {
+          "health_max_fraction": 0.01
+        }
+      },
+      "feedback": {
+        "visual": {
+          "color": "#65a844",
+          "pattern": "gotas_ascendentes",
+          "description": "barra verde hachurada com gotas a subir até ao limiar"
+        },
+        "sound": {
+          "profile": "veneno_acumula",
+          "wave": "sine",
+          "frequency_hz": 146.8,
+          "duration_s": 0.10,
+          "volume_db": -13.0,
+          "description": "bolha húmida curta"
+        },
+        "trigger_visual": {
+          "color": "#b9dc62",
+          "pattern": "bolhas_no_contorno",
+          "description": "gotas verdes espessas e bolhas amarelas pequenas no contorno"
+        },
+        "trigger_sound": {
+          "profile": "veneno_dispara",
+          "wave": "sine",
+          "frequency_hz": 110.0,
+          "duration_s": 0.22,
+          "volume_db": -9.0,
+          "description": "borbulhar húmido que termina num sopro"
+        },
+        "tick_visual": {
+          "color": "#b9dc62",
+          "pattern": "pulso_de_bolhas",
+          "description": "um anel de bolhas sobe pelo contorno sem tapar a pose"
+        },
+        "tick_sound": {
+          "profile": "veneno_pulso",
+          "wave": "sine",
+          "frequency_hz": 110.0,
+          "duration_s": 0.12,
+          "volume_db": -11.0,
+          "description": "borbulhar húmido por pulso"
+        },
+        "immunity_visual": {
+          "color": "#82917b",
+          "pattern": "icone_morto_vivo",
+          "description": "a barra fecha num pictograma de corpo morto-vivo"
+        },
+        "immunity_sound": {
+          "profile": "veneno_imune",
+          "wave": "triangle",
+          "frequency_hz": 98.0,
+          "duration_s": 0.10,
+          "volume_db": -12.0,
+          "description": "gota seca contra osso"
+        },
+        "expire_visual": {
+          "color": "#667060",
+          "pattern": "gotas_a_secar",
+          "description": "as gotas esvaziam de cima para baixo e o contorno regressa ao normal"
+        },
+        "expire_sound": {
+          "profile": "veneno_termina",
+          "wave": "sine",
+          "frequency_hz": 130.8,
+          "duration_s": 0.12,
+          "volume_db": -12.0,
+          "description": "última bolha desfaz-se num sopro"
+        }
+      }
+    },
+    "sangramento": {
+      "display_name": "Sangramento",
+      "applies_to": "jogador_e_inimigo",
+      "origin": ["campas_cinzentas"],
+      "fatia_1": true,
+      "meter": {
+        "maximum": 100.0,
+        "decay_delay_s": 2.0,
+        "decay_per_s": 14.0
+      },
+      "immunity_tags": ["sem_sangue"],
+      "buildup_while_active": false,
+      "trigger": {
+        "mode": "instant",
+        "reset_meter_to": 0.0,
+        "consequences": {
+          "health_max_fraction": 0.04,
+          "stamina_damage": 30.0,
+          "stamina_regen_delay_s": 1.2
+        }
+      },
+      "feedback": {
+        "visual": {
+          "color": "#a92336",
+          "pattern": "duas_veias_ao_centro",
+          "description": "barra carmesim dividida em duas veias que fecham ao centro"
+        },
+        "sound": {
+          "profile": "sangramento_acumula",
+          "wave": "triangle",
+          "frequency_hz": 196.0,
+          "duration_s": 0.08,
+          "volume_db": -12.0,
+          "description": "batimento seco curto"
+        },
+        "trigger_visual": {
+          "color": "#f2d7db",
+          "pattern": "rasgo_branco",
+          "description": "as duas veias unem-se num rasgo branco curto sobre o ponto atingido"
+        },
+        "trigger_sound": {
+          "profile": "sangramento_dispara",
+          "wave": "noise",
+          "frequency_hz": 128.0,
+          "duration_s": 0.14,
+          "volume_db": -8.0,
+          "description": "dois batimentos secos e um rasgo curto"
+        },
+        "immunity_visual": {
+          "color": "#c8c2b5",
+          "pattern": "icone_sem_sangue",
+          "description": "as veias recolhem e mostram o material sem sangue do corpo"
+        },
+        "immunity_sound": {
+          "profile": "sangramento_imune",
+          "wave": "triangle",
+          "frequency_hz": 164.8,
+          "duration_s": 0.09,
+          "volume_db": -11.0,
+          "description": "lâmina seca contra material oco"
+        }
+      }
+    },
+    "queimadura": {
+      "display_name": "Queimadura",
+      "applies_to": "jogador_e_inimigo",
+      "origin": ["fornalha"],
+      "fatia_1": false,
+      "meter": {
+        "maximum": 100.0,
+        "decay_delay_s": 2.0,
+        "decay_per_s": 12.0
+      },
+      "immunity_tags": [],
+      "buildup_while_active": false,
+      "trigger": {
+        "mode": "duration",
+        "reset_meter_to": 0.0,
+        "duration_s": 8.0,
+        "tick_interval_s": 2.0,
+        "tick_consequences": {
+          "health_max_fraction": 0.015,
+          "if_target_has_tag": {
+            "tag": "covarde",
+            "retreat_s": 2.0
+          }
+        }
+      },
+      "feedback": {
+        "visual": {
+          "color": "#e56b26",
+          "pattern": "quatro_brasas",
+          "description": "barra laranja hachurada com quatro brasas numeradas"
+        },
+        "sound": {
+          "profile": "queimadura_acumula",
+          "wave": "noise",
+          "frequency_hz": 247.0,
+          "duration_s": 0.07,
+          "volume_db": -13.0,
+          "description": "crepitação curta"
+        },
+        "trigger_visual": {
+          "color": "#ffb12b",
+          "pattern": "brasas_no_contorno",
+          "description": "brasas laranja agarram-se à silhueta sem tapar o corpo"
+        },
+        "trigger_sound": {
+          "profile": "queimadura_dispara",
+          "wave": "noise",
+          "frequency_hz": 174.6,
+          "duration_s": 0.20,
+          "volume_db": -8.0,
+          "description": "estalo grave seguido de quatro crepitações"
+        },
+        "tick_visual": {
+          "color": "#ffb12b",
+          "pattern": "pulso_de_brasa",
+          "description": "uma das quatro brasas cresce no contorno antes do dano"
+        },
+        "tick_sound": {
+          "profile": "queimadura_pulso",
+          "wave": "noise",
+          "frequency_hz": 174.6,
+          "duration_s": 0.10,
+          "volume_db": -10.0,
+          "description": "uma crepitação por pulso"
+        },
+        "expire_visual": {
+          "color": "#76543f",
+          "pattern": "ultima_brasa_apaga",
+          "description": "a última brasa escurece e liberta um fio de fumo"
+        },
+        "expire_sound": {
+          "profile": "queimadura_termina",
+          "wave": "noise",
+          "frequency_hz": 146.8,
+          "duration_s": 0.11,
+          "volume_db": -12.0,
+          "description": "crepitação curta a apagar"
+        }
+      }
+    }
+  },
+  "_verification": {
+    "selected_effects": {
+      "expected_ids": ["queimadura", "sangramento", "veneno"]
+    },
+    "partial_buildup": {
+      "status_id": "sangramento",
+      "source_id": "prova_jogador",
+      "amount": 35.0,
+      "expected_meter": 35.0
+    },
+    "threshold_trigger": {
+      "status_id": "sangramento",
+      "source_id": "prova_inimigo",
+      "setup_amount": 65.0,
+      "trigger_amount": 35.0,
+      "expected_meter": 0.0,
+      "expected_consequences": {
+        "health_max_fraction": 0.04,
+        "stamina_damage": 30.0,
+        "stamina_regen_delay_s": 1.2
+      }
+    },
+    "decay_after_grace": {
+      "status_id": "sangramento",
+      "amount": 50.0,
+      "inside_grace_s": 1.5,
+      "cross_grace_s": 1.0,
+      "expected_inside_grace": 50.0,
+      "expected_after_crossing": 43.0
+    },
+    "poison_duration": {
+      "status_id": "veneno",
+      "trigger_amount": 100.0,
+      "elapsed_s": 12.0,
+      "expected_tick_count": 6,
+      "expected_total_health_max_fraction": 0.06
+    },
+    "legible_immunity": {
+      "status_id": "sangramento",
+      "target_tags": ["sem_sangue"],
+      "amount": 100.0,
+      "expected_meter": 0.0
+    },
+    "catalogue_cure_and_resistance": {
+      "status_id": "veneno",
+      "consumable_id": "antidoto_selva",
+      "initial_amount": 50.0,
+      "expected_cleared_meter": 0.0,
+      "expected_multiplier": 0.5,
+      "expected_resisted_meter": 25.0,
+      "expected_multiplier_after_expiry": 1.0
+    },
+    "ring_surface_cure": {
+      "status_id": "queimadura",
+      "ring_id": "carvao_fendido",
+      "trigger_amount": 100.0,
+      "wrong_surface": "pedra",
+      "valid_surface": "agua"
+    },
+    "burn_coward_pulse": {
+      "status_id": "queimadura",
+      "target_tags": ["covarde"],
+      "trigger_amount": 100.0,
+      "elapsed_s": 2.0,
+      "expected_consequences": {
+        "health_max_fraction": 0.015,
+        "retreat_s": 2.0
+      }
+    },
+    "active_rebuild_blocked": {
+      "status_id": "veneno",
+      "trigger_amount": 100.0,
+      "rebuild_amount": 100.0,
+      "expected_meter": 0.0,
+      "expected_reason": "already_active"
+    }
+  }
+}
