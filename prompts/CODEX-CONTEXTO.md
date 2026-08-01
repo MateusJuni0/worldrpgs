@@ -145,7 +145,7 @@
 | ❌ **Caminhos absolutos ou segredos** | o repositório é **público** |
 | ❌ **Assets de jogos comerciais** | |
 | ❌ **Sobrevender** | ⭐ dizer **o que ainda não está provado** é o que torna um relatório útil |
-| ❌ **Adjectivos onde deviam estar números** | *"combate responsivo"* não é spec; *"0,60 s, invencibilidade dos 0,08 aos 0,38"* é |
+| ❌ **Adjectivos onde deviam estar números** | *"combate responsivo"* não é spec; *"0,60 s, invencibilidade nos frames 5–23 inclusivos (317 ms)"* é |
 
 ---
 

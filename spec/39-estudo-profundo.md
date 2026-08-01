@@ -126,9 +126,9 @@ Isto liga directamente ao [`38-ataques-e-honestidade.md`](38-ataques-e-honestida
 
 | Escalão | Limiar | Distância | Invencibilidade | Regen. stamina |
 |---|---|---|---|---|
-| Leve | < 30% | 4,5 m | **300 ms** | 100% |
-| Médio | 30–70% | 3,2 m | **300 ms** | 100% |
-| Pesado | > 70% | 1,8 m | **300 ms** | **−35%** |
+| Leve | < 30% | 4,5 m | **317 ms** | 100% |
+| Médio | 30–70% | 3,2 m | **317 ms** | 100% |
+| Pesado | > 70% | 1,8 m | **317 ms** | **−35%** |
 
 **Fontes:** [Equipment Weight Thresholds — TheGamer](https://www.thegamer.com/dark-souls-3-weight-ratio-dodge-roll/) · [Equipment Load — DS3 Wiki](https://darksouls3.wiki.fextralife.com/Equipment_Load)
 

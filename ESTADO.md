@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8433 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 5–23 inclusivos, **317 ms**, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8433 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -293,7 +293,7 @@ E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3)
 | **Nada por analogia nem de memória** | estuda-se o mecanismo, escreve-se com **números e fonte**, e só depois se decide o nosso |
 | **Reservar antes de começar** | pacote **e** número de ficheiro, em [`COORDENACAO.md`](COORDENACAO.md) |
 | **Não decidir uma `[TENSÃO]`** | propõe-se e recomenda-se. Decidem os donos |
-| **Adjectivos não são spec** | *"combate responsivo"* não é nada. *"0,60 s, invencibilidade dos 0,08 aos 0,38"* é |
+| **Adjectivos não são spec** | *"combate responsivo"* não é nada. *"0,60 s, invencibilidade nos frames 5–23 inclusivos (317 ms)"* é |
 | **Coluna `Fatia 1?`** | em todo o catálogo. É o que trava o escopo |
 
 ---

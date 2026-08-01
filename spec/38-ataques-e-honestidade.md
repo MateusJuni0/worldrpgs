@@ -28,7 +28,7 @@ A referência usa ≥ 340 ms. **Nós usamos 500 ms**, e de propósito: a reacç�
 
 **Regra B — a hitbox vive 3 a 6 frames.** ⚠️ **CORRIGIDA a 01-08 — ver §1b.**
 
-Com a esquiva a dar **300 ms de invencibilidade** (WP1), uma janela de golpe de 50–100 ms cabe folgadamente lá dentro. **Isto é o que torna a esquiva verdadeira:** um rolamento bem cronometrado cobre o golpe inteiro com margem de 3×.
+Com a esquiva a dar **317 ms de invencibilidade** (WP1), uma janela de golpe de 50–100 ms cabe folgadamente lá dentro. **Isto é o que torna a esquiva verdadeira:** um rolamento bem cronometrado cobre o golpe inteiro com margem de 3×.
 
 ⚠️ **Hitboxes que ficam vivas 20 frames são a causa nº1 de "eu esquivei e levei na mesma"** — a hitbox continua lá depois de a invencibilidade acabar. **Isto continua verdadeiro para golpes de arma.**
 
@@ -48,7 +48,7 @@ Escrevi *"3 a 6 frames, nunca mais"* a pensar em golpes de arma. ⚠️ **E isso
 
 | Tipo | O que é | Quanto tempo viva | Regra que a mantém justa |
 |---|---|---|---|
-| ⭐ **Instantâneo** | um golpe de arma, um tiro | **3–6 frames** *(a regra antiga, agora com âmbito)* | cabe dentro dos 300 ms de esquiva |
+| ⭐ **Instantâneo** | um golpe de arma, um tiro | **3–6 frames** *(a regra antiga, agora com âmbito)* | cabe dentro dos 317 ms de esquiva |
 | ⭐ **Volume móvel** | uma investida, um corpo a rolar, um salto | **enquanto se move** | ⚠️ **cada alvo é atingido uma vez por passagem** — nunca duas |
 | ⭐ **Volume persistente** | uma poça, um sopro, um feixe, chão a arder | **enquanto se vê** | ⚠️ **dano por intervalos declarados** (ex.: 1×/0,5 s), e **entrar ou sair é escolha do jogador** |
 
@@ -142,7 +142,7 @@ E a referência **não faz isso**: uns ataques acompanham mais tempo, outros apa
 
 Já estava decidido (WP1) e repete-se aqui porque é o outro pecado conhecido: na referência (DS2), a **velocidade do rolamento depende de um atributo**, e isso escondeu uma perícia atrás de uma estatística.
 
-**No nosso jogo, os 300 ms de invencibilidade são iguais ao nível 1 e ao nível 100.** Não há atributo, anel ou armadura que os aumente. *(Armadura pode mudar a **distância** e o **custo** do rolamento — nunca a invencibilidade.)*
+**No nosso jogo, os 317 ms de invencibilidade são iguais ao nível 1 e ao nível 100.** Não há atributo, anel ou armadura que os aumente. *(Armadura pode mudar a **distância** e o **custo** do rolamento — nunca a invencibilidade.)*
 
 ### Cláusula 4 — o que se vê é o que acontece
 

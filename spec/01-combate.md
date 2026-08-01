@@ -70,15 +70,15 @@ stateDiagram-v2
 | Parâmetro | Valor |
 |---|---|
 | Duração total | **0,60 s (36 f)** |
-| Invencibilidade | **0,08 s → 0,38 s** (frames 5–23 · **300 ms**) |
+| Invencibilidade | **0,083 s → 0,400 s** (frames 5–23 inclusivos · **19 f = 317 ms**) |
 | Custo | **25 stamina** |
 | Distância | **3,5 m**, 8 direcções (sem direcção: para trás) |
-| Recuperação vulnerável | 0,38 s → 0,60 s |
+| Recuperação vulnerável | 0,400 s → 0,600 s |
 | Cancelável | a partir de 0,45 s, em: ataque leve · bloqueio · nova esquiva |
 
 Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunta 14). Se armadura entrar, o rolamento ganha classes de peso **neste documento**, não lá.
 
-*Teste da Lei 1:* 300 ms de invencibilidade cobrem qualquer ataque telegrafado do jogo — o WP6 fica obrigado a ≥ 0,5 s de aviso legível em todo o ataque inimigo. A esquiva não escala com nível: o jogador de nível 1 tem exactamente os mesmos 300 ms que o de nível 100. O nível compra stamina (mais esquivas), nunca esquivas melhores — margem de erro, não porta. ✅
+*Teste da Lei 1:* 317 ms de invencibilidade cobrem qualquer ataque telegrafado do jogo — o WP6 fica obrigado a ≥ 0,5 s de aviso legível em todo o ataque inimigo. A esquiva não escala com nível: o jogador de nível 1 tem exactamente os mesmos 317 ms que o de nível 100. O nível compra stamina (mais esquivas), nunca esquivas melhores — margem de erro, não porta. ✅
 
 ## Parry
 

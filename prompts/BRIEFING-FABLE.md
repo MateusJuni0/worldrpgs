@@ -172,9 +172,9 @@ Este é o ponto onde a maior parte das specs falha. Um agente vai implementar a 
 > O combate deve ser desafiante mas justo, com esquivas responsivas.
 
 **Vale:**
-> **Esquiva (rolamento).** 0,60 s de duração total. Invencibilidade dos 0,08 s aos 0,38 s (30 frames a 60 fps). Custo 25 de stamina. Distância 3,5 m. Não cancelável depois de iniciada. Durante a recuperação (0,38 → 0,60 s) o jogador não pode atacar nem voltar a esquivar.
+> **Esquiva (rolamento).** 0,60 s de duração total. Invencibilidade nos frames 5–23 inclusivos (19 frames = 317 ms; 0,083–0,400 s a 60 Hz). Custo 25 de stamina. Distância 3,5 m. Não cancelável depois de iniciada. Durante a recuperação (0,400 → 0,600 s) o jogador não pode atacar nem voltar a esquivar.
 >
-> *Teste da Lei 1:* um jogador que leia o ataque tem 300 ms de invencibilidade — chega para atravessar qualquer ataque do jogo, incluindo os dos chefes finais, sem depender de estatísticas. ✅
+> *Teste da Lei 1:* um jogador que leia o ataque tem 317 ms de invencibilidade — chega para atravessar qualquer ataque do jogo, incluindo os dos chefes finais, sem depender de estatísticas. ✅
 
 Regras concretas:
 

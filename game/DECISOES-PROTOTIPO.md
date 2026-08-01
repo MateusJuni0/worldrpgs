@@ -44,7 +44,7 @@ Ja nao ha nada `[PROTO]` nas magias da fatia.
 
 ### D11 · Curva de saida do rolamento
 A spec da distancia (3,5 m) e duracao (0,60 s) mas nao a curva. Uso *ease-out* quadratica, cujo integral da exactamente 3,5 m.
-**Razao:** velocidade constante faria o rolamento parar a seco; rapido no arranque e a morrer no fim e o que faz os i-frames dos 0,08–0,38 s cairem onde e util.
+**Razao:** velocidade constante faria o rolamento parar a seco; rapido no arranque e a morrer no fim e o que faz os i-frames 5–23 inclusivos (317 ms) cairem onde e util.
 
 ### D12 · Hiper-armadura do machadao carregado
 A spec diz "frames 30–48". Sem carga isso e exactamente do frame 30 ao fim dos frames activos. Implementei como **frame 30 ate ao fim dos activos**, para que ao carregar (+20 f) a hiper-armadura continue a cobrir o golpe em vez de acabar antes dele.

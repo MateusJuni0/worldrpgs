@@ -171,11 +171,11 @@ Regras que valem para os três (`[FABLE]` = as do 48): estabilidade máxima **85
 
 | Carga (% do limite) | Esquiva | Regeneração de stamina |
 |---|---|---|
-| **Leve** < 30% | 0,60 s, i-frames 0,08–0,38 | 40/s (integral) |
+| **Leve** < 30% | 0,60 s, i-frames 5–23 inclusivos (317 ms) | 40/s (integral) |
 | **Médio** 30–70% | igual, **recuperação +4 f** | −10% |
 | **Pesado** > 70% | igual, **recuperação +8 f** | ⭐ **−20%** ([`41`](41-estudo-armas-e-golpes.md) §5) |
 
-⚠️ **Os i-frames nunca mudam.** A janela 0,08–0,38 s é a gramática que o jogador aprendeu — mexer-lhe com equipamento seria mudar a leitura por baixo dos pés dele (Lei 1). **O peso paga-se na recuperação e na regeneração** — quantas vezes seguidas se esquiva, não se a esquiva funciona. *Alternativa descartada:* "fat roll" da referência (janela menor com peso) — muda a leitura, e a leitura é sagrada aqui.
+⚠️ **Os i-frames nunca mudam.** A janela dos frames 5–23 inclusivos (317 ms) é a gramática que o jogador aprendeu — mexer-lhe com equipamento seria mudar a leitura por baixo dos pés dele (Lei 1). **O peso paga-se na recuperação e na regeneração** — quantas vezes seguidas se esquiva, não se a esquiva funciona. *Alternativa descartada:* "fat roll" da referência (janela menor com peso) — muda a leitura, e a leitura é sagrada aqui.
 
 ---
 

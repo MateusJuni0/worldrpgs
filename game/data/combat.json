@@ -17,8 +17,8 @@
   "dodge": {
     "duration": 0.60,
     "duration_frames": 36,
-    "iframe_start": 0.08,
-    "iframe_end": 0.38,
+    "iframe_start": 0.0833333333,
+    "iframe_end": 0.4,
     "iframe_start_frame": 5,
     "iframe_end_frame": 23,
     "stamina_cost": 25.0,

@@ -48,7 +48,7 @@ Por ordem de gravidade:
 2. **Contradiz alguma das quatro leis?** Sobretudo a 1 e a 4, que são as fáceis de quebrar sem dar por isso.
 3. **Inventou coisas como se fossem deles?** Tudo o que vem do Fable é `[FABLE]`, com justificação. Um `[DECIDIDO]` novo tem de dizer a fonte — e se só um dos dois decidiu, tem de estar marcado que falta o outro. O guarda assinala as linhas promovidas a `[DECIDIDO]` em cada PR.
 4. **Decidiu sozinho uma `[TENSÃO]`?** Não é dele para decidir. Tem de propor e recomendar.
-5. **Adjectivos onde deviam estar números?** "Combate responsivo" não é spec. "0,60 s, invencibilidade dos 0,08 aos 0,38" é.
+5. **Adjectivos onde deviam estar números?** "Combate responsivo" não é spec. "0,60 s, invencibilidade nos frames 5–23 inclusivos (317 ms)" é.
 6. **Falta a coluna `Fatia 1?`** nos catálogos? É o que trava o escopo.
 7. **O código corresponde à spec?** Desde 31-07 escreve-se código aqui. Se ele diverge do que está escrito, o PR tem de trazer a mudança da spec junto — nunca só o código.
 8. **Actualizou o `SPEC.md` e o `99-perguntas-abertas.md`?** Devem ir no mesmo PR.

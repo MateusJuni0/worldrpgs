@@ -39,7 +39,7 @@ Construído e verificado por auto-teste (130 verificações contra a spec):
 
 | Sistema | Estado | Fonte |
 |---|---|---|
-| Máquina de estados, esquiva (i-frames 0,08→0,38), parry (8 f) + riposte, bloqueio + guarda quebrada, stamina com histerese | ✅ fiel ao documento | [`01-combate.md`](01-combate.md) |
+| Máquina de estados, esquiva (i-frames 5–23 inclusivos, 317 ms), parry (8 f) + riposte, bloqueio + guarda quebrada, stamina com histerese | ✅ fiel ao documento | [`01-combate.md`](01-combate.md) |
 | As 5 armas com frames e MV exactos, hiper-armadura do machadão, poise/postura, lock-on, hit-stun | ✅ | [`01-combate.md`](01-combate.md) |
 | Lanceiro e brutamontes, telegrafia ≥ 0,5 s, anti-kite aos 4 s | ✅ | [`15-inimigos.md`](15-inimigos.md) |
 | Dardo, Ruína, Égide com cargas; interrupção gasta a carga | ✅ | [`13-magia.md`](13-magia.md) |

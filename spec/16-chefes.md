@@ -82,7 +82,7 @@ Mantém 1, 3 e 4. O 2 e o 5 saem; entram:
 | 7 | Arremesso | 0,7 s — braço atrás, um machado só | aparável (desvia) | 130 | **o machado volta** 1,2 s depois: segunda esquiva sem novo aviso visual — o som (assobio) é o aviso; a lição de ouvido do WP12 |
 | 8 | Fúria do portão (1× por luta, aos 30%) | salto + marca 🔴 no chão 1,2 s | **só esquiva** | 200 | a área é grande (r 4 m) mas a marca é honesta; em co-op cai no jogador **sem** o alvo actual |
 
-*Teste da Lei 1, por escrito:* nível 1, zero pontos — dano recebido 100–170 por golpe contra 420 PV (morre em 3–4 erros, nunca em 1); TTK 53 golpes leves = 4–7 min de leitura (WP2); todos os avisos ≥ 0,5 s contra 300 ms de i-frames; os `só esquiva` têm marca vermelha; o whiff do ataque 2 e os pilares dão janelas de dano a quem não apara. Vence-se sem um único ponto gasto — mais devagar, com menos margem. É o critério 3 da fatia, e esta ficha é o contrato dele. ✅
+*Teste da Lei 1, por escrito:* nível 1, zero pontos — dano recebido 100–170 por golpe contra 420 PV (morre em 3–4 erros, nunca em 1); TTK 53 golpes leves = 4–7 min de leitura (WP2); todos os avisos ≥ 0,5 s contra 317 ms de i-frames; os `só esquiva` têm marca vermelha; o whiff do ataque 2 e os pilares dão janelas de dano a quem não apara. Vence-se sem um único ponto gasto — mais devagar, com menos margem. É o critério 3 da fatia, e esta ficha é o contrato dele. ✅
 
 *Teste de co-op:* ×1,8 de PV mantém ~30 s de luta por jogador a mais; a alternância + a regra do "nunca o mesmo `só esquiva` seguido" garante que estar fora do foco nunca é morte cega; a Fúria (8) cai de propósito em quem se julga seguro. ✅
 

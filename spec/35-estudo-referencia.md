@@ -45,7 +45,7 @@
 2. **A nossa ideia de "resistências por tipo em vez de defesa plana" já é o modelo deles** — e é a saída para a tensão com a Lei 1 que registámos no [`33-morte-e-almas.md`](33-morte-e-almas.md). Boa notícia: não estamos a inventar, estamos a seguir um padrão provado.
 3. ⚠️ **O detalhe do DS2 que vale ouro para nós:** naquele jogo, a velocidade do rolamento **não depende só do peso** — depende de um atributo próprio (Adaptabilidade). Isso foi das mecânicas mais criticadas do jogo, precisamente porque **esconde uma coisa de perícia (a esquiva) atrás de uma estatística.**
 
-   **É exactamente o que a nossa Lei 1 proíbe.** Fica registado como coisa a **não** copiar: no nosso jogo a janela de invencibilidade da esquiva é fixa (300 ms, WP1) e não escala com atributo nenhum. Se alguém propuser um "atributo de agilidade" que melhore a esquiva, a resposta é não.
+   **É exactamente o que a nossa Lei 1 proíbe.** Fica registado como coisa a **não** copiar: no nosso jogo a janela de invencibilidade da esquiva é fixa (317 ms, frames 5–23 inclusivos, WP1) e não escala com atributo nenhum. Se alguém propuser um "atributo de agilidade" que melhore a esquiva, a resposta é não.
 
 **Fonte:** [Armor — DS2 Wiki (Fextralife)](https://darksouls2.wiki.fextralife.com/Armor)
 

@@ -141,7 +141,7 @@ Tudo isto corre numa máquina com 8 GB e gráficos integrados:
 
 **Regra:** física é **para o combate e o movimento**. Adereços de cenário não caem, barris não rolam, capas não ondulam. Isso é enfeite que custa fotogramas, e fotogramas são justiça (Lei 4).
 
-⚠️ **Passo fixo para o combate.** A física de combate corre a **60 Hz fixos**, independentemente dos fotogramas desenhados. Senão, num engasgo os números do WP1 mudam sozinhos — a esquiva de 300 ms deixa de ser 300 ms. É a única forma de as janelas de frames significarem o mesmo sempre. `→WP14`
+⚠️ **Passo fixo para o combate.** A física de combate corre a **60 Hz fixos**, independentemente dos fotogramas desenhados. Senão, num engasgo os números do WP1 mudam sozinhos — a esquiva de 317 ms deixa de ter 19 ticks. É a única forma de as janelas de frames significarem o mesmo sempre. `→WP14`
 
 ---
 

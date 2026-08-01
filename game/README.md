@@ -33,7 +33,7 @@ Vêm de `spec/01-combate.md`. Em jogo, **F2** mostra-os no ecrã.
 | Mover | `WASD` (correr 5,0 m/s — o passo por defeito) |
 | Andar (3,0 m/s) | segurar `Ctrl` |
 | Sprint (7,0 m/s, 8 stamina/s) | segurar `Space` |
-| Esquiva | toque em `Space` — 0,60 s, invencível dos 0,08 aos 0,38 |
+| Esquiva | toque em `Space` — 0,60 s, invencível nos frames 5–23 inclusivos (317 ms) |
 | Câmara | rato |
 | Ataque leve | `LMB` |
 | Ataque pesado | `Shift`+`LMB` (com machadão, segurar carrega) |

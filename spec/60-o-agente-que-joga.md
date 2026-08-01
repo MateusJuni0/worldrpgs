@@ -14,7 +14,7 @@
 
 | | Auto-teste (temos) | ⭐ Agente que joga (isto) |
 |---|---|---|
-| Verifica | *"o JSON diz 0,38 e o código lê 0,38"* | ⭐ *"rolei no frame certo e **não levei**"* |
+| Verifica | *"o JSON diz frames 5–23 e o código lê 5–23"* | ⭐ *"rolei no frame certo e **não levei**"* |
 | Natureza | estático | **dinâmico** |
 | Prova a Lei 1? | ❌ | ⭐ **sim** |
 | Prova a Lei 3? | ❌ | ⭐ **sim** |

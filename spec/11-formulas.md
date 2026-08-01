@@ -106,7 +106,7 @@ Contra o jogador nível 1 (Vida 10 → **420 PV**, Con 10 → DEF 20):
 - Brutamontes: 130−20 = 110 → mata em **4**. Respeita-se; todos os golpes dele são aparáveis (WP1/WP6).
 - Vorgar: 120−20 = 100 (leve), 190−20 = 170 (pesado) → mata em **3–4 golpes**. Uma tentativa a nível 1 dura 4–7 min de leitura quase perfeita: exigente, possível, e é exactamente o critério 3 da fatia.
 
-*Teste da Lei 1, escrito:* a nível 1 nada é impossível por números — o Vorgar morre em 53 leves (~35 s de frames activos dentro de 4–7 min de dança) e os 300 ms de i-frames da esquiva não dependem de atributo nenhum. A nível 10 (+9 pontos, p. ex. Vida→14, For→14, Con→13), o dano sobe ~5% e os PV ~20%: **margem de erro, não porta.** Se o protótipo mostrar TTK fora das janelas do WP1, ajusta-se `dano_base` das armas — **nunca** as janelas de esquiva/parry. ✅
+*Teste da Lei 1, escrito:* a nível 1 nada é impossível por números — o Vorgar morre em 53 leves (~35 s de frames activos dentro de 4–7 min de dança) e os 317 ms de i-frames da esquiva não dependem de atributo nenhum. A nível 10 (+9 pontos, p. ex. Vida→14, For→14, Con→13), o dano sobe ~5% e os PV ~20%: **margem de erro, não porta.** Se o protótipo mostrar TTK fora das janelas do WP1, ajusta-se `dano_base` das armas — **nunca** as janelas de esquiva/parry. ✅
 
 ## O que este documento entrega aos outros
 

@@ -924,10 +924,10 @@ func _test_dodge_iframes() -> void:
 	_check(first == want_start, "esquiva: i-frames comecam no frame %d (spec: %d)" % [first, want_start])
 	_check(last == want_end, "esquiva: i-frames acabam no frame %d (spec: %d)" % [last, want_end])
 	_check(absf(GameData.frames_to_seconds(float(last - first + 1)) - 0.3167) < 0.02,
-		"esquiva: %.0f ms de invencibilidade (spec: ~300 ms)"
+		"esquiva: %.0f ms de invencibilidade (spec: 317 ms)"
 		% (GameData.frames_to_seconds(float(last - first + 1)) * 1000.0))
 
-	# A recuperacao dos 0,38 aos 0,60 s tem de ser vulneravel.
+	# A recuperacao dos 0,400 aos 0,600 s tem de ser vulneravel.
 	p.state_frame = 30
 	_check(not p.has_iframes(), "esquiva: frame 30 (0,50 s) ja e vulneravel")
 	p.free()
