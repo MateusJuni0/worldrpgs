@@ -2,16 +2,83 @@
   "_fonte": "spec/51-familias.md §4-§5 + spec/68 §6 + spec/70 §1.1 — 9 slots, 4 estados de carga e 11 pecas dos kits iniciais.",
   "_estado": "as 11 pecas iniciais e os 57 drops vivem no catalogo; o ecra de equipar e do WP11 e a mecanica entra no M2.",
   "_regra": "A armadura muda COMO se joga, nunca quanto se aguenta de graca: peso e resistencias por tipo, com tecto por peca. Nada de defesa plana.",
+  "_entrega": {
+    "como_o_jogador_usa": "Na entrada Armadura da mochila, aberta pela accao configuravel inventory_menu: escolhe slot, escolhe peca, le a comparacao e confirma. A ligacao desta entrada ao GameShell pertence a outro agente e esta registada em LACUNAS.md.",
+    "como_se_prova": "game/src/equipment/armor_self_test.tscn cobre carga, resistencias, comparacao e troca de malha; scenes/selftest.tscn conserva 9703/0.",
+    "arte_e_som": "Malhas do KayKit Adventurers 2.0 FREE, CC0, ja importadas; a armadura nao cria accao temporal nem cue, por isso nao acrescenta som.",
+    "custo_na_maquina_do_rico": "Intel Iris Xe, Mobile/Vulkan, 1920x1080, 5 actores: baseline 228.0 fps e armadura 253.8 fps; 41 draw calls e 92360 primitivas nos dois. Sem regressao detectavel; +6.2 MiB de VRAM."
+  },
 
   "slots": ["cabeca", "rosto", "ombros", "peito", "maos", "cintura", "pernas", "pes", "capa"],
 
+  "ui": {
+    "title": "EQUIPAR ARMADURA",
+    "confirm": "CONFIRMAR TROCA",
+    "back": "VOLTAR",
+    "empty_comparison": "Escolhe uma peça para comparar com o que está vestido.\n\nA carga muda aqui antes de confirmares.",
+    "comparison_template": "[b]%s[/b]\nVestido: %s\n\n[b]CARGA ANTES → DEPOIS[/b]\n%.1f / %.1f (%d%%, %s) → %.1f / %.1f (%d%%, %s)\nRolamento: %.2f m / %d f → %.2f m / %d f\nI-frames: %d–%d → %d–%d\n\n[b]RESISTÊNCIAS DA PEÇA[/b]\n%s",
+    "no_resistance": "Sem resistência declarada",
+    "slot_labels": {
+      "cabeca": "CABEÇA", "rosto": "ROSTO", "ombros": "OMBROS",
+      "peito": "PEITO", "maos": "MÃOS", "cintura": "CINTURA",
+      "pernas": "PERNAS", "pes": "PÉS", "capa": "CAPA"
+    }
+  },
+
+  "comparacao_referencia": {
+    "fontes": [
+      "https://darksouls3.wikidot.com/equipment-load",
+      "https://strategywiki.org/wiki/Dark_Souls_III/Stats"
+    ],
+    "eles": "No DS3, <30% rola mais longe, 30-70% rola a distancia media, >70-100% rola devagar e curto e perde 9 pontos de regeneracao de stamina; a invencibilidade varia apenas 13 para 12 frames.",
+    "nos": "Mantemos os limites <30%, 30-70%, >70-100% e >100%. Leve percorre 110% da distancia base; medio conserva a base; pesado percorre 70% em 125% da duracao e conserva a penalizacao de regeneracao; os i-frames continuam sempre 5-23.",
+    "diferenca": "[CODEX] Copiamos a pergunta jogavel (mobilidade contra peso), nao a resposta inteira: o pesado fica visivelmente mais lento e curto, mas nunca perde invencibilidade nem ganha hiper-armadura gratis. Razao: cumpre a decisao do Mateus e a Lei 1; a destreza do jogador conserva a mesma janela. Alternativa descartada: cobrar apenas recuperacao depois de uma animacao identica, porque o peso nao se lia durante a accao."
+  },
+
   "carga": {
-    "_fonte": "spec/70 §1.1. Os i-frames NUNCA mudam (Lei 1); acima de 100% a accao de esquiva deixa de estar disponivel.",
+    "_fonte": "spec/70 §1.1 + decisao do Mateus nesta tarefa: armadura pesada rola mais devagar. Os i-frames NUNCA mudam (Lei 1); acima de 100% a accao de esquiva deixa de estar disponivel.",
     "limite_base_carga_8": 50,
-    "leve":   { "max_fraccao": 0.30, "recuperacao_esquiva_frames": 0, "regen_stamina_mult": 1.0 },
-    "medio":  { "max_fraccao": 0.70, "recuperacao_esquiva_frames": 4, "regen_stamina_mult": 1.0 },
-    "pesado": { "max_fraccao": 1.00, "recuperacao_esquiva_frames": 8, "regen_stamina_mult": 0.775 },
-    "sobrecarregado": { "min_fraccao_exclusiva": 1.00, "recuperacao_esquiva_frames": null, "regen_stamina_mult": 0.65, "pode_esquivar": false, "pode_correr": false, "pode_sprintar": false, "velocidade_maxima_m_s": 3.0 }
+    "leve":   { "max_fraccao": 0.30, "recuperacao_esquiva_frames": 0, "regen_stamina_mult": 1.0, "distancia_esquiva_mult": 1.10, "duracao_esquiva_mult": 1.00, "custo_stamina_esquiva_mult": 1.00 },
+    "medio":  { "max_fraccao": 0.70, "recuperacao_esquiva_frames": 4, "regen_stamina_mult": 1.0, "distancia_esquiva_mult": 1.00, "duracao_esquiva_mult": 1.00, "custo_stamina_esquiva_mult": 1.00 },
+    "pesado": { "max_fraccao": 1.00, "recuperacao_esquiva_frames": 8, "regen_stamina_mult": 0.775, "distancia_esquiva_mult": 0.70, "duracao_esquiva_mult": 1.25, "custo_stamina_esquiva_mult": 1.00 },
+    "sobrecarregado": { "min_fraccao_exclusiva": 1.00, "recuperacao_esquiva_frames": null, "regen_stamina_mult": 0.65, "distancia_esquiva_mult": 0.00, "duracao_esquiva_mult": 0.00, "custo_stamina_esquiva_mult": 0.00, "pode_esquivar": false, "pode_correr": false, "pode_sprintar": false, "velocidade_maxima_m_s": 3.0 }
+  },
+
+  "resistance_rules": {
+    "_fonte": "spec/33 §3 + spec/39 §1: por tipo, acumulacao multiplicativa e piso corporal; nunca defesa plana.",
+    "percent_scale": 100.0,
+    "max_per_piece_percent": 20.0,
+    "minimum_damage_fraction": 0.30,
+    "stacking": "multiplicative"
+  },
+
+  "visual_rules": {
+    "_fonte": "KayKit Adventurers 2.0 FREE (CC0), ja importado em game/assets/models/characters/kaykit-adventurers/; sem arte comercial.",
+    "license": "game/assets/models/characters/kaykit-adventurers/License.txt",
+    "strategy": "trocar apenas a malha do slot no mesmo rig KayKit; a arma, cabeca, bracos, pernas e cor da origem que nao pertencem ao slot ficam para conservar a silhueta a 30 m",
+    "available_slots": ["cabeca", "rosto", "peito", "capa"],
+    "missing_modular_slots": ["ombros", "maos", "cintura", "pernas", "pes"],
+    "performance_measurement": {
+      "date": "2026-08-01",
+      "hardware": "Intel(R) Iris(R) Xe Graphics",
+      "renderer": "Mobile/Vulkan",
+      "resolution": "1920x1080",
+      "actors": 5,
+      "warmup_seconds": 3.0,
+      "sample_seconds": 12.0,
+      "baseline": { "average_fps": 228.0, "average_ms": 4.387, "p95_ms": 7.673, "p99_ms": 8.366, "worst_ms": 9.537, "draw_calls": 41, "primitives": 92360, "video_mem_mib": 84.9, "visible_mesh_surfaces": 40 },
+      "armored": { "average_fps": 253.8, "average_ms": 3.940, "p95_ms": 6.533, "p99_ms": 7.855, "worst_ms": 9.627, "draw_calls": 41, "primitives": 92360, "video_mem_mib": 91.1, "visible_mesh_surfaces": 40 },
+      "conclusion": "Sem aumento de draw calls, primitivas ou superficies; a variacao de fps entre corridas nao prova aceleracao. O custo detectavel e +6.2 MiB de VRAM e existe margem ampla para 60 fps."
+    },
+    "recipes": {
+      "couro_peitoral": { "slot": "peito", "donor": "res://assets/models/characters/kaykit-adventurers/Ranger.glb", "part_suffix": "_Body", "tint": "#8b6845" },
+      "ferro_peitoral": { "slot": "peito", "donor": "res://assets/models/characters/kaykit-adventurers/Knight.glb", "part_suffix": "_Body", "tint": "#aeb4ba" },
+      "ferro_peitoral_polido": { "slot": "peito", "donor": "res://assets/models/characters/kaykit-adventurers/Knight.glb", "part_suffix": "_Body", "tint": "#e4e9ea" },
+      "ferro_elmo": { "slot": "cabeca", "donor": "res://assets/models/characters/kaykit-adventurers/Knight.glb", "part_suffix": "_Helmet", "tint": "#aeb4ba" },
+      "pano_mascara": { "slot": "rosto", "donor": "res://assets/models/characters/kaykit-adventurers/Rogue_Hooded.glb", "part_suffix": "_Mask", "tint": "#44484b" },
+      "la_capa": { "slot": "capa", "donor": "res://assets/models/characters/kaykit-adventurers/Rogue.glb", "part_suffix": "_Cape", "tint": "#43474b" },
+      "la_capa_clara": { "slot": "capa", "donor": "res://assets/models/characters/kaykit-adventurers/Mage.glb", "part_suffix": "_Cape", "tint": "#ded5bd" }
+    }
   },
 
   "pieces": {
