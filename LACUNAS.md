@@ -52,6 +52,7 @@ Relatório completo: [`docs/REVISAO-3.md`](docs/REVISAO-3.md). As linhas `⏳` s
 
 | | Lacuna | Origem |
 |---|---|---|
+| 🔴 | **A abertura jogável está pronta como fronteira, mas ainda não está ligada pela casca.** `IntroSequence` conserva o controlo, consome `strings.pt.json`, serve as cinco dicas remapeadas e liga descrições aos cinco IDs dos kits; hoje `game_shell.gd` ainda mostra o prólogo estático/hardcoded, `main.gd` ainda bloqueia o despertar e pede dicas à casca, e a mochila ainda não pede `item_description()`. Os donos desses ficheiros têm de substituir essas três chamadas; esta árvore não lhes pode escrever. | [`26`](spec/26-narrativa.md) §§1.1–1.2 · `game/src/ui/intro_sequence.gd` |
 | ⏳ | 🔴 **O combate comum ainda não prova co-op:** nenhum encontro da Fatia 1 exige salvar, preparar uma abertura ou executar tarefas simultâneas; o jogador melhor pode limpar o caminho enquanto o outro acompanha | revisão 3 · perguntas 59/32 |
 | ⏳ | 🔴 **Brumal pede densidade larga com só dois tipos `fatia_1:true`.** O Batedor e um nomeado que depende dele aparecem no orçamento, mas continuam fora da fatia; decidir promover o terceiro papel ou cortar para 6–7 batidas | revisão 3 · pergunta 57 |
 | ⏳ | 🔴 **Meditação segura cria até 80 s de espera para o parceiro; ressurreição exige 5–7 s onde Vorgar/refúgios só declaram janelas abaixo de 2 s.** Falta agência do caído e uma janela executável | revisão 3 · perguntas 58/60 |
