@@ -78,13 +78,13 @@ Pensa no que ela faz. O jogo já te ensina a **recuar** quando o inimigo ataca. 
 
 **Isso é a Lei 1 em estado puro:** não é um número que se compra, é uma leitura que se aprende. E premeia exactamente o que o Mateus quer do espadachim.
 
-**Proposta `[CLAUDE]` `→WP1`:**
+**Contrato corrente**, fechado pelo [`70`](70-fecho-dos-sistemas-de-combate.md) §3:
 
 | | |
 |---|---|
-| Bónus | **+30%** |
-| Quando | o alvo está nas fases 1, 2 ou 3 de um ataque ([`38`](38-ataques-e-honestidade.md) §1) |
-| Quem beneficia mais | **katana e estoque** (bónus próprio a somar) |
+| Bónus | **×1,30**, apenas em golpes marcados `perfuracao`; haste ×1,40; katana ×1,45 só na estocada |
+| Quando | o golpe perfurante acerta durante os frames activos do ataque do alvo |
+| Quem não recebe | corte, contusão, flecha sem tag e magia |
 | ⚠️ Como se vê | **som e faísca próprios** — senão o jogador nunca aprende que existe |
 
 ⚠️ **A última linha é obrigatória.** Um bónus invisível não ensina nada — é sorte, do ponto de vista de quem joga. Cláusula 4 do contrato ([`38`](38-ataques-e-honestidade.md)).
@@ -218,7 +218,7 @@ Juntando tudo, **nenhuma família entra no catálogo sem isto**:
 | Custo de stamina por golpe | — |
 | **Dano de interrupção** | 14 |
 | **Frames de hiper-armadura** | 2.ª metade do arranque + 1.ª metade dos activos, ou *"não tem"* |
-| **Bónus de contra-ataque** | +30% base, ou mais |
+| **Bónus de contra-ataque** | `nenhum` ou multiplicador de `CONTRA_PERFURANTE`: ×1,30 base · haste ×1,40 · katana/estocada ×1,45 |
 | **Multiplicador crítico** | normal / alto |
 | Arte a 1 mão · a 2 mãos | verbo + custo |
 | Atributo que escala | — |

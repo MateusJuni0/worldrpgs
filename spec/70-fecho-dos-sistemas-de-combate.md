@@ -26,7 +26,7 @@ O máximo por atributo passa de 50 para **70**. O nível máximo continua 100 e 
 |---|---:|---:|---:|---|
 | Leve | `<30%` | +0 f | 40/s | normal |
 | Média | `30–70%` | +4 f | **40/s** | normal |
-| Pesada | `70–100%` | +8 f | **31/s** | normal |
+| Pesada | `>70–100%` | +8 f | **31/s** | normal |
 | **Sobrecarregada** | `>100%` | não há esquiva | **26/s** | sem correr nem sprint; só marcha a 3 m/s |
 
 Os i-frames continuam 5–23 quando existe esquiva. Peso nunca compra nem remove frames dentro de uma esquiva; acima de 100% remove a acção inteira e comunica `SOBRECARGA` antes de o jogador sair do inventário.

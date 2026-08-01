@@ -131,31 +131,26 @@ O [`36-fisica.md`](36-fisica.md) escreveu o dano de queda como **percentagem pur
 
 **Estava mal aplicada.** A Lei 1 diz que o nível não abre portas — não tranca conteúdo, não deixa passar um chefe que a perícia não passa. **Sobreviver a uma queda não é conteúdo trancado.** Investir em Vida e notar isso ao cair de um sítio alto é progressão a funcionar, não a Lei 1 a quebrar.
 
-### O modelo corrigido — parte fixa + parte proporcional
+### O modelo corrente — parte fixa + parte proporcional, com limiar fatal absoluto
 
-`dano = fixo(h) + proporcional(h) × PV_máximos`
+`dano = fixo(h) + proporcional(h) × PV_máximos`, interpolado entre os nós abaixo. O [`70`](70-fecho-dos-sistemas-de-combate.md) §1 e `progression.json` são a autoridade executável:
 
-Com `PV = 200 + 22 × Vida` (WP2):
-
-| Altura | Fixo | Proporcional | Nível 1 (222 PV) | Nível 55 (Vida 30 → 860 PV) |
-|---|---|---|---|---|
-| 3 m | 0 | 0% | **0** | **0** |
-| 5 m | 20 | 4% | 29 (**13%**) | 54 (**6%**) |
-| 8 m | 45 | 10% | 67 (**30%**) | 131 (**15%**) |
-| 12 m | 90 | 20% | 134 (**60%**) | 262 (**30%**) |
-| 16 m | 150 | 32% | 221 (**99%** — quase morte) | 425 (**49%**) |
-| 20 m | 240 | 45% | **morte** | 627 (**73%**) |
-| 25 m+ | — | — | **morte** | **morte** — tecto absoluto |
+| Altura | Fixo | Proporcional | Resultado |
+|---|---|---|---|
+| até 5 m | 0 | 0% | **0** |
+| 8 m | 45 | 10% | dano progressivo; Vida muda a margem |
+| 12 m | 90 | 20% | dano progressivo; Vida muda a margem |
+| 16 m | 150 | 32% | dano progressivo; Vida muda a margem |
+| **20 m+** | — | — | **morte absoluta**, antes de vida, carga ou equipamento |
 
 ### O que este modelo dá
 
-- **Nível 1:** 16 m quase mata, 20 m mata. O mundo é perigoso
-- **Nível 55:** 16 m custa metade da vida, 20 m é sobrevivível a custo alto. **Sente-se a diferença, claramente**
-- **Tecto absoluto aos 25 m:** ninguém sobrevive, em nível nenhum. É isto que impede o jogo de virar "sou alto nível, salto de qualquer lado" — e é aqui, e só aqui, que a Lei 1 se aplica de facto
+- **Abaixo de 20 m:** Vida faz diferença na margem de erro, como o Mateus decidiu
+- **Aos 20 m:** ninguém sobrevive, em nível nenhum. É isto que impede vida/equipamento de abrirem atalhos topológicos — e é aqui que a Lei 1 se aplica
 
 E continua verdade que:
 - **A carga aumenta o dano** (`×(1 + carga_relativa × 0,4)`)
-- **As peças de armadura que cortam a queda** aplicam-se depois, e podem tornar os 20 m sobrevivíveis mesmo a nível baixo — **construção, não nível**
+- **As peças de armadura que cortam a queda** aplicam-se depois da carga, mas apenas abaixo de 20 m; nunca alteram o limiar fatal
 
 **Substitui** a tabela de percentagem pura do [`36-fisica.md`](36-fisica.md) §2.
 

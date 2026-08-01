@@ -17,7 +17,7 @@ Tudo o resto pendura-se nestas. Mudar uma muda o jogo todo, por isso vivem num s
 | **Gravidade** | **−18 m/s²** | ~1,8× a real. Jogos usam gravidade exagerada porque a real (9,81) faz as quedas parecerem lentas e flutuantes |
 | Altura do jogador | 1,8 m · olhos a 1,7 m | a câmara de 1.ª pessoa assenta aqui ([`29-perspectiva.md`](29-perspectiva.md)) |
 | Velocidade terminal | 40 m/s | tecto de segurança para o motor |
-| Passo máximo sem saltar | 0,35 m | degraus e raízes até esta altura atravessam-se a andar |
+| Passo máximo sem saltar | **0,45 m** | degraus e raízes até esta altura atravessam-se a andar; autoridade de integração: [`73`](73-fecho-dos-buracos-de-integracao.md) §2 |
 | Inclinação máxima | 45° | acima disto escorrega-se |
 | Massa do jogador | 80 kg base + equipamento | usada no empurrão |
 
@@ -38,13 +38,13 @@ Com gravidade a −18 m/s², a velocidade ao aterrar de uma altura `h` é `v = �
 | 16 m | 1,33 s | 24,0 m/s | ~90% |
 | 20 m+ | 1,49 s | 26,8 m/s | **morte** |
 
-⚠️ **SUBSTITUÍDA a 31-07** — ver [`37-aneis-e-elementos.md`](37-aneis-e-elementos.md) §3. A tabela acima usava **percentagem pura**, o que faz o nível não valer nada nas quedas. O Mateus corrigiu: subir de nível tem de fazer diferença. O modelo novo é **parte fixa + parte proporcional**, com tecto absoluto aos 25 m onde ninguém sobrevive. A tabela acima fica como registo do raciocínio.
+⚠️ **SUBSTITUÍDA** — a tabela acima fica como registo do raciocínio. O modelo de parte fixa + proporcional do [`37`](37-aneis-e-elementos.md) foi depois fechado pelo contrato canónico do [`70`](70-fecho-dos-sistemas-de-combate.md) §1: zero até 5 m, dano progressivo abaixo de 20 m e **morte absoluta aos 20 m**.
 
 *O expoente 1,6 é o que interessa:* faz as quedas pequenas serem quase inofensivas e as grandes serem fatais depressa, em vez de uma rampa linear que castiga cair de um degrau.
 
 ### O que a queda obriga
 
-1. ⚠️ **CORRIGIDO:** era percentagem pura; passa a **fixo + proporcional** ([`37-aneis-e-elementos.md`](37-aneis-e-elementos.md) §3). Eu tinha aplicado a Lei 1 onde ela não se aplica — sobreviver a uma queda não é conteúdo trancado. **A Lei 1 vive agora no tecto absoluto dos 25 m**, que ninguém sobrevive em nível nenhum.
+1. ⚠️ **CORRIGIDO:** era percentagem pura; passa a **fixo + proporcional abaixo do limiar fatal** ([`37`](37-aneis-e-elementos.md) §3, fechado pelo [`70`](70-fecho-dos-sistemas-de-combate.md) §1). **A Lei 1 vive no tecto absoluto dos 20 m**, que ignora vida, carga e equipamento.
 2. **A carga afecta a queda** (confirmado na referência): mais peso, mais dano. Proposta: `dano_final = dano × (1 + carga_relativa × 0,4)` — um jogador com armadura pesada leva até 40% mais.
 3. **Armaduras que cortam o dano de queda** ([`34-catalogo-e-comandos.md`](34-catalogo-e-comandos.md) §2c) aplicam-se **depois** da carga. Uma peça que dê −50% torna quedas de 12 m sobreviváveis, e isso é uma construção legítima: trocar defesa por mobilidade vertical.
 4. **`→WP8`:** o traçado das zonas tem de conhecer estes números. Um desnível de 4 m é atalho; um de 20 m é morte. **Os atalhos que descem desenham-se com a tabela à frente**, não a olho.

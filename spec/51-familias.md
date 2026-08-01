@@ -38,7 +38,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 | Alcance · arco | 2,0 m · 100° |
 | Leve | 16+6+18 f (0,67 s) · MV 1,0 · 18 sta |
 | Interrupção · hiper-armadura | **14** · não tem |
-| Contra-ataque · crítico | +30% base · normal |
+| Contra-ataque · crítico | ×1,30 **só na estocada marcada `perfuracao`** · normal |
 | Arte (1 mão · 2 mãos) | estocada perfurante · golpe circular |
 | Escala | força (médio) |
 
@@ -51,7 +51,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 | Alcance · arco | 1,4 m · 70° |
 | Leve | 12+4+14 f (0,50 s) · MV 0,55 · 12 sta |
 | Interrupção · hiper-armadura | **10** · não tem |
-| Contra-ataque · crítico | +30% · ⭐ **alto** |
+| Contra-ataque · crítico | ×1,30 só em golpe marcado `perfuracao` · ⭐ **alto** |
 | Arte | apunhalar (avanço) · dança de lâminas |
 | Escala | destreza (forte) |
 
@@ -64,7 +64,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 | Alcance · arco | 2,3 m · 140° |
 | Leve | 24+8+26 f (0,97 s) · MV 1,5 · 28 sta |
 | Interrupção · hiper-armadura | **31** · 2.ª metade do arranque + 1.ª metade dos activos ([`41`](41-estudo-armas-e-golpes.md) §4); carregado: frame 30 → fim dos activos (WP1) |
-| Contra-ataque · crítico | +30% · normal |
+| Contra-ataque · crítico | **nenhum** em corte/contusão · normal |
 | Arte | salto esmagador · rodopio |
 | Escala | força (forte) |
 
@@ -72,12 +72,12 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 
 | | |
 |---|---|
-| **Onde é boa** | ⭐ **a bater enquanto ele bate**: contra-ataque **+45%** (o +30% base e +15 da família), e o golpe em corrida mais forte do jogo (avanço 3 m) |
+| **Onde é boa** | ⭐ **a estocar enquanto ele bate**: contra-ataque ×1,45 apenas na estocada, e o golpe em corrida mais forte do jogo (avanço 3 m) |
 | ⭐ **Onde é MÁ** | nas mãos de quem não lê: sem contra-ataques é uma espada recta pior (MV 0,9). E contra armadura pesada, o corte fino entra mal |
 | Alcance · arco | 2,1 m · 90° |
 | Leve | 14+5+16 f (0,58 s) · MV 0,9 · 16 sta |
 | Interrupção · hiper-armadura | **13** · não tem |
-| Contra-ataque · crítico | ⭐ **+45%** · normal |
+| Contra-ataque · crítico | ⭐ **×1,45 só na estocada** · normal |
 | Arte | iai (embainhar → corte instantâneo, o tempo de carga é a leitura) · corte duplo |
 | Escala | destreza (forte) |
 
@@ -85,12 +85,12 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 
 | | |
 |---|---|
-| **Onde é boa** | estocar a 2,8 m **com o escudo levantado** — a única família que ataca sem baixar a guarda; +40% de contra-ataque em estocada |
+| **Onde é boa** | estocar a 2,8 m **com o escudo levantado** — a única família que ataca sem baixar a guarda; ×1,40 de contra-ataque em estocada |
 | ⭐ **Onde é MÁ** | colado ao corpo: dentro de 1,2 m os golpes **falham por dentro** — o inimigo que entra anula-a |
 | Alcance · arco | 2,8 m · 30° (estocada) |
 | Leve | 18+6+20 f (0,73 s) · MV 0,95 · 18 sta |
 | Interrupção · hiper-armadura | **14** · não tem |
-| Contra-ataque · crítico | **+40%** (estocada) · normal |
+| Contra-ataque · crítico | **×1,40** (estocada) · normal |
 | Arte | varrimento baixo (derruba) · carga de lança |
 | Escala | destreza (médio) |
 
@@ -103,7 +103,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 | Alcance · arco | 1,8 m · 80° |
 | Leve | 18+5+20 f (0,72 s) · MV 0,7 · 15 sta |
 | Interrupção · hiper-armadura | **8** · não tem |
-| Contra-ataque · crítico | +30% · normal |
+| Contra-ataque · crítico | **nenhum** · normal |
 | Arte | rajada de bruma (empurra, dano ~0) · conjuração firmada (a próxima magia não é interrompível) |
 | Escala | inteligência (fraco) |
 
@@ -141,7 +141,7 @@ Adoptado do [`48`](48-arcos-bestas-escudos.md) §3, com os números dele:
 | **Escudo médio** · **Fatia 1 ✅** (madeira) | ~70 | médio | normal (8 f) | não brilha em nada — é o padrão |
 | **Escudo grande** | **85 — tecto rígido** | pesadíssimo (tira a carga leve) | ⚠️ **não apara** | a escolha dói dos dois lados: sem parry, e sem esquiva leve |
 
-Regras que valem para os três (`[FABLE]` = as do 48): estabilidade máxima **85** (bloquear custa **sempre**) · defesa física máxima **90%** (o piso de 30% vale para tudo) · **penalidade de espreitar** — atacar por trás do escudo perde absorção e estabilidade.
+Regras que valem para os três, fechadas pelo [`70`](70-fecho-dos-sistemas-de-combate.md) §3: estabilidade máxima **85** (bloquear custa **sempre**) · broquel absorve 85% físico; escudo médio e grande podem absorver **100% físico** · o piso corporal de 30% **não se aplica ao bloqueio** · **penalidade de espreitar** — atacar por trás do escudo perde absorção e estabilidade.
 
 ---
 
@@ -167,13 +167,14 @@ Regras que valem para os três (`[FABLE]` = as do 48): estabilidade máxima **85
 
 **Habilidade por peça, não por conjunto** (briefing): cada peça *pode* trazer uma passiva ou condicional — mas **as peças dos kits iniciais não trazem nenhuma** (o combate medido do WP1 não muda no dia 1). Habilidades entram na camada 2, peça a peça.
 
-### As 3 classes de carga — e a linha que a Lei 1 não deixa cruzar
+### As 4 classes de carga — e a linha que a Lei 1 não deixa cruzar
 
 | Carga (% do limite) | Esquiva | Regeneração de stamina |
 |---|---|---|
 | **Leve** < 30% | 0,60 s, i-frames 5–23 inclusivos (317 ms) | 40/s (integral) |
-| **Médio** 30–70% | igual, **recuperação +4 f** | −10% |
-| **Pesado** > 70% | igual, **recuperação +8 f** | ⭐ **−20%** ([`41`](41-estudo-armas-e-golpes.md) §5) |
+| **Médio** 30–70% | igual, **recuperação +4 f** | **40/s** |
+| **Pesado** >70–100% | igual, **recuperação +8 f** | **31/s** |
+| **Sobrecarregado** > 100% | **sem esquiva, corrida ou sprint; marcha 3 m/s** | **26/s** |
 
 ⚠️ **Os i-frames nunca mudam.** A janela dos frames 5–23 inclusivos (317 ms) é a gramática que o jogador aprendeu — mexer-lhe com equipamento seria mudar a leitura por baixo dos pés dele (Lei 1). **O peso paga-se na recuperação e na regeneração** — quantas vezes seguidas se esquiva, não se a esquiva funciona. *Alternativa descartada:* "fat roll" da referência (janela menor com peso) — muda a leitura, e a leitura é sagrada aqui.
 

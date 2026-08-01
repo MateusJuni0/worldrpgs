@@ -126,6 +126,7 @@ Ordem inversa: **o mais recente primeiro.**
 - **~70 anéis, até 10 equipados** (um por dedo), ~10 por classe mas usáveis por todas. Criativos, sem repetir; alguns somam-se
 - **Elementos:** fogo, raio, veneno, escuridão, magia do mal — além de físico (corte/contundente/perfuração) e mágico. **Escudos diferem por elemento**
 - ✏️ **CORRIGE o dano de queda:** era percentagem pura (nível não valia nada); passa a **fixo + proporcional**, com tecto absoluto aos 25 m. Eu tinha esticado a Lei 1 para onde ela não se aplica
+  - ⚠️ **Histórico:** o contrato canónico posterior do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) preserva fixo + proporcional abaixo do limiar e move a morte absoluta para **20 m**, para vida/equipamento não abrirem topologia.
 - ⚠️ **Substitui:** a tabela de queda do [`spec/36-fisica.md`](spec/36-fisica.md) §2
 
 ### Física, artes de arma e armadura por peça → [`spec/36-fisica.md`](spec/36-fisica.md) e [`spec/34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md) §2b/§2c

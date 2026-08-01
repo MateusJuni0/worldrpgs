@@ -111,7 +111,7 @@ Isto liga directamente ao [`38-ataques-e-honestidade.md`](38-ataques-e-honestida
 
 **Eles chegaram, na prática, à mesma conclusão que nós escrevemos ontem por princípio.** A cláusula 3 do nosso contrato diz que a invencibilidade não escala com nada. O jogo de referência **quase** faz isso: 12 contra 13 frames é ruído.
 
-⭐ **E dá-nos a forma correcta de a armadura pesar sem tocar na invencibilidade:**
+⭐ **Na referência, a armadura pesa sem tocar materialmente na invencibilidade:**
 
 | O que a carga muda | O que a carga **não** muda |
 |---|---|
@@ -120,15 +120,16 @@ Isto liga directamente ao [`38-ataques-e-honestidade.md`](38-ataques-e-honestida
 | **regeneração de stamina** (−9 no escalão pesado) | quantas vezes se pode esquivar seguido |
 | ter ou não **hiper-armadura** | |
 
-**Isto é a resposta a "como é que a armadura pesada custa alguma coisa".** Não custa invencibilidade — custa **espaço** e **stamina**. Um jogador pesado esquiva o golpe na mesma, mas fica mais perto, e cansa-se mais depressa. É uma penalização honesta: continua a ser possível, mas exige melhor posicionamento.
+**A conclusão que conservamos é o custo sem mexer nos i-frames.** O contrato actual não herdou a distância variável da referência: cobra recuperação e regeneração, que são os campos executáveis de `armor.json`.
 
-**A decisão para nós** `[CLAUDE]`, `→WP1`/`→WP5`:
+**A decisão corrente para nós**, fechada pelo [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1:
 
-| Escalão | Limiar | Distância | Invencibilidade | Regen. stamina |
+| Escalão | Limiar | Esquiva | Invencibilidade | Regen. stamina |
 |---|---|---|---|---|
-| Leve | < 30% | 4,5 m | **317 ms** | 100% |
-| Médio | 30–70% | 3,2 m | **317 ms** | 100% |
-| Pesado | > 70% | 1,8 m | **317 ms** | **−35%** |
+| Leve | < 30% | base | **317 ms** | **40/s** |
+| Médio | 30–70% | recuperação +4 f | **317 ms** | **40/s** |
+| Pesado | >70–100% | recuperação +8 f | **317 ms** | **31/s** |
+| **Sobrecarregado** | > 100% | **não existe**; sem corrida/sprint, marcha 3 m/s | — | **26/s** |
 
 **Fontes:** [Equipment Weight Thresholds — TheGamer](https://www.thegamer.com/dark-souls-3-weight-ratio-dodge-roll/) · [Equipment Load — DS3 Wiki](https://darksouls3.wiki.fextralife.com/Equipment_Load)
 

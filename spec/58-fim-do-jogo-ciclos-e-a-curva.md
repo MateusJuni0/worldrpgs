@@ -56,33 +56,23 @@
 
 ## 3. ⭐ E o terceiro travão, que é o que faltava: os pontos ficam **caros e inúteis** ao mesmo tempo
 
-**Os soft caps aos 40 fazem a segunda metade da conta.** Com 8 atributos, base 10 cada, e 1 ponto por nível:
-
-| Nível | Pontos ganhos | O que dá |
-|---|---|---|
-| 40 | 39 | **um** atributo no soft cap, e sobra pouco |
-| 70 | 69 | **dois** atributos no soft cap |
-| **100** | 99 | ⭐ **três** atributos no soft cap — e **nunca mais do que isso** |
-
-⭐ **Com 8 atributos e tecto 100, nunca podes ter mais de três especialidades. Nunca.** É isso que impede o nível 100 de ser "o jogador completo" — é o jogador que escolheu **três**.
-
-⚠️ **E o soft cap é o que impede o 4.º de valer a pena:** depois dos 40, cada ponto rende tão pouco que **espalhar é sempre pior do que aprofundar**. A escolha é real, e é permanente até haver reespecialização.
+⚠️ **CORRIGIDO PELO [`70`](70-fecho-dos-sistemas-de-combate.md) §1:** não há um soft cap universal aos 40 nem um limite matemático de três especialidades. Há curvas próprias: Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70. Com tecto 100 e um ponto por nível, chegar ao último breakpoint de um atributo é possível; chegar a todos não é.
 
 ### ⭐ Os níveis 71–100 compram largura
 
-**Depois de dois atributos no soft cap, mais pontos no mesmo não fazem quase nada.** O que fazem é **abrir outras coisas**:
+**Depois dos breakpoints, mais pontos no mesmo atributo rendem menos.** Espalhá-los pode abrir outras ferramentas sem criar trancas de classe:
 
 | | Nível 70 | ⭐ Nível 100 |
 |---|---|---|
-| O que sabes fazer | duas coisas, muito bem | ⭐ **três coisas, muito bem** |
-| Armas que podes usar | as da tua família | ⭐ **as de três famílias** |
-| Magia | uma escola, ou nenhuma | ⭐ **uma escola a sério, ou duas pela metade** |
+| O que sabes fazer | ferramentas concentradas | ⭐ mais ferramentas com eficiência útil |
+| Armas que podes usar | **todas** (Lei 3) | **todas**; requisitos só mudam eficiência, nunca permissão |
+| Magia | reserva e escala concentradas | pode alargar escolas/formas, pagando custo de oportunidade |
 | ⚠️ Danos por golpe | ~igual | **~igual** |
 | ⚠️ Vida | ~igual | **~igual** |
 
 ⭐ **É a Lei 2 aplicada ao nível: os últimos 30 níveis dão OPÇÕES, não números.** Não ficas mais forte — ficas **mais versátil**. E versátil não ganha lutas sozinho.
 
-⚠️ **Isto obriga a uma coisa no `→WP2`:** vida e stamina **têm de ter soft caps mais duros do que os atributos de dano**. Senão subir vida é sempre bom, e o jogador "apelão" aos 70 é o que tem 70 pontos em sobrevivência. **O piso de 30%** ([`39`](39-estudo-profundo.md) §1) já ajuda — nenhuma armadura te torna imune — mas a curva tem de ajudar também.
+✅ **Isto já está executável:** Vida e Stamina saturam por curvas próprias antes do último breakpoint de dano; Constituição tem curva própria e o piso corporal de 30% continua a impedir imunidade. Ver [`70`](70-fecho-dos-sistemas-de-combate.md) §1 e `attributes.json`.
 
 ---
 
@@ -100,7 +90,7 @@
 
 # PARTE B — o fim do jogo e os ciclos
 
-## 5. O que a referência faz
+## 5. O que a referência faz — não são os números do WorldRPGs
 
 | | |
 |---|---|
@@ -174,8 +164,8 @@ matas o ULTRA
 | ⭐ **Em co-op, os dois têm de concordar** | ⚠️ e se não concordarem, **isso é uma conversa** — e é a melhor cena que este jogo pode dar |
 | **Guarda-se tudo** | níveis, equipamento, feitiços, almas, brasas |
 | ⚠️ **Perde-se** | ⭐ **as chaves e os atalhos** — o mundo volta a estar fechado. É o que faz o NG+ ser um percurso e não um passeio |
-| **NG+** | **+40%** de vida e dano |
-| **NG+2 a NG+7** | **+8%** por ciclo |
+| **NG+ (ciclo 2)** | **PV ×1,30 · dano ×1,15** |
+| **Ciclos 3 a 7** | somam **+5% PV · +3% dano** por ciclo |
 | ⚠️ **Tecto no NG+7** | **sem tecto, o esforço deixa de valer** |
 
 ### ⭐ E o que muda além dos números — que é o que faz voltar
