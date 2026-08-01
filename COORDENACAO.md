@@ -90,7 +90,15 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 56 | Claude | voz e vendedores |
 | 57 | Claude | mapa e minimapa |
 | 58 | Claude | fim do jogo, ciclos e a curva |
-| **59+** | **livre** | |
+| 59 | Fable | sistema de saves (fase 1.1 do `TERMINAR-A-SPEC`) |
+| 60 | Fable | arena de chefe (fase 2.3) |
+| 61 | Fable | acessibilidade auditiva (fase 2.4) |
+| 62 | Fable | como se afinam os números (fase 2.5) |
+| 63 | Fable | criação de personagem (fase 2.6) |
+| 64 | Fable | música e ambiente (fase 2.7) |
+| **65+** | **livre** | |
+
+⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 
