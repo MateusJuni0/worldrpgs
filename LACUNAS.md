@@ -710,3 +710,46 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🟠 | **As cenas que instanciam `Gameplay` deixam instâncias Godot no fecho headless.** A cena anterior `repro-inicio.tscn` termina verde com `10 ObjectDB instances were leaked`; a nova reduz para 6 depois de esperar a libertação do mundo/áudio, mas não elimina a dívida. Não altera o resultado dos testes. | O dono do ciclo de vida de `main.gd`/visuais/áudio deve localizar as seis instâncias com uma sonda dedicada; não esconder o aviso nem libertar nós de jogo a partir do teste. |
 
 | ⏳ | ⭐ **O instrumento do Mago do Mal fica em aberto.** O [`52`](spec/52-mago-do-mal.md) §10 diz que a **escolha de instrumento é livre**, mas hoje só o `cajado` tem ficha 1,0 — os outros cinco estão declarados e não existem. O kit inicial dele arranca com cajado por ser o único jogável. **Um instrumento próprio (osso, talismã) é decisão do Mateus** | `game/data/weapons.json` `loadouts.evil_mage` |
+
+---
+
+## ☠️ Corpos levantados — entrega da árvore `necromancia` (01-08-2026)
+
+### As quatro perguntas do fio solto
+
+1. **Como usa o jogador:** mata um inimigo, deixa o corpo visível no chão, percorre os favoritos com a acção remapeável `next_spell` (F/d-pad cima por defeito) até **Levantar** ou **Erguer Guardião** e conjura com `cast` (C/X-quadrado). O runtime escolhe o corpo elegível mais próximo, dentro do alcance e à frente do jogador. `ability` (V/Start-Options) alterna todos os levantados entre seguir o necromante e guardar o chão. A pré-validação pública impede consumir corpo ou reservar PV antes do commit.
+2. **Como se prova:** `necromancy_runtime_self_test.tscn` passa **16/16**: morte→corpo único/visível, claim atómico entre dois necromantes, pré-validação sem efeito, consumo/libertação do corpo, aliado materializado, barra máxima, ausência de fogo amigo, dono/autoridade separados, caminhada lenta, golpe/resposta hostil, commit com C, ordem com V, interrupção, descanso sem cura e limpeza na morte. `dark_mage_origin_test.gd` passa **18/18**, incluindo chefe portátil, ausência de tecto, três camadas e a exclusividade pelo PV. O agregado oficial manteve **9703/9703**.
+3. **De onde vêm arte e som:** o cadáver conserva o modelo do inimigo que caiu; o levantado reutiliza a sua malha, ataques e tells. O conceito aprovado `art/concept/inimigos/peregrino-caido.png` orienta a postura inclinada, passo lento, dessaturação de podridão e leitura “errada”; aro, halo e fios vermelhos são geometria/material sintetizados. Os cues de levantar e dar ordem são PCM de 16 bits sintetizado em código e cacheado, sem binário novo.
+4. **Quanto custa na máquina do Rico:** Iris Xe, Vulkan Mobile, 1920×1080, VSync desligado, 2 jogadores + 5 inimigos com rig/IA/tells reais e o mesmo modelo/IA do levantado. O benchmark neutraliza apenas o dano recebido para conservar todos animados e inclui a procura contínua de alvo. Esta máquina tem i7-1255U e 16 GiB; é a GPU-alvo, mas ainda se deve repetir no aparelho final se tiver 8 GiB e com arte final.
+
+| Levantados | Actores animados | FPS médio | ms médio | p95 | p99 | Draw calls |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 7 | 330,0 | 3,031 | 5,169 | 6,717 | 72 |
+| 3 | 10 | 313,3 | 3,192 | 4,902 | 6,210 | 97 |
+| 5 | 12 | 308,4 | 3,242 | 5,659 | 6,821 | 123 |
+| 8 | 15 | 278,7 | 3,588 | 6,166 | 8,069 | 162 |
+| 12 | 19 | 246,5 | 4,056 | 7,703 | 9,686 | 225 |
+| 19 | 26 | 254,7 | 3,926 | 7,659 | 9,899 | 325 |
+
+De 7 para 26 actores — os 19 corpos pequenos matematicamente alcançáveis antes de o orçamento visível de PV impedir o seguinte — a memória estática passou de 85,9 para 90,6 MiB e a VRAM de 75,5 para 76,7 MiB. O p99 de 9,899 ms ficou abaixo dos 16,67 ms. FPS médio não é monotónico por ruído de agenda, mas draws, primitivas e memória crescem com a carga. Portanto, **esta medição não justifica o antigo máximo de oito actores e não foi introduzido qualquer tecto silencioso**.
+
+Havia dezenas de processos Godot de árvores paralelas na máquina. Uma primeira passagem contaminada mediu baseline p99 16,702 ms e 19 levantados p99 18,655 ms; depois de a actividade CPU estabilizar, a comparação emparelhada 19→0 deu 9,899→6,717 ms e a série acima. O pior resultado não é escondido, mas também não pode ser atribuído à necromancia porque o próprio baseline falhou. Os números não autorizam extrapolar para modelos finais mais pesados e o gate final continua a exigir repetição sozinho no hardware do Rico.
+
+### Decisões `[CODEX]` propostas, não `[DECIDIDO]`
+
+- `[CODEX]` **Corpo mais próximo, à frente e dentro do alcance.** Razão: transforma Levantar numa acção existente e rápida, sem acrescentar tecla nem menu durante combate. Alternativa: retículo dedicado ou lista de cadáveres; fica disponível se o teste com dois corpos próximos mostrar selecção ambígua.
+- `[CODEX]` **Silhueta original apodrecida, inclinada e marcada a vermelho.** Razão: o jogador reconhece que criatura levantou e conserva a leitura dos seus ataques, enquanto a postura/cor/material a separam imediatamente de um hostil vivo. Alternativa: modelo morto-vivo único para todas as espécies; não adoptada porque apaga essa identidade e pede arte nova.
+- `[CODEX]` **Som curto sintetizado para levantamento e ordem.** Razão: dá confirmação mesmo fora da câmara e cumpre a proveniência sem bloquear em assets finais. Alternativa: silêncio até gravação/pack final; rejeitada nesta fatia porque tornaria a acção menos legível.
+
+### Ligações e decisões que pertencem a outros donos
+
+| Estado | Trabalho fora desta árvore | Fronteira pronta |
+|---|---|---|
+| 🔴 | **O dono de `game/src/main.gd`/`game/src/player/player.gd` tem de instanciar `NecromancyRuntime` para `class_id == evil_mage`.** Configurar com jogador, raiz do mundo, IDs de dono/autoridade e catálogos; chamar `watch_enemy(enemy, stable_spawn_id)` em cada `_spawn` (o segundo argumento é necessário entre peers; a omissão só é estável no processo local); chamar `rest()` antes da cura da fogueira e `leave_zone(new_root)` na transição. A morte do caster já limpa automaticamente; descanso também descarta os registos de corpos antes de os inimigos ressuscitarem. Sem estas chamadas, a necromancia continua sem consumidor no jogo principal, apesar de o fluxo isolado estar completo | `res://src/summons/necromancy_runtime.gd::setup/watch_enemy/rest/leave_zone` |
+| 🔴 | **O dono de `player.gd` deve chamar `validate_raise_target(selected_spell)` antes de gastar mana/iniciar Levantar ou Erguer.** Hoje `_start_cast()` cobra primeiro e não conhece cadáver/PV; o runtime só observa o commit. A API devolve `no_eligible_corpse`, `missing_body_size_data`, `insufficient_health_budget` ou aceitação sem mutar estado | `NecromancyRuntime.validate_raise_target(spell_id)` |
+| 🔴 | **O dono de `game/data/enemies.json` tem de declarar `necromancy_body_size` em cada inimigo comum**, usando uma chave de `spells.json::levantar.effect.health_cost_fraction_by_size`. É um número/classificação de combate e esta árvore não o inferiu pelo modelo. Sem a declaração, o corpo aparece mas Levantar rejeita `missing_body_size_data`; chefes continuam pela ficha própria | `RaisedCorpse.body_size`; escolher pequeno/médio/grande nos dados, não em `.gd` |
+| ⚠️ | **[TENSÃO] Quem simula/comanda invocados em co-op continua por decidir.** A implementação não fechou a questão: o claim do corpo e o levantado guardam `caster_owner_id` e `simulation_authority_id` separadamente, pelo que o adaptador de rede pode usar “quem levantou” ou “host” sem reescrever IA/posse. O ID estável e claim atómico já impedem duplicação local; a validação remota fica para a política escolhida. Não há fogo amigo em nenhuma das opções | Mateus/Rico escolhem política; `RaisedCorpse.try_claim(...)` e `RaisedEnemy.setup_raised(...)` aceitam os dois IDs |
+| 🔵 | Incluir a cena focal no corredor obrigatório para esta regressão passar a contar no total central; a posse desta árvore proíbe alterar o agregador | `res://src/summons/necromancy_runtime_self_test.tscn` · 16/16 isolados |
+| 🔵 | Repetir o benchmark no hardware físico final e com modelos/efeitos finais. Não transformar variação de FPS em limite de desenho; se a Lei 4 falhar, degradar apresentação pelos presets declarados e publicar o número medido | `res://src/summons/necromancy_benchmark.tscn -- --summons=N` |
+
+O orçamento continua puramente data-driven: chefe erguido (50%) + Voto de Sangue ×3 (60%) já excedem 100%, e qualquer invocação comum aumenta ainda mais. `_fits_budget()` exige que o necromante permaneça vivo, logo as combinações incompatíveis são rejeitadas pela mesma matemática, independentemente da ordem, sem travão adicional nem máximo de criaturas.
