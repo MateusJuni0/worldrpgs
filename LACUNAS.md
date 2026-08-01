@@ -354,6 +354,34 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 
 ---
 
+## ⭐ Queda e limite do mundo — implementação `[CODEX]` (01-08)
+
+### Eles / nós / diferença
+
+| | Dark Souls | Queda e Morte |
+|---|---|---|
+| Faixas | **DS1:** até 5 unidades não causa dano; acima de 5 até 20 causa dano; acima de 20 mata. O dano sobrevivível é percentagem da vida máxima, aumenta com a carga e ignora defesa. Há ainda `kill boxes` separadas em abismos/fora do mapa. [Fonte](https://darksouls.wikidot.com/fall-damage) | **0–5 m:** zero; **>5 e <20 m:** curva híbrida fixa + percentagem da vida máxima; **≥20 m:** morte absoluta. Os valores e nós da curva vivem em `game/data/progression.json`; a defesa não reduz queda e a carga multiplica o dano até ×1,40. |
+| Variação útil | **DS2:** dano sobrevivível plano, não percentagem de PV; carga aumenta-o, equipamento pode reduzi-lo, mas existe um corte fatal absoluto que ignora redução. [Fonte](https://darksouls2.wikidot.com/falling-damage) | A parte fixa impede que subir Vida apague a queda; a parte proporcional conserva a decisão do Mateus de Vida continuar relevante antes dos 20 m. |
+| Protecção | **DS3:** Spook/Anel do Gato anulam quedas não fatais, nunca tornam sobrevivível uma queda letal. [Fonte](https://darksouls3.wikidot.com/falling) | A topologia fatal também não depende de vida, carga ou equipamento. O gancho de redução já existe na fórmula de dados, mas nenhum anel implementado declara ainda esse valor executável. |
+| Diferença deliberada | DS1 aceita caixas de morte que podem não corresponder à altura realmente percorrida. | O vazio exterior usa a mesma medição física desde o ponto mais alto da queda; não há teletransporte nem `kill box` silenciosa. A inclusão exacta difere em 20 m: nós matamos já em **20,0 m**, como manda o `spec/70`. |
+
+`[CODEX]` **Limite escolhido: queda e morte, não parede invisível.** Razão: o chão e a colisão terminam juntos, a imagem diz a verdade e a consequência usa uma regra que o jogador pode aprender em qualquer queda. Alternativa descartada: parede invisível com sinalização; impediria o bloqueio, mas mostraria precipício aberto enquanto a colisão dizia “parede”, contra a cláusula de honestidade do `spec/38`. Ao chegar a 20 m desde o último apoio, `Player` emite o mesmo `died` que `main.gd` já liga a `SaveSystem.commit_death`: larga as almas e regressa à última fogueira depois do fade normal. Não há reposicionamento especial da queda. O gancho seguro da mancha está pronto; falta o consumidor fora desta árvore indicado abaixo.
+
+### As quatro perguntas do fio solto
+
+1. **Como usa o jogador:** anda/corre/esquiva com as acções remapeáveis já existentes e pode atravessar a orla; não foi inventada uma tecla de “cair”. A última célula de 4 m avisa passivamente com padrão partido âmbar, estacas, folhas a correr para fora e vento 3D. A arena de afinação fica excluída.
+2. **Como se prova:** `game/src/world/bounds_self_test.gd` prova as três faixas e simula a gravidade a 60 Hz. O probe opt-in `--bounds-player-probe` criou um `Player` isolado fora do chão, deixou correr `move_and_slide()` e recebeu `Player.died` em **1,417 s**, antes do prazo **1,481 s**; não está ligado ao `main`, portanto não escreve save. O auto-teste geral continua em **9703/9703**.
+3. **De onde vêm arte e som:** nenhuma descarga nova. Faixa, estacas e folhas são primitivas/shader/partículas sintetizadas em `bounds_warning.gd`; o vento direccional reutiliza `amb_wind`, já sintetizado por `procedural_audio.gd` e carregado pelo `Sfx`.
+4. **Quanto custa no Rico:** Iris Xe, Mobile/Vulkan, 1080p, zona completa, 5 s de aquecimento + 15 s: variante final **130,1 fps**, p99 **11,413 ms**, 51 draws, 273 306 primitivas e 123,2 MB VRAM. Contra o probe desligado são **+5 draws, +2 864 primitivas e +0,1 MB VRAM**. Os controlos `off` deram 72,2–83,3 fps/p99 32,992–33,681 ms enquanto sete Godot de outros agentes estavam órfãos a consumir CPU; por isso não se atribui um delta de FPS falso. A variante entregue passa 60 fps com margem, mas a sessão não isola um custo causal fino.
+
+| | Lacuna | Origem |
+|---|---|---|
+| 🔴 | **O dono de `game/src/tests/self_test.gd` ainda tem de incorporar `BoundsSelfTest.run_suite()` e somar cada `failures` ao contador central.** Esta árvore não pode escrever nesse ficheiro. Até isso acontecer, a regressão corre separadamente com `godot --headless --audio-driver Dummy --path game --script res://src/world/bounds_self_test.gd`, e a física real com `--bench --scene=zone --bounds-player-probe`, mas ainda não impedem um merge que só execute `scenes/selftest.tscn`. | pedido directo do Mateus · ownership paralelo |
+| 🔴 | **O dono do ciclo de almas tem de gravar `player.death_stain_position`, não `player.global_position`, em `_on_player_died`.** O `Player` já conserva o último apoio para uma queda fatal; o `main.gd` actual continua a passar a posição no vazio a `SaveSystem.commit_death`, o que criaria uma mancha irrecuperável. Não foi alterado aqui porque `main.gd` e fogueiras pertencem a outro agente. | `game/src/main.gd::_on_player_died` · ownership paralelo |
+| 🟠 | **Uma redução de dano de queda por anel ainda não tem fonte executável.** `GameData.fall_damage()` aceita o parâmetro, mas `equipment.json` só tem descrições editoriais relacionadas com queda. Não transformar prosa em número sem ficha/decisão. | `game/data/equipment.json` · `GameData.fall_damage()` |
+
+---
+
 ## 🕳️ Buracos de sistema — coisas que NUNCA foram escritas
 
 **Varrimento de 01-08.** Não são detalhes por afinar: são sistemas inteiros que a spec assume e nunca definiu. Ordenados por quanto custa descobri-los tarde.
