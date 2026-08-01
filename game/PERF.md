@@ -25,9 +25,13 @@ O nome do adaptador vem lido do próprio Godot em cada medição (`Intel(R) Iris
 
 ## A resposta curta
 
-**Aguenta-se, com muita folga.**
+**Aguenta-se, incluindo os corpos e esqueletos reais da Fatia 1.**
 
-No cenário que a spec define como critério de aceitação — **2 jogadores + 3 inimigos no ecrã, a 1920×1080** — o jogo corre a **60,0 fps travados, com o pior frame em 16,67 ms e zero frames fora do orçamento**. Sem vsync, o mesmo cenário dá **377 fps médios**.
+No cenário que a spec define como critério de aceitação — **2 jogadores + 3
+inimigos no ecrã, a 1920×1080** — o jogo com cinco corpos Quaternius animados
+corre a **60,0 fps travados, com 1% low de 60,0, pior frame de 16,67 ms e zero
+frames fora do orçamento** durante 30 segundos. O número antigo de 377 fps sem
+vsync pertence ao greybox; a medição actual sem vsync é registada abaixo.
 
 Ao fim de **20 minutos quente**, a média é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável.**
 
@@ -101,6 +105,39 @@ Com vsync ligado, os **3601 frames** dos 60 segundos saíram todos a 16,67 ms ex
 
 ---
 
+## Animação de esqueleto — medida no conteúdo importado
+
+Medição de 01-08-2026, Iris Xe, Mobile/Vulkan, 1920×1080, depois de importar o
+corpo e a biblioteca UAL que o jogo usa. A variante UAL é sem root motion e os
+actores partilham a mesma estrutura de **65 ossos**.
+
+| Cena | Actores | Média | p95 | p99 | Pior frame |
+|---|---:|---:|---:|---:|---:|
+| UAL isolado | 5 | **60,0 fps** | 17,773 ms | 18,723 ms | 20,619 ms |
+| UAL isolado | 10 | **60,0 fps** | 16,666 ms | 17,323 ms | 18,539 ms |
+
+Na prova integrada `lei4`, com **2 jogadores + 3 inimigos**, modelos, texturas,
+IA, animação e colisões reais, 30 s com vsync deram **60,0 fps de média, 60,0 de
+1% low, mínimo 60,0, pior frame 16,67 ms e 0,0% acima do orçamento**. A cena
+ocupou 115,2 MB de memória gráfica, fez 22 draw calls e desenhou 100 228
+primitivas.
+
+Sem vsync, uma amostra curta deu 154,7 fps médios, mas apanhou um pico isolado
+de 75,2 ms: o 1% low caiu para 57,7 e 0,2% dos frames passaram 16,67 ms. Uma
+amostra anterior na mesma sessão deu 219,3 fps e 1% low de 88,4. Esta variação
+é ruído real da máquina enquanto estava a ser usada; não se esconde. O critério
+de jogo, medido com o limite real de 60 fps durante 30 s, passou sem uma quebra.
+
+**Conclusão:** “cápsulas não são personagens animados” deixou de ser risco por
+medir. Cinco e dez esqueletos mantêm 60 fps; cinco dentro do combate também.
+Os picos curtos do ensaio isolado e sem vsync continuam a justificar medir de
+novo depois de cada camada visual.
+
+Dados reproduzíveis: [`medicoes/animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json)
+e `src/tools/animation_benchmark.gd`.
+
+---
+
 ## Como estes números foram conseguidos
 
 Não foi por sorte. Três decisões deliberadas, todas por causa da Lei 4:
@@ -109,7 +146,9 @@ Não foi por sorte. Três decisões deliberadas, todas por causa da Lei 4:
 2. **A névoa é desempenho, não estética.** Corta a distância de visão para 70 m e esconde o corte do mundo. A spec já tinha percebido isto — *"a bruma é aliada da Lei 4"*.
 3. **Tudo o que é caro está desligado, explicitamente:** sem SSAO, sem SSIL, sem SDFGI, sem glow, sem névoa volumétrica, sem MSAA, sombras numa só cascata e as copas das árvores não as lançam.
 
-Malhas de baixa contagem: troncos com 6 lados, copas com 7, cápsulas com 8 segmentos. **23 mil primitivas na cena toda.**
+Os 23 mil primitivos e as cápsulas desta secção descrevem a medição histórica
+do greybox. Com cinco corpos importados, a cena integrada actual chega a
+100 228 primitivas e continua dentro do alvo.
 
 ---
 
@@ -117,9 +156,13 @@ Malhas de baixa contagem: troncos com 6 lados, copas com 7, cápsulas com 8 segm
 
 Sou obrigado a ser honesto sobre isto, senão o dado engana.
 
-**Isto é um greybox.** Não há animação de esqueleto, nem texturas, nem partículas, nem som, nem interface a sério. Um souls-like vive de animação — e a animação de esqueleto é *a* grande incógnita que falta medir, porque é cara de CPU e o combate inteiro depende dela.
+**Ainda não é o conteúdo final.** Já há corpos, texturas e animação de esqueleto,
+mas faltam equipamento encaixado, efeitos e interface final. A medição fecha o
+risco de animação da Fatia 1; não promete o custo de todos os sistemas futuros.
 
-**A folga é o orçamento para o conteúdo, não uma garantia.** 377 fps no critério 5 quer dizer que há cerca de **6× de orçamento de frame** para gastar em arte, animação e efeitos antes de tocar nos 60. É muito. Não é infinito.
+**A folga é o orçamento para o conteúdo, não uma garantia.** Os 154–219 fps sem
+vsync medidos com cinco corpos deixam margem média, mas os picos mostram por que
+razão cada camada visual tem de voltar a ser medida.
 
 **Só uma máquina foi medida** — a do chão, que é a que manda. A do Mateus (i7-1255U, 16 GB) deve dar melhor, mas não está medida.
 
@@ -127,10 +170,9 @@ Sou obrigado a ser honesto sobre isto, senão o dado engana.
 
 ### O que medir a seguir, por ordem
 
-1. **Animação de esqueleto** com 4–5 personagens animados ao mesmo tempo. É a incógnita que resta.
-2. A fuga de memória dos 14,5 MB / 20 min.
-3. A zona inteira percorrida a pé, em vez da câmara em órbita.
-4. A máquina do Mateus, para confirmar que o chão é mesmo o chão.
+1. A fuga de memória dos 14,5 MB / 20 min.
+2. A zona inteira percorrida a pé, em vez da câmara em órbita.
+3. A máquina do Mateus, para confirmar que o chão é mesmo o chão.
 
 ---
 
@@ -145,6 +187,9 @@ godot --path . --rendering-method mobile -- --bench --scene=lei4 --seconds=60 --
 
 # quente (20 min)
 godot --path . --rendering-method mobile -- --bench --scene=perf --seconds=1200 --label=quente
+
+# custo isolado de 5 e 10 esqueletos UAL reais
+godot --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=12 --warmup=3 --width=1920 --height=1080
 ```
 
 Os JSON crus ficam em `perf-raw/` (fora do git). Se algum número aqui e no JSON divergirem, **manda o JSON**.
