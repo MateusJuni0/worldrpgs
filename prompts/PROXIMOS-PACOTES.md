@@ -1,5 +1,7 @@
 # Fila de trabalho — os 11 pacotes que faltam
 
+> ⚠️ **FILA HISTÓRICA DE 31-07-2026 — NÃO EXECUTAR.** Os onze pacotes foram entregues e várias “lacunas” abaixo já foram decididas ou revogadas (morte/mancha, frasco, armadura, mana sem cargas, hierarquia e catálogos). Para trabalho corrente, ler [`../prompts/CODEX-CONTEXTO.md`](CODEX-CONTEXTO.md), [`../ESTADO.md`](../ESTADO.md), [`../LACUNAS.md`](../LACUNAS.md) e [`../MAPA.md`](../MAPA.md); este ficheiro conserva apenas a ordem e o contexto da passagem antiga.
+
 > **Para o Fable.** Onze pacotes, por ordem de valor. Cada um diz o que tem de responder, **o que investigar da referência antes de escrever**, o que herda das decisões de 31-07, e as lacunas que já sabemos que existem.
 >
 > Antes de qualquer um: **reserva no [`COORDENACAO.md`](../COORDENACAO.md)**, e lê [`../spec/31-referencias.md`](../spec/31-referencias.md) (o protocolo de investigação e a linha entre inspirar e copiar).
@@ -72,7 +74,7 @@ Mais: **armadura** — nunca foi dita uma única vez na sessão 1 (pergunta 14, 
 
 ### WP9 — Progressão, loot e economia · `spec/18-progressao.md`
 
-**Investigar:** o que se perde ao morrer e como se recupera — é a **pergunta 10**, aberta, e é a decisão de tom do jogo inteiro. Curva de custo de subir de nível. Como os consumíveis se estruturam.
+**Registo histórico do que se ia investigar:** o que se perde ao morrer era a **pergunta 10**; foi depois resolvida por mancha de almas no [`33`](../spec/33-morte-e-almas.md). A curva e os consumíveis correntes vivem no [`72`](../spec/72-materiais-consumiveis-e-economia.md).
 
 **Herda:** evoluções opção A · loot instanciado (provisório) · recompensa reduzida ao ajudar (12:34).
 

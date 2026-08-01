@@ -78,9 +78,9 @@ O que um vendedor venderia, se existir (para a gravação ter chão): consumíve
 | Guardião/subchefe (WP7) | **um verbo** (skill ou pergaminho) + XP alto | +X% de seja o que for |
 | O Ultra | o fim do jogo | — |
 
-## O que se perde ao morrer
+## O que se perde ao morrer — contrato posterior
 
-**Nada, provisoriamente** — formalizado no WP1, herdado do WP0. A **pergunta 10 continua deles**: é a decisão de tom do jogo inteiro (perder XP não gasto à Dark Souls? recuperá-lo no local da morte?). O que este documento acrescenta para essa gravação: se decidirem perder-algo, a proposta técnica é *XP não gasto cai no local da morte, uma chance de recuperar* — punição de tensão, não de grind; e os tectos da Lei 1 não mexem. Fica pronta, à espera do sim ou do não.
+O provisório “nada” foi **revogado pela resposta dos donos à pergunta 10**. As almas não gastas ficam numa mancha no local da morte; podem ser recuperadas uma vez e uma segunda morte antes da recolha substitui a mancha anterior. O [`33`](33-morte-e-almas.md) fecha os quatro casos solo/co-op e o [`59`](59-saves.md) fecha a publicação atómica. O risco cria tensão sem introduzir grind obrigatório; os tectos da Lei 1 mantêm-se.
 
 ## Ideias para depois
 
@@ -100,7 +100,7 @@ O que um vendedor venderia, se existir (para a gravação ter chão): consumíve
 ## O que continua aberto
 
 - **Pergunta 5** — instanciado escolhido e justificado; a resposta perdida do Mateus (05:40) tem precedência se for recuperada
-- **Pergunta 10** — o tom da morte, deles, com a proposta técnica pronta
+- ~~**Pergunta 10**~~ — ✅ resolvida pelos donos; mancha de almas no [`33`](33-morte-e-almas.md)
 - Moeda/vendedores — pendurados na gravação de narrativa (WP8B)
 
 ## Ligações

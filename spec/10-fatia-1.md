@@ -70,10 +70,10 @@ O "arranque típico" é o equipamento inicial — pela Lei 3, qualquer um pega e
 
 ## Decisões provisórias que a fatia obriga a tomar já
 
-Cada uma é `[FABLE]` **provisória**: serve a fatia, não fecha a pergunta original — que continua no [`99-perguntas-abertas.md`](99-perguntas-abertas.md), à espera deles.
+Estas secções nasceram `[FABLE]` provisórias. As que receberam decisão posterior dizem-no na própria linha; as restantes continuam no [`99-perguntas-abertas.md`](99-perguntas-abertas.md), à espera dos donos.
 
-### Morte (pergunta 10 continua aberta)
-Morreste → voltas à entrada de Brumal; depois de descoberta a Toca, ela própria é o ponto de renascimento. Inimigos normais renascem; **não se perde nada** — na fatia não há economia, e punição sem economia seria arbitrária. *Alternativa descartada:* perder XP/"almas" ao morrer — é a decisão de tom do jogo inteiro (pergunta 10) e é deles; a fatia não a antecipa à socapa. *Teste da Lei 1:* a morte custa caminho (< 30 s no chefe), nunca grind. ✅
+### Morte — pergunta 10 resolvida
+Morreste → voltas ao último ponto de descanso; depois de descoberta a Toca, ela própria pode sê-lo. Inimigos normais renascem. **As almas não gastas ficam numa mancha onde morreste; morrer outra vez antes de a recuperar substitui-a e perde a anterior.** O contrato decidido está no [`33`](33-morte-e-almas.md) e a persistência atómica no [`59`](59-saves.md). O provisório antigo desta fatia era “não se perde nada”; ficou revogado quando os donos responderam à pergunta 10. *Teste da Lei 1:* a morte custa risco e caminho (< 30 s no chefe), nunca grind obrigatório. ✅
 
 ### Drops em co-op (pergunta 5 continua aberta)
 **Loot instanciado** — cada jogador recebe a sua cópia. *Alternativa descartada:* partilhado com negociação — mais rede, mais fricção entre amigos, zero ganho na pergunta que a fatia responde. A resposta do Mateus perdida no áudio (05:40) continua a ser a decisão final.
@@ -125,7 +125,7 @@ Nada disto é corte. É ordem.
 
 ## O que a fatia NÃO responde, de propósito
 
-**Actualizado a 01-08:** biomas, evoluções, escala, bem/mal e armadura fecharam; o [`69`](69-catalogo-do-mundo.md) aplica os 8 min a Brumal. Continuam abertas para esta experiência: **10** (o que se perde ao morrer — o tom), **15** (paleta final) e **37** (aprovação da identidade proposta do Assassino). A fatia não as fecha à socapa.
+**Actualizado a 01-08:** morte/almas, biomas, evoluções, escala, bem/mal e armadura fecharam; o [`69`](69-catalogo-do-mundo.md) aplica os 8 min a Brumal. Continuam abertas para esta experiência: **15** (paleta final) e **37** (aprovação da identidade proposta do Assassino). A fatia não as fecha à socapa.
 
 ## Ligações
 
