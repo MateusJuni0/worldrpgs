@@ -40,11 +40,54 @@ func _ready() -> void:
 	_test_families_and_kits()
 	_test_equipment_catalogue()
 	_test_world_catalogue()
+	_test_game_shell_and_character_creation()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
 	_test_save_migration()
 	_report()
+
+
+# --- spec/64: menu inicial e criacao de personagem ---------------------------
+
+func _test_game_shell_and_character_creation() -> void:
+	_check(GameShell.CLASS_IDS.size() == 6,
+		"criacao: mostra exactamente as seis origens confirmadas")
+	for class_id: String in GameShell.CLASS_IDS:
+		_check(not GameData.class_attributes(class_id).is_empty(),
+			"criacao/%s: origem deriva atributos do catalogo" % class_id)
+		_check(not ((GameData.weapons.get("loadouts", {}) as Dictionary).get(
+			class_id, {}) as Dictionary).is_empty(),
+			"criacao/%s: origem deriva kit do catalogo" % class_id)
+		_check(not GameData.ability(class_id).is_empty(),
+			"criacao/%s: origem deriva habilidade do catalogo" % class_id)
+	var options: Dictionary = GameData.appearance.get("options", {}) as Dictionary
+	_check((options.get("body_id", []) as Array).size() == 2,
+		"criacao: corpo masculino e feminino estao disponiveis")
+	_check(ResourceLoader.exists(
+		"res://assets/models/characters/quaternius/Superhero_Female_FullBody.gltf"),
+		"criacao: modelo feminino Quaternius e importavel")
+	for key: String in ["skin_tone_id", "hair_id", "hair_color_id", "brows_id", "accent_id", "voice_id"]:
+		_check(not (options.get(key, []) as Array).is_empty(),
+			"criacao: eixo %s tem opcoes finitas" % key)
+	for good_name: String in ["A", "Ana Maria", "D'Ávila", "João-Luz", "Á".repeat(24)]:
+		_check(bool(GameShell.validate_character_name(good_name).get("valid")),
+			"criacao: nome valido '%s' passa" % good_name)
+	for bad_name: String in ["", "Ana  Maria", "Ana/../save", "<b>Ana</b>", "A".repeat(25), "Rico2"]:
+		_check(not bool(GameShell.validate_character_name(bad_name).get("valid")),
+			"criacao: nome inseguro '%s' falha" % bad_name)
+	var identity := {
+		"name": "Ari",
+		"appearance": (GameData.appearance.get("default", {}) as Dictionary).duplicate(true),
+	}
+	identity.appearance["body_id"] = "body_female"
+	var first := SaveSystem.create_save("profile-a", "warrior", identity)
+	var second := SaveSystem.create_save("profile-b", "warrior", identity)
+	_check(first.character.profile_id != second.character.profile_id
+		and first.character.identity.name == second.character.identity.name,
+		"criacao: nomes e origens repetidos conservam ids distintos")
+	_check(first.character.identity.appearance.body_id == "body_female",
+		"criacao: corpo feminino entra no estado atomico")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

@@ -74,10 +74,14 @@ func _build_world() -> void:
 
 
 func _build_player() -> void:
+	var identity: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
+		"identity", {}) as Dictionary)
+	var class_id := String(identity.get("class_id", "warrior"))
+	var appearance: Dictionary = identity.get("appearance", {}) as Dictionary
 	player = Player.new()
 	player.name = "Player"
 	add_child(player)
-	player.setup("warrior", _palette)
+	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")))
 	player.global_position = world.spawn_point + Vector3(0, 0.6, 0)
 	_respawn_point = player.global_position
 

@@ -1,0 +1,30 @@
+{
+  "_fonte": "spec/64-criacao-de-personagem.md §4",
+  "default": {
+    "body_id": "body_male",
+    "skin_tone_id": "skin_02",
+    "hair_id": "hair_buzzed",
+    "hair_color_id": "hair_03",
+    "brows_id": "brows_regular",
+    "accent_id": "accent_amber",
+    "voice_id": "voice_low"
+  },
+  "options": {
+    "body_id": ["body_male", "body_female"],
+    "skin_tone_id": ["skin_01", "skin_02", "skin_03", "skin_04"],
+    "hair_id": ["hair_none", "hair_buzzed", "hair_short", "hair_braids", "hair_tied", "hair_wavy", "hair_long"],
+    "hair_color_id": ["hair_01", "hair_02", "hair_03", "hair_04", "hair_05", "hair_06"],
+    "brows_id": ["brows_regular", "brows_fine"],
+    "accent_id": ["accent_amber", "accent_ash", "accent_blue", "accent_green", "accent_red", "accent_violet"],
+    "voice_id": ["voice_low", "voice_high"]
+  },
+  "labels": {
+    "body_male": "Corpo A", "body_female": "Corpo B (feminino)",
+    "skin_01": "Pele 1", "skin_02": "Pele 2", "skin_03": "Pele 3", "skin_04": "Pele 4",
+    "hair_none": "Sem cabelo", "hair_buzzed": "Rente", "hair_short": "Curto", "hair_braids": "Tranças", "hair_tied": "Preso", "hair_wavy": "Ondulado", "hair_long": "Comprido",
+    "hair_01": "Preto", "hair_02": "Castanho", "hair_03": "Cobre", "hair_04": "Louro", "hair_05": "Cinzento", "hair_06": "Branco",
+    "brows_regular": "Direitas", "brows_fine": "Finas",
+    "accent_amber": "Âmbar", "accent_ash": "Cinza", "accent_blue": "Azul", "accent_green": "Verde", "accent_red": "Vermelho", "accent_violet": "Violeta",
+    "voice_low": "Grave · amostra provisória", "voice_high": "Aguda · amostra provisória"
+  }
+}

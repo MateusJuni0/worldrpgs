@@ -18,18 +18,26 @@ signal save_failed(path: String, message: String)
 signal recovery_completed(path: String, source: String)
 
 
-func create_save(profile_id: String, class_id: String) -> Dictionary:
+func create_save(profile_id: String, class_id: String, identity_overrides := {}) -> Dictionary:
 	var attributes := GameData.class_attributes(class_id).duplicate(true)
 	attributes.erase("display_name")
 	var loadouts: Dictionary = GameData.weapons.get("loadouts", {}) as Dictionary
 	var loadout: Dictionary = (loadouts.get(class_id, {}) as Dictionary).duplicate(true)
+	var identity := {
+		"name": "",
+		"class_id": class_id,
+		"appearance": (GameData.appearance.get("default", {}) as Dictionary).duplicate(true),
+	}
+	for key: Variant in identity_overrides.keys():
+		if key != "class_id":
+			identity[key] = identity_overrides[key]
 	return {
 		"format_version": CURRENT_FORMAT_VERSION,
 		"content_revision": String(ProjectSettings.get_setting("application/config/version", "prototype")),
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
 		"character": {
 			"profile_id": profile_id,
-			"identity": {"name": "", "class_id": class_id},
+			"identity": identity,
 			"progression": {
 				"level": 1,
 				"souls_held": 0,
@@ -79,9 +87,10 @@ func slot_path(slot: int) -> String:
 	return "%s/slot_%02d.json" % [SAVE_DIR, slot]
 
 
-func new_game(profile_id: String, class_id: String, slot: int = 0) -> bool:
+func new_game(profile_id: String, class_id: String, slot: int = 0,
+		identity_overrides := {}) -> bool:
 	active_slot = slot
-	var state := create_save(profile_id, class_id)
+	var state := create_save(profile_id, class_id, identity_overrides)
 	GameData.replace_save_state(state)
 	return save_current(slot)
 

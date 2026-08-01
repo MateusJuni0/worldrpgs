@@ -90,7 +90,7 @@ var _frame := 0
 
 # --- Arranque -----------------------------------------------------------------
 
-func setup(p_class_id: String, palette: Dictionary) -> void:
+func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> void:
 	class_id = p_class_id
 	_palette = palette
 	attrs = GameData.class_attributes(class_id).duplicate()
@@ -126,11 +126,11 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
 	_buffer_life_parry = int(float(buf.get("parry_life_ms", 80)) * 0.06)
 
-	_build_body()
+	_build_body(body_id)
 	_build_children()
 
 
-func _build_body() -> void:
+func _build_body(body_id: String) -> void:
 	var cfg := GameData.section("player")
 	var height: float = cfg.get("capsule_height", 1.8)
 	var radius: float = cfg.get("capsule_radius", 0.35)
@@ -147,7 +147,7 @@ func _build_body() -> void:
 	# mede os mesmos 1,8 m e usa animacao sem root motion.
 	_visual = CharacterVisual.new()
 	add_child(_visual)
-	_visual.setup(height)
+	_visual.setup(height, Color.WHITE, true, body_id)
 
 	collision_layer = 2
 	collision_mask = 1
