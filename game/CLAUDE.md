@@ -57,7 +57,7 @@ Valem aqui tanto como na spec. **Nada entra sem responder às quatro:**
 
 1. **Como é que o jogador usa isto?** — uma acção sem entrada não existe no jogo. Já aconteceu: seis habilidades de classe escritas, zero teclas
 2. **Como é que se prova que funciona?** — um teste no `self_test.gd`, ou um número medido
-3. **De onde vem a arte e o som?** — pack, geração, ou sintetizado em código como os 12 efeitos actuais
+3. **De onde vem a arte e o som?** — pack, geração, ou sintetizado em código como os 17 efeitos actuais
 4. **Quanto custa na máquina do Rico?** — se mexeste no render, mede. `PERF.md` tem o método
 
 ## O que nunca entra

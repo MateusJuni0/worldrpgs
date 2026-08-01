@@ -94,7 +94,7 @@ Por ordem de importância — o detalhe está em [PERGUNTAS.md](PERGUNTAS.md).
 | `combat.json` | janelas, custos, stamina, poise, lock-on (spec/01) |
 | `weapons.json` | frames e MV das armas + dano base e requisitos (spec/01 + spec/11) |
 | `enemies.json` | PV, DEF, dano, postura, padrões de ataque (spec/11) |
-| `attributes.json` | os 6 atributos, fórmulas e classes (spec/11) |
+| `attributes.json` | os 8 atributos, fórmulas e classes (spec/70) |
 | `spells.json` | as 3 magias |
 | `controls.json` | o mapa de teclas — remapear é editar aqui |
 | `graphics.json` | presets de qualidade `alto`/`medio`/`baixo` |

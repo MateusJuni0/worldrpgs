@@ -46,7 +46,7 @@ Construído inicialmente com 130 verificações; o fecho corrente passa **8434 a
 | Vorgar, 2 fases (padrões diferentes, não números), reset total | ✅ | [`16-chefes.md`](16-chefes.md) |
 | **Frasco de cura** — 3 usos, 40% PV, 1,2 s a beber a 50% de movimento; recarrega no descanso | ✅ modelo `[DECIDIDO]`, números `[FABLE]` | [`14`](14-equipamento.md) · pergunta 7 |
 | **Habilidades de classe** — Ímpeto, Fúria, Provocação jogáveis | ✅ `[PROTO]` | [`12-classes.md`](12-classes.md) |
-| **Som** — 12 efeitos sintetizados em código, zero ficheiros e zero licenças | ✅ `[PROTO]` | [`21-arte-render.md`](21-arte-render.md) |
+| **Som** — 17 efeitos sintetizados em código, zero ficheiros e zero licenças | ✅ `[PROTO]` | [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md) §1 |
 
 Tudo **data-driven**: nenhum número de combate vive em código. Afinar uma janela é editar JSON e voltar a correr.
 
