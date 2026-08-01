@@ -786,7 +786,7 @@ func _close_pause_layer() -> void:
 	get_tree().paused = false
 	_pause_open = false
 	if is_instance_valid(_pause_layer):
-		_pause_layer.free()
+		_fechar_no(_pause_layer)
 	_pause_layer = null
 	_set_gameplay_input(true)
 
@@ -939,7 +939,7 @@ func _close_instructions() -> void:
 	_instructions_paused_here = false
 	_instructions_open = false
 	if is_instance_valid(_instructions_layer):
-		_instructions_layer.free()
+		_fechar_no(_instructions_layer)
 	_instructions_layer = null
 	if is_instance_valid(_gameplay) and not _pause_open and not is_instance_valid(_settings_layer):
 		_set_gameplay_input(true)
@@ -965,7 +965,7 @@ func _show_inventory() -> void:
 
 func _close_inventory() -> void:
 	if is_instance_valid(_inventory_menu):
-		_inventory_menu.free()
+		_fechar_no(_inventory_menu)
 	_inventory_menu = null
 	if is_instance_valid(_gameplay) and not _pause_open and not _instructions_open \
 			and not is_instance_valid(_settings_layer):
@@ -1014,7 +1014,7 @@ func _close_spell_wheel(cast_selection: bool) -> void:
 	if not is_instance_valid(_spell_wheel):
 		return
 	var selected := _spell_wheel.selected_spell_id
-	_spell_wheel.free()
+	_fechar_no(_spell_wheel)
 	_spell_wheel = null
 	if is_instance_valid(_gameplay):
 		_set_gameplay_input(true)
@@ -1320,7 +1320,7 @@ func _set_settings_tab(tab_name: String) -> void:
 func _rebuild_settings() -> void:
 	var origin := _settings_origin
 	if is_instance_valid(_settings_layer):
-		_settings_layer.free()
+		_fechar_no(_settings_layer)
 	_settings_layer = null
 	_settings_root = null
 	_show_settings(origin)
@@ -1329,7 +1329,7 @@ func _rebuild_settings() -> void:
 func _close_settings() -> void:
 	_cancel_binding_capture()
 	if is_instance_valid(_settings_layer):
-		_settings_layer.free()
+		_fechar_no(_settings_layer)
 	_settings_layer = null
 	_settings_root = null
 	_settings_fps_label = null
@@ -1401,7 +1401,7 @@ func _cancel_binding_capture() -> void:
 	_binding_action = ""
 	_binding_add_secondary = false
 	if is_instance_valid(_binding_prompt):
-		_binding_prompt.free()
+		_fechar_no(_binding_prompt)
 	_binding_prompt = null
 
 
@@ -1535,7 +1535,7 @@ func _update_preview() -> void:
 	if not is_instance_valid(_preview_pivot):
 		return
 	if is_instance_valid(_preview_visual):
-		_preview_visual.free()
+		_fechar_no(_preview_visual)
 	var appearance: Dictionary = _draft.get("appearance", {}) as Dictionary
 	_preview_visual = CharacterVisual.new()
 	_preview_pivot.add_child(_preview_visual)
@@ -1571,9 +1571,29 @@ func _begin_screen() -> void:
 	_layer.add_child(_screen)
 
 
+## ⚠️ Fecha um no de interface EM SEGURANCA. Nunca usar free() directamente aqui.
+##
+## Porque isto existe (01-08-2026): o jogo fechava ao escolher a classe e carregar
+## em iniciar. Estas funcoes de fecho sao chamadas de dentro do handler de um
+## botao — ou seja, o sinal `pressed` desse botao AINDA ESTA A SER EMITIDO. O
+## free() destroi o botao a meio da propria emissao: use-after-free. As vezes
+## sobrevive, as vezes fecha a janela sem dizer nada, e por isso o auto-teste
+## nunca apanhou. O proprio Godot diz o remedio no erro:
+##   "use queue_free() ... to avoid this error and potential crashes"
+##
+## Tira do ecra JA (para nao ficar nada visivel a mais um frame) e deixa morrer
+## no fim do frame, quando ja ninguem esta a emitir nada.
+func _fechar_no(no: Node) -> void:
+	if not is_instance_valid(no):
+		return
+	var pai: Node = no.get_parent()
+	if pai != null:
+		pai.remove_child(no)
+	no.queue_free()
+
 func _clear_screen() -> void:
 	if is_instance_valid(_layer):
-		_layer.free()
+		_fechar_no(_layer)
 	_layer = null
 	_screen = null
 	_preview_viewport = null
@@ -1583,7 +1603,7 @@ func _clear_screen() -> void:
 
 func _clear_gameplay() -> void:
 	if is_instance_valid(_gameplay):
-		_gameplay.free()
+		_fechar_no(_gameplay)
 	_gameplay = null
 
 

@@ -74,7 +74,7 @@ Valem aqui tanto como na spec. **Nada entra sem responder às quatro:**
 
 - `[PROTO]` — o protótipo assumiu para poder correr. **Não é decisão**, e alguém tem de a tomar
 - `[FABLE]` / `[CLAUDE]` — decidido por um agente, com razão e alternativa descartada
-- `[TENSÃO]` — **não se decide.** Propõe-se e recomenda-se; decidem o Mateus e o Rico
+- `[TENSÃO]` — **não se decide.** Propõe-se e recomenda-se; decide o Mateus
 
 ## Antes de começar
 

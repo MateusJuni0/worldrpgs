@@ -496,7 +496,15 @@ func wake_sequence_active() -> bool:
 
 func _end_wake_sequence() -> void:
 	if is_instance_valid(_wake_layer):
-		_wake_layer.free()
+		# ⚠️ queue_free(), nunca free(). Isto pode ser chamado de dentro de um
+		# sinal (tecla, temporizador, fim de animacao) e o free() imediato mata o
+		# emissor a meio da emissao — use-after-free, e a janela fecha sem dizer
+		# nada. Foi o que fechava o jogo ao iniciar (01-08). Ver _fechar_no() no
+		# game_shell.gd, que tem a explicacao completa.
+		var pai: Node = _wake_layer.get_parent()
+		if pai != null:
+			pai.remove_child(_wake_layer)
+		_wake_layer.queue_free()
 	_wake_layer = null
 	if is_instance_valid(player):
 		player.set_waking_up(false)

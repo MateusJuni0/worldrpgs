@@ -34,7 +34,7 @@ Estão desenvolvidas em [`spec/00-visao.md`](spec/00-visao.md) e em [`prompts/BR
 
 | | | |
 |---|---|---|
-| `[DECIDIDO]` | Fechado pelo Mateus e pelo Rico numa gravação | **Ninguém mexe** sem uma decisão nova, registada. **Indica sempre a fonte**; se só um dos dois decidiu, fica marcado ⏳ até o outro confirmar |
+| `[DECIDIDO]` | **Fechado pelo Mateus** | **Ninguém mexe** sem uma decisão nova, registada. **Indica sempre a fonte.** ⭐ **Quem decide é o Mateus, e a decisão dele vale sozinha** (instrução dele, 01-08-2026: *"o rico nao confirma, quem decide é a gente"*). O que vier do Rico é contributo — fica ⏳ até o Mateus confirmar, nunca o contrário |
 | `[SUGERIDO]` | Dito, não confirmado | Pode ser adoptado, virando `[FABLE]` |
 | `[EM ABERTO]` | Por decidir | É trabalho a fazer |
 | `[TENSÃO]` | Duas decisões que não encaixam | Propõe-se, **não se decide** |

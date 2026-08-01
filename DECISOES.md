@@ -11,7 +11,7 @@ Ordem inversa: **o mais recente primeiro.**
 ## 01-08-2026
 
 ### ⭐ O Mago do Mal é uma **origem própria** — a 7.ª classe · fecha a pergunta 36
-**[DECIDIDO] (Mateus, 01-08-2026) ⏳ falta a confirmação do Rico** — respondeu à pergunta 36 do [`99`](spec/99-perguntas-abertas.md) depois de lhe serem apresentadas as três saídas.
+**[DECIDIDO] (Mateus, 01-08-2026)** — respondeu à pergunta 36 do [`99`](spec/99-perguntas-abertas.md) depois de lhe serem apresentadas as três saídas.
 
 - ⭐ **O Mago do Mal entra no ecrã de criação ao lado das outras seis**, com ficha inicial, traço de mana e postura próprias. Passam a ser **sete origens**
 - **Não é o Feiticeiro.** O Feiticeiro é o mago que fica atrás; este **anda entre os mortos**, porque precisa dos corpos para trabalhar. É o argumento do [`52`](spec/52-mago-do-mal.md) §5: *"uma classe com postura própria, não uma variante de números"*
