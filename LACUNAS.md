@@ -465,6 +465,27 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ~~Espólio sem garantia~~ | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §2 — o baralho de 10 |
 | ~~WP6 sem catálogo executável~~ | [`67`](spec/67-catalogo-do-bestiario.md) — 33 tipos, 100 ataques comuns, 33 baralhos e 12 orçamentos |
 | ~~Ataques dependiam de áudio~~ | [`67`](spec/67-catalogo-do-bestiario.md) §7 — `GameplayCue` apresenta som e visual equivalentes |
+
+---
+
+## ⚔️ Artes de arma e movesets — fronteiras para os outros donos (01-08-2026)
+
+`weapon_art_system.gd` fecha a fronteira pura: recebe `GameData.weapons`, `GameData.equipment`, arma, melhoria, empunhadura, recursos e estado; devolve arte/moveset e uma sessão comprometida. O teste dedicado percorre as 119 armas principais: **848 passaram, 0 falharam**, **31,275 µs p95/resolução**, catálogo **17 487 B**. Nada abaixo foi alterado nesta árvore.
+
+| Estado | Trabalho fora da posse desta árvore | Contrato já pronto |
+|---|---|---|
+| 🔴 | **Controlos/UI:** declarar a acção remapeável `weapon_art` em `controls.json`/`project.godot`, mostrar o comando no ecrã de controlos e consumir o estado de mana. Não ligar uma tecla física directamente. | `_artes.input_action = weapon_art`; `begin(...)` recusa sem mana e conserva stamina |
+| 🔴 | **Player:** em `LIVRE`, resolver `is_two_handed`, chamar `begin(...)`, conservar `session.locked` até `completed`/`interrupted` e avançar frames de simulação. Não permitir esquiva/troca/item/cancelamento enquanto a sessão está presa. | `begin`, `advance`, `request_cancel`, `try_interrupt`; o efeito emite exactamente uma vez em `effect_emitted_this_step` |
+| 🟠 | **Armas/melhorias:** `weapon_progression.gd` ainda contém a fronteira anterior `weapon_art()`/`perform_art()`, que cobra mana mas não declara compromisso, curva, fuga, som ou duas fases. O dono desse ficheiro deve delegar artes/movesets em `WeaponArtSystem` para não haver duas autoridades. | `WeaponArtSystem.art_for()` e `moveset_for()` já consomem `_weapon_improvements` base + seis |
+| 🔴 | **Animação de jogador:** criar/retargetar os clips de 1.ª e 3.ª pessoa para os IDs `moveset/<familia>/<one_hand|two_hands>`, e ligar `momento_compromisso_frame`, activos e recuperação. Não editar `character_visual.gd` nesta árvore. | 8 famílias × 2 empunhaduras; nove movimentos comuns + arte atribuída por arma |
+| 🔴 | **GameplayCue/Sfx/acessibilidade:** encaminhar `som_anuncio.cue_id/perfil/alcance_m/inicio_frame` e `sinal_visual_equivalente` sem substituir o som por legenda genérica. | cada uma das 16 combinações família/empunhadura declara som, forma, âncora, início, compromisso, fim e fora de ecrã |
+| 🟠 | **Rede:** o anfitrião valida arma/empunhadura/mana e replica início; o evento autoritativo de efeito nasce uma vez no frame de compromisso. Input tardio não pode voltar a apontar a arte. | `effect_committed`, `effect_emissions`, `effect_emitted_this_step`; estado puro e serializável |
+| 🟠 | **Auto-teste central:** o dono de `game/src/tests/self_test.gd` deve incorporar esta regressão ou acrescentar o script dedicado ao gate de CI. Até lá, os 848 casos correm separadamente e os 9703 globais não os contam. | `godot --headless --audio-driver Dummy --path game/ --script res://src/weapons/weapon_art_selftest.gd` |
+| 🟠 | **Índices de spec:** `SPEC.md` ainda não lista `spec/75-artes-de-arma-e-movesets.md` e `99-perguntas-abertas.md` não referencia a tensão 70 armas pedidas versus 120 fichas decididas. O agente de coerência deve ligá-los; não se alteraram ficheiros fora da posse. | `node tools/check-coerencia.mjs` reporta exactamente esses dois pontos; os três links partidos antigos em `MAPA.md` são também alheios |
+| 🟠 | **Lei 4 integrada:** este pacote não muda render e só mediu catálogo/estado. Quando os clips finais existirem, medir 2 jogadores + 3 inimigos, Iris Xe/8 GB, 1080p60, com apenas família/artes equipadas residentes. | tecto conservador medido/projetado em `spec/75`: 48,4 MiB para 70 armas por família+artes contra 175,9 MiB para 70 conjuntos únicos |
+
+`[TENSÃO]` **O pedido directo fala em 70 armas/movesets; o catálogo `[DECIDIDO]` tem 120 fichas (119 armas com família + escudo).** Não se cortou nenhuma. `[CODEX]` recomenda moveset por família e arte atribuída por arma, partilhável e com poucas excepções; razão: reduz pelo menos 72,5% dos clips sem reduzir identidades jogáveis. Alternativa descartada nesta proposta: produzir todos os conjuntos únicos desde a Fatia 1; se Mateus mantiver essa escolha, fasear uma arma vertical por família e autorizar as seguintes só depois de medir produção/feel.
+
 # Casca do jogo — decisões de implementação a rever
 
 - `[CODEX]` **Pausa solo/co-op (01-08-2026):** a implementação pausa a árvore do mundo em solo e mantém o mundo a correr em co-op, com o estado escrito no próprio ecrã. Razão: o pedido actual do Mateus distingue explicitamente os dois modos e uma sessão de rede não pode congelar o parceiro. Alternativa descartada: nunca pausar, como recomenda a camada histórica de `spec/20-interface.md`; conserva um único hábito, mas deixa o pedido de pausa sem efeito no único modo onde parar é tecnicamente honesto. Se Mateus e Rico preferirem a regra histórica, mudar `GameShell.pause_world_for_mode()` para devolver sempre `false` é a única fronteira funcional.
