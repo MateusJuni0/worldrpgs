@@ -128,6 +128,8 @@ func _summarise() -> Dictionary:
 	var avg_fps := float(n) / total
 	var worst_delta: float = sorted[n - 1]
 	var min_fps := (1.0 / worst_delta) if worst_delta > 0.0 else 0.0
+	var p95_delta: float = sorted[clampi(ceili(float(n) * 0.95) - 1, 0, n - 1)]
+	var p99_delta: float = sorted[clampi(ceili(float(n) * 0.99) - 1, 0, n - 1)]
 
 	# 1% low: media dos 1% de frames mais lentos (o que se SENTE, nao o pico isolado)
 	var one_pct := maxi(1, int(float(n) * 0.01))
@@ -138,9 +140,15 @@ func _summarise() -> Dictionary:
 
 	var budget := 1.0 / 60.0
 	var over := 0
+	var over_20_ms := 0
+	var over_33_ms := 0
 	for d: float in _deltas:
 		if d > budget:
 			over += 1
+		if d > 0.020:
+			over_20_ms += 1
+		if d > 0.033333:
+			over_33_ms += 1
 
 	var vp_size := get_viewport().get_visible_rect().size
 	return {
@@ -157,8 +165,12 @@ func _summarise() -> Dictionary:
 		"min_fps": snappedf(min_fps, 0.1),
 		"p1_low_fps": snappedf(p1_low, 0.1),
 		"avg_frame_ms": snappedf(total / float(n) * 1000.0, 0.01),
+		"p95_frame_ms": snappedf(p95_delta * 1000.0, 0.001),
+		"p99_frame_ms": snappedf(p99_delta * 1000.0, 0.001),
 		"worst_frame_ms": snappedf(worst_delta * 1000.0, 0.01),
 		"pct_frames_over_16_67ms": snappedf(100.0 * float(over) / float(n), 0.1),
+		"frames_over_20ms": over_20_ms,
+		"frames_over_33ms": over_33_ms,
 		"static_memory_mb": snappedf(float(OS.get_static_memory_usage()) / 1048576.0, 0.1),
 		"draw_calls": int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),
 		"primitives": int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)),

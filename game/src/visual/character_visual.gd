@@ -18,6 +18,7 @@ var _animation_player: AnimationPlayer
 var _materials: Array[StandardMaterial3D] = []
 var _base_colours: Array[Color] = []
 var _current_animation := ""
+var _current_tint := Color(-1.0, -1.0, -1.0, -1.0)
 
 
 func setup(target_height: float, tint := Color.WHITE, casts_shadow := true) -> void:
@@ -36,6 +37,12 @@ func setup(target_height: float, tint := Color.WHITE, casts_shadow := true) -> v
 
 
 func set_tint(tint: Color) -> void:
+	# A cor comunica estado e muda poucas vezes por ataque. Reescrever todos os
+	# materiais a cada physics frame forçava uploads sem alterar um pixel e fazia
+	# o p99 crescer com o quinto actor.
+	if tint.is_equal_approx(_current_tint):
+		return
+	_current_tint = tint
 	for index: int in _materials.size():
 		_materials[index].albedo_color = _base_colours[index] * tint
 

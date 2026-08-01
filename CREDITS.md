@@ -6,6 +6,7 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 |---|---|---|---|---|
 | **Universal Base Characters** (Standard) | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-base-characters) | corpo base das 6 classes — esqueleto partilhado (Lei 3) |
 | **Universal Animation Library** | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-animation-library) | ⭐ ciclos de animação — é o que permite medir o risco do M1 |
+| **Ultimate Monsters** | Quaternius | CC0 1.0 | [quaternius.com](https://quaternius.com/packs/ultimatemonsters.html) | Orc, Orc Small e Orc Skull — lanceiro, brutamontes e Vorgar |
 | **KayKit — Adventurers** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-adventurers) | personagens jogáveis, alternativa de silhueta |
 | **KayKit — Dungeon Pack** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-dungeon-pack) | a Toca (dungeon da fatia 1) |
 | **KayKit — Skeletons** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-skeletons) | raça esqueleto (Campas Cinzentas) |
@@ -19,7 +20,9 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 
 ## A licença foi lida no ficheiro, não na página
 
-**Os dez packs trazem `License.txt` (ou `License_Standard.txt`) dentro do zip, com CC0 1.0 explícito.** Verifiquei um a um por leitura do ficheiro — uma página de download pode mudar; o ficheiro que veio com os assets é a prova, e fica junto deles.
+**Os onze packs trazem `License.txt` (ou `License_Standard.txt`) dentro da distribuição, com CC0 1.0 explícito.** Verifiquei um a um por leitura do ficheiro — uma página de download pode mudar; o ficheiro que veio com os assets é a prova, e fica junto deles.
+
+No caso de **Ultimate Monsters**, a distribuição oficial é a pasta Google Drive ligada pela página do pack. O `License.txt` interno foi lido e copiado para `game/assets/models/characters/quaternius-ultimate-monsters/License.txt`; declara literalmente **CC0 1.0 Universal / Public Domain Dedication**. Há uma gralha de empacotamento que não se esconde: o cabeçalho desse ficheiro diz “Ultimate Platformer Pack”, apesar de viver na pasta oficial Ultimate Monsters. A página oficial e os nomes dos modelos confirmam a origem; a concessão CC0 do próprio ficheiro é inequívoca.
 
 ## Onde vivem, e o que o Godot vê
 

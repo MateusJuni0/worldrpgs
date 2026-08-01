@@ -16,12 +16,16 @@ var _animation_players := 0
 var _asset_path := "res://benchmark_assets/UAL1_Standard.glb"
 var _width := 1920
 var _height := 1080
+var _vsync_on := false
 var _failed := false
 
 
 func _initialize() -> void:
 	_parse_arguments()
 	DisplayServer.window_set_size(Vector2i(_width, _height))
+	DisplayServer.window_set_vsync_mode(
+		DisplayServer.VSYNC_ENABLED if _vsync_on else DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = 0
 	var packed := load(_asset_path) as PackedScene
 	if packed == null:
 		_fail("não foi possível carregar %s" % _asset_path)
@@ -57,9 +61,10 @@ func _initialize() -> void:
 			_animation_name = candidate
 		player.play(candidate)
 
-	print("[ANIMATION_BENCH] asset=%s actors=%d players=%d animation=%s warmup=%.1fs measure=%.1fs resolution=%dx%d renderer=%s gpu=%s" % [
+	print("[ANIMATION_BENCH] asset=%s actors=%d players=%d animation=%s warmup=%.1fs measure=%.1fs resolution=%dx%d vsync=%s renderer=%s gpu=%s" % [
 		_asset_path, _actors, _animation_players, _animation_name, _warmup_seconds,
-		_measure_seconds, _width, _height, RenderingServer.get_current_rendering_method(),
+		_measure_seconds, _width, _height, "on" if _vsync_on else "off",
+		RenderingServer.get_current_rendering_method(),
 		RenderingServer.get_video_adapter_name()])
 
 
@@ -93,6 +98,8 @@ func _parse_arguments() -> void:
 			_width = maxi(320, argument.trim_prefix("--width=").to_int())
 		elif argument.begins_with("--height="):
 			_height = maxi(240, argument.trim_prefix("--height=").to_int())
+		elif argument.begins_with("--vsync="):
+			_vsync_on = argument.trim_prefix("--vsync=") == "on"
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

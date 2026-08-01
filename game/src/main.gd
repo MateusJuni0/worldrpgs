@@ -5,6 +5,7 @@ extends Node3D
 ## Cenarios (--scene=):
 ##   perf    marco 1: zona pequena com nevoa + 3 inimigos a patrulhar (teste de desempenho)
 ##   combat  arena limpa: lanceiro + brutamontes, para afinar o combate
+##   vorgar  arena final real: 2 jogadores + chefe + 2 orcs, para medir o pior caso
 ##   zone    a fatia: Brumal -> Toca -> Vorgar   (defeito)
 
 var world: Greybox
@@ -136,6 +137,21 @@ func _populate() -> void:
 		"combat":
 			_spawn("orc_spearman", Vector3(4, 0.5, -6))
 			_spawn("orc_brute", Vector3(-5, 0.5, -8))
+		"vorgar":
+			# Prova repetível dentro da arena final, não numa arena cinzenta que
+			# omite as paredes, tochas e os detritos que o jogador vê.
+			var c := world.arena_center
+			player.global_position = c + Vector3(0.0, 0.6, 8.0)
+			_respawn_point = player.global_position
+			boss = _spawn("vorgar", c)
+			hud.boss = boss
+			_spawn("orc_spearman", c + Vector3(6.0, 0.5, 1.5))
+			_spawn("orc_brute", c + Vector3(-6.0, 0.5, -2.0))
+			var partner := Player.new()
+			partner.name = "Parceiro"
+			add_child(partner)
+			partner.setup("sorcerer", _palette)
+			partner.global_position = c + Vector3(2.5, 0.6, 6.5)
 		_:
 			_populate_zone()
 
