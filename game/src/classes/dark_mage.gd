@@ -52,58 +52,41 @@ func mana_capacity(base_mana: int) -> int:
 	return roundi(float(base_mana) * float(origin_trait.get("multiplier", 0.0)))
 
 
+func preview_raise_dead(corpse_id: String, body_size: String,
+		original_max_health: float) -> Dictionary:
+	var rejection := _raise_dead_rejection_reason(
+		corpse_id, body_size, original_max_health)
+	if not rejection.is_empty():
+		return _rejected(rejection)
+	return _preview_accepted(_raised_dead_payload(
+		corpse_id, body_size, original_max_health))
+
+
 func raise_dead(corpse_id: String, body_size: String,
 		original_max_health: float) -> Dictionary:
-	if corpse_id.is_empty():
-		return _rejected("invalid_corpse")
-	if _spent_corpses.has(corpse_id):
-		return _rejected("corpse_already_spent")
-	var costs := _raise_dead_effect.get(
-		"health_cost_fraction_by_size", {}) as Dictionary
-	if not costs.has(body_size):
-		return _rejected("unknown_body_size")
-	if original_max_health <= 0.0:
-		return _rejected("invalid_original_health")
-	var health_cost := float(costs.get(body_size, 0.0))
-	if not _can_add_reservation(health_cost):
-		return _rejected("insufficient_health_budget")
-	var summon := {
-		"summon_id": corpse_id,
-		"corpse_id": corpse_id,
-		"kind": "raised_dead",
-		"health_cost_fraction": health_cost,
-		"max_health": original_max_health * float(
-			_raise_dead_effect.get("raised_health_fraction", 0.0)),
-		"portable": false,
-		"order": _summon_order,
-	}
+	var preview := preview_raise_dead(corpse_id, body_size, original_max_health)
+	if not bool(preview.get("accepted", false)):
+		return preview
+	var summon := _raised_dead_payload(
+		corpse_id, body_size, original_max_health)
 	_active_summons[corpse_id] = summon
 	_spent_corpses[corpse_id] = true
 	return _accepted(summon)
 
 
+func preview_raise_boss(corpse_id: String,
+		original_max_health: float) -> Dictionary:
+	var rejection := _raise_boss_rejection_reason(corpse_id, original_max_health)
+	if not rejection.is_empty():
+		return _rejected(rejection)
+	return _preview_accepted(_raised_boss_payload(corpse_id, original_max_health))
+
+
 func raise_boss(corpse_id: String, original_max_health: float) -> Dictionary:
-	if corpse_id.is_empty():
-		return _rejected("invalid_corpse")
-	if _spent_corpses.has(corpse_id):
-		return _rejected("corpse_already_spent")
-	if _active_boss_id() != "":
-		return _rejected("boss_already_active")
-	if original_max_health <= 0.0:
-		return _rejected("invalid_original_health")
-	var health_cost := float(_raise_boss_effect.get("health_cost_fraction", 0.0))
-	if not _can_add_reservation(health_cost):
-		return _rejected("insufficient_health_budget")
-	var summon := {
-		"summon_id": corpse_id,
-		"corpse_id": corpse_id,
-		"kind": "raised_boss",
-		"health_cost_fraction": health_cost,
-		"max_health": original_max_health * float(
-			_raise_boss_effect.get("raised_health_fraction", 0.0)),
-		"portable": bool(_raise_boss_effect.get("portable", false)),
-		"order": _summon_order,
-	}
+	var preview := preview_raise_boss(corpse_id, original_max_health)
+	if not bool(preview.get("accepted", false)):
+		return preview
+	var summon := _raised_boss_payload(corpse_id, original_max_health)
 	_active_summons[corpse_id] = summon
 	_spent_corpses[corpse_id] = true
 	return _accepted(summon)
@@ -271,6 +254,70 @@ func _current_oath_layer() -> Dictionary:
 	return layers[_oath_layer_count - 1] as Dictionary
 
 
+func _raise_dead_rejection_reason(corpse_id: String, body_size: String,
+		original_max_health: float) -> String:
+	if corpse_id.is_empty():
+		return "invalid_corpse"
+	if _spent_corpses.has(corpse_id):
+		return "corpse_already_spent"
+	var costs := _raise_dead_effect.get(
+		"health_cost_fraction_by_size", {}) as Dictionary
+	if not costs.has(body_size):
+		return "unknown_body_size"
+	if original_max_health <= 0.0:
+		return "invalid_original_health"
+	if not _can_add_reservation(float(costs.get(body_size, 0.0))):
+		return "insufficient_health_budget"
+	return ""
+
+
+func _raise_boss_rejection_reason(corpse_id: String,
+		original_max_health: float) -> String:
+	if corpse_id.is_empty():
+		return "invalid_corpse"
+	if _spent_corpses.has(corpse_id):
+		return "corpse_already_spent"
+	if _active_boss_id() != "":
+		return "boss_already_active"
+	if original_max_health <= 0.0:
+		return "invalid_original_health"
+	var health_cost := float(_raise_boss_effect.get("health_cost_fraction", 0.0))
+	if not _can_add_reservation(health_cost):
+		return "insufficient_health_budget"
+	return ""
+
+
+func _raised_dead_payload(corpse_id: String, body_size: String,
+		original_max_health: float) -> Dictionary:
+	var costs := _raise_dead_effect.get(
+		"health_cost_fraction_by_size", {}) as Dictionary
+	return {
+		"summon_id": corpse_id,
+		"corpse_id": corpse_id,
+		"kind": "raised_dead",
+		"health_cost_fraction": float(costs.get(body_size, 0.0)),
+		"max_health": original_max_health * float(
+			_raise_dead_effect.get("raised_health_fraction", 0.0)),
+		"portable": false,
+		"order": _summon_order,
+	}
+
+
+func _raised_boss_payload(corpse_id: String,
+		original_max_health: float) -> Dictionary:
+	return {
+		"summon_id": corpse_id,
+		"corpse_id": corpse_id,
+		"kind": "raised_boss",
+		"health_cost_fraction": float(
+			_raise_boss_effect.get("health_cost_fraction", 0.0)),
+		"max_health": original_max_health * float(
+			_raise_boss_effect.get("raised_health_fraction", 0.0)),
+		"portable": bool(_raise_boss_effect.get("portable", false)),
+		"order": _summon_order,
+	}
+
+
 func _summon_reservation() -> float:
 	var total := 0.0
 	for summon_value: Variant in _active_summons.values():
@@ -307,6 +354,17 @@ func _accepted(payload: Dictionary) -> Dictionary:
 	result["accepted"] = true
 	result["reserved_health_fraction"] = reserved_health_fraction()
 	result["available_health_fraction"] = available_health_fraction()
+	return result
+
+
+func _preview_accepted(payload: Dictionary) -> Dictionary:
+	var result := payload.duplicate(true)
+	var future_reserved := reserved_health_fraction() + float(
+		payload.get("health_cost_fraction", 0.0))
+	result["accepted"] = true
+	result["future_reserved_health_fraction"] = future_reserved
+	result["future_available_health_fraction"] = maxf(float(
+		_health_budget.get("total_fraction", 0.0)) - future_reserved, 0.0)
 	return result
 
 
