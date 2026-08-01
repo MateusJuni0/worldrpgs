@@ -4,30 +4,84 @@ extends Node
 ## O som e parte da Lei 1 (spec/21, WP12): um ataque que se OUVE a chegar e mais
 ## uma pista justa; o parry que acerta merece o melhor som do jogo. Cada som e
 ## gerado por DSP simples (senos, serra, ruido, envelopes) a 22050 Hz mono.
+## Brumal acrescenta vento, folhas, agua, corvos e fogueiras, tambem sinteticos.
 ## Afinacao: mexer nos numeros dos _make_* e voltar a correr.
 
+const ProceduralAudio = preload("res://src/audio/procedural_audio.gd")
 const RATE := 22050
+const USER_BUSES := ["Musica", "Efeitos", "Ambiente", "Vozes"]
+const INTERNAL_BUSES := {
+	"GameplayInfo": "Efeitos",
+	"Impact": "Efeitos",
+	"UI": "Efeitos",
+	"Music": "Musica",
+	"Ambience": "Ambiente",
+	"Voice": "Vozes",
+}
+const INFORMATION_SOUNDS := {
+	"telegraph": true,
+	"attack_parry": true,
+	"attack_dodge": true,
+	"attack_moving": true,
+	"attack_area": true,
+	"attack_hunter": true,
+}
+const AMBIENCE_SCAN_SECONDS := 0.5
+const CROW_INTERVAL_MIN_SECONDS := 20.0
+const CROW_INTERVAL_MAX_SECONDS := 60.0
+const INFO_CLEARANCE_SECONDS := 1.5
 
 var _bank: Dictionary = {}
 var _pool: Array[AudioStreamPlayer3D] = []
 var _flat_pool: Array[AudioStreamPlayer] = []
 var _rng := RandomNumberGenerator.new()
+var _ambience_players: Dictionary = {}
+var _bonfire_players: Dictionary = {}
+var _crow_player: AudioStreamPlayer3D
+var _active_gameplay: Node3D
+var _scan_elapsed := 0.0
+var _crow_elapsed := 0.0
+var _next_crow_seconds := 30.0
+var _info_clear_at_ms := 0
+var _duck_ambience_db := 0.0
+var _duck_music_db := 0.0
+var synthesis_milliseconds := 0.0
 
 
 func _ready() -> void:
+	_rng.randomize()
+	_ensure_audio_buses()
 	for i in 4:
 		var f := AudioStreamPlayer.new()
-		f.bus = "Efeitos"
+		f.bus = "Impact"
 		add_child(f)
 		_flat_pool.append(f)
 	for i in 12:
 		var p := AudioStreamPlayer3D.new()
-		p.bus = "Efeitos"
+		p.bus = "Impact"
 		p.max_distance = 42.0
 		p.unit_size = 6.0
 		add_child(p)
 		_pool.append(p)
+	var synthesis_started := Time.get_ticks_usec()
 	_generate_bank()
+	synthesis_milliseconds = float(Time.get_ticks_usec() - synthesis_started) / 1000.0
+	print("[sfx] 17 efeitos + 5 sons de ambiente sintetizados em %.1f ms" %
+		synthesis_milliseconds)
+	_next_crow_seconds = _rng.randf_range(CROW_INTERVAL_MIN_SECONDS,
+		CROW_INTERVAL_MAX_SECONDS)
+
+
+func _process(delta: float) -> void:
+	_update_ducking(delta)
+	_scan_elapsed += delta
+	if _scan_elapsed >= AMBIENCE_SCAN_SECONDS:
+		_scan_elapsed = 0.0
+		_sync_world_audio()
+	if is_instance_valid(_active_gameplay):
+		_crow_elapsed += delta
+		if _crow_elapsed >= _next_crow_seconds:
+			_try_play_crows()
 
 
 ## at == null -> som "do jogador" (sem posicao). Com posicao -> 3D.
@@ -35,11 +89,16 @@ func play(sound: String, at: Variant = null, volume_db := 0.0, pitch_jitter := 0
 	var stream: AudioStreamWAV = _bank.get(sound)
 	if stream == null:
 		return
-	var pitch := 1.0 + _rng.randf_range(-pitch_jitter, pitch_jitter)
+	var informative := INFORMATION_SOUNDS.has(sound)
+	var pitch := 1.0 if informative else 1.0 + _rng.randf_range(-pitch_jitter, pitch_jitter)
+	var bus_name := "GameplayInfo" if informative else "Impact"
 	if at == null:
 		for f in _flat_pool:
 			if not f.playing:
+				if informative:
+					_protect_information(stream.get_length())
 				f.stream = stream
+				f.bus = bus_name
 				f.volume_db = volume_db
 				f.pitch_scale = pitch
 				f.play()
@@ -47,12 +106,189 @@ func play(sound: String, at: Variant = null, volume_db := 0.0, pitch_jitter := 0
 		return
 	for p in _pool:
 		if not p.playing:
+			if informative:
+				_protect_information(stream.get_length())
 			p.global_position = at as Vector3
 			p.stream = stream
+			p.bus = bus_name
 			p.volume_db = volume_db
 			p.pitch_scale = pitch
 			p.play()
 			return
+
+
+## API pequena para UI/testes: os sliders publicos controlam os pais destes
+## buses, sem o menu ter de conhecer a arquitectura interna da mistura.
+func volume_bus_contract() -> Dictionary:
+	return INTERNAL_BUSES.duplicate()
+
+
+func has_sound(sound: String) -> bool:
+	return _bank.has(sound)
+
+
+func active_ambience_layer_count() -> int:
+	return _ambience_players.size()
+
+
+func active_bonfire_source_count() -> int:
+	return _bonfire_players.size()
+
+
+# --- Mistura e ciclo do mundo -------------------------------------------------
+
+func _ensure_audio_buses() -> void:
+	for bus_name: String in USER_BUSES:
+		_ensure_bus(bus_name, "Master")
+	for bus_name: String in INTERNAL_BUSES:
+		_ensure_bus(bus_name, String(INTERNAL_BUSES[bus_name]))
+
+
+func _ensure_bus(bus_name: String, send_name: String) -> void:
+	var index := AudioServer.get_bus_index(bus_name)
+	if index < 0:
+		AudioServer.add_bus()
+		index = AudioServer.bus_count - 1
+		AudioServer.set_bus_name(index, bus_name)
+	AudioServer.set_bus_send(index, send_name)
+
+
+func _sync_world_audio() -> void:
+	var gameplay := get_tree().root.find_child("Gameplay", true, false) as Node3D
+	if gameplay != _active_gameplay:
+		_stop_brumal()
+		if is_instance_valid(gameplay):
+			_start_brumal(gameplay)
+	if is_instance_valid(_active_gameplay):
+		_sync_bonfires()
+
+
+func _start_brumal(gameplay: Node3D) -> void:
+	_active_gameplay = gameplay
+	# [CODEX] Tres vozes permanentes deixam cada material afinavel sem criar uma
+	# faixa musical falsa. Alternativa descartada: achatar tudo num unico drone.
+	var layers := {
+		"amb_wind": -17.0,
+		"amb_leaves": -21.0,
+		"amb_water": -24.0,
+	}
+	for sound_id: String in layers:
+		var player := AudioStreamPlayer.new()
+		player.name = sound_id
+		player.bus = "Ambience"
+		player.stream = _bank[sound_id] as AudioStream
+		player.volume_db = float(layers[sound_id])
+		add_child(player)
+		player.play()
+		_ambience_players[sound_id] = player
+	print("[sfx] Brumal activo: vento + folhas + agua; corvos em eventos raros")
+	_crow_player = AudioStreamPlayer3D.new()
+	_crow_player.name = "DistantCrows"
+	_crow_player.bus = "Ambience"
+	_crow_player.stream = _bank["amb_crows"] as AudioStream
+	_crow_player.volume_db = -17.0
+	_crow_player.unit_size = 22.0
+	_crow_player.max_distance = 105.0
+	add_child(_crow_player)
+	_crow_elapsed = 0.0
+
+
+func _stop_brumal() -> void:
+	for player_value: Variant in _ambience_players.values():
+		var player := player_value as AudioStreamPlayer
+		if is_instance_valid(player):
+			player.queue_free()
+	_ambience_players.clear()
+	if is_instance_valid(_crow_player):
+		_crow_player.queue_free()
+	_crow_player = null
+	_bonfire_players.clear()
+	_active_gameplay = null
+	_crow_elapsed = 0.0
+
+
+func _sync_bonfires() -> void:
+	var live_ids: Dictionary = {}
+	for child in _active_gameplay.get_children():
+		var rest_point := child as Node3D
+		if rest_point == null or not rest_point.name.begins_with("Rest_"):
+			continue
+		var instance_id := rest_point.get_instance_id()
+		live_ids[instance_id] = true
+		if not _bonfire_players.has(instance_id):
+			_register_bonfire(rest_point)
+	for instance_id: Variant in _bonfire_players.keys():
+		var player := _bonfire_players[instance_id] as AudioStreamPlayer3D
+		if not live_ids.has(instance_id) or not is_instance_valid(player):
+			_bonfire_players.erase(instance_id)
+
+
+func _register_bonfire(rest_point: Node3D) -> void:
+	var player := AudioStreamPlayer3D.new()
+	player.name = "CampfireAudio"
+	player.bus = "Ambience"
+	player.stream = _bank["campfire"] as AudioStream
+	player.position = Vector3(0.0, 0.65, 0.0)
+	player.volume_db = -7.0
+	# [CODEX] A fogueira chega aos ouvidos antes de a pequena chama vencer a
+	# bruma. Alternativa descartada: copiar os 7 m da luz, que soaria tarde.
+	player.unit_size = 12.0
+	player.max_distance = 46.0
+	rest_point.add_child(player)
+	player.play()
+	_bonfire_players[rest_point.get_instance_id()] = player
+	print("[sfx] fogueira 3D ligada: %s" % rest_point.name)
+
+
+func _try_play_crows() -> void:
+	if Time.get_ticks_msec() < _info_clear_at_ms or not is_instance_valid(_crow_player):
+		_crow_elapsed = maxf(_crow_elapsed - 1.0, 0.0)
+		return
+	var listener := get_tree().get_first_node_in_group("player") as Node3D
+	if listener == null:
+		return
+	var angle := _rng.randf_range(0.0, TAU)
+	var distance := _rng.randf_range(48.0, 72.0)
+	_crow_player.global_position = listener.global_position \
+		+ Vector3(cos(angle) * distance, _rng.randf_range(12.0, 22.0),
+			sin(angle) * distance)
+	_crow_player.pitch_scale = _rng.randf_range(0.94, 1.04)
+	_crow_player.play()
+	_crow_elapsed = 0.0
+	_next_crow_seconds = _rng.randf_range(CROW_INTERVAL_MIN_SECONDS,
+		CROW_INTERVAL_MAX_SECONDS)
+
+
+func _protect_information(duration_seconds: float) -> void:
+	if is_instance_valid(_crow_player) and _crow_player.playing:
+		_crow_player.stop()
+	var clear_at := Time.get_ticks_msec() + roundi(
+		(duration_seconds + INFO_CLEARANCE_SECONDS) * 1000.0)
+	_info_clear_at_ms = maxi(_info_clear_at_ms, clear_at)
+
+
+func _update_ducking(delta: float) -> void:
+	var protecting := Time.get_ticks_msec() < _info_clear_at_ms
+	var target_ambience := -6.0 if protecting else 0.0
+	var target_music := -8.0 if protecting else 0.0
+	var attack_seconds := 0.02
+	var release_seconds := 0.25
+	var previous_ambience := _duck_ambience_db
+	var previous_music := _duck_music_db
+	_duck_ambience_db = move_toward(_duck_ambience_db, target_ambience,
+		6.0 * delta / (attack_seconds if protecting else release_seconds))
+	_duck_music_db = move_toward(_duck_music_db, target_music,
+		8.0 * delta / (attack_seconds if protecting else release_seconds))
+	if not is_equal_approx(previous_ambience, _duck_ambience_db):
+		_set_bus_db("Ambience", _duck_ambience_db)
+	if not is_equal_approx(previous_music, _duck_music_db):
+		_set_bus_db("Music", _duck_music_db)
+
+
+func _set_bus_db(bus_name: String, volume_db: float) -> void:
+	var index := AudioServer.get_bus_index(bus_name)
+	if index >= 0:
+		AudioServer.set_bus_volume_db(index, volume_db)
 
 
 # --- Geracao -------------------------------------------------------------------
@@ -75,7 +311,11 @@ func _generate_bank() -> void:
 	_bank["posture_break"] = _make_break()
 	_bank["enemy_death"] = _make_death()
 	_bank["fury"] = _make_fury()
-	print("[sfx] %d sons sintetizados" % _bank.size())
+	_bank["amb_wind"] = ProceduralAudio.make_wind()
+	_bank["amb_leaves"] = ProceduralAudio.make_leaves()
+	_bank["amb_water"] = ProceduralAudio.make_water()
+	_bank["amb_crows"] = ProceduralAudio.make_crows()
+	_bank["campfire"] = ProceduralAudio.make_campfire()
 
 
 func _stream(samples: PackedFloat32Array) -> AudioStreamWAV:
