@@ -80,10 +80,10 @@ E resolve um problema concreto que a spec tem em aberto: **o mago é frágil ao 
 
 | | |
 |---|---|
-| Escudos grandes | a estabilidade mais alta — **88 a 90** nos melhores |
+| Escudos grandes | a estabilidade mais alta — **até 85** nos melhores; o tecto canónico do [`70`](70-fecho-dos-sistemas-de-combate.md) impede bloqueio gratuito |
 | Peso | até **26 unidades** — ⚠️ **quase impossível manter carga leve** |
 | Defesa física | os melhores chegam a **100%** |
-| ⭐ **Penalidade de espreitar** | atacar por trás do escudo **perde absorção e estabilidade** — mesmo com 100 de estabilidade, gasta-se stamina; mesmo com 100% de defesa, passa dano |
+| ⭐ **Penalidade de espreitar** | atacar por trás do escudo **perde absorção e estabilidade** — mesmo com a estabilidade máxima de 85, gasta-se stamina; mesmo com 100% de defesa física, a penalidade deixa passar dano |
 
 ### ⚠️ A armadilha, e nós vamos evitá-la
 
@@ -131,13 +131,13 @@ E resolve um problema concreto que a spec tem em aberto: **o mago é frágil ao 
 | 7 | **O broquel é o escudo de quem apara**, não o escudo fraco | `→WP5` |
 | 8 | **Escudo grande não apara** — a troca que o define | `→WP5` |
 
-## O que continua sem cobertura
+## O que tinha ficado sem cobertura — varrido na Tarefa 4
 
 | | Onde |
 |---|---|
-| **Inimigos que lançam magia** — usam as mesmas regras do jogador? *(proposta: sim, incluindo interrupção)* | `→WP6` |
-| **Desenho de arena de chefe** — tamanho, obstáculos, onde o jogador se refugia | `→WP7` |
-| **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | `→WP1B` |
+| ~~**Inimigos que lançam magia**~~ — mesma honestidade/contacto e interrupção; IA usa cooldown/usos, não mana/meditação invisível | ✅ [`73`](73-fecho-dos-buracos-de-integracao.md) §1 |
+| ~~**Desenho de arena de chefe**~~ — tamanho, obstáculos, refúgios, duas rotas e provas co-op | ✅ [`61`](61-arenas-de-chefe.md) |
+| **Lock-on em 1.ª pessoa** — o sistema e 18/25 m estão fechados; magnetizada vs assistência de alvo é ensaio de feel M2, com as duas opções do [`29`](29-perspectiva.md) | não bloqueia spec |
 | ~~**Sistema de saves**~~ ✅ formato, co-op, escrita atómica e recuperação no [`59`](59-saves.md) | `WP14` |
 
 ## Ligações

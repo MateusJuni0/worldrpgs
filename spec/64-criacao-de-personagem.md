@@ -186,7 +186,7 @@ O v1 do [`59`](59-saves.md) já guarda `identity.name` e `identity.class_id`, ma
 }
 ```
 
-A migração v1→v2 preserva nome/classe/progresso e aplica a combinação visual de fábrica; nunca reabre criação nem troca kit. Nome e aspecto podem ser alterados gratuitamente na ficha **apenas num ponto de descanso**. Origem e distribuição inicial não mudam aí.
+A migração v1→v2 preserva nome/classe/progresso e aplica a combinação visual de fábrica; nunca reabre criação nem troca kit. Se o v1 histórico tiver `sabedoria` e não tiver os dois eixos modernos, aplica o algoritmo determinístico do [`73`](73-fecho-dos-buracos-de-integracao.md) §7 e prova que não duplicou pontos. Nome e aspecto podem ser alterados gratuitamente na ficha **apenas num ponto de descanso**. Origem e distribuição inicial não mudam aí.
 
 ---
 

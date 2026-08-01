@@ -79,20 +79,7 @@ func _build_labels() -> void:
 
 	_help = _styled_label(Vector2(1180, 120))
 	_help.visible = false
-	_help.text = """COMANDOS  (spec/01-combate.md)
-WASD          mover        (correr 5,0 m/s)
-Ctrl          andar 3,0    Space segurar: sprint 7,0
-Space toque   esquiva      0,60 s · i-frames 0,08-0,38
-Rato          camara
-LMB           ataque leve
-Shift+LMB     ataque pesado (segurar: carrega o machadao)
-RMB segurar   bloqueio     (LMB com escudo = bash)
-Q             parry        janela 8 f
-Tab           lock-on      18 m engate / 25 m quebra
-C             conjurar     F: magia seguinte
-M             meditar 40 s (2 tentativas por descanso)
-[ ]           trocar de arma (Lei 3)
-F1 fps · F2 esta ajuda · F3 rato · F5 reiniciar · Esc sair"""
+	_help.text = GameData.ui_text("hud.help", "COMANDOS")
 
 
 func _process(delta: float) -> void:
@@ -113,7 +100,7 @@ func _process(delta: float) -> void:
 	_stamina.color = Color(0.85, 0.35, 0.3) if player.stamina.locked_out else Color(0.45, 0.78, 0.35)
 
 	var spell_name: String = GameData.spell(player.selected_spell).get("display_name", "?")
-	_info.text = "%d/%d PV   %d/%d STA   mana %d/%d   frasco %d/%d   hab: %s   magia: %s   %s   [%s]" % [
+	_info.text = GameData.ui_text("hud.info") % [
 		int(player.health), int(player.max_health),
 		int(player.stamina.current), int(player.stamina.maximum),
 		player.mana, player.max_mana,
@@ -132,7 +119,7 @@ func _update_boss() -> void:
 	_boss_label.visible = show
 	if show:
 		_boss_bar.size.x = 780.0 * clampf(boss.health / maxf(boss.max_health, 1.0), 0.0, 1.0)
-		_boss_label.text = "%s   —   fase %d" % [boss.display_name(), 2 if boss.health / boss.max_health <= 0.5 else 1]
+		_boss_label.text = GameData.ui_text("hud.boss") % [boss.display_name(), 2 if boss.health / boss.max_health <= 0.5 else 1]
 
 
 func toast(message: String, seconds := 2.5) -> void:

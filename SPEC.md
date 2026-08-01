@@ -46,30 +46,31 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
-| 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | ⚠️ **sem soft caps e sem o piso de 30%** — [`39`](spec/39-estudo-profundo.md) §1–2 |
+| 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | 🟢 curvas canónicas por atributo no [`70`](spec/70-fecho-dos-sistemas-de-combate.md); piso corporal e escudos separados |
 | 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Primeira proposta de escolas/catálogo (WP4) | 🔵 substituído pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) + [`66`](spec/66-catalogo-de-magia.md) |
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; catálogo completo no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 15 | [Bestiário — primeira camada](spec/15-inimigos.md) | IA e primeiros encontros (WP6) | 🔵 catálogo substituído pelo [`67`](spec/67-catalogo-do-bestiario.md); a máquina comum e a Fatia 1 continuam herdadas |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Primeira proposta de rede, dungeons e traçado (WP8) | 🔵 substituído pelo catálogo completo do [`69`](spec/69-catalogo-do-mundo.md) |
-| 18 | [Progressão e loot](spec/18-progressao.md) | Curva, loot, economia (WP9) | ⚠️ **curva linear, devia ser cúbica** · "XP" devia ser "almas" |
+| 18 | [Progressão e loot](spec/18-progressao.md) | Curva, loot, economia (WP9) | 🔵 retrato histórico; curva cúbica em almas, materiais e transacção canónicos no [`72`](spec/72-materiais-consumiveis-e-economia.md) |
 | 19 | [Multiplayer e rede](spec/19-rede.md) | Autoridade, transporte, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte aguarda os dois |
-| 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus (WP11) | ⚠️ **o mapa de teclas tem de fechar de uma vez** — [`45`](spec/45-controlos-configuraveis.md) |
+| 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus (WP11) | 🟠 mapa de fábrica teclado/rato + comando fechado no [`73`](spec/73-fecho-dos-buracos-de-integracao.md); UI de remapeamento é produção WP11 |
 | 21 | [Arte e render](spec/21-arte-render.md) | Direcção, animações, efeitos, som (WP12) | 🟠 proposta `[FABLE]` |
 | 22 | [Origem dos assets](spec/22-assets.md) | Modelos, animações, áudio: fontes e licenças (WP13) | 🟢 regras fixas |
-| 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine, sistemas, dados, saves (WP14) | ⚠️ **falta o carregamento por área** — [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 |
+| 23 | [Arquitectura técnica](spec/23-tecnico.md) | Engine, sistemas, dados, saves (WP14) | 🟢 contrato de carregamento por zona/garganta no [`69`](spec/69-catalogo-do-mundo.md); runtime continua produção WP8/14 |
 | 24 | [Plano de construção](spec/24-plano.md) | M0–M7 com verificação jogável por marco (WP15) | 🟢 é o documento de arranque |
 | 25 | [Câmara, controlo e game feel](spec/25-controlo.md) | Câmara, buffer de entrada, latência, hit-stop (WP1B) | 🟠 proposta `[CLAUDE]` |
 | 26 | [Narrativa e NPCs](spec/26-narrativa.md) | Proposta mínima + 7 perguntas para gravação (WP8B) | 🟠 decisões são dos donos |
 | 27 | [Aprender a jogar](spec/27-aprendizagem.md) | Os professores, os 5 primeiros minutos (WP11B) | 🟠 proposta `[CLAUDE]` |
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
-| 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
+| 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | 🟢 contrato canónico completado pelos [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) e [`70`](spec/70-fecho-dos-sistemas-de-combate.md); golpes futuros são produção M2 |
 
-### Decisões e estudos (32–72)
+### Decisões e estudos (32–73)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 73 | [**Fecho dos buracos de integração**](spec/73-fecho-dos-buracos-de-integracao.md) | magia inimiga · cura remota · travessia · subchefes · textos · comando · voz · migração `sabedoria` · fronteira spec→produção | 🟢 varrimento da Tarefa 4 fechado; dívida de produção explicitamente não confundida com implementação |
 | 72 | [**Materiais, consumíveis e economia**](spec/72-materiais-consumiveis-e-economia.md) | curva cúbica exacta · 40 materiais · 15 consumíveis canónicos · bias por classe · morte→baralho→recibo/save | 🟢 WP9 fechado no contrato e na transacção local; política de destinatário co-op continua dos donos |
 | 71 | [**Encontros nomeados**](spec/71-encontros-nomeados.md) | 36 fichas · 3 por zona · um ataque extra · carta garantida · reutilização de tipo-base | 🟢 catálogo fechado; produção segue a promoção `Fatia 1?` do tipo-base |
 | 70 | [**Fecho dos sistemas de combate**](spec/70-fecho-dos-sistemas-de-combate.md) | parry 8/8/40 · curvas por atributo · sobrecarga · empunhadura · gramática inimiga | 🟢 contrato canónico da Tarefa 4; dados e invariantes executáveis |
@@ -98,7 +99,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 47 | [**Do greybox ao visual**](spec/47-do-greybox-ao-visual.md) | O que temos hoje, visto e não suposto; o que faz parecer a referência (luz > polígonos); a ordem da conversão; capturas em todo o marco | 🟢 `[DECIDIDO]` 31-07 |
 | 46 | [**Coerência: bioma → raça → item → história**](spec/46-coerencia-bioma-raca-item.md) | A lei que impede a sopa, o motor que gera 300 descrições de 24 fichas, a camada dos subchefes, e os 61 chefes derivados do mapa | 🟢 `[DECIDIDO]` 31-07 |
 | 45 | [**Controlos configuráveis**](spec/45-controlos-configuraveis.md) | O jogador escolhe as teclas dentro do jogo — dissolve a guerra do parry | 🟢 `[DECIDIDO]` 31-07 |
-| 44 | [**O protótipo**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, lacunas encontradas a construir | 🟢 metade da ressalva do 0b fechada |
+| 44 | [**O protótipo**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, lacunas encontradas a construir | 🟢 cápsulas e esqueletos UAL medidos na Iris Xe; retarget integrado continua fase 1.2 |
 | 43 | [**Estudo: espólio, inventário, segredos, carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços, mímicos, a porta de nevoeiro | 🟢 10 accionáveis |
 | 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | 4 escolas, instrumento, melhoria e grelha de verbos | 🟢 base herdada pelo 66; espaços/energia revogados pelo 54 |
 | 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção | 🟢 a base do WP5 |
@@ -123,8 +124,8 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 3. Co-op para dois, sempre disponível
 4. Esquiva e parry no corpo a corpo
 5. **Qualquer classe pega em qualquer arma** — a diferença vem de atributos e habilidades
-6. Atributos distribuídos por nível, tecto **100**
-7. Magia do bem e do mal, com usos limitados
+6. Atributos distribuídos por nível; nível máximo **100**, atributo máximo **70**
+7. Magia do bem e do mal, com mana sem regeneração e meditação limitada
 8. **Mundo vasto**, por biomas, ~30 min a pé, **12 biomas catalogados**, dungeons escondidas
 9. **Mochila sem limite** — só o equipado pesa (70%)
 10. **A máquina alvo é a do Rico** — 8 GB, Iris Xe, 1080p @ 60 Hz. Manda em tudo
@@ -141,7 +142,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 **Nada trava a construção.** O que falta são decisões que se tomam a jogar, não a escrever — estão no [`99`](spec/99-perguntas-abertas.md) e o [`ESTADO.md`](ESTADO.md) diz quais são mesmo urgentes.
 
-⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 encontros maiores + 12 biomas + 120 armas + 68 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
+⚠️ **O maior risco continua a ser escopo, não uma lacuna vermelha de spec:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 
 ## Sessões
 

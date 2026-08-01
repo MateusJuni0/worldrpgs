@@ -97,7 +97,7 @@ func _build_hud() -> void:
 	add_child(hud)
 	hud.player = player
 	if not Bench.is_benchmarking():
-		hud.toast("F2 mostra os comandos · qualidade: %s" % _preset.get("_name", "?"), 6.0)
+		hud.toast(GameData.ui_text("toast.start") % _preset.get("_name", "?"), 6.0)
 
 
 # --- Povoamento ---------------------------------------------------------------
@@ -193,17 +193,17 @@ func _on_enemy_died(defeated: Enemy) -> void:
 	match String(receipt.get("status", "")):
 		"awarded":
 			var card := String(receipt.get("resolved_card", ""))
-			hud.toast("+%d almas · %s" % [int(receipt.get("souls_awarded", 0)), card], 3.0)
+			hud.toast(GameData.ui_text("toast.reward") % [int(receipt.get("souls_awarded", 0)), card], 3.0)
 		"exhausted":
-			hud.toast("Este tipo ja entregou as dez cartas.", 2.5)
+			hud.toast(GameData.ui_text("toast.loot_exhausted"), 2.5)
 		"save_failed":
-			hud.toast("Recompensa nao gravada; nada foi consumido.", 3.0)
+			hud.toast(GameData.ui_text("toast.reward_save_failed"), 3.0)
 
 func _on_player_died() -> void:
 	if _respawning:
 		return
 	_respawning = true
-	hud.toast("Morreste. A voltar...", 1.5)
+	hud.toast(GameData.ui_text("toast.death"), 1.5)
 	await get_tree().create_timer(
 		float(GameData.section("death").get("respawn_fade_seconds", 1.2))).timeout
 	_respawn()
@@ -219,11 +219,11 @@ func _respawn() -> void:
 		if e != null:
 			e.full_reset()
 	_respawning = false
-	hud.toast("Nada se perdeu.", 2.0)
+	hud.toast(GameData.ui_text("toast.respawn"), 2.0)
 
 
 func _on_boss_died(_e: Enemy) -> void:
-	hud.toast("Vorgar caiu. A fatia 1 esta zerada.", 12.0)
+	hud.toast(GameData.ui_text("toast.boss_defeated"), 12.0)
 
 
 # --- Teclas de sessao ---------------------------------------------------------
@@ -241,7 +241,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			else Input.MOUSE_MODE_CAPTURED)
 	elif InputMap.has_action("reset_arena") and Input.is_action_just_pressed("reset_arena"):
 		_respawn()
-		hud.toast("Arena reiniciada.", 2.0)
+		hud.toast(GameData.ui_text("toast.arena_reset"), 2.0)
 
 
 # --- Piloto automatico para a medicao -----------------------------------------
@@ -295,4 +295,4 @@ func _cycle_class() -> void:
 		if e != null:
 			e.target = player
 	var display: String = GameData.class_attributes(class_id).get("display_name", class_id)
-	hud.toast("Classe: %s (F6 troca)" % display, 2.5)
+	hud.toast(GameData.ui_text("toast.class_changed") % display, 2.5)

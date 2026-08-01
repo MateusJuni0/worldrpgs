@@ -63,7 +63,7 @@
 
 - **A curva é cúbica, não linear.** Cada nível custa desproporcionalmente mais do que o anterior. É isso que faz os primeiros 30 níveis serem rápidos e os últimos serem uma escolha a sério.
 - **O nosso tecto de 100 é bem mais apertado que o deles**, e isso é bom: com soft cap deles aos ~199, o nosso 100 fica dentro da zona onde cada ponto ainda conta. Não temos o problema de níveis que não fazem diferença.
-- ⚠️ **O WP9 escreveu a curva com `XP = 80 + 20×n` — que é linear.** Isso significa que o nível 100 custaria o mesmo esforço marginal que o nível 10, e a progressão perde a tensão toda. `→WP2/WP9` — a curva precisa de ser revista para crescer mais depressa.
+- ~~⚠️ **O WP9 escreveu a curva com `XP = 80 + 20×n` — que é linear.**~~ **CORRIGIDO NA TAREFA 4:** a moeda chama-se almas e a curva cúbica, os quatro marcos e o runtime canónico vivem no [`72`](72-materiais-consumiveis-e-economia.md) §2. A observação histórica explica o porquê da correcção, não reabre a fórmula.
 
 **Fontes:** [Level — DS2 Wikidot](http://darksouls2.wikidot.com/level) · [Level Up — Dark Souls Wiki](https://darksouls.fandom.com/wiki/Level_Up)
 

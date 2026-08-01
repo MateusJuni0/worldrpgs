@@ -148,6 +148,7 @@
     "fov": 55.0,
     "min_distance": 1.2,
     "collision_radius": 0.25,
+    "gamepad_look_radians_per_second": 2.5,
     "follow_smoothing": 0.12,
     "rotation_smoothing": 0.08,
     "mouse_acceleration": false,

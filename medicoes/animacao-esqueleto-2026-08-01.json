@@ -1,0 +1,40 @@
+{
+  "label": "animacao-esqueleto-ual-iris-xe",
+  "date": "2026-08-01",
+  "engine": "Godot 4.7.1",
+  "adapter": "Intel(R) Iris(R) Xe Graphics",
+  "rendering_driver": "Vulkan 1.4.323",
+  "rendering_method": "mobile",
+  "resolution": "1920x1080",
+  "vsync": "on",
+  "asset": "Quaternius Universal Animation Library Standard / UAL1_Standard.glb",
+  "asset_bytes": 7618436,
+  "animation": "Crouch_Idle",
+  "warmup_seconds": 3.0,
+  "sample_seconds_per_run": 12.0,
+  "runs": [
+    {
+      "actors": 5,
+      "animation_players": 5,
+      "samples": 721,
+      "average_frame_ms": 16.667,
+      "average_fps": 60.0,
+      "p95_frame_ms": 18.519,
+      "p99_frame_ms": 19.910,
+      "worst_frame_ms": 21.993
+    },
+    {
+      "actors": 10,
+      "animation_players": 10,
+      "samples": 721,
+      "average_frame_ms": 16.666,
+      "average_fps": 60.0,
+      "p95_frame_ms": 18.552,
+      "p99_frame_ms": 19.861,
+      "worst_frame_ms": 22.532
+    }
+  ],
+  "conclusion": "O orçamento de ecrã de 2 jogadores + 3 inimigos mantém 60,0 fps médios com cinco esqueletos animados; dez também mantêm a média. A animação deixou de estar por medir.",
+  "limits": "Spike isolado com o actor do UAL e luz/sombras, não o nível completo nem retarget KayKit. p95 acima de 16,67 ms mostra jitter curto; a prova integrada da fase 1.2 continua obrigatória antes de substituir todas as cápsulas.",
+  "reproduction": "game/src/tools/animation_benchmark.gd; expor temporariamente o directório Unreal-Godot do pack como res://benchmark_assets, importar, e correr com --actors=5/10 --warmup=3 --seconds=12 --width=1920 --height=1080"
+}

@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, catálogos WP4/WP5/WP6/WP8 completos.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, Tarefa 4 fechada e lacunas vermelhas varridas.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 71 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8402 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8433 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -46,7 +46,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 |---|---|---|---|
 | Documentos de spec | **74** em `spec/` | — | — |
 | Código e dados | 17 ficheiros `.gd` · 16 catálogos JSON | — | — |
-| Testes | **8402, todos a passar** | — | — |
+| Testes | **8433, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
 | **Armaduras** | **68 peças** · 9 slots · 4 estados de carga · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
@@ -63,7 +63,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 O [`59`](spec/59-saves.md) define e o `SaveSystem` implementa: estado separado de personagem/mundo ligado ao `GameData`, autosave sem botão de recarregar, escrita `.tmp` + rename, geração `.bak`, checksum, recuperação de corrupção e migrações de formato. **19 verificações novas** cobrem round-trip, interrupção, corrupção silenciosa e v0→v1.
 
-⚠️ **Isto desbloqueia, mas não finge que os clientes já existem:** o greybox ainda não tem almas, mochila ou mapa persistentes. Quando cada sistema entrar, chama a fronteira única do save. A regra de progresso de chefe no mundo alheio continua `[TENSÃO]`, pergunta 32 do [`99`](spec/99-perguntas-abertas.md).
+⚠️ **Isto desbloqueia, mas não finge que todos os clientes já existem:** a morte de inimigo já publica almas, item, índice do baralho e recibo numa geração atómica. Exploração do mapa, equipamento/UI, mancha definitiva de morte e progresso de chefe ainda chamam a mesma fronteira quando forem construídos. A regra de progresso de chefe no mundo alheio continua `[TENSÃO]`, pergunta 32 do [`99`](spec/99-perguntas-abertas.md).
 
 ## 1d. ✅ A arena deixou de ser um círculo vazio
 
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8268 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8433 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -143,7 +143,7 @@ O [`70`](spec/70-fecho-dos-sistemas-de-combate.md) passa a ser a autoridade das 
 
 `T` ou `Y/triângulo` muda a empunhadura em 12 frames interrompíveis. `hook_pull` atravessa 40% do escudo e `slam` custa ×2,5 stamina de guarda no runtime. O bestiário liga ainda duas largadas, ramo de combo, falsa recuperação, castigo de cura, fingir morte e corpo duro a fichas concretas. Estes ramos avançados estão especificados e testados como dados; animação/IA completa e ressalto geométrico continuam construção M2 conhecida.
 
-Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8402/8402** testes passam neste ponto.
+Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8433/8433** testes passam no fecho da tarefa.
 
 ## 1n. ✅ Os vazios entre comuns, chefes e recompensa estão fechados
 
@@ -152,6 +152,24 @@ O [`71`](spec/71-encontros-nomeados.md) fecha **36 encontros nomeados, exactamen
 O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida pelos baralhos: **40 materiais, 15 consumíveis canónicos**, curva cúbica com marcos exactos, receitas regionais partilhadas por arma/feitiço e enviesamento marcial/arcano apenas no enchimento. A transacção local é idempotente e publica almas, item, índice e recibo na mesma geração atómica do save; `Enemy.died` já a chama e apresenta a recompensa.
 
 ⚠️ A política de destinatário em co-op continua a pergunta 29 do [`99`](spec/99-perguntas-abertas.md). A infraestrutura recebe um destinatário explícito e, por isso, não decidiu à socapa se cai uma ou duas cartas.
+
+## 1o. ⭐ Fecho honesto da Tarefa 4
+
+**A spec de sistemas está completa o suficiente para implementar sem inventar regras pelo caminho.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) fecha magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, fronteira técnica da voz e migração histórica de `sabedoria`. O `10`–`20` preserva história com avisos; a auditoria DS2/DS3 já não deixa parry reactivo, soft cap único, queda a 25 m ou ausência de sobrecarga; as sete situações de combate estão ligadas a ataques concretos. Não resta nenhuma linha `🔴` aberta no [`LACUNAS`](LACUNAS.md).
+
+Também deixou de haver uma incógnita sem número na animação: UAL Standard em Mobile/Vulkan, Iris Xe, 1920×1080, deu **60,0 fps médios com 5 e com 10 esqueletos animados**. O p95 de ~18,5 ms impede triunfalismo: é um spike isolado, não a cena final. Artefacto em [`medicoes/animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json).
+
+**O que ficou por fazer de propósito — e porquê:**
+
+| Não está feito | Porque não se finge completo |
+|---|---|
+| runtime dos sete golpes/estados/artes; 50 feitiços; favoritos; criador/save v2; directores/áudio; mundo/streaming/mapa | é produção M2/WP8/WP11/WP12/15, já com autoridade e prova de saída no `73`; construir tudo seria outra fase, não “fechar spec” |
+| retarget KayKit/Quaternius dentro do nível completo | o spike mediu o custo do esqueleto, mas não prova encaixe, IA, efeitos e duas perspectivas juntos |
+| `TuningRecorder` e três sessões de feel | 8433 testes provam coerência; não provam prazer nem confirmam os baselines |
+| identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
+| políticas co-op, mapa, Assassino, invocados e vendedores | perguntas 24, 28, 29, 32 e 35–40 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
+
+Portanto, **não se declara o jogo completo nem toda a produção de conteúdo fechada**. Declara-se completa a camada técnica/sistémica sob autoridade dos agentes, com os vazios criativos e decisões dos donos explicitamente isolados. A lacuna importante que resta é o catálogo mecânico/narrativo dos doze confrontos finais; ficou aberto porque a identidade depende dos donos, não porque foi esquecido.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
@@ -282,7 +300,7 @@ E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3)
 
 ## 6. O risco, dito uma vez
 
-Mundo vasto + ~61 encontros maiores + 12 biomas + 120 armas + 68 armaduras + 70 anéis + catálogo de magia largo, **feito por duas pessoas e dois agentes**.
+Mundo vasto + 13 chefes + 12 subchefes + 36 nomeados + 12 biomas + 120 armas + 68 armaduras + 70 anéis + 53 feitiços, **feito por duas pessoas e dois agentes**.
 
 **Os donos sabem e decidiram avançar** — e a decisão é deles. Fica registado que a alavanca que dá vastidão sem custar produção são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8), e que a coluna `Fatia 1?` é o que impede o catálogo de virar um plano de dez anos.
 
@@ -292,10 +310,10 @@ Mundo vasto + ~61 encontros maiores + 12 biomas + 120 armas + 68 armaduras + 70 
 
 | Quem | O quê |
 |---|---|
-| **Codex** | tarefa 3 concluída — catálogos 66/67/68/69 entregues; aguarda a próxima ordem |
+| **Codex** | tarefa 4 concluída — contratos 70–73, alinhamento histórico, varrimento de lacunas e benchmark entregues; 74+ livres |
 | **Fable** | não duplicar os catálogos 66/67/68/69; o traçado canónico está no `world.json` |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
-| **Donos** | as perguntas 24, 28, 32, **37 (Assassino)** e **38 (escopo do mapa)** do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
+| **Donos** | perguntas 24, 28, 29, 32 e 34–40 do [`99`](spec/99-perguntas-abertas.md), incluindo Assassino, mapa, música, invocados e vendedores; e a gravação da narrativa |
 | **Claude** | rever o que chega; os 11 ícones de armadura já estão no manifesto |
 
 ### As três voltas de 31-07, e onde estão

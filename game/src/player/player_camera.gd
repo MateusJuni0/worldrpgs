@@ -14,6 +14,7 @@ const MAX_PITCH := 32.0
 @export var follow_height := 1.6
 @export var distance := 4.0
 @export var distance_locked_on := 4.8
+@export var gamepad_look_radians_per_second := 2.5
 
 var target: Node3D
 var lock_target: Node3D
@@ -31,6 +32,7 @@ func _ready() -> void:
 	follow_height = cfg.get("pivot_height", 1.6)
 	distance = cfg.get("distance", 4.0)
 	distance_locked_on = cfg.get("distance_locked_on", 4.8)
+	gamepad_look_radians_per_second = cfg.get("gamepad_look_radians_per_second", 2.5)
 
 	_arm = SpringArm3D.new()
 	_arm.spring_length = distance
@@ -62,6 +64,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if target == null:
 		return
+	if not is_instance_valid(lock_target):
+		var gamepad_look := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+		if gamepad_look.length_squared() > 0.01:
+			_yaw -= gamepad_look.x * gamepad_look_radians_per_second * delta
+			_pitch = clampf(_pitch - gamepad_look.y * gamepad_look_radians_per_second * delta,
+				deg_to_rad(MIN_PITCH), deg_to_rad(MAX_PITCH))
 
 	var focus := target.global_position + Vector3.UP * follow_height
 	global_position = global_position.lerp(focus, clampf(delta * 18.0, 0.0, 1.0))

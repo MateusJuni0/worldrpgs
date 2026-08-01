@@ -30,7 +30,7 @@ Perder almas **nunca torna um chefe impossível**. O jogador continua com o mesm
 
 ⚠️ **A regra que protege isto:** se um jogador perder as almas todas repetidamente e ficar preso, a resposta **nunca é baixar a dificuldade nem devolver as almas**. É verificar se a telegrafia do inimigo está legível ([`15-inimigos.md`](15-inimigos.md)) e se o retry é barato o suficiente.
 
-`[EM ABERTO]` — quantas almas dá cada inimigo, e a curva de custo por nível até 100. É trabalho do WP2/WP9, e tem de bater certo com a tabela de XP que já lá está *(nota: o que o WP9 chama "XP" e este documento chama "almas" são a mesma coisa — o WP9 precisa de uma passagem para uniformizar o nome)*.
+~~`[EM ABERTO]` — quantas almas dá cada inimigo, e a curva de custo por nível até 100.~~ **FECHADO:** as 33 fichas e os orçamentos por zona estão no [`67`](67-catalogo-do-bestiario.md); a curva cúbica e os marcos exactos estão no [`72`](72-materiais-consumiveis-e-economia.md). A moeda chama-se **almas** em todas as fontes vigentes.
 
 ---
 
@@ -158,7 +158,7 @@ O jogo é **inteiramente jogável sozinho** `[DECIDIDO]`. Sozinho não há ressu
 | | Onde |
 |---|---|
 | Almas por inimigo e curva de custo até ao nível 100 | WP2 / WP9 |
-| Uniformizar o nome: o WP9 diz "XP", isto diz "almas" | WP9 |
+| ~~Uniformizar XP/almas~~ **Fechado: fontes vigentes e runtime dizem almas; documentos 10–20 preservam “XP” apenas sob aviso histórico** | ✅ [`72`](72-materiais-consumiveis-e-economia.md) |
 | Catálogo de armadura por peças, com peso e resistências | WP5 |
 | Que peças cada inimigo usa (= o que pode largar) | WP6 |
 | Melhorar frascos: mais ou mais fortes | WP5 |

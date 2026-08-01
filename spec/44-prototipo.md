@@ -16,6 +16,7 @@ Godot 4.7.1-stable, renderer Mobile, 1920×1080, **na máquina do Rico — a mai
 | Mobile (frio) ✅ | 412 fps · 1% low 251 · 63 MB VRAM | [`mobile-frio.json`](../medicoes/mobile-frio.json) |
 | Compatibility (frio) | 415 fps · **1% low 143** · 32 MB VRAM | [`gl_compatibility-frio.json`](../medicoes/gl_compatibility-frio.json) |
 | Zona completa, depois de 4 iterações de melhoria | 268,7 fps · 1% low 147,7 · 0,0% fora do orçamento · **16 draw calls** | [`iter1-zona.json`](../medicoes/iter1-zona.json) |
+| ⭐ **Esqueleto animado UAL**, 5 actores / 10 actores, vsync | **60,0 fps médios nos dois** · p95 18,519/18,552 ms · pior 21,993/22,532 ms | [`animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json) |
 
 **Renderer Mobile escolhido pelo 1% low, não pela média** — é o número que se sente. O Compatibility tem melhor média e pior 1% low: seria a escolha errada por olhar para a coluna errada.
 
@@ -25,12 +26,12 @@ Godot 4.7.1-stable, renderer Mobile, 1920×1080, **na máquina do Rico — a mai
 
 A honestidade que a spec exige, e que a aprovação dos donos não apaga:
 
-- **Sem animação de esqueleto.** É a incógnita cara, e continua por medir. Cápsulas não são personagens animados.
+- ~~**Sem animação de esqueleto.**~~ **Medida isoladamente na Iris Xe:** cinco e dez actores UAL mantêm 60,0 fps médios a 1920×1080. Ainda falta retarget KayKit/Quaternius dentro do nível completo; p95 ~18,5 ms mostra jitter curto que a média esconde.
 - **Sem 25 imagens/texturas** aplicadas — o orçamento de VRAM real do WP12 ainda não foi exercido.
 - A folga de ~6× é **orçamento para conteúdo**, não garantia.
 - Memória cresceu ~14,5 MB em 20 min — a vigiar; 8 GB não perdoam.
 
-O caminho A está escolhido com dados. A prova completa continua a ser o M1 do [`24-plano.md`](24-plano.md), com esqueletos animados.
+O caminho A está escolhido com dados. O risco “esqueleto nunca medido” fechou; a prova completa continua a ser o M1 integrado do [`24-plano.md`](24-plano.md), com esses actores no nível, IA, efeitos e duas perspectivas.
 
 ## 2. O que já se joga
 

@@ -17,7 +17,7 @@
 | | |
 |---|---|
 | **Transporte** | o mesmo da rede do jogo — **canal separado, não fiável** *(a voz atrasada não se repete: deita-se fora)* |
-| **Codec** | **Opus**, 24 kbps mono. É o padrão para voz e o Godot suporta-o |
+| **Codec** | **Opus**, 24 kbps mono. É o alvo; Godot dá captura/microfone, mas codec/AEC/jitter completos exigem integração escolhida no WP14 |
 | **Largura de banda** | ~3 KB/s por pessoa — **irrelevante** ao lado do estado do jogo |
 | **Latência alvo** | < 150 ms boca a ouvido |
 
@@ -155,9 +155,9 @@ exploras ──► encontras o TOMO DAS CINZAS numa dungeon
 
 | | |
 |---|---|
-| Voz: **Godot faz isto nativamente ou precisa de biblioteca?** | `→WP14` — a validar |
-| **Os vendedores morrem?** Na referência alguns morrem e perde-se o stock | ⏳ donos |
-| **O Coveiro só serve o mago do mal — isso é gating de classe?** | ⚠️ **provavelmente sim.** Rever contra a Lei 3 |
+| ~~Voz: **Godot faz isto nativamente ou precisa de biblioteca?**~~ Captura/microfone são nativos; Opus/AEC/jitter/transporte completos exigem integração e, se for WebRTC nativo, GDExtension externa | ✅ [`73`](73-fecho-dos-buracos-de-integracao.md) §6; biblioteca/licença no spike WP14 |
+| **Os vendedores morrem?** Na referência alguns morrem e perde-se o stock | ⏳ pergunta 39 dos donos |
+| **O Coveiro só serve a Escola vermelha — isso é gating de classe?** | ⏳ pergunta 40 dos donos; não decidido por este documento |
 | Preços concretos, e o total comprável por zona | `→WP9` |
 
 ## Ligações

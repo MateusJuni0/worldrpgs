@@ -24,6 +24,7 @@ var world: Dictionary = {}
 var progression: Dictionary = {}
 var named_catalog: Dictionary = {}
 var economy: Dictionary = {}
+var ui_strings: Dictionary = {}
 var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
@@ -45,6 +46,7 @@ func _ready() -> void:
 	progression = _load_json("progression.json")
 	named_catalog = _load_json("named_encounters.json")
 	economy = _load_json("economy.json")
+	ui_strings = _load_json("strings.pt.json")
 	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
@@ -117,6 +119,13 @@ func consumable(id: String) -> Dictionary:
 	var aliases: Dictionary = economy.get("aliases", {}) as Dictionary
 	var canonical_id := String(aliases.get(id, id))
 	return (economy.get("consumables", {}) as Dictionary).get(canonical_id, {}) as Dictionary
+
+
+## Todo o texto apresentado ao jogador nasce no catálogo da língua. Mensagens
+## de diagnóstico e nomes internos continuam no código: não são interface.
+func ui_text(id: String, fallback: String = "") -> String:
+	var strings: Dictionary = ui_strings.get("strings", {}) as Dictionary
+	return String(strings.get(id, fallback))
 
 
 ## O JSON guarda declaracoes compactas de ataques, mas o runtime recebe sempre
@@ -573,6 +582,11 @@ func _event_from_binding(binding: Dictionary, action_name: String) -> InputEvent
 			var joy := InputEventJoypadButton.new()
 			joy.button_index = int(binding.get("button", 0)) as JoyButton
 			return joy
+		"joypad_motion":
+			var motion := InputEventJoypadMotion.new()
+			motion.axis = int(binding.get("axis", 0)) as JoyAxis
+			motion.axis_value = float(binding.get("value", 1.0))
+			return motion
 	_fail("Tipo de ligacao desconhecido em '%s'" % action_name)
 	return null
 
@@ -599,6 +613,10 @@ func _keycode_from_name(n: String) -> Key:
 		"Enter", "Return": return KEY_ENTER
 		"BracketLeft": return KEY_BRACKETLEFT
 		"BracketRight": return KEY_BRACKETRIGHT
+		"ArrowLeft": return KEY_LEFT
+		"ArrowRight": return KEY_RIGHT
+		"ArrowUp": return KEY_UP
+		"ArrowDown": return KEY_DOWN
 	return KEY_NONE
 
 
@@ -1203,6 +1221,60 @@ func _validate() -> void:
 	if level_cost(20) != 2601 or level_cost(40) != 9505 \
 			or level_cost(70) != 28351 or level_cost(100) != 60265:
 		_fail("[SPEC] curva cubica de almas divergiu dos marcos publicados")
+	checks += 1
+
+	# 14. Tarefa 4.4: fronteiras que antes eram assumidas e agora são dados.
+	var enemy_spell_rule: Dictionary = (enemies.get("_rules", {}) as Dictionary).get(
+		"enemy_spellcasting", {}) as Dictionary
+	for shared_rule: String in ["forma_de_entrega", "tell", "momento_de_compromisso",
+			"hitbox_visivel", "elemento", "interrupcao", "cue_audio_visual", "vectores_de_fuga"]:
+		if not (enemy_spell_rule.get("shares_with_player", []) as Array).has(shared_rule):
+			_fail("[SPEC] magia inimiga não partilha '%s' com a ficha de ataque" % shared_rule)
+	if String(enemy_spell_rule.get("enemy_resource", "")) == "" \
+			or String(enemy_spell_rule.get("interrupt_rule", "")) == "":
+		_fail("[SPEC] magia inimiga sem recurso/interrupção explícitos")
+
+	var traversal: Dictionary = world.get("_traversal_rules", {}) as Dictionary
+	for absent_verb: String in ["free_swimming", "free_climbing", "free_traversal_jump"]:
+		if bool(traversal.get(absent_verb, true)):
+			_fail("[SPEC] travessia reabriu o verbo '%s'" % absent_verb)
+	if not is_equal_approx(float(traversal.get("automatic_step_max_m", 0.0)), 0.45):
+		_fail("[SPEC] passo automático deixou de ser 0,45 m")
+	var subboss: Dictionary = world.get("_subboss_rules", {}) as Dictionary
+	for subboss_field: String in ["on_flee", "on_defeat", "on_new_zone_cycle", "presentation"]:
+		if String(subboss.get(subboss_field, "")) == "":
+			_fail("[SPEC] ciclo de subchefe sem '%s'" % subboss_field)
+
+	const REQUIRED_UI_TEXTS: Array[String] = ["hud.help", "hud.info", "hud.boss",
+		"toast.start", "toast.reward", "toast.loot_exhausted", "toast.reward_save_failed",
+		"toast.death", "toast.respawn", "toast.boss_defeated", "toast.arena_reset",
+		"toast.class_changed"]
+	for text_id: String in REQUIRED_UI_TEXTS:
+		if ui_text(text_id) == "":
+			_fail("[SPEC] texto obrigatório '%s' não está no catálogo português" % text_id)
+	var remote_heal: Dictionary = spell("elo_curador")
+	var remote_heal_effect: Dictionary = remote_heal.get("effect", {}) as Dictionary
+	var remote_heal_network: Dictionary = remote_heal.get("network_contract", {}) as Dictionary
+	if not is_equal_approx(float(remote_heal_effect.get(
+			"heal_target_max_health_fraction", 0.0)), 0.30) \
+			or bool(remote_heal_effect.get("can_resurrect", true)):
+		_fail("[SPEC] Elo Curador deixou de curar 30% sem ressuscitar")
+	if String(remote_heal_network.get("channel", "")) != "reliable_ordered_gameplay" \
+			or String(remote_heal_network.get("deduplication", "")) == "":
+		_fail("[SPEC] cura remota sem canal fiável/ordem/idempotência")
+
+	var control_actions: Dictionary = controls.get("actions", {}) as Dictionary
+	for required_action_value: Variant in controls.get("gamepad_required", []):
+		var required_action := String(required_action_value)
+		var has_primary := false
+		var has_gamepad := false
+		for binding_value: Variant in control_actions.get(required_action, []):
+			var binding := binding_value as Dictionary
+			var binding_type := String(binding.get("type", ""))
+			has_primary = has_primary or binding_type in ["key", "mouse"]
+			has_gamepad = has_gamepad or binding_type in ["joypad_button", "joypad_motion"]
+		if not has_primary or not has_gamepad:
+			_fail("[SPEC] acção nuclear '%s' não é agnóstica da fonte" % required_action)
 	checks += 1
 
 	if load_errors.is_empty():

@@ -11,9 +11,9 @@
     "points_per_level": 1,
     "max_level": 100,
     "slice_range": [1, 10],
-    "xp_formula": "XP = 80 + 20*n",
-    "xp_base": 80,
-    "xp_per_level": 20
+    "currency": "almas",
+    "cost_source": "economy.json/rules/level_cost",
+    "old_linear_xp_formula_revoked": "spec/72: substituída pela curva cúbica canónica"
   },
 
   "formulas": {

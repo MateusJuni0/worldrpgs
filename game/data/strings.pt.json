@@ -1,0 +1,20 @@
+{
+  "_fonte": "spec/73-fecho-dos-buracos-de-integracao.md",
+  "locale": "pt",
+  "fallback_locale": "pt",
+  "rule": "texto apresentado ao jogador vive aqui; IDs, diagnósticos de desenvolvimento e dados numéricos continuam nas respectivas fontes",
+  "strings": {
+    "hud.help": "COMANDOS  (spec/01-combate.md)\nWASD          mover        (correr 5,0 m/s)\nCtrl          andar 3,0    Space segurar: sprint 7,0\nSpace toque   esquiva      0,60 s · i-frames 0,08-0,38\nRato          câmara\nLMB           ataque leve\nShift+LMB     ataque pesado (segurar: carrega o machadão)\nRMB segurar   bloqueio     (LMB com escudo = bash)\nQ             parry        janela 8 f\nTab           lock-on      18 m engate / 25 m quebra\nC             conjurar     F: magia seguinte\nM             meditar 40 s (2 tentativas por descanso)\nT             uma/duas mãos\n[ ]           trocar de arma (Lei 3)\nF1 fps · F2 esta ajuda · F3 rato · F5 reiniciar · Esc sair",
+    "hud.info": "%d/%d PV   %d/%d STA   mana %d/%d   frasco %d/%d   hab: %s   magia: %s   %s   [%s]",
+    "hud.boss": "%s   —   fase %d",
+    "toast.start": "F2 mostra os comandos · qualidade: %s",
+    "toast.reward": "+%d almas · %s",
+    "toast.loot_exhausted": "Este tipo já entregou as dez cartas.",
+    "toast.reward_save_failed": "Recompensa não gravada; nada foi consumido.",
+    "toast.death": "Morreste. A voltar...",
+    "toast.respawn": "Nada se perdeu.",
+    "toast.boss_defeated": "Vorgar caiu. A fatia 1 está zerada.",
+    "toast.arena_reset": "Arena reiniciada.",
+    "toast.class_changed": "Classe: %s (F6 troca)"
+  }
+}

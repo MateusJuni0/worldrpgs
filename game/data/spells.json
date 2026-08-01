@@ -799,6 +799,19 @@
     "contact_type": "nenhum",
     "speed_mps": 12,
     "range_m": 24,
+    "effect": {
+      "heal_target_max_health_fraction": 0.30,
+      "can_resurrect": false,
+      "can_target_summons": false,
+      "applies_once_per_cast_id": true
+    },
+    "network_contract": {
+      "channel": "reliable_ordered_gameplay",
+      "authority": "o anfitrião valida alcance e linha no compromisso; o dono do corpo aplica a cura",
+      "apply_time": "commit_time + distancia_no_compromisso / 12 m/s; se a mensagem chegar depois, aplica ao receber",
+      "late_rule": "não rebobina morte e nunca ressuscita; acima de 150 ms a UI mostra o aviso geral de latência",
+      "deduplication": "cast_id persistente durante a tentativa"
+    },
     "has_drop": false,
     "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
     "visual_cue": "silhueta perseguidor completa desde o primeiro frame; fecha no compromisso",

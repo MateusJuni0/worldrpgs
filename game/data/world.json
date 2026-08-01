@@ -10,6 +10,22 @@
     ],
     "rule": "a leitura vem antes do traçado; uma zona sem círculos horizontal e vertical não está acabada"
   },
+  "_traversal_rules": {
+    "free_swimming": false,
+    "free_climbing": false,
+    "free_traversal_jump": false,
+    "automatic_step_max_m": 0.45,
+    "authored_vertical_links": ["escada_interactiva", "elevador", "rampa", "queda_sem_retorno_legivel"],
+    "deep_water": "perigo ou rota lenta com fundo caminhável; nunca exige nadar",
+    "weapon_move_a_saltar": "investida terrestre de ataque; não é verbo de travessia",
+    "geometry_guard": "nenhuma rota obrigatória, segredo ou fuga depende de nadar, escalar ou saltar"
+  },
+  "_subboss_rules": {
+    "on_flee": "o encontro recompõe-se no descanso e permanece na bolsa autorada",
+    "on_defeat": "fica morto nesse ciclo da zona",
+    "on_new_zone_cycle": "Brasa ou NG+ volta a colocá-lo; a recompensa fixa só pode sair uma vez por ciclo",
+    "presentation": "sem nevoeiro, barra global ou música própria; pode ser abandonado por qualquer saída legível"
+  },
   "map_reading": {
     "decided_before_layout": true,
     "projection": "inclinada_40_graus",

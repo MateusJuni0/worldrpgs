@@ -6,7 +6,14 @@
     "loot_draw": "uma carta sem reposição por derrota recompensada; baralho partilhado pelo tipo",
     "boss_loot": "fora deste baralho: chefe não reaparece e larga o conjunto fixo do WP7",
     "soul_budget": "souls_first_clear multiplica a população colocada; souls_ten_rewarded_clears é o limite desse conteúdo repetido dez vezes",
-    "visual_cue": "o som e o visual apresentam o mesmo GameplayCue; cor nunca é o único canal"
+    "visual_cue": "o som e o visual apresentam o mesmo GameplayCue; cor nunca é o único canal",
+    "enemy_spellcasting": {
+      "shares_with_player": ["forma_de_entrega", "tell", "momento_de_compromisso", "hitbox_visivel", "elemento", "interrupcao", "cue_audio_visual", "vectores_de_fuga"],
+      "does_not_share": ["mana_do_jogador", "meditacao", "favoritos", "instrumento_equipavel"],
+      "enemy_resource": "a ficha de IA declara padrão, cooldown e número de usos quando finito",
+      "interrupt_rule": "qualquer dano de postura que exceda a postura restante interrompe antes do compromisso; depois do compromisso o efeito já lançado resolve",
+      "fairness_rule": "uma magia inimiga é uma ficha de ataque do bestiário e passa exactamente as mesmas guardas de honestidade"
+    }
   },
   "_enemy_defaults": {
     "is_boss": false,

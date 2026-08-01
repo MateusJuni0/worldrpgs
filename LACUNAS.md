@@ -18,7 +18,7 @@
 |---|---|---|
 | ✅ | ~~"Rolar para o lado funciona sempre"~~ **CORRIGIDO 01-08** — cada ataque declara **momento de compromisso, curva de seguimento e vector de fuga**, escolhido de uma lista de 9. E o vector **tem de ser legível na animação** | [`38`](spec/38-ataques-e-honestidade.md) §2b |
 | ✅ | ~~A hitbox de 3–6 frames é regra de espada aplicada a tudo~~ **CORRIGIDO 01-08** — três tipos de contacto: **instantâneo** (3–6 frames), **volume móvel** (uma vez por passagem), **volume persistente** (dano por intervalos declarados). A regra unificadora: *a hitbox vive exactamente enquanto o efeito se vê* | [`38`](spec/38-ataques-e-honestidade.md) §1b |
-| 🔴 | ⭐ **A fórmula da estabilidade estava invertida** — eu escrevi `dano × (estabilidade/100)`, o que fazia o broquel de 50 bloquear melhor que o escudo grande de 85. ✅ **CORRIGIDO 01-08** para `× (1 − estabilidade/100)` | [`41`](spec/41-estudo-armas-e-golpes.md) §6 |
+| ✅ | ~~⭐ **A fórmula da estabilidade estava invertida**~~ **CORRIGIDO 01-08** para `dano × (1 − estabilidade/100)`; o broquel já não bloqueia melhor que o escudo grande | [`41`](spec/41-estudo-armas-e-golpes.md) §6 · `3f7fe16` |
 | ✅ | ~~O espelho é mais fácil do que o parry~~ **RESOLVIDO 01-08** — janela de 0,25 s, recuperação se falhar, escala pelo instrumento, e recompensa maior quando acerta | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §4 |
 | ✅ | ~~O intervalo de 0,20 s entre atacantes não chega~~ **CORRIGIDO 01-08** — conta-se a partir de **quando o jogador pode agir**, não do relógio. E o tecto de 2 agressores passa a garantir **rota de fuga** em vez de um número | [`38`](spec/38-ataques-e-honestidade.md) §3 |
 | ✅ | ~~⚠️ **Melhoria de armas (+10%/nível) era a Lei 2 quebrada**~~ **RESOLVIDO 01-08** — base + seis níveis abrem postura/moveset, arte, troca de escala ou conversão elemental; zero aumento de dano base | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §3 |
@@ -33,9 +33,9 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | ⚠️ **A linha "porque está neste bioma"** é a única que liga a raça ao mapa, e é a que se salta. A resposta tem de sair de uma ficha de bioma já escrita | [`46`](spec/46-coerencia-bioma-raca-item.md) §5 |
-| 🟠 | **Em que biomas cada raça aparece, e o que muda em cada variante** — e a variante tem de mudar **como se luta**, não só a cor | [`46`](spec/46-coerencia-bioma-raca-item.md) §7 |
-| 🟠 | ⚠️ **Santuário Branco e A Raiz** são os dois biomas mais fáceis de deixar sem raça própria. Sem habitante próprio são cenários, não lugares | revisão do PR #14 |
+| ✅ | ~~⚠️ **A linha "porque está neste bioma"**~~ **RESOLVIDA** — as 12 fichas ligam origem/necessidade ao bioma e a validação cruza `races.json` ↔ `biomes.json` nos dois sentidos | [`50`](spec/50-racas.md) · `664ec7e` |
+| ✅ | ~~**Em que biomas cada raça aparece, e o que muda em cada variante**~~ **RESOLVIDO** — variantes têm papel/ataques próprios nas fichas do bestiário, não apenas cor | [`50`](spec/50-racas.md) · [`67`](spec/67-catalogo-do-bestiario.md) · `d7088b7` |
+| ✅ | ~~⚠️ **Santuário Branco e A Raiz sem raça própria**~~ **RESOLVIDO** — Penitentes e Sem-rosto são habitantes dominantes e têm fichas/combate | [`50`](spec/50-racas.md) · [`67`](spec/67-catalogo-do-bestiario.md) · `d7088b7` |
 | ✅ | ~~**Mímicos e Minotauros sem ficha adequada**~~ **RESOLVIDO 01-08** — mímico é praga com duas fichas de encontro; minotauros comuns variam por bioma e o guardião singular continua WP7 | [`50`](spec/50-racas.md) · [`67`](spec/67-catalogo-do-bestiario.md) |
 
 ### Volta 3 — armas e armaduras
@@ -46,7 +46,7 @@
 | ✅ | ~~**Melhoria de armas**~~ **RESOLVIDO 01-08** — seis escolhas sem força | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §3 |
 | ✅ | ~~**Estados alterados**~~ **RESOLVIDO 01-08** — veneno, sangramento e queimadura com barra, disparo, saída e simetria | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §4 |
 | ✅ | ~~**Requisitos de atributo**~~ **RESOLVIDO** — abaixo do requisito continua utilizável a ×0,6 sem escala; nenhum catálogo passa 18 | [`11`](spec/11-formulas.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
-| 🔴 | **Os sete golpes novos, estados e segunda adaga estão declarados mas não executam.** Leve/pesado/cadeia/bash são o runtime actual; corrida, rolar, saltar, queda, empurrão universal, artes, medidores e Corte Alternado entram no M2 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 🟠 | **Produção M2: executar os sete golpes novos, estados e segunda adaga.** O contrato está fechado; leve/pesado/cadeia/bash são o runtime actual, e corrida, rolar, salto de ataque, queda, empurrão universal, artes, medidores e Corte Alternado têm prova de saída no [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🟠 | **Equipar, votos de melhoria, 2→10 dedos e persistência não têm UI/save.** Dados e invariantes existem; clientes são WP11 + save v2 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🟠 | **O catálogo de armadura cresceu de ~30 para 68 peças** porque o WP6 já prometia 57 IDs além das 11 iniciais. A coluna `Fatia 1?` contém a produção (só 11 agora), mas o custo futuro ficou maior | [`67`](spec/67-catalogo-do-bestiario.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🔵 | **Como a mira do arco comunica a queda da flecha** — sem isso o jogador aprende "o arco falha às vezes" | [`36`](spec/36-fisica.md) §3 |
@@ -65,12 +65,12 @@
 | | Lacuna | Origem |
 |---|---|---|
 | ⏳ | ~~As 6 perguntas do mago do mal~~ ✅ **4 respondidas 31-07** (chefe portátil · sem tecto de invocados · Voto empilha 3× · instrumento livre). Faltam: que feitiços cortar, e o tecto de máquina | [`52`](spec/52-mago-do-mal.md) §11 |
-| 🟠 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* | [`50`](spec/52-mago-do-mal.md) §9 |
-| 🟠 | **Inimigos que lançam magia usam as mesmas regras?** *(proposta: sim, incluindo ser interrompíveis)* | [`42`](spec/42-estudo-magia.md), [`48`](spec/48-arcos-bestas-escudos.md) |
+| ⏳ | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* — não decidido pelo agente | [`52`](spec/52-mago-do-mal.md) §9 · pergunta 35 |
+| ✅ | ~~**Inimigos que lançam magia usam as mesmas regras?**~~ **FECHADO** — partilham honestidade/contacto/interrupção; IA declara padrão/cooldown/usos e não finge mana/meditação | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §1 |
 | ✅ | ~~**Quantos feitiços na fatia 1**~~ **RESOLVIDO 01-08** — Dardo, Ruína e Égide; os três têm ícone aprovado e ficha completa | [`66`](spec/66-catalogo-de-magia.md) |
 | ✅ | ~~**O material de melhoria de feitiço é o mesmo das armas, ou outro?**~~ **RESOLVIDO NA TAREFA 4** — catálogo regional partilhado; evita uma moeda paralela e conserva preferência marcial/arcana nas cartas `bias:classe` | [`72`](spec/72-materiais-consumiveis-e-economia.md) §2.1 |
-| 🔴 | **O catálogo tem 53 feitiços, mas o runtime só executa os 3 da Fatia 1 e três renderers (`projectile`, `aoe`, `barrier`).** As outras formas não podem entrar numa fatia futura sem comportamento, hitbox e cue próprios | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
-| 🔴 | **Roda e edição dos 8 favoritos não existem.** A regra “só fora de combate/no descanso” está nos dados, mas ainda não há UI que a aplique | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
+| 🟠 | **Produção M3/fatias futuras: executar os 50 feitiços fora da Fatia 1.** Cada nova forma só entra com comportamento, hitbox e cue; a dívida tem autoridade e prova de saída no [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
+| 🟠 | **Produção WP11: roda e edição dos 8 favoritos.** A regra “só fora de combate/no descanso” está fechada; falta a UI que a aplique e a prova negativa em combate | [`66`](spec/66-catalogo-de-magia.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 |
 | 🟠 | **Só o cajado existe como instrumento no runtime.** Sino, talismã, chama e relicário estão declarados por escola, mas faltam instâncias de WP5 e validação por feitiço | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
 
 ### Volta 5 — bestiário
@@ -81,7 +81,7 @@
 | ✅ | ~~⭐ **`GameplayCue` + renderer e migração**~~ **RESOLVIDO 01-08** — faixa/área, glifo no mundo, bordo fora do ecrã, cancelamento 0,15 s e cinco perfis sonoros | [`67`](spec/67-catalogo-do-bestiario.md) §7 |
 | ✅ | ~~**Massa de cada inimigo**~~ **RESOLVIDO 01-08** — 33 comuns + Vorgar, em kg, validada positiva | [`67`](spec/67-catalogo-do-bestiario.md) §3 |
 | ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
-| ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 8402 testes |
+| ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 8433 testes |
 | ✅ | ~~**Resolver os IDs de materiais e consumíveis dos cartões**~~ **RESOLVIDO NA TAREFA 4** — 40 materiais; os 17 tokens antigos eram 15 objectos + Brasa ilegal + grafia acentuada duplicada, ambos corrigidos | [`72`](spec/72-materiais-consumiveis-e-economia.md) §§2–3 |
 | 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
 
@@ -90,7 +90,7 @@
 | | Lacuna | Origem |
 |---|---|---|
 | ✅ | ~~⚠️ **Desenho de arena de chefe**~~ **RESOLVIDO 01-08** — tamanho por camada, obstáculos/refúgios, duas rotas e perguntas SEPARAR/JUNTAR para co-op | [`61`](spec/61-arenas-de-chefe.md) |
-| 🟠 | **Um subchefe pode ser fugido de vez, ou reaparece?** | [`46`](spec/46-coerencia-bioma-raca-item.md) §6 |
+| ✅ | ~~**Um subchefe pode ser fugido de vez, ou reaparece?**~~ **FECHADO** — fugir recompõe no descanso; matar persiste no ciclo; Brasa/NG+ volta a colocá-lo com uma recompensa fixa por ciclo | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §3 · `world.json` |
 | ✅ | ~~**Como se sinaliza um precipício**~~ **RESOLVIDO 01-08** — faixa ≥ empurrão máximo + 0,5 m, padrão sem depender de cor, silhueta, movimento e som redundante | [`61`](spec/61-arenas-de-chefe.md) §5 |
 | 🟠 | **As 12 fichas de arena depois de Vorgar** — 11 guardiões + Ultra; quais usam queda, obstáculos, SEPARAR/JUNTAR e prova em ambas as perspectivas | [`61`](spec/61-arenas-de-chefe.md) §7 |
 
@@ -98,27 +98,27 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
+| ✅ | ~~**A curva de nível era linear e chamava “XP”**~~ **CORRIGIDO** — custo cúbico em almas, com marcos 20/40/70/100 executáveis | [`72`](spec/72-materiais-consumiveis-e-economia.md) §2 · `860204f` |
 | ✅ | ~~**Sistema de saves sem uma linha**~~ **RESOLVIDO 01-08** — formato campo a campo, morte sem save-scumming, escrita atómica, recuperação e migração, com código e testes | [`59`](spec/59-saves.md) · `game/src/autoload/save_system.gd` |
-| 🟠 | **Um save v1 criado antes do catálogo pode conservar `sabedoria` e não ter `inteligencia`/`fe`.** Fazer a conversão determinística na migração v1→v2 já prevista pelo criador; não gastar uma versão intermédia só para o greybox | encontrado ao alinhar [`11`](spec/11-formulas.md) com o [`66`](spec/66-catalogo-de-magia.md) |
+| ✅ | ~~**A migração de `sabedoria` não tinha algoritmo**~~ **FECHADO NO CONTRATO** — v2 move o valor para o eixo mágico da origem, repõe o outro na base e prova que não duplicou pontos; implementação entra com `appearance` | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §7 |
 | ✅ | ~~⚠️ **A leitura do mapa tinha de ser decidida antes do traçado**~~ **RESOLVIDO NO CONTRATO 01-08** — vista inclinada a ~40°, só terreno percorrido, andar actual realçado; a escolha zona/mundo continua dos donos sem bloquear a geometria | [`57`](spec/57-mapa-e-minimapa.md) §5 · [`69`](spec/69-catalogo-do-mundo.md) §1 |
 | 🟠 | ⚠️ **Os packs CC0 estão em `art/`, mas quase nada está integrado em `game/`.** Biblioteca não é runtime: cada modelo/som ainda precisa de importação, orçamento e prova no motor | [`22`](spec/22-assets.md), verificado no [`64`](spec/64-criacao-de-personagem.md) |
-| 🟠 | ⚠️ **Ligar os três produtores ao `SaveSystem`** — o greybox ainda não tem almas/inventário/mapa persistentes; quando cada sistema entrar, tem de emitir os eventos do [`59`](spec/59-saves.md) §3. Hoje `main.gd` ainda diz «Nada se perdeu» | encontrado ao implementar o [`59`](spec/59-saves.md) |
-| 🔴 | ⭐ **A infra-estrutura de afinação escrita no `23`/`28` não existe** — sem CSV, `tp arena_vorgar`, `latencia`, overlays ou fixtures A/B; só a semente fixa do greybox existe. Construir `TuningRecorder` antes de chamar qualquer valor “confirmado” | encontrado ao verificar o código para o [`63`](spec/63-como-se-afinam-os-numeros.md) |
-| 🔴 | **O criador não existe** — o greybox só troca classe com F6. Faltam ecrã/slots, `appearance.json`, validação do nome, save v2 + migração v1 e teste 6 origens × armas | encontrado ao escrever o [`64`](spec/64-criacao-de-personagem.md) |
+| 🟠 | ⚠️ **Ligar os produtores restantes ao `SaveSystem`.** Morte de inimigo → almas/inventário/baralho/recibo já é atómica; exploração do mapa, equipamento e UI entram quando esses clientes forem construídos. A mensagem provisória «Nada se perdeu» continua a não simular a mancha definitiva | [`59`](spec/59-saves.md) · [`72`](spec/72-materiais-consumiveis-e-economia.md) |
+| 🟠 | ⭐ **Produção M2: construir `TuningRecorder`.** CSV, `tp arena_vorgar`, `latencia`, overlays e fixtures A/B já têm contrato; até existirem, os números dizem **baseline**, nunca “confirmado” | [`63`](spec/63-como-se-afinam-os-numeros.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 |
+| 🟠 | **Produção WP11: construir o criador.** Ecrã/slots, `appearance.json`, nome, save v2/migração e matriz 6 origens × armas têm contrato e prova de saída | [`64`](spec/64-criacao-de-personagem.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §§7–8 |
 | 🟠 | **Os corpos Quaternius, classes KayKit e 11 peças não têm retarget/encaixe provado; os 2 conjuntos de voz também não existem** | conteúdo e integração exigidos pelo [`64`](spec/64-criacao-de-personagem.md) |
-| 🔴 | **Áudio sem arquitectura:** os 12 sons sintetizados vão todos para `Master`; faltam `audio_catalog.json`, buses, `AudioDirector`/`MusicDirector`, 8 vozes reservadas e ducking que proteja `GameplayInfo` | encontrado ao escrever o [`65`](spec/65-musica-e-ambiente.md) |
-| 🔴 | **Zero música e zero loop de ambiente.** Os 182 OGG são 181 SFX + 1 preview; faltam 6 peças, 3 stingers, Brumal/Toca, vozes, orcs, carne e magia própria | inventário medido no [`65`](spec/65-musica-e-ambiente.md) |
+| 🟠 | **Produção WP12/15: arquitectura de áudio.** `audio_catalog.json`, buses, `AudioDirector`/`MusicDirector`, 8 vozes e ducking estão especificados; o runtime actual ainda envia os sintetizados para `Master` | [`65`](spec/65-musica-e-ambiente.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 |
+| 🟠 | **Produção/autoria: zero música e zero loop de ambiente.** Faltam 6 peças, 3 stingers, Brumal/Toca, vozes e materiais próprios; autoria/direcção continua pergunta 34 dos donos | [`65`](spec/65-musica-e-ambiente.md) · pergunta 34 |
 | 🟠 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | [`29`](spec/29-perspectiva.md) |
-| 🟠 | **A cura à distância funciona com que latência?** | [`42`](spec/42-estudo-magia.md) |
+| ✅ | ~~**A cura à distância funciona com que latência?**~~ **FECHADO** — evento fiável/ordenado, `cast_id`, validação anfitriã e aplicação pelo dono no tempo de voo; nunca rebobina morte, >150 ms avisa | [`42`](spec/42-estudo-magia.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §1.1 |
 
 ### Volta 9 — mundo
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | **Nadar, escalar, saltar: existem?** Nunca foram mencionados | [`36`](spec/36-fisica.md) |
+| ✅ | ~~**Nadar, escalar, saltar: existem?**~~ **FECHADO** — sem verbos livres; passo automático ≤0,45 m e ligações verticais autoradas; “a saltar” é golpe terrestre | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §2 · `world.json` |
 | ✅ | ~~⚠️ **Traçado e orçamento de memória tinham de nascer juntos**~~ **RESOLVIDO NO CONTRATO 01-08** — 21 gargantas carregam exactamente os dois vizinhos; atalhos fecham dentro da própria zona; conjunto residente = actual + vizinhas, tecto 2,5 GB | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 · [`69`](spec/69-catalogo-do-mundo.md) §2 |
-| 🔴 | **O catálogo do mundo não tem runtime.** `world.json` carrega e é validado, mas não existem topologia, streaming por garganta, mapa/minimapa, elevadores, atalhos persistentes nem as 11 zonas fora de Brumal | encontrado ao fechar o [`69`](spec/69-catalogo-do-mundo.md) |
+| 🟠 | **Produção WP8: o catálogo do mundo ainda não tem runtime.** Topologia, streaming por garganta, mapa/minimapa, elevadores, atalhos persistentes e 11 zonas têm contrato e prova de saída; hoje só Brumal existe | [`69`](spec/69-catalogo-do-mundo.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 |
 | 🟠 | **Brumal cresceu do greybox de 2–3/4–6 min para uma travessia catalogada de 8 min.** O nível actual tem de ganhar círculos horizontal/vertical, atalho por dentro, segundo descanso e densidade sem virar corredor; só fica confirmado depois de cinco corridas medidas em ambas as perspectivas | [`10`](spec/10-fatia-1.md) · [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §3 · [`69`](spec/69-catalogo-do-mundo.md) §3.1 |
 | 🟠 | **As 30 portas são malha estática e escrita, não conteúdo futuro construído.** Quando uma for promovida, precisa de novo `Fatia 1?`, orçamento, destino e revisão da promessa; hoje nenhuma entra na primeira fatia | [`69`](spec/69-catalogo-do-mundo.md) §4 |
 
@@ -147,6 +147,8 @@ Estão no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). As que mais
 | **24** | Chefe a dois: +40% de vida ou zero? | proposta: +40%, e desce quando um morre |
 | **37** | O Mateus confirma o Assassino do catálogo? | proposta completa no `68`, sem fingir aprovação |
 | **38** | Mapa por zona ou do mundo inteiro; mostra nomes não visitados? | proposta: por zona, nomes só depois de vistos |
+| **39** | Os vendedores morrem e o stock pode desaparecer? | proposta: sem morte acidental; consequência só explícita |
+| **40** | O Coveiro fecha acesso por origem/classe? | proposta: qualquer origem depois de descobrir a Escola vermelha |
 
 E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precisam de uma gravação — **o nome do jogo incluído**.
 
@@ -184,7 +186,7 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 |---|---|---|
 | ✅ | ~~*"do 70 ao 100 custa 3× tudo o que gastaste do 1 ao 70"*~~ **ERRO MEU, CORRIGIDO** — somei só o termo cúbico e ignorei `3,06N²` e `105,6N`, que pesam mais nos níveis baixos. **A conta certa é 1,92×** (680 663 contra 1 308 518). Refiz-a e confirma | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §2 |
 | ✅ | ~~⭐ **Meditação infinita + artes a gastar “energia” revogada**~~ **RESOLVIDO 01-08** — 2 tentativas por descanso, consumidas ao sentar; 40 s/100% preservados por serem decisão dos donos; interrupção guarda o parcial; artes gastam mana | [`66`](spec/66-catalogo-de-magia.md) §3 · runtime testado |
-| ✅ | ~~⭐ **Uma mão / duas mãos não tinha comando nem estado**~~ **RESOLVIDO NA TAREFA 4** — `T`/`Y`, estado próprio de 12 f interrompível, offhand recolhido e arte seleccionada pela empunhadura | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §2 · 8268 testes |
+| ✅ | ~~⭐ **Uma mão / duas mãos não tinha comando nem estado**~~ **RESOLVIDO NA TAREFA 4** — `T`/`Y`, estado próprio de 12 f interrompível, offhand recolhido e arte seleccionada pela empunhadura | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §2 · 8433 testes |
 | ✅ | ~~⭐ **8 favoritos mudáveis a qualquer momento**~~ **RESOLVIDO NO CONTRATO 01-08** — só mudam fora de combate/no descanso; a UI que aplica a regra está registada acima como construção em falta | [`66`](spec/66-catalogo-de-magia.md) §3 |
 | ✅ | ~~⚠️ **Parry com 4 frames de arranque**~~ **CORRIGIDO** — baseline executável **8/8/40**, falha total 56 f | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
 | ✅ | ~~⚠️ **Soft cap de 40 em tudo**~~ **CORRIGIDO** — Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70 | [`70`](spec/70-fecho-dos-sistemas-de-combate.md) §1 |
@@ -231,9 +233,9 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 |---|---|---|
 | ✅ | ~~⭐ **Sistema de saves**~~ **ESCRITO E IMPLEMENTADO 01-08** — dois domínios, escrita atómica, backup, checksum, recuperação e migrações | [`59`](spec/59-saves.md) · 19 auto-testes novos |
 | ✅ | ~~⭐ **Packs CC0 por descarregar**~~ **RESOLVIDO 01-08** — modelos e 182 OGG estão em `art/`; integração no jogo continua nas linhas próprias abaixo/acima | [`CREDITS`](CREDITS.md), [`22`](spec/22-assets.md), [`65`](spec/65-musica-e-ambiente.md) |
-| 🔴 | ⚠️ **O `.gitignore` NÃO trava os binários, ao contrário do que o [`game/CLAUDE.md`](game/CLAUDE.md) afirma.** Ele diz *"Binários: modelos, texturas, áudio, builds — `.gitignore` já os trava"*. **É falso:** o `game/.gitignore` trava `*.zip`, `*.exe`, `*.pck` e mais nada — `.glb`, `.gltf`, `.fbx`, `.obj`, `.png` e `.ogg` passam. O `.gitignore` da raiz só trava `art/models/_local/` e `art/audio/_local/`. **Consequência:** um pack CC0 largado em `art/models/` entra no repositório **público e para sempre** (o git guarda o histórico). Precisa de decisão antes da fase 1.2 — ver abaixo | encontrado 01-08 ao preparar a fase 1.2 |
+| ✅ | ~~⚠️ **O `.gitignore` e o `game/CLAUDE.md` contradiziam-se sobre binários**~~ **RESOLVIDO** — os packs CC0 entram deliberadamente no repositório; `game/CLAUDE.md` já distingue builds ignoradas de assets versionados | `953589c` |
 | 🟠 | ⭐ **Os packs entraram, mas NENHUM MODELO ESTÁ NO JOGO.** A fase 1.2 tinha três partes: descarregar ✅ · importar em `game/` ⬜ · substituir as cápsulas ⬜. **Só a primeira está feita.** As cápsulas continuam lá, e o jogo continua greybox | fase 1.2, 01-08 |
-| 🔴 | ⭐ **A animação de esqueleto CONTINUA POR MEDIR** — é o único risco técnico real, aberto desde o [`44`](spec/44-prototipo.md) (*"cápsulas não são personagens animados"*). ⭐ **A ferramenta chegou:** a *Universal Animation Library* (CC0, esqueleto partilhado) está em `art/models/`. Falta pôr N personagens animados em cena e medir na Iris Xe. **Sem esse número, a folga de 6× do M1 é orçamento, não garantia** | fase 1.2, 01-08 |
+| ✅ | ~~⭐ **A animação de esqueleto estava por medir**~~ **MEDIDA NA IRIS XE** — UAL Standard, Mobile/Vulkan, 1920×1080: 5 actores e 10 actores deram ambos 60,0 fps médios; p95 18,519/18,552 ms, pior 21,993/22,532 ms. Spike isolado fecha a incógnita; retarget no nível completo continua fase 1.2 | [`animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json) · [`44`](spec/44-prototipo.md) |
 | 🔵 | **120 MB dos 410 são formatos que o Godot não usa** — `.fbx`, `.obj`, `.mtl`, `.stl`, `.dae`, duplicados do `.glb` que já lá está. Entraram porque a decisão foi *"tudo no repositório"*, e limpar depois obriga a reescrever a história. *Se algum dia se reescrever o histórico por outra razão, aproveita-se* | fase 1.2, 01-08 |
 | ⏳ | ~~⭐ **Onde vivem os modelos CC0: no repositório ou em `_local/`?**~~ ✅ **DECIDIDO 01-08 pelo Rico** — no repositório, com o custo à vista. Custo real medido: **410 MB** empacotados, 6451 ficheiros. *(registo do que era:)* O [`22`](spec/22-assets.md) diz que CC0 *pode* entrar, mas ninguém pesou o tamanho nem o facto de o git nunca esquecer. **É decisão dos donos** porque é praticamente irreversível: 1 pack Kenney ≈ 2–10 MB, mas o conjunto de personagens+animações+natureza+dungeon anda pelas **centenas de MB**, e um `git clone` passa a custar isso a toda a gente, para sempre. *Proposta: `art/models/` no repo só para o que o jogo carrega mesmo (poucos MB, optimizado), e os packs crus em `_local/`* | encontrado 01-08 |
 | ✅ | ~~⭐ **Desenho de arena de chefe**~~ **ESCRITO 01-08** — 13 arenas seladas, bolsas abertas para subchefes, bordo legível, nevoeiro/carregamento e espaço desenhado para dois | [`61`](spec/61-arenas-de-chefe.md) |
@@ -245,10 +247,10 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🔵 | **Medir p95 da escrita com o mapa completo na máquina do Rico** — a fixture actual tem guarda < 64 KiB; o orçamento cheio é 2 MiB e ainda não existe conteúdo para o medir | [`59`](spec/59-saves.md) §10 |
 | ✅ | ~~**Música e ambiente**~~ **ESCRITO 01-08** — inventário real, mapa de uso, estados/transições, camadas, buses, ducking e prova; produção em falta fica vermelha acima | [`65`](spec/65-musica-e-ambiente.md) |
 | ✅ | ~~⭐ **Acessibilidade auditiva**~~ **ESCRITA 01-08** — cada tipo de som informativo tem equivalente próprio de forma/direcção/timing; sem legendas genéricas e com ficha de ataque alterada já | [`62`](spec/62-acessibilidade-auditiva.md) |
-| 🔵 | **Onde vivem os textos** | português decidido; falta dizer se as strings estão em ficheiro ou no código |
-| 🔵 | **Comando / gamepad** | [`45`](spec/45-controlos-configuraveis.md) §5 propõe nascer agnóstico da fonte; por confirmar |
-| 🔵 | **Os vendedores morrem?** | na referência alguns morrem e perde-se o stock. ⏳ donos |
-| 🔵 | **Voz: Godot faz nativamente?** | [`56`](spec/56-voz-e-vendedores.md) — a validar no `→WP14` |
+| ✅ | ~~**Onde vivem os textos**~~ — `strings.<locale>.json` por ID estável; HUD/toasts já consomem português e IDs obrigatórios falham o teste | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §4 · `strings.pt.json` |
+| ✅ | ~~**Comando / gamepad**~~ — todas as acções nucleares, incluindo câmara, têm teclado/rato + botão/eixo, construídos do mesmo catálogo; conforto/deadzone esperam comando físico no M2 | [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §5 · 8433 testes |
+| ⏳ | **Os vendedores morrem?** — não decidido pelo agente; morte pode destruir stock e é irreversível | pergunta 39 dos donos |
+| ✅ | ~~**Voz: Godot faz nativamente?**~~ — captura/microfone sim; Opus/AEC/jitter/transporte completos exigem integração e possível GDExtension nativa, com spike/licença no WP14 | [`56`](spec/56-voz-e-vendedores.md) · [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §6 |
 
 ### ⚠️ E três que são de coerência, não de conteúdo
 

@@ -236,10 +236,10 @@ O Mateus quer *"bem vasto"*. Vasto não é muitos feitiços — é **muitos verb
 
 | | Onde |
 |---|---|
-| Inimigos que lançam magia usam as mesmas regras? *(proposta: sim, incluindo a interrupção)* | `→WP6` |
-| A cura à distância funciona com que latência? | `→WP10` |
+| ~~Inimigos que lançam magia usam as mesmas regras?~~ **Sim na honestidade/contacto; não fingem mana/meditação do jogador.** | ✅ [`73`](73-fecho-dos-buracos-de-integracao.md) §1 |
+| ~~A cura à distância funciona com que latência?~~ **Evento fiável/ordenado no compromisso, validado pelo anfitrião e aplicado pelo dono do corpo no tempo de voo; `cast_id` impede repetição, nunca rebobina morte e >150 ms mostra aviso. Elo Curador cura 30% de PV máximo.** | ✅ [`73`](73-fecho-dos-buracos-de-integracao.md) §1.1 |
 | ~~Quantos feitiços na fatia 1?~~ **3: Dardo, Ruína e Égide** | ✅ [`66`](66-catalogo-de-magia.md) |
-| O material de melhoria de feitiço é o mesmo das armas, ou outro? | `→WP9` |
+| ~~O material de melhoria de feitiço é o mesmo das armas, ou outro?~~ **Catálogo regional partilhado, sem moeda paralela.** | ✅ [`72`](72-materiais-consumiveis-e-economia.md) §2.1 |
 
 ## Ligações
 

@@ -1,28 +1,40 @@
 {
-  "_fonte": "spec/01-combate.md, tabela 'Comandos'. Teclado+rato e o esquema primario (nenhuma das duas maquinas tem comando).",
-  "_nota": "O mapa e construido em runtime pelo GameData a partir deste ficheiro - remapear nao exige recompilar (WP11 herda isto).",
+  "_fonte": "spec/01-combate.md + spec/45-controlos-configuraveis.md + spec/73-fecho-dos-buracos-de-integracao.md.",
+  "_nota": "O mapa e construido em runtime pelo GameData a partir deste ficheiro - remapear nao exige recompilar. Teclado+rato continua primario porque nenhuma das duas maquinas tem comando; o esquema de comando e um default completo e sintetico a provar em hardware no M2.",
   "_lacuna_spec": "A tabela da spec nao tem tecla para CONJURAR (so 'magia seguinte: F'). Ver PERGUNTAS.md P2 e DECISOES-PROTOTIPO.md D6 - o prototipo usa C.",
 
+  "gamepad_required": [
+    "move_forward", "move_back", "move_left", "move_right", "attack", "heavy_mod",
+    "block", "parry", "dodge_sprint", "lock_on", "next_spell", "cast", "meditate",
+    "use_item", "ability", "toggle_grip", "interact", "loadout_next", "loadout_prev",
+    "look_left", "look_right", "look_up", "look_down"
+  ],
+
   "actions": {
-    "move_forward":   [{ "type": "key", "key": "W" }],
-    "move_back":      [{ "type": "key", "key": "S" }],
-    "move_left":      [{ "type": "key", "key": "A" }],
-    "move_right":     [{ "type": "key", "key": "D" }],
+    "move_forward":   [{ "type": "key", "key": "W" }, { "type": "joypad_motion", "axis": 1, "value": -1.0, "label": "stick esquerdo cima" }],
+    "move_back":      [{ "type": "key", "key": "S" }, { "type": "joypad_motion", "axis": 1, "value": 1.0, "label": "stick esquerdo baixo" }],
+    "move_left":      [{ "type": "key", "key": "A" }, { "type": "joypad_motion", "axis": 0, "value": -1.0, "label": "stick esquerdo esquerda" }],
+    "move_right":     [{ "type": "key", "key": "D" }, { "type": "joypad_motion", "axis": 0, "value": 1.0, "label": "stick esquerdo direita" }],
 
-    "attack":         [{ "type": "mouse", "button": 1 }],
-    "heavy_mod":      [{ "type": "key", "key": "Shift" }],
-    "block":          [{ "type": "mouse", "button": 2 }],
-    "parry":          [{ "type": "key", "key": "Q" }],
-    "dodge_sprint":   [{ "type": "key", "key": "Space" }],
-    "lock_on":        [{ "type": "key", "key": "Tab" }],
+    "look_left":      [{ "type": "key", "key": "ArrowLeft" }, { "type": "joypad_motion", "axis": 2, "value": -1.0, "label": "stick direito esquerda" }],
+    "look_right":     [{ "type": "key", "key": "ArrowRight" }, { "type": "joypad_motion", "axis": 2, "value": 1.0, "label": "stick direito direita" }],
+    "look_up":        [{ "type": "key", "key": "ArrowUp" }, { "type": "joypad_motion", "axis": 3, "value": -1.0, "label": "stick direito cima" }],
+    "look_down":      [{ "type": "key", "key": "ArrowDown" }, { "type": "joypad_motion", "axis": 3, "value": 1.0, "label": "stick direito baixo" }],
 
-    "next_spell":     [{ "type": "key", "key": "F" }],
-    "cast":           [{ "type": "key", "key": "C" }],
-    "meditate":       [{ "type": "key", "key": "M" }],
-    "use_item":       [{ "type": "key", "key": "R" }],
-    "ability":        [{ "type": "key", "key": "V" }],
+    "attack":         [{ "type": "mouse", "button": 1 }, { "type": "joypad_button", "button": 10, "label": "RB/R1" }],
+    "heavy_mod":      [{ "type": "key", "key": "Shift" }, { "type": "joypad_motion", "axis": 5, "value": 1.0, "label": "RT/R2" }],
+    "block":          [{ "type": "mouse", "button": 2 }, { "type": "joypad_motion", "axis": 4, "value": 1.0, "label": "LT/L2" }],
+    "parry":          [{ "type": "key", "key": "Q" }, { "type": "joypad_button", "button": 9, "label": "LB/L1" }],
+    "dodge_sprint":   [{ "type": "key", "key": "Space" }, { "type": "joypad_button", "button": 0, "label": "A/cruz" }],
+    "lock_on":        [{ "type": "key", "key": "Tab" }, { "type": "joypad_button", "button": 8, "label": "stick direito" }],
+
+    "next_spell":     [{ "type": "key", "key": "F" }, { "type": "joypad_button", "button": 11, "label": "d-pad cima" }],
+    "cast":           [{ "type": "key", "key": "C" }, { "type": "joypad_button", "button": 2, "label": "X/quadrado" }],
+    "meditate":       [{ "type": "key", "key": "M" }, { "type": "joypad_button", "button": 12, "label": "d-pad baixo" }],
+    "use_item":       [{ "type": "key", "key": "R" }, { "type": "joypad_button", "button": 1, "label": "B/circulo" }],
+    "ability":        [{ "type": "key", "key": "V" }, { "type": "joypad_button", "button": 6, "label": "Start/Options" }],
     "toggle_grip":    [{ "type": "key", "key": "T" }, { "type": "joypad_button", "button": 3, "label": "Y/triangulo" }],
-    "interact":       [{ "type": "key", "key": "E" }],
+    "interact":       [{ "type": "key", "key": "E" }, { "type": "joypad_button", "button": 2, "label": "X/quadrado contextual" }],
     "debug_class_next": [{ "type": "key", "key": "F6" }],
 
     "hotbar_1":       [{ "type": "key", "key": "1" }],
@@ -31,8 +43,8 @@
     "hotbar_4":       [{ "type": "key", "key": "4" }],
     "hotbar_5":       [{ "type": "key", "key": "5" }],
 
-    "loadout_next":   [{ "type": "key", "key": "BracketRight" }],
-    "loadout_prev":   [{ "type": "key", "key": "BracketLeft" }],
+    "loadout_next":   [{ "type": "key", "key": "BracketRight" }, { "type": "joypad_button", "button": 14, "label": "d-pad direita" }],
+    "loadout_prev":   [{ "type": "key", "key": "BracketLeft" }, { "type": "joypad_button", "button": 13, "label": "d-pad esquerda" }],
 
     "toggle_perf":    [{ "type": "key", "key": "F1" }],
     "toggle_help":    [{ "type": "key", "key": "F2" }],

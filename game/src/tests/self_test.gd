@@ -22,6 +22,7 @@ func _ready() -> void:
 	_test_progression_closures()
 	_test_named_encounters()
 	_test_economy_and_loot_transaction()
+	_test_integration_closures()
 	_test_weapon_frames()
 	_test_stamina()
 	_test_damage_worked_example()
@@ -130,6 +131,58 @@ func _test_economy_and_loot_transaction() -> void:
 		"goblin_mist_scout", {}) as Dictionary).get("next_index", 0)) == 1,
 		"espolio atomico: indice persistido com o recibo")
 	_remove_save_artifacts(path)
+
+
+# --- spec/73: fronteiras assumidas passam a contratos executáveis -----------
+
+func _test_integration_closures() -> void:
+	var spell_rule: Dictionary = (GameData.enemies.get("_rules", {}) as Dictionary).get(
+		"enemy_spellcasting", {}) as Dictionary
+	_check((spell_rule.get("shares_with_player", []) as Array).has("interrupcao")
+		and (spell_rule.get("does_not_share", []) as Array).has("mana_do_jogador"),
+		"integração: magia inimiga partilha honestidade, não mana do jogador")
+
+	var traversal: Dictionary = GameData.world.get("_traversal_rules", {}) as Dictionary
+	_check(not bool(traversal.get("free_swimming", true))
+		and not bool(traversal.get("free_climbing", true))
+		and not bool(traversal.get("free_traversal_jump", true)),
+		"integração: mundo não exige nadar, escalar ou salto livre")
+	_check(is_equal_approx(float(traversal.get("automatic_step_max_m", 0.0)), 0.45)
+		and String(traversal.get("weapon_move_a_saltar", "")).contains("não é verbo"),
+		"integração: passo de 0,45 m e golpe a saltar não criam travessia")
+	var subboss: Dictionary = GameData.world.get("_subboss_rules", {}) as Dictionary
+	_check(String(subboss.get("on_flee", "")).contains("descanso")
+		and String(subboss.get("on_defeat", "")).contains("ciclo"),
+		"integração: fugir e vencer um subchefe persistem de forma diferente")
+
+	_check(GameData.ui_text("hud.help").begins_with("COMANDOS")
+		and GameData.ui_text("toast.death") == "Morreste. A voltar...",
+		"integração: HUD e mensagens vivem no catálogo português")
+	_check(GameData.ui_text("id.inexistente", "fallback") == "fallback",
+		"integração: lookup de texto tem fallback explícito")
+	var remote_heal := GameData.spell("elo_curador")
+	var heal_effect: Dictionary = remote_heal.get("effect", {}) as Dictionary
+	var heal_network: Dictionary = remote_heal.get("network_contract", {}) as Dictionary
+	_check(is_equal_approx(float(heal_effect.get("heal_target_max_health_fraction", 0.0)), 0.30)
+		and not bool(heal_effect.get("can_resurrect", true)),
+		"integração: Elo Curador cura 30% e nunca ressuscita")
+	_check(String(heal_network.get("channel", "")) == "reliable_ordered_gameplay"
+		and String(heal_network.get("deduplication", "")).contains("cast_id"),
+		"integração: cura remota é fiável, ordenada e idempotente")
+
+	var actions: Dictionary = GameData.controls.get("actions", {}) as Dictionary
+	for action_value: Variant in GameData.controls.get("gamepad_required", []):
+		var action_id := String(action_value)
+		var declared_gamepad := false
+		for binding_value: Variant in actions.get(action_id, []):
+			declared_gamepad = declared_gamepad or String((binding_value as Dictionary).get(
+				"type", "")).begins_with("joypad_")
+		var built_gamepad := false
+		for event: InputEvent in InputMap.action_get_events(action_id):
+			built_gamepad = built_gamepad or event is InputEventJoypadButton \
+				or event is InputEventJoypadMotion
+		_check(declared_gamepad and built_gamepad,
+			"comando: acção nuclear '%s' declara e constrói ligação" % action_id)
 
 
 # --- spec/59-saves.md: persistencia ------------------------------------------
