@@ -19,6 +19,12 @@ const ROCK_LARGE_C: PackedScene = preload("res://assets/models/environment/bruma
 const ROCK_SMALL_A: PackedScene = preload("res://assets/models/environment/brumal/rock_smallA.glb")
 const GROUND_GRASS: PackedScene = preload("res://assets/models/environment/brumal/ground_grass.glb")
 const GROUND_PATH: PackedScene = preload("res://assets/models/environment/brumal/ground_pathStraight.glb")
+const DETAIL_GRASS: PackedScene = preload("res://assets/models/environment/brumal/details/grass_leafs.glb")
+const DETAIL_BUSH: PackedScene = preload("res://assets/models/environment/brumal/details/plant_bushSmall.glb")
+const DETAIL_MUSHROOM: PackedScene = preload("res://assets/models/environment/brumal/details/mushroom_redGroup.glb")
+const DETAIL_LOG: PackedScene = preload("res://assets/models/environment/brumal/details/log_large.glb")
+const DETAIL_STONE: PackedScene = preload("res://assets/models/environment/brumal/details/stone_smallFlatA.glb")
+const DETAIL_FLOWER: PackedScene = preload("res://assets/models/environment/brumal/details/flower_yellowB.glb")
 const DUNGEON_WALL: PackedScene = preload("res://assets/models/environment/toca/wall.gltf")
 const DUNGEON_WALL_BROKEN: PackedScene = preload("res://assets/models/environment/toca/wall_broken.gltf")
 const DUNGEON_DOORWAY: PackedScene = preload("res://assets/models/environment/toca/wall_doorway.gltf")
@@ -387,6 +393,7 @@ func _build_brumal() -> void:
 
 	_build_path_visual()
 	_scatter_forest()
+	_scatter_ground_details()
 	_build_lair()
 
 
@@ -472,6 +479,93 @@ func _scatter_forest() -> void:
 			"KenneyRocks%d" % family)
 
 
+## Seis familias de detalhe, cada uma num MultiMesh. Assim centenas de folhas,
+## seixos e cogumelos acrescentam seis draw calls, nao centenas de Nodes. As
+## malhas sao minimas (só estas seis vieram do pack de 785 modelos) e sem sombra.
+func _scatter_ground_details() -> void:
+	var families := [
+		{
+			"name": "GroundLeafGrass", "scene": DETAIL_GRASS,
+			"count": int(preset.get("grass_detail_count", 520)),
+			"path_clearance": 1.85, "scale_min": 0.72, "scale_max": 1.45,
+			"path_bias": 0.78, "roughness": 0.96, "tint": Color("#7d8971"),
+		},
+		{
+			"name": "GroundBushes", "scene": DETAIL_BUSH,
+			"count": int(preset.get("bush_detail_count", 120)),
+			"path_clearance": 2.35, "scale_min": 0.72, "scale_max": 1.35,
+			"path_bias": 0.72, "roughness": 0.94, "tint": Color("#748064"),
+		},
+		{
+			"name": "GroundMushrooms", "scene": DETAIL_MUSHROOM,
+			"count": int(preset.get("mushroom_count", 54)),
+			"path_clearance": 1.65, "scale_min": 0.70, "scale_max": 1.15,
+			"path_bias": 0.82, "roughness": 0.90, "tint": Color.WHITE,
+		},
+		{
+			"name": "FallenLogs", "scene": DETAIL_LOG,
+			"count": int(preset.get("fallen_log_count", 14)),
+			"path_clearance": 3.1, "scale_min": 0.80, "scale_max": 1.35,
+			"path_bias": 0.54, "roughness": 0.92, "tint": Color("#8c7b6a"),
+		},
+		{
+			"name": "GroundPebbles", "scene": DETAIL_STONE,
+			"count": int(preset.get("pebble_count", 210)),
+			"path_clearance": 1.45, "scale_min": 0.65, "scale_max": 1.50,
+			"path_bias": 0.62, "roughness": 0.86, "tint": Color("#8a8c86"),
+		},
+		{
+			"name": "GroundFlowers", "scene": DETAIL_FLOWER,
+			"count": int(preset.get("flower_count", 70)),
+			"path_clearance": 1.75, "scale_min": 0.72, "scale_max": 1.22,
+			"path_bias": 0.78, "roughness": 0.92, "tint": Color("#d0c29d"),
+		},
+	]
+	for family: Dictionary in families:
+		var transforms := _scatter_detail_transforms(
+			int(family["count"]), float(family["path_clearance"]),
+			float(family["scale_min"]), float(family["scale_max"]),
+			float(family["path_bias"]))
+		var mesh := _asset_mesh(family["scene"] as PackedScene,
+			float(family["roughness"]), family["tint"] as Color, false)
+		_add_asset_multimesh(mesh, transforms, false, String(family["name"]))
+
+
+func _scatter_detail_transforms(count: int, path_clearance: float,
+	scale_min: float, scale_max: float, path_bias: float) -> Array[Transform3D]:
+	var result: Array[Transform3D] = []
+	var tries := 0
+	while result.size() < count and tries < count * 12:
+		tries += 1
+		var p: Vector3
+		if _rng.randf() < path_bias:
+			var segment := _rng.randi_range(0, path_points.size() - 2)
+			var start := path_points[segment]
+			var finish := path_points[segment + 1]
+			var forward := (finish - start).normalized()
+			var side := Vector3(-forward.z, 0.0, forward.x)
+			var centre := start.lerp(finish, _rng.randf())
+			var signed_offset := _rng.randf_range(path_clearance + 0.25, 13.0)
+			if _rng.randf() < 0.5:
+				signed_offset *= -1.0
+			p = centre + side * signed_offset + forward * _rng.randf_range(-2.5, 2.5)
+			p.y = 0.025
+		else:
+			p = Vector3(_rng.randf_range(-103, 103), 0.025,
+				_rng.randf_range(-103, 103))
+		if _distance_to_path(p) < path_clearance:
+			continue
+		# O centro da arena tem de conservar a silhueta de combate. Os seus
+		# detritos são colocados de propósito em _build_lair, junto às paredes.
+		if p.distance_to(arena_center) < 18.0:
+			continue
+		var s := _rng.randf_range(scale_min, scale_max)
+		result.append(Transform3D(
+			Basis(Vector3.UP, _rng.randf_range(0.0, TAU)).scaled(
+				Vector3(s, _rng.randf_range(scale_min, scale_max), s)), p))
+	return result
+
+
 ## A Toca: a geometria de colisao continua simples e invisivel; os modulos
 ## KayKit fazem a leitura visual da entrada, salas e arena.
 func _build_lair() -> void:
@@ -489,6 +583,8 @@ func _build_lair() -> void:
 	var floors: Array[Transform3D] = []
 	var pillars: Array[Transform3D] = []
 	var rubble: Array[Transform3D] = []
+	var arena_pebbles: Array[Transform3D] = []
+	var arena_beams: Array[Transform3D] = []
 
 	# A arvore morta que marca a fenda — o unico ponto de referencia.
 	_add_block(e + Vector3(2.4, 3.0, 1.2), Vector3(0.5, 6.0, 0.5), "trunk", true, false)
@@ -549,6 +645,31 @@ func _build_lair() -> void:
 	]:
 		rubble.append(Transform3D(
 			Basis(Vector3.UP, _rng.randf_range(0, TAU)).scaled(Vector3.ONE * 0.34), at))
+	# A área de luta fica livre num raio de 8 m. A desordem conta a história nas
+	# margens: pedra caída das paredes e traves partidas, sempre em MultiMesh.
+	for index in 18:
+		var angle := TAU * float(index) / 18.0 + _rng.randf_range(-0.12, 0.12)
+		var radius_at := _rng.randf_range(10.0, 13.2)
+		var at := c + Vector3(sin(angle) * radius_at, 0.025, cos(angle) * radius_at)
+		var rubble_scale := _rng.randf_range(0.18, 0.40)
+		rubble.append(Transform3D(
+			Basis(Vector3.UP, _rng.randf_range(0.0, TAU)).scaled(
+				Vector3.ONE * rubble_scale), at))
+	for index in 72:
+		var angle := _rng.randf_range(0.0, TAU)
+		var radius_at := sqrt(_rng.randf_range(8.0 * 8.0, 13.5 * 13.5))
+		var s := _rng.randf_range(0.45, 1.15)
+		arena_pebbles.append(Transform3D(
+			Basis(Vector3.UP, _rng.randf_range(0.0, TAU)).scaled(
+				Vector3(s, _rng.randf_range(0.55, 0.90), s)),
+			c + Vector3(sin(angle) * radius_at, 0.11, cos(angle) * radius_at)))
+	for index in 7:
+		var angle := TAU * float(index) / 7.0 + _rng.randf_range(-0.20, 0.20)
+		var s := _rng.randf_range(0.72, 1.12)
+		arena_beams.append(Transform3D(
+			Basis(Vector3.UP, angle + PI * 0.5).scaled(Vector3.ONE * s),
+			c + Vector3(sin(angle) * _rng.randf_range(10.4, 12.6), 0.10,
+				cos(angle) * _rng.randf_range(10.4, 12.6))))
 
 	_add_asset_multimesh(wall_mesh, walls, bool(preset.get("shadows", true)), "KayKitWalls")
 	_add_asset_multimesh(broken_mesh, broken_walls, bool(preset.get("shadows", true)), "KayKitBrokenWalls")
@@ -556,6 +677,10 @@ func _build_lair() -> void:
 	_add_asset_multimesh(floor_mesh, floors, false, "KayKitFloors")
 	_add_asset_multimesh(pillar_mesh, pillars, bool(preset.get("shadows", true)), "KayKitPillars")
 	_add_asset_multimesh(rubble_mesh, rubble, false, "KayKitRubble")
+	_add_asset_multimesh(_asset_mesh(DETAIL_STONE, 0.88, Color("#898982"), false),
+		arena_pebbles, false, "ArenaPebbles")
+	_add_asset_multimesh(_asset_mesh(DETAIL_LOG, 0.94, Color("#746456"), false),
+		arena_beams, false, "ArenaBrokenBeams")
 
 	# Tochas: 4 na arena + 1 na fenda de entrada. Luz quente pontual contra a
 	# nevoa fria — mood de souls por 5 luzes omni sem sombra (barato em Iris Xe).
