@@ -153,7 +153,7 @@ Tudo isto corre numa máquina com 8 GB e gráficos integrados:
 | Como a mira do arco comunica a queda | WP11 |
 | Arenas com precipícios: quais e como se sinalizam | WP8 / WP7 |
 | Nadar, escalar, saltar: existem? | WP8 — nunca foram mencionados |
-| Massa de cada inimigo (para o empurrão) | WP6 |
+| ~~Massa de cada inimigo (para o empurrão)~~ | ✅ [`67`](67-catalogo-do-bestiario.md): 33 comuns + Vorgar, validada no arranque |
 
 ## Ligações
 

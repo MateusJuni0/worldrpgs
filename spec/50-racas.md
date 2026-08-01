@@ -230,7 +230,7 @@
 
 | Pergunta | Para |
 |---|---|
-| As fichas de inimigo (raça × bioma × camada, ~30–36) com ataques e baralhos | volta 5 (WP6) |
+| ~~As fichas de inimigo (raça × bioma × camada, ~30–36) com ataques e baralhos~~ | ✅ [`67`](67-catalogo-do-bestiario.md): 33 tipos, 100 ataques comuns e 33 baralhos |
 | Que peças de armadura cada raça larga (a decisão da armadura por peças) | volta 5, com a volta 3 |
 | O goblin que não luta, a teia que ninguém teceu, a casa dos impostos — viram segredos de zona | volta 9 (WP8) |
 | O Ceifador: senhor dos esqueletos das Campas — a ficha de subchefe dele | volta 7 (WP7) |

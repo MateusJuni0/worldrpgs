@@ -1,0 +1,163 @@
+extends Node3D
+## Apresenta um evento informativo por dois canais independentes (spec/62).
+## A geometria no mundo mostra origem/área/vector; o indicador de bordo mantém
+## direcção e resposta quando a origem sai do ecrã. O áudio pode estar a zero e
+## este nó continua a existir com exactamente o mesmo relógio.
+
+var _attack: Dictionary = {}
+var _source: Node3D
+var _frame := 0
+var _danger_end_frame := 0
+var _cancel_frames := -1
+var _world_mark: MeshInstance3D
+var _world_glyph: Label3D
+var _edge_glyph: Label
+var _material: StandardMaterial3D
+
+
+func configure(source: Node3D, attack: Dictionary) -> void:
+	_source = source
+	_attack = attack
+
+
+func _ready() -> void:
+	top_level = true
+	_sync_to_source()
+	_danger_end_frame = int(_attack.get("startup", 30)) + int(_attack.get("active", 5))
+	_build_world_mark()
+	_build_edge_mark()
+	var sound: Dictionary = _attack.get("som_anuncio", {}) as Dictionary
+	Sfx.play(String(sound.get("profile", "attack_dodge")), global_position, -4.0, 0.02)
+
+
+func _physics_process(_delta: float) -> void:
+	_frame += 1
+	if is_instance_valid(_source):
+		_sync_to_source()
+	_update_pulse()
+	_update_edge_mark()
+	if _cancel_frames >= 0:
+		_cancel_frames -= 1
+		if _cancel_frames <= 0:
+			queue_free()
+	elif _frame > _danger_end_frame:
+		queue_free()
+
+
+func cancel() -> void:
+	# 0,15 s a 60 Hz: a forma quebra, em vez de continuar a prometer o ataque.
+	_cancel_frames = 9
+	if is_instance_valid(_world_glyph):
+		_world_glyph.text = "×"
+
+
+func _sync_to_source() -> void:
+	if not is_instance_valid(_source):
+		return
+	# A faixa tem de apontar para onde o golpe ficou comprometido; posição sem
+	# orientação desenharia uma mentira sempre que o inimigo não estivesse a norte.
+	global_transform = Transform3D(_source.global_transform.basis.orthonormalized(), _source.global_position)
+
+
+func _build_world_mark() -> void:
+	_material = StandardMaterial3D.new()
+	_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_material.albedo_color = Color(0.92, 0.18, 0.16, 0.32)
+	_material.emission_enabled = true
+	_material.emission = Color(0.92, 0.18, 0.16)
+	_material.emission_energy_multiplier = 0.7
+	_world_mark = MeshInstance3D.new()
+	var contact := String(_attack.get("tipo_contacto", "instantaneo"))
+	if bool(_attack.get("is_aoe", false)) or contact == "volume_persistente":
+		var disc := CylinderMesh.new()
+		var radius := float(_attack.get("radius", 3.0))
+		disc.top_radius = radius
+		disc.bottom_radius = radius
+		disc.height = 0.025
+		disc.radial_segments = 32
+		_world_mark.mesh = disc
+		_world_mark.position.y = 0.035
+	else:
+		var lane := BoxMesh.new()
+		var reach := maxf(float(_attack.get("range", 2.0)), float(_attack.get("lunge_distance", 0.0)))
+		lane.size = Vector3(0.12 if contact == "instantaneo" else 0.34, 0.025, reach)
+		_world_mark.mesh = lane
+		_world_mark.position = Vector3(0.0, 0.035, -reach * 0.5)
+	_world_mark.material_override = _material
+	add_child(_world_mark)
+
+	_world_glyph = Label3D.new()
+	_world_glyph.text = _glyph_for_attack()
+	_world_glyph.font_size = 96
+	_world_glyph.outline_size = 18
+	_world_glyph.modulate = Color.WHITE
+	_world_glyph.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_world_glyph.no_depth_test = true
+	_world_glyph.position = Vector3(0.0, 2.35, 0.0)
+	add_child(_world_glyph)
+
+
+func _build_edge_mark() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 90
+	add_child(layer)
+	_edge_glyph = Label.new()
+	_edge_glyph.text = _glyph_for_attack()
+	_edge_glyph.add_theme_font_size_override("font_size", 42)
+	_edge_glyph.add_theme_color_override("font_color", Color.WHITE)
+	_edge_glyph.add_theme_color_override("font_outline_color", Color(0.25, 0.0, 0.0, 0.95))
+	_edge_glyph.add_theme_constant_override("outline_size", 8)
+	_edge_glyph.visible = false
+	layer.add_child(_edge_glyph)
+
+
+func _update_pulse() -> void:
+	var startup := maxi(int(_attack.get("startup", 30)), 1)
+	var t := clampf(float(_frame) / float(startup), 0.0, 1.0)
+	var pulse := 0.35 + 0.65 * t
+	_material.albedo_color.a = pulse * 0.42
+	_material.emission_energy_multiplier = 0.55 + pulse * 1.25
+	var scale_value := 0.82 + 0.18 * t
+	_world_glyph.scale = Vector3.ONE * scale_value
+	if String(_attack.get("tipo_contacto", "")) == "volume_persistente" and _frame > startup:
+		var interval := maxi(int(_attack.get("damage_interval_frames", 30)), 1)
+		var tick_t := float((_frame - startup) % interval) / float(interval)
+		_material.albedo_color.a = 0.20 + tick_t * 0.30
+
+
+func _update_edge_mark() -> void:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		_edge_glyph.visible = false
+		return
+	var viewport_size := get_viewport().get_visible_rect().size
+	var screen := camera.unproject_position(global_position + Vector3.UP * 1.5)
+	var behind := camera.is_position_behind(global_position + Vector3.UP * 1.5)
+	var margin := Vector2(52.0, 52.0)
+	var outside := behind or screen.x < margin.x or screen.y < margin.y \
+		or screen.x > viewport_size.x - margin.x or screen.y > viewport_size.y - margin.y
+	_edge_glyph.visible = outside
+	_world_glyph.visible = not outside
+	if not outside:
+		return
+	if behind:
+		screen = viewport_size - screen
+	screen.x = clampf(screen.x, margin.x, viewport_size.x - margin.x)
+	screen.y = clampf(screen.y, margin.y, viewport_size.y - margin.y)
+	_edge_glyph.position = screen - _edge_glyph.size * 0.5
+
+
+func _glyph_for_attack() -> String:
+	var vectors: Array = _attack.get("vectores_fuga", []) as Array
+	if vectors.has("aparar"):
+		return "><"
+	if vectors.has("sair_da_area") or vectors.has("rolar_para_fora"):
+		return "◎"
+	if vectors.has("sair_da_linha"):
+		return "↔"
+	if vectors.has("quebrar_a_visao"):
+		return "◉"
+	if vectors.has("bloquear_e_aguentar"):
+		return "▥"
+	return "◇"

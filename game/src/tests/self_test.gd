@@ -11,6 +11,8 @@ extends Node
 var _passed := 0
 var _failed := 0
 
+const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
+
 
 func _ready() -> void:
 	print("\n=== AUTO-TESTE CONTRA A SPEC ===\n")
@@ -21,6 +23,8 @@ func _ready() -> void:
 	_test_damage_worked_example()
 	_test_time_to_kill()
 	_test_enemy_contract()
+	_test_bestiary_catalogue()
+	_test_bestiary_runtime()
 	_test_movement_speeds()
 	_test_spell_catalogue()
 	_test_feel()
@@ -748,6 +752,134 @@ func _test_enemy_contract() -> void:
 	for pat: Variant in p2:
 		longest_2 = maxi(longest_2, (pat as Array).size())
 	_check(longest_2 > longest_1, "Vorgar: cadeias mais longas na fase 2 (%d vs %d)" % [longest_2, longest_1])
+
+
+# --- spec/67-catalogo-do-bestiario.md · WP6 completo -------------------------
+
+func _test_bestiary_catalogue() -> void:
+	const CONTACT_TYPES: Array[String] = ["instantaneo", "volume_movel", "volume_persistente"]
+	const ESCAPE_VECTORS: Array[String] = ["sair_da_linha", "rolar_para_dentro",
+		"rolar_para_fora", "afastar_se", "aproximar_se", "quebrar_a_visao",
+		"sair_da_area", "aparar", "bloquear_e_aguentar"]
+	const VISUAL_CUE_FIELDS: Array[String] = ["ancora", "forma", "inicio",
+		"compromisso", "fim", "fora_ecra"]
+
+	var common_ids: Array[String] = []
+	var represented_races := {}
+	var attack_count := 0
+	var slice_ids: Array[String] = []
+	for id: String in GameData.enemies.keys():
+		if id.begins_with("_"):
+			continue
+		var e: Dictionary = GameData.enemy(id)
+		for field: String in ["display_name", "race_id", "biome_ids", "role", "mass_kg",
+				"souls", "descricao_visual", "fatia_1", "attacks"]:
+			_check(e.has(field), "%s: ficha de inimigo tem '%s'" % [id, field])
+		if bool(e.get("is_boss", false)):
+			continue
+		common_ids.append(id)
+		represented_races[String(e.get("race_id", ""))] = true
+		if bool(e.get("fatia_1", false)):
+			slice_ids.append(id)
+		_check(float(e.get("mass_kg", 0.0)) > 0.0, "%s: massa positiva para empurrao" % id)
+		_check(int(e.get("souls", 0)) > 0, "%s: almas por derrota declaradas" % id)
+		_check(String(e.get("descricao_visual", "")).length() >= 45,
+			"%s: descricao visual especifica" % id)
+		var deck: Dictionary = e.get("loot_deck", {}) as Dictionary
+		var cards: Array = deck.get("cards", []) as Array
+		_check(cards.size() == 10, "%s: baralho tem exactamente 10 cartas" % id)
+		_check(bool(deck.get("without_replacement", false)),
+			"%s: baralho compra sem reposicao" % id)
+		var mandatory: Array = deck.get("mandatory_indices", []) as Array
+		_check(not mandatory.is_empty(), "%s: baralho garante o equipamento visivel" % id)
+		for card_index: Variant in mandatory:
+			_check(int(card_index) >= 0 and int(card_index) < cards.size(),
+				"%s: indice obrigatorio %s pertence ao baralho" % [id, card_index])
+
+		var attacks: Array = e.get("attacks", []) as Array
+		_check(attacks.size() >= 3 and attacks.size() <= 5,
+			"%s: inimigo comum tem 3-5 ataques" % id)
+		var questions := {}
+		for attack_value: Variant in attacks:
+			var attack: Dictionary = attack_value as Dictionary
+			attack_count += 1
+			var attack_label := "%s/%s" % [id, attack.get("id", "?")]
+			for field: String in ["display_name", "fase_1", "fase_2", "fase_3", "fases_4_5",
+					"startup", "active", "recovery", "aviso_total_frames", "parryable",
+					"vectores_fuga", "som_anuncio", "sinal_visual_equivalente", "alcance_arco",
+					"janela_castigo_frames", "tipo_contacto", "momento_compromisso_frame",
+					"curva_seguimento", "pergunta"]:
+				_check(attack.has(field), "%s: ataque tem '%s'" % [attack_label, field])
+			_check(int(attack.get("aviso_total_frames", 0)) == int(attack.get("startup", -1)),
+				"%s: aviso total coincide com fases 1+2" % attack_label)
+			_check(CONTACT_TYPES.has(String(attack.get("tipo_contacto", ""))),
+				"%s: tipo de contacto valido" % attack_label)
+			var vectors: Array = attack.get("vectores_fuga", []) as Array
+			_check(vectors.size() >= 1 and vectors.size() <= 2,
+				"%s: declara um ou dois vectores de fuga" % attack_label)
+			for vector: Variant in vectors:
+				_check(ESCAPE_VECTORS.has(String(vector)),
+					"%s: vector '%s' pertence aos nove" % [attack_label, vector])
+			var sound: Dictionary = attack.get("som_anuncio", {}) as Dictionary
+			_check(String(sound.get("cue_id", "")) != "" and String(sound.get("descricao", "")).length() >= 12,
+				"%s: som proprio e descritivo" % attack_label)
+			var visual: Dictionary = attack.get("sinal_visual_equivalente", {}) as Dictionary
+			for visual_field: String in VISUAL_CUE_FIELDS:
+				_check(String(visual.get(visual_field, "")) != "",
+					"%s: sinal visual declara '%s'" % [attack_label, visual_field])
+			var tracking: Dictionary = attack.get("curva_seguimento", {}) as Dictionary
+			_check(float(tracking.get("fase_3_deg_s", -1.0)) == 0.0,
+				"%s: seguimento para no golpe" % attack_label)
+			questions[String(attack.get("pergunta", ""))] = true
+		_check(questions.size() >= 3, "%s: os ataques fazem tres perguntas diferentes" % id)
+
+	_check(common_ids.size() == 33, "bestiario: 33 tipos comuns dentro da conta 30-36")
+	_check(attack_count >= 99, "bestiario: pelo menos 99 fichas completas de ataque")
+	_check(slice_ids == ["orc_spearman", "orc_brute"],
+		"fatia 1 do bestiario comum = lanceiro + brutamontes")
+	for race_id: String in ["orcs", "goblins", "kobolds", "esqueletos", "zumbis",
+			"minotauros", "teceloes", "ventaneiras", "borralheiros", "submersos",
+			"penitentes", "sem_rosto"]:
+		_check(represented_races.has(race_id), "bestiario representa a raca '%s'" % race_id)
+
+	var zones: Dictionary = GameData.enemies.get("_zone_budgets", {}) as Dictionary
+	_check(zones.size() == 12, "bestiario: total de almas nas 12 zonas")
+	for biome_id: String in GameData.biome_ids():
+		var zone: Dictionary = zones.get(biome_id, {}) as Dictionary
+		var population: Dictionary = zone.get("population", {}) as Dictionary
+		var computed_first_clear := 0
+		for enemy_id: String in population.keys():
+			_check(common_ids.has(enemy_id), "%s: populacao referencia '%s' valido" % [biome_id, enemy_id])
+			computed_first_clear += int(population[enemy_id]) * int(GameData.enemy(enemy_id).get("souls", 0))
+		_check(computed_first_clear == int(zone.get("souls_first_clear", -1)),
+			"%s: total da primeira limpeza = %d almas" % [biome_id, computed_first_clear])
+		_check(computed_first_clear * 10 == int(zone.get("souls_ten_rewarded_clears", -1)),
+			"%s: orcamento fechado das dez limpezas" % biome_id)
+
+
+func _test_bestiary_runtime() -> void:
+	var first := GameData.loot_draw_order("orc_spearman", 42)
+	var repeated := GameData.loot_draw_order("orc_spearman", 42)
+	var other_seed := GameData.loot_draw_order("orc_spearman", 43)
+	_check(first == repeated, "baralho: a mesma semente repete exactamente a ordem")
+	_check(first != other_seed, "baralho: outra semente pode mudar a ordem")
+	_check(first.size() == 10 and first.duplicate().size() == 10,
+		"baralho: ordenar nao perde nenhuma das dez cartas")
+
+	var profiles := {}
+	for enemy_id: String in GameData.enemies.keys():
+		if enemy_id.begins_with("_"):
+			continue
+		for attack_value: Variant in GameData.enemy(enemy_id).get("attacks", []):
+			var attack := attack_value as Dictionary
+			profiles[String((attack.get("som_anuncio", {}) as Dictionary).get("profile", ""))] = true
+	_check(profiles.size() == 5, "GameplayCue: cinco familias sonoras apresentam os ataques")
+
+	# O ensaio headless não abre um viewport 3D; prova aqui que o renderer comum
+	# é construível. A ancoragem e o relógio são exercitados na arena visual.
+	var cue: Node = GameplayCueRenderer.new()
+	_check(cue != null, "GameplayCue: renderer comum e construivel em headless")
+	cue.free()
 
 
 # --- spec/01-combate.md · Movimento -------------------------------------------

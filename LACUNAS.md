@@ -36,7 +36,7 @@
 | 🟠 | ⚠️ **A linha "porque está neste bioma"** é a única que liga a raça ao mapa, e é a que se salta. A resposta tem de sair de uma ficha de bioma já escrita | [`46`](spec/46-coerencia-bioma-raca-item.md) §5 |
 | 🟠 | **Em que biomas cada raça aparece, e o que muda em cada variante** — e a variante tem de mudar **como se luta**, não só a cor | [`46`](spec/46-coerencia-bioma-raca-item.md) §7 |
 | 🟠 | ⚠️ **Santuário Branco e A Raiz** são os dois biomas mais fáceis de deixar sem raça própria. Sem habitante próprio são cenários, não lugares | revisão do PR #14 |
-| 🟠 | **Mímicos e Minotauros** estão na lista de raças, mas um é armadilha e o outro é subchefe. A ficha de 8 linhas não lhes assenta | [`15`](spec/15-inimigos.md) |
+| ✅ | ~~**Mímicos e Minotauros sem ficha adequada**~~ **RESOLVIDO 01-08** — mímico é praga com duas fichas de encontro; minotauros comuns variam por bioma e o guardião singular continua WP7 | [`50`](spec/50-racas.md) · [`67`](spec/67-catalogo-do-bestiario.md) |
 
 ### Volta 3 — armas e armaduras
 
@@ -75,10 +75,13 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | ⚠️ **Preencher som + sinal visual em cada ataque do catálogo** — a ficha já tem as 12 colunas e a língua por tipo; falta conteúdo ataque a ataque | [`38`](spec/38-ataques-e-honestidade.md) §3 · [`62`](spec/62-acessibilidade-auditiva.md) |
-| 🔴 | ⭐ **Implementar `GameplayCue` + renderer visual e migrar os 12 ataques actuais** — hoje `Sfx` toca o mesmo `telegraph` em todos; fazer antes de o WP6 multiplicar fichas | encontrado ao escrever o [`62`](spec/62-acessibilidade-auditiva.md) |
-| 🟠 | **Massa de cada inimigo**, para o empurrão | [`36`](spec/36-fisica.md) §4 |
-| 🟠 | **Almas por inimigo, e o total por zona** — com o tecto de 10 reaparições, cada zona tem orçamento fixo | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §2 |
+| ✅ | ~~**Som + sinal visual em cada ataque**~~ **RESOLVIDO 01-08** — 105 fichas compiladas têm cue ID/descrição e seis campos visuais | [`67`](spec/67-catalogo-do-bestiario.md) §4–7 |
+| ✅ | ~~⭐ **`GameplayCue` + renderer e migração**~~ **RESOLVIDO 01-08** — faixa/área, glifo no mundo, bordo fora do ecrã, cancelamento 0,15 s e cinco perfis sonoros | [`67`](spec/67-catalogo-do-bestiario.md) §7 |
+| ✅ | ~~**Massa de cada inimigo**~~ **RESOLVIDO 01-08** — 33 comuns + Vorgar, em kg, validada positiva | [`67`](spec/67-catalogo-do-bestiario.md) §3 |
+| ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
+| 🔴 | **Ligar morte → compra do baralho → recibo/save.** A ordem determinística, as 330 cartas e `world.loot_decks` existem; `Enemy.died` ainda não executa a transacção nem apresenta a recompensa | encontrado ao implementar o [`67`](spec/67-catalogo-do-bestiario.md) · `→WP9` |
+| 🟠 | **Resolver os IDs dos cartões nos catálogos de objectos.** Armas/armaduras/anéis entram na tarefa 3.3; materiais e consumíveis continuam WP9 | [`67`](spec/67-catalogo-do-bestiario.md) §5 |
+| 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
 
 ### Volta 7 — chefes
 
@@ -209,7 +212,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 
 ---
 
-| 🔴 | ⭐ **A semente fixa do acaso — é a única parte do banco de ensaio que tem de ser feita JÁ.** Se o baralho de espólio, a variação de IA e a colocação forem escritos sem semente, enxertá-la depois obriga a mexer em tudo. **Escrita agora custa uma linha por sítio** | [`60`](spec/60-o-agente-que-joga.md) §2 |
+| ✅ | ~~⭐ **A semente fixa do acaso**~~ **RESOLVIDO 01-08** — greybox, escolha de padrões e ordem do baralho aceitam semente; 42 repete e 43 diverge no auto-teste | [`60`](spec/60-o-agente-que-joga.md) §2 · [`67`](spec/67-catalogo-do-bestiario.md) §5 |
 
 ---
 
@@ -262,3 +265,5 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ~~O parry tem dois botões~~ | [`45`](spec/45-controlos-configuraveis.md) — controlos configuráveis |
 | ~~Sem sistema de interrupção~~ | [`39`](spec/39-estudo-profundo.md) §4 · [`41`](spec/41-estudo-armas-e-golpes.md) §4 *(escrito; falta implementar)* |
 | ~~Espólio sem garantia~~ | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §2 — o baralho de 10 |
+| ~~WP6 sem catálogo executável~~ | [`67`](spec/67-catalogo-do-bestiario.md) — 33 tipos, 100 ataques comuns, 33 baralhos e 12 orçamentos |
+| ~~Ataques dependiam de áudio~~ | [`67`](spec/67-catalogo-do-bestiario.md) §7 — `GameplayCue` apresenta som e visual equivalentes |

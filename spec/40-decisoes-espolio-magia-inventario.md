@@ -35,6 +35,8 @@
 
 `→WP6` — **cada ficha do bestiário traz o seu valor de almas**, e o valor é parte do desenho: um inimigo que dá muito é um convite a arriscar.
 
+✅ **Entregue no [`67`](67-catalogo-do-bestiario.md):** almas por tipo e totais verificáveis de primeira limpeza e dez limpezas recompensadas nas 12 zonas.
+
 ⚠️ **E com o tecto de 10, o valor das almas passa a ser um orçamento fixo por zona**, não uma torneira. `→WP9` tem de somar: *quantas almas existem numa zona, ao todo?* É esse número que diz a que nível se chega lá.
 
 ---
@@ -69,6 +71,8 @@ Cada inimigo tem um **baralho de 10 cartas**. Cada morte tira uma carta, **e ess
 - Liga-se à regra do [`38`](38-ataques-e-honestidade.md) §5 — *o que larga é o que se vê no corpo dele*. Agora é a mesma regra, com garantia por trás
 
 `→WP6` — **cada ficha do bestiário declara o seu baralho.** É coluna obrigatória.
+
+✅ **Entregue no [`67`](67-catalogo-do-bestiario.md):** 33 baralhos de dez, índices obrigatórios, enviesamento só no enchimento e ordem reproduzível por semente.
 
 ### Os chefes
 

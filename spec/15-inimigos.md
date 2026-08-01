@@ -2,6 +2,8 @@
 
 > **WP6 · Fable** (31-07-2026). O bestiário completo, construído sobre: as **7 raças** do Rico ([`04-inimigos-chefes.md`](04-inimigos-chefes.md), aprovadas pelos dois a 31-07), as restrições que o WP1 impôs a todo o inimigo, e os números dos 3 da fatia já derivados no WP2 ([`11-formulas.md`](11-formulas.md)). Chefes têm documento próprio (WP7); o Vorgar aparece aqui só como referência de zona. Tudo `[FABLE]` salvo indicação.
 
+> ⚠️ **CAMADA HISTÓRICA, substituída em catálogo (01-08-2026).** Este documento conserva a máquina comum, o círculo de agressão e a intenção dos professores. As tabelas de 7 raças, XP e ataques antigos foram superadas pelas 12 raças do [`50`](50-racas.md) e pelas **33 fichas/100 ataques/baralhos/almas** do [`67`](67-catalogo-do-bestiario.md). Quando um número ou golpe divergir, vale o `67` + `game/data/enemies.json`; chefes continuam WP7.
+
 ## As regras herdadas — nenhum inimigo escapa a estas
 
 1. **Telegrafia ≥ 0,5 s legível na silhueta** em todo o ataque (WP1). O aviso é pose + evento com som distinto **e equivalente visual** ([`62`](62-acessibilidade-auditiva.md)); a cara não conta, a cor sozinha não conta.

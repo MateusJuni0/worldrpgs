@@ -195,7 +195,7 @@ As fichas existentes não ganham uma frase genérica; ganham a família visual c
 | Vorgar · transição | grito + música | corpo invulnerável, barra marca fase 2 e arena mostra o que mudou |
 | Vorgar · machado de retorno do [`16`](16-chefes.md) | assobio traseiro | rasto de duas pontas + nova cunha no retorno |
 
-⚠️ **Estado real do protótipo:** `Sfx` toca hoje um único `telegraph` sintetizado para todo o ataque e não existe renderer destes sinais. O desenho fica fechado agora para as próximas fichas nascerem com o campo; implementação e migração dos 12 ataques de `game/data/enemies.json` continuam trabalho de construção, registado no [`LACUNAS`](../LACUNAS.md).
+✅ **Estado real depois do [`67`](67-catalogo-do-bestiario.md):** cada ataque emite um `GameplayCue` comum. `Sfx` apresenta cinco famílias semânticas e o renderer desenha faixa/área, glifo de resposta e indicador de bordo no mesmo relógio; os ataques da Fatia 1 e Vorgar foram migrados. O banco jogado com áudio a zero continua critério de WP15B, não dívida de schema.
 
 ---
 
@@ -268,8 +268,8 @@ Máximo **8 sinais informativos activos**, um atlas, formas batched e zero texto
 
 | | Estado |
 |---|---|
-| Emissor comum `GameplayCue` + renderer visual | código; tem de entrar antes do catálogo WP6 crescer |
-| Migrar os 12 ataques actuais para som/visual próprios | dados + teste de schema; o `telegraph` único é provisório |
+| ~~Emissor comum `GameplayCue` + renderer visual~~ | ✅ [`67`](67-catalogo-do-bestiario.md) · `game/src/combat/gameplay_cue.gd` |
+| ~~Migrar os ataques actuais para som/visual próprios~~ | ✅ cue ID/descrição/âncora/forma/timing por ataque, validados no arranque |
 | Roda JUNTAR/ESPERA/AJUDA/OLHA | WP10/WP11, agnóstica de teclado/comando |
 | Afinar tamanho/opacidade | valores de partida acima; medem-se pelo [`63`](63-como-se-afinam-os-numeros.md) |
 

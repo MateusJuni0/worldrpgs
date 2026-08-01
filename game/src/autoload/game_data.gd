@@ -35,6 +35,7 @@ func _ready() -> void:
 	biomes = _load_json("biomes.json")
 	races = _load_json("races.json")
 	armor = _load_json("armor.json")
+	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
 
@@ -76,6 +77,120 @@ func weapon(id: String) -> Dictionary:
 
 func enemy(id: String) -> Dictionary:
 	return enemies.get(id, {}) as Dictionary
+
+
+## O JSON guarda declaracoes compactas de ataques, mas o runtime recebe sempre
+## a ficha completa do spec/38. Assim um molde de contacto corrige todos os
+## utilizadores sem apagar a pose, o som ou a ancora propria de cada golpe.
+func _expand_enemy_catalog() -> void:
+	var templates: Dictionary = enemies.get("_attack_templates", {}) as Dictionary
+	var defaults: Dictionary = enemies.get("_enemy_defaults", {}) as Dictionary
+	for enemy_id: String in enemies.keys():
+		if enemy_id.begins_with("_"):
+			continue
+		var e: Dictionary = defaults.duplicate(true)
+		e.merge(enemies[enemy_id] as Dictionary, true)
+		enemies[enemy_id] = e
+		var expanded: Array = []
+		for value: Variant in e.get("attacks", []):
+			var declared: Dictionary = value as Dictionary
+			var template_id := String(declared.get("template", ""))
+			var attack: Dictionary = (templates.get(template_id, {}) as Dictionary).duplicate(true)
+			attack.merge(declared, true)
+			var phase_1 := int(attack.get("phase_1_frames", 24))
+			var phase_2 := int(attack.get("phase_2_frames", 12))
+			var startup := phase_1 + phase_2
+			var active := int(attack.get("active", 5))
+			var recovery := int(attack.get("recovery", 30))
+			var phase_4 := mini(int(attack.get("phase_4_frames", 8)), recovery)
+			var actor := String(attack.get("actor", "corpo"))
+			var tell := String(attack.get("tell", "recolhe antes de avancar"))
+			var impact := String(attack.get("impact", "cruza o espaco marcado"))
+			var sound_description := String(attack.get("sound", "esforco e deslocacao de ar distintos"))
+			var anchor := String(attack.get("anchor", actor))
+			attack["startup"] = startup
+			attack["aviso_total_frames"] = startup
+			attack["fase_1"] = "%d f — %s: %s" % [phase_1, actor, tell]
+			attack["fase_2"] = "%d f — %s; ajuste cai para 30 graus/s" % [phase_2, sound_description]
+			attack["fase_3"] = "%d f — %s" % [active, impact]
+			attack["fases_4_5"] = "%d f de saida + %d f de regresso" % [phase_4, recovery - phase_4]
+			attack["momento_compromisso_frame"] = phase_1
+			attack["curva_seguimento"] = {
+				"fase_1_deg_s": 180,
+				"fase_2_deg_s": 30,
+				"fase_3_deg_s": 0,
+			}
+			attack["som_anuncio"] = {
+				"cue_id": "attack.%s.%s" % [enemy_id, attack.get("id", "unknown")],
+				"descricao": sound_description,
+				"profile": _attack_sound_profile(attack),
+				"alcance_informativo_m": float(attack.get("informative_range_m", 18.0)),
+			}
+			attack["sinal_visual_equivalente"] = {
+				"ancora": anchor,
+				"forma": String(attack.get("visual_shape", "losango partido ESQUIVAR")),
+				"inicio": "surge no frame 1, preso a %s" % anchor,
+				"compromisso": "fecha no primeiro frame activo, frame %d" % (startup + 1),
+				"fim": "dissolve no fim; se cancelado, quebra em 0,15 s",
+				"fora_ecra": "cunha no bordo na direccao da origem, com a mesma forma e tres bandas de distancia",
+			}
+			if attack.has("radius"):
+				attack["alcance_arco"] = "raio %.1f m · 360 graus" % float(attack.get("radius", 0.0))
+			else:
+				attack["alcance_arco"] = "%.1f m · %d graus" % [
+					float(attack.get("range", 0.0)), int(attack.get("arc_degrees", 0))]
+			attack["descricao_visual"] = "%s; %s; materiais e silhueta pertencem ao inimigo que o executa" % [tell, impact]
+			attack["fatia_1"] = bool(e.get("fatia_1", false))
+			expanded.append(attack)
+		e["attacks"] = expanded
+
+		if not bool(e.get("is_boss", false)):
+			var cards: Array = (e.get("loot_cards", []) as Array).duplicate(true)
+			var mandatory_count := mini(int(e.get("mandatory_loot_count", 0)), cards.size())
+			var mandatory_indices: Array = []
+			for index in mandatory_count:
+				mandatory_indices.append(index)
+			e["loot_deck"] = {
+				"cards": cards,
+				"mandatory_indices": mandatory_indices,
+				"without_replacement": true,
+				"bias_only_on_filler": true,
+			}
+		if not e.has("patterns") and not bool(e.get("is_boss", false)):
+			var single_patterns: Array = []
+			for attack_value: Variant in expanded:
+				if not bool((attack_value as Dictionary).get("anti_kite_only", false)):
+					single_patterns.append([String((attack_value as Dictionary).get("id", ""))])
+			e["patterns"] = single_patterns
+		e["gap_between_patterns"] = float(e.get("gap_between_patterns", 1.25))
+
+
+## Ordem reproduzivel do baralho. O estado de save guarda depois o indice e as
+## cartas tiradas; esta funcao garante que o mesmo ensaio + semente da spec/60
+## produz exactamente a mesma sequencia.
+func loot_draw_order(enemy_id: String, seed_value: int) -> Array:
+	var cards: Array = ((enemy(enemy_id).get("loot_deck", {}) as Dictionary).get("cards", []) as Array).duplicate(true)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value ^ hash(enemy_id)
+	for i in range(cards.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var held: Variant = cards[i]
+		cards[i] = cards[j]
+		cards[j] = held
+	return cards
+
+
+func _attack_sound_profile(attack: Dictionary) -> String:
+	var vectors: Array = attack.get("vectores_fuga", []) as Array
+	if String(attack.get("tipo_contacto", "")) == "volume_persistente":
+		return "attack_area"
+	if vectors.has("quebrar_a_visao"):
+		return "attack_hunter"
+	if String(attack.get("tipo_contacto", "")) == "volume_movel":
+		return "attack_moving"
+	if bool(attack.get("parryable", false)):
+		return "attack_parry"
+	return "attack_dodge"
 
 
 func spell(id: String) -> Dictionary:
@@ -537,6 +652,47 @@ func _validate() -> void:
 	for favorite: Variant in favorites:
 		if not spell_ids.has(String(favorite)):
 			_fail("[SPEC] favorito '%s' nao existe no catalogo" % favorite)
+	checks += 1
+
+	# 10. WP6 completo (spec/67): a ficha expandida é a fronteira de runtime.
+	const CONTACT_TYPES: Array[String] = ["instantaneo", "volume_movel", "volume_persistente"]
+	const ATTACK_VECTORS: Array[String] = ["sair_da_linha", "rolar_para_dentro",
+		"rolar_para_fora", "afastar_se", "aproximar_se", "quebrar_a_visao",
+		"sair_da_area", "aparar", "bloquear_e_aguentar"]
+	var common_enemy_count := 0
+	for bestiary_id: String in enemies.keys():
+		if bestiary_id.begins_with("_"):
+			continue
+		var bestiary_enemy := enemy(bestiary_id)
+		if bool(bestiary_enemy.get("is_boss", false)):
+			continue
+		common_enemy_count += 1
+		if (bestiary_enemy.get("loot_deck", {}) as Dictionary).get("cards", []).size() != 10:
+			_fail("[SPEC] '%s' sem baralho de 10 (spec/43 + spec/67)" % bestiary_id)
+		if float(bestiary_enemy.get("mass_kg", 0.0)) <= 0.0 or int(bestiary_enemy.get("souls", 0)) <= 0:
+			_fail("[SPEC] '%s' sem massa/almas positivas (spec/36 + spec/40)" % bestiary_id)
+		var catalogue_attacks: Array = bestiary_enemy.get("attacks", []) as Array
+		if catalogue_attacks.size() < 3 or catalogue_attacks.size() > 5:
+			_fail("[SPEC] '%s' tem %d ataques; comum exige 3-5" % [bestiary_id, catalogue_attacks.size()])
+		for catalogue_attack_value: Variant in catalogue_attacks:
+			var catalogue_attack := catalogue_attack_value as Dictionary
+			var label := "%s/%s" % [bestiary_id, catalogue_attack.get("id", "?")]
+			if String(catalogue_attack.get("tipo_contacto", "")) not in CONTACT_TYPES:
+				_fail("[SPEC] %s sem tipo de contacto valido" % label)
+			var attack_vectors: Array = catalogue_attack.get("vectores_fuga", []) as Array
+			if attack_vectors.is_empty() or attack_vectors.size() > 2:
+				_fail("[SPEC] %s precisa de 1-2 vectores de fuga" % label)
+			for vector: Variant in attack_vectors:
+				if String(vector) not in ATTACK_VECTORS:
+					_fail("[SPEC] %s usa vector inexistente '%s'" % [label, vector])
+			var cue: Dictionary = catalogue_attack.get("sinal_visual_equivalente", {}) as Dictionary
+			for cue_field: String in ["ancora", "forma", "inicio", "compromisso", "fim", "fora_ecra"]:
+				if String(cue.get(cue_field, "")) == "":
+					_fail("[SPEC] %s: equivalente visual sem '%s'" % [label, cue_field])
+	if common_enemy_count != 33:
+		_fail("[SPEC] bestiario tem %d tipos comuns; spec/67 fecha 33" % common_enemy_count)
+	if (enemies.get("_zone_budgets", {}) as Dictionary).size() != 12:
+		_fail("[SPEC] bestiario sem orcamento de almas para as 12 zonas")
 	checks += 1
 
 	if load_errors.is_empty():

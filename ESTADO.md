@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, catálogo de magia.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, catálogo do bestiário.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe, 12 sons sintetizados. **1854 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **5737 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,15 +44,15 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **68** em `spec/` | — | — |
+| Documentos de spec | **69** em `spec/` | — | — |
 | Código e dados | 16 ficheiros `.gd` · 11 catálogos JSON | — | — |
-| Testes | **1854, todos a passar** | — | — |
+| Testes | **5737, todos a passar** | — | — |
 | Imagens curadas | **43** fora dos packs: 32 conceitos · 9 ícones · menu · céu | — | 11 ícones de armadura por gerar |
 | **Armas** | 5 instâncias · **8 famílias** ([`51`](spec/51-familias.md)) | ~120 | as instâncias (camada 2) |
 | **Armaduras** | **11 peças** · 9 slots · 3 cargas ([`51`](spec/51-familias.md)) | ~30 | ~19 |
 | **Anéis** | **0** | ~70 | **70** |
 | **Feitiços** | **53 fichas · 3 executáveis/Fatia 1** ([`66`](spec/66-catalogo-de-magia.md)) | catálogo largo | 50 renderers/comportamentos e roda |
-| **Inimigos** | **3** | 12 raças + 61 chefes | quase tudo |
+| **Inimigos** | **33 tipos comuns · 100 ataques comuns · Vorgar migrado** ([`67`](spec/67-catalogo-do-bestiario.md)) | 12 raças + 61 chefes | modelos/animações dos 31 fora da Fatia 1 · chefes WP7 |
 | Habilidades de classe | 6 | 6 | ✅ |
 | **Biomas** | **12 fichas** ([`49`](spec/49-biomas.md) + `game/data/biomes.json`) | 12 | ✅ volta 1 |
 | **Raças** | **12 fichas + mímico** ([`50`](spec/50-racas.md) + `game/data/races.json`) | 10–15 | ✅ volta 2 |
@@ -79,7 +79,7 @@ O [`62`](spec/62-acessibilidade-auditiva.md) corrige a tranca criada pelo [`38`]
 
 **A regra entrou na fundação agora:** a ficha de ataque passa de 11 para **12 colunas**, com `sinal_visual_equivalente`. O áudio pode ir a zero. O perfil é local e a roda JUNTAR/ESPERA/AJUDA/OLHA mantém coordenação mínima sem voz.
 
-⚠️ **Desenho não é runtime:** o protótipo ainda toca um `telegraph` único e não desenha o novo canal. Emissor comum, renderer e migração dos 12 ataques actuais estão registados no [`LACUNAS`](LACUNAS.md) antes de o catálogo WP6 crescer.
+✅ **O canal já é runtime:** o [`67`](spec/67-catalogo-do-bestiario.md) introduziu o emissor/renderer `GameplayCue`, cinco famílias sonoras e a migração dos ataques da Fatia 1/Vorgar. O banco jogado sem som e a afinação de tamanho/opacidade continuam WP15B; já não são uma ausência de implementação.
 
 ## 1f. ✅ “Valida-se a jogar” já tem método
 
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 1854 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 5737 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -99,11 +99,11 @@ O aspecto é finito e baseado no que está em `art/models/`: 2 corpos, 4 tons, 0
 
 ## 1h. ✅ A atmosfera já sabe quando se calar
 
-O [`65`](spec/65-musica-e-ambiente.md) auditou os **182 `.ogg`**: 181 efeitos curtos utilizáveis (77,5 s, 1,68 MiB) + um `Preview.ogg` excluído; **zero música e zero loop de ambiente**. Mapeia cada família Kenney a superfície/material/acção e mantém os 12 sons sintetizados apenas como baseline do protótipo.
+O [`65`](spec/65-musica-e-ambiente.md) auditou os **182 `.ogg`**: 181 efeitos curtos utilizáveis (77,5 s, 1,68 MiB) + um `Preview.ogg` excluído; **zero música e zero loop de ambiente**. Mapeia cada família Kenney a superfície/material/acção e mantém os **17 sons sintetizados** apenas como baseline do protótipo — cinco são agora famílias informativas do `GameplayCue`.
 
 A fatia pede 6 peças + 3 stingers. O `MusicDirector` entra por estado autoritativo, não por proximidade; não denuncia emboscadas, sincroniza fases co-op e corta na morte. `GameplayInfo` tem bus e 8 vozes reservadas: cada cue baixa música −8 dB e ambiente −6 dB, enquanto menus baixam só atmosfera porque o mundo não pára.
 
-⚠️ **Desenho não é conteúdo:** `Sfx` ainda envia tudo para `Master`; não há catálogo, buses/directores, música, loops, vozes nem sons próprios por ataque. Os packs são biblioteca em `art/`, não áudio importado em `game/`.
+⚠️ **Desenho não é conteúdo:** `Sfx` ainda envia tudo para `Master`; não há catálogo, buses/directores, música, loops nem vozes. Os ataques têm cue ID/descrição próprios e cinco perfis sintetizados, mas os packs continuam biblioteca em `art/`, não áudio de produção importado em `game/`.
 
 ## 1i. ✅ O WP4 deixou de ser um catálogo de três linhas
 
@@ -112,6 +112,14 @@ O [`66`](spec/66-catalogo-de-magia.md) fecha **53 feitiços** em quatro escolas:
 O protótipo trocou cargas por **mana**: `60 + 4×maior(Int, Fé)` até 35; a Escola vermelha escala pelo **menor**. `M` inicia a meditação de 40 s, há duas tentativas por descanso, a mana parcial sobrevive à interrupção e artes de arma gastam mana. Dardo, Ruína e Égide continuam os três feitiços da Fatia 1 e ligam os ícones já aprovados no manifesto.
 
 ⚠️ **Catálogo não é renderer:** os outros 50 feitiços ainda não executam; a roda/edição de favoritos e os instrumentos além do cajado também não existem. O save v1 anterior a esta mudança pode conservar a chave histórica `sabedoria`; a migração deve entrar junto do save v2 do criador, sem consumir uma versão só para o greybox.
+
+## 1j. ✅ O WP6 já tem tamanho, perguntas e orçamento
+
+O [`67`](spec/67-catalogo-do-bestiario.md) fecha **33 tipos comuns** (dentro da conta 30–36 do [`50`](spec/50-racas.md)), **100 ataques comuns** e os cinco de Vorgar migrados. Cada ficha declara massa, almas, descrição visual, Fatia 1 e dez cartas sem reposição. Cada ataque compilado traz contacto instantâneo/móvel/persistente, 1–2 dos nove vectores, compromisso, seguimento `180→30→0°/s`, som próprio e equivalente visual de seis campos.
+
+As 12 zonas têm população de referência e orçamento recalculado pelo teste: **390→2 050 almas** na primeira limpeza e exactamente ×10 no limite recompensado. `GameplayCue` apresenta a mesma informação por som e geometria/glifo/bordo; padrões de IA e baralhos aceitam semente. Os três conceitos imediatos — lanceiro, brutamontes e Vorgar — foram auditados e reutilizados; as outras 31 fichas ficam sem imagem até `Fatia 1?` mudar.
+
+⚠️ O catálogo não finge WP9/WP15: morte ainda não compra/grava a carta, IDs de objecto fecham nos pacotes seguintes e os 31 inimigos futuros não têm modelo/animação/hitbox. As perguntas 23 e 29 do [`99`](spec/99-perguntas-abertas.md) continuam abertas; o `67` não escolheu por Mateus/Rico.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
@@ -252,7 +260,7 @@ Mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + ~70 anéis +
 
 | Quem | O quê |
 |---|---|
-| **Codex** | **tarefa 3.2 — bestiário:** ficha de ataque nova, baralho de 10, som+visual, almas/total por zona e massa |
+| **Codex** | **tarefa 3.3 — armas e armaduras:** 7 golpes universais, melhoria sem +10%, estados, ~70 anéis e Assassino |
 | **Fable** | não duplicar o WP4: o [`66`](spec/66-catalogo-de-magia.md) já fechou o catálogo; a identidade do Assassino entra na tarefa 3.3 |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
 | **Donos** | as perguntas 24, 28 e 32 do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |

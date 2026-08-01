@@ -190,6 +190,8 @@ O molde: **um que se apara, um que só se esquiva, e um que obriga a mexer o pé
 
 `→WP6` e `→WP7`. **Nenhum ataque entra na spec sem estas doze colunas:**
 
+✅ **WP6 instanciado:** o [`67`](67-catalogo-do-bestiario.md) aplica esta ficha aos 100 ataques comuns e migra os cinco de Vorgar. `GameData` expande e valida as fases, acrescentando obrigatoriamente `tipo_contacto`, compromisso e curva de seguimento; nenhum dos nove vectores funciona como resposta universal.
+
 | Coluna | Exemplo |
 |---|---|
 | Nome | Machado descendente |

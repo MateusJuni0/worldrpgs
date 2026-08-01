@@ -66,6 +66,11 @@ func _generate_bank() -> void:
 	_bank["step"] = _make_step()
 	_bank["flask"] = _make_flask()
 	_bank["telegraph"] = _make_telegraph()
+	_bank["attack_parry"] = _make_attack_tell(0.25, 520.0, 1040.0, 0.16)
+	_bank["attack_dodge"] = _make_attack_tell(0.28, 310.0, 760.0, 0.24)
+	_bank["attack_moving"] = _make_attack_tell(0.32, 180.0, 440.0, 0.38)
+	_bank["attack_area"] = _make_attack_tell(0.38, 120.0, 260.0, 0.52)
+	_bank["attack_hunter"] = _make_attack_tell(0.40, 680.0, 420.0, 0.20)
 	_bank["posture_break"] = _make_break()
 	_bank["enemy_death"] = _make_death()
 	_bank["fury"] = _make_fury()
@@ -177,6 +182,23 @@ func _make_telegraph() -> AudioStreamWAV:
 		var k := t / 0.26
 		phase += TAU * lerpf(380.0, 860.0, k * k) / RATE
 		b[i] = sin(phase) * sin(PI * k) * 0.20
+	return _stream(b)
+
+
+## Cinco famílias semânticas, independentes do nome do ficheiro: aparar é
+## brilhante, esquivar médio, volume móvel sobe do grave, área pulsa grave e o
+## perseguidor desce de altura. A descrição concreta continua na ficha.
+func _make_attack_tell(dur: float, f_start: float, f_end: float, noise_amount: float) -> AudioStreamWAV:
+	var b := _buf(dur)
+	var phase := 0.0
+	var lp := 0.0
+	for i in b.size():
+		var t := float(i) / RATE
+		var k := t / dur
+		phase += TAU * lerpf(f_start, f_end, k * k) / RATE
+		lp += (_rng.randf_range(-1.0, 1.0) - lp) * 0.12
+		var env := sin(PI * k)
+		b[i] = (sin(phase) * (1.0 - noise_amount) + lp * noise_amount) * env * 0.24
 	return _stream(b)
 
 

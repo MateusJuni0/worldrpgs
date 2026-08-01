@@ -8,7 +8,7 @@
 
 ## 1. ⭐ Porque é que isto vale mais do que parece
 
-**Temos 1854 auto-testes. Eles verificam que os números do código batem certo com os da spec.** É útil, e é estático.
+**Temos 5737 auto-testes. Eles verificam que os números do código batem certo com os da spec.** É útil, e é estático.
 
 ⚠️ **O que eles não conseguem verificar é se o jogo cumpre as leis.**
 
@@ -38,11 +38,11 @@ O [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) §2, cláusula 5,
 | | |
 |---|---|
 | **Passo fixo** | ✅ já decidido — a física de combate corre a **60 Hz fixos** ([`36`](36-fisica.md) §6) |
-| **Semente fixa** | ⚠️ **por fazer** — todo o acaso (baralho de espólio, variação de IA) tem de aceitar uma semente |
+| **Semente fixa** | ✅ greybox, escolha de padrões da IA e ordem do baralho aceitam semente; mesma semente 42 repete a sequência ([`67`](67-catalogo-do-bestiario.md)) |
 | **Sem relógio de parede** | ⚠️ nada pode depender de `Time.get_ticks()` — só do número de frames |
 | **Entrada por guião** | ⚠️ o jogo tem de aceitar entradas de um ficheiro em vez do teclado |
 
-⭐ **A semente fixa é a peça que falta e é barata:** com ela, correr o mesmo ensaio duas vezes dá **exactamente** o mesmo resultado. Sem ela, um teste que falha uma vez em vinte é indistinguível de ruído — e é assim que se ignora um bug a sério.
+⭐ **A semente fixa entrou no ponto certo:** com ela, correr o mesmo ensaio duas vezes dá **exactamente** a mesma colocação, escolha de padrão e ordem de espólio. O guarda automatizado compara semente 42 consigo própria e com 43.
 
 ---
 
@@ -154,7 +154,7 @@ O [`38-ataques-e-honestidade.md`](38-ataques-e-honestidade.md) §2, cláusula 5,
 
 ⭐ **Porque é que faz sentido esperar:** um banco de ensaio sobre um jogo de 5 armas e 3 inimigos testa quase nada. Sobre 8 famílias e 36 inimigos, testa **1728 combinações** — e aí paga-se sozinho na primeira noite.
 
-⚠️ **Mas há uma coisa a fazer JÁ, e é barata:** a **semente fixa** (§2). Se o acaso for escrito sem semente agora, enxertá-la depois obriga a mexer em tudo o que usa aleatório — o baralho de espólio, a variação de IA, a colocação. **Escrita agora, custa uma linha por sítio.** `→WP14`
+✅ **A peça barata foi feita antes de multiplicar conteúdo:** a **semente fixa** (§2) atravessa baralho, variação de IA e colocação. O banco completo continua `→WP14`; já não precisa de enxertar determinismo depois.
 
 ## O que fica em aberto
 

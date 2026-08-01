@@ -14,6 +14,8 @@ extends CharacterBody3D
 
 signal died(enemy: Enemy)
 
+const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
+
 enum State { IDLE, PATROL, CHASE, ATTACK, STAGGER, BROKEN, DEAD }
 
 var enemy_id := "orc_spearman"
@@ -37,6 +39,9 @@ var _state_frame := 0
 var _state_time := 0.0
 
 var _attacks: Dictionary = {}
+var _rng := RandomNumberGenerator.new()
+var _active_gameplay_cue: Node
+var _last_attack_hit_frame := -9999
 var _queue: Array = []
 var _atk: Dictionary = {}
 var _atk_frame := 0
@@ -53,8 +58,9 @@ var _material: StandardMaterial3D
 var _palette: Dictionary = {}
 
 
-func setup(p_enemy_id: String, palette: Dictionary, coop := false) -> void:
+func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed := 0) -> void:
 	enemy_id = p_enemy_id
+	_rng.seed = pattern_seed if pattern_seed != 0 else hash(enemy_id)
 	data = GameData.enemy(enemy_id)
 	_palette = palette
 	is_boss = bool(data.get("is_boss", false))
@@ -308,13 +314,15 @@ func _walk_towards(point: Vector3, speed: float) -> void:
 	rotation.y = lerp_angle(rotation.y, atan2(-dir.x, -dir.z), 0.12)
 
 
-func _face_target(delta: float) -> void:
+func _face_target(delta: float, max_degrees_per_second := 180.0) -> void:
 	if not _target_valid():
 		return
 	var d := target.global_position - global_position
 	d.y = 0.0
 	if d.length_squared() > 0.01:
-		rotation.y = lerp_angle(rotation.y, atan2(-d.x, -d.z), 0.10)
+		var desired := atan2(-d.x, -d.z)
+		var max_step := deg_to_rad(max_degrees_per_second) * delta
+		rotation.y += clampf(angle_difference(rotation.y, desired), -max_step, max_step)
 
 
 # --- Anti-kite ----------------------------------------------------------------
@@ -366,7 +374,7 @@ func _begin_pattern() -> void:
 	var patterns: Array = phase.get("patterns", [])
 	if patterns.is_empty():
 		return
-	var chosen: Array = patterns[randi() % patterns.size()]
+	var chosen: Array = patterns[_rng.randi_range(0, patterns.size() - 1)]
 	_queue = []
 	for id: Variant in chosen:
 		# Um golpe so-anti-kite nunca entra num padrao normal.
@@ -388,8 +396,12 @@ func _start_next_attack() -> void:
 		return
 	_atk_frame = 0
 	_atk_hit = false
-	# O telegrafo tambem se OUVE — "um chefe le-se de ouvido" (spec/21, WP12).
-	Sfx.play("telegraph", global_position, -4.0)
+	_last_attack_hit_frame = -9999
+	if is_instance_valid(_active_gameplay_cue):
+		_active_gameplay_cue.cancel()
+	_active_gameplay_cue = GameplayCueRenderer.new()
+	_active_gameplay_cue.call("configure", self, _atk)
+	add_child(_active_gameplay_cue)
 	_change_state(State.ATTACK)
 
 
@@ -400,10 +412,11 @@ func _tick_attack(delta: float) -> void:
 	var recovery := int(_atk.get("recovery", 24))
 
 	if _atk_frame <= startup:
-		# Telegrafo: trava e roda devagar, para o jogador ler a direccao a tempo.
+		# Abertura pode seguir a 180 graus/s; o sinal só afina a 30. No primeiro
+		# frame activo a rotação é zero (spec/38), não uma direcção universal.
 		_brake(delta)
-		if _atk_frame < startup - 6:
-			_face_target(delta * 0.5)
+		var phase_1 := int(_atk.get("phase_1_frames", startup - 12))
+		_face_target(delta, 180.0 if _atk_frame <= phase_1 else 30.0)
 		return
 
 	if _atk_frame <= startup + active:
@@ -414,7 +427,9 @@ func _tick_attack(delta: float) -> void:
 			velocity.z = f.z * (lunge / (float(active) / 60.0)) * 0.5
 		else:
 			_brake(delta)
-		if not _atk_hit:
+		var persistent := String(_atk.get("tipo_contacto", "")) == "volume_persistente"
+		var interval := maxi(int(_atk.get("damage_interval_frames", 30)), 1)
+		if not _atk_hit or (persistent and _atk_frame - _last_attack_hit_frame >= interval):
 			_try_hit()
 		return
 
@@ -451,6 +466,7 @@ func _try_hit() -> void:
 	if not hit:
 		return
 	_atk_hit = true
+	_last_attack_hit_frame = _atk_frame
 
 	var info := DamageInfo.make(raw, self, weight)
 	info.parryable = bool(_atk.get("parryable", false))

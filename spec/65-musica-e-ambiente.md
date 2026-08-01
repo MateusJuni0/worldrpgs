@@ -21,7 +21,7 @@ Inventário local medido com `ffprobe` em 01-08-2026:
 
 Os 181 efeitos somam **77,5 s**, média **0,428 s**, máximo **1,741 s**, e ocupam **1,68 MiB comprimidos**. O `Preview.ogg` não se copia para `game/`, não entra no catálogo e não se corta em sons — é só a montra do autor.
 
-Além deles, o protótipo gera em código **12 sons** a 22,05 kHz: `swing_light`, `swing_heavy`, `hit_flesh`, `hit_block`, `parry`, `dodge`, `step`, `flask`, `telegraph`, `posture_break`, `enemy_death`, `fury`. São uma baseline funcional, **não 12 faixas**. O `telegraph` único é provisório e tem de dar lugar aos sons por ataque exigidos no [`62`](62-acessibilidade-auditiva.md).
+Além deles, o protótipo gera em código **17 sons** a 22,05 kHz: os 12 baselines (`swing_light`, `swing_heavy`, `hit_flesh`, `hit_block`, `parry`, `dodge`, `step`, `flask`, `telegraph`, `posture_break`, `enemy_death`, `fury`) + cinco apresentações semânticas de ataque (`attack_parry`, `attack_dodge`, `attack_moving`, `attack_area`, `attack_hunter`). São baseline funcional, **não faixas**. O [`67`](67-catalogo-do-bestiario.md) já retirou o `telegraph` único do caminho dos inimigos; a produção sonora continua subordinada ao mesmo `cue_id` do [`62`](62-acessibilidade-auditiva.md).
 
 ### Biblioteca não é runtime
 

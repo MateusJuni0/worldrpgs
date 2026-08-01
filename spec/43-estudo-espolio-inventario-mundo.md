@@ -74,7 +74,7 @@ Baralho do lanceiro leve:
 
 | Classe | O que sai mais nas cartas de enchimento |
 |---|---|
-| Mago | material de feitiço · cargas de energia · pergaminhos |
+| Mago | material de feitiço · material de instrumento · melhoria de magia *(nunca recuperação de mana)* |
 | Espadachim | pedras de melhoria · material de arma |
 | — | almas continuam a sair para todos |
 
@@ -85,6 +85,8 @@ Baralho do lanceiro leve:
 **Não reaparecem** → não há baralho. **Largam tudo de uma vez:** armadura, arma, e o feitiço se lançarem. `→WP7`
 
 `→WP6` — **coluna obrigatória no bestiário: o baralho de 10.**
+
+✅ Os 33 baralhos estão declarados e validados no [`67`](67-catalogo-do-bestiario.md). A compra transaccional na morte e a gravação do índice continuam WP9.
 
 ---
 
