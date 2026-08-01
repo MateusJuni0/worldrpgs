@@ -74,7 +74,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.1 Brumal
 
-**Travessia medida:** 8 min — Orla → caminho médio → clareira do brutamontes → árvore morta → porta da Toca. **Curva:** 12 comuns · 3 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 8 min — Orla → caminho médio → clareira do brutamontes → árvore morta → porta da Toca. **Curva:** 12 comuns · 3 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião. ⚠️ É alvo de catálogo; a medição real só fecha pelas cinco corridas da §9.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -96,7 +96,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.2 Selva Funda
 
-**Travessia medida:** 10 min — Raízes → elevador de contrapeso → aldeia suspensa → ponte dos espinhos → ninho do guardião. **Curva:** 14 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 10 min — Raízes → elevador de contrapeso → aldeia suspensa → ponte dos espinhos → ninho do guardião. **Curva:** 14 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -119,7 +119,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.3 Campas Cinzentas
 
-**Travessia medida:** 9 min — Cais seco → lápides inclinadas → dique dos estandartes → ossário → capela do guardião. **Curva:** 13 comuns · 3 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 9 min — Cais seco → lápides inclinadas → dique dos estandartes → ossário → capela do guardião. **Curva:** 13 comuns · 3 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -141,7 +141,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.4 Fojo
 
-**Travessia medida:** 9 min — Boca alta → andaimes → praça das roldanas → veio partido → labirinto do guardião. **Curva:** 16 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 9 min — Boca alta → andaimes → praça das roldanas → veio partido → labirinto do guardião. **Curva:** 16 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -164,7 +164,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.5 Costa Quebrada
 
-**Travessia medida:** 11 min — Praia → casco inclinado → terraço de azinhavre → escada do farol → promontório do guardião. **Curva:** 15 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 11 min — Praia → casco inclinado → terraço de azinhavre → escada do farol → promontório do guardião. **Curva:** 15 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -186,7 +186,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.6 Cimeira
 
-**Travessia medida:** 10 min — Abrigo baixo → escadaria → ponte de gelo → vigia intermédia → observatório do guardião. **Curva:** 14 comuns · 3 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 10 min — Abrigo baixo → escadaria → ponte de gelo → vigia intermédia → observatório do guardião. **Curva:** 14 comuns · 3 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -209,7 +209,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.7 Fornalha
 
-**Travessia medida:** 10 min — Pátio de escória → forjas gémeas → ponte de obsidiana → chaminé → cratera do guardião. **Curva:** 17 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 10 min — Pátio de escória → forjas gémeas → ponte de obsidiana → chaminé → cratera do guardião. **Curva:** 17 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -231,7 +231,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.8 Fulgor
 
-**Travessia medida:** 9 min — Marco de terra → campo rachado → bosque de vidro → espiral das torres → olho do guardião. **Curva:** 16 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 9 min — Marco de terra → campo rachado → bosque de vidro → espiral das torres → olho do guardião. **Curva:** 16 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -254,7 +254,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.9 Raizama
 
-**Travessia medida:** 11 min — Costela aberta → lago de esporos → ponte de raiz → cogumelos-torre → crânio do guardião. **Curva:** 15 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 11 min — Costela aberta → lago de esporos → ponte de raiz → cogumelos-torre → crânio do guardião. **Curva:** 15 comuns · 4 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -276,7 +276,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.10 Cidade Afogada
 
-**Travessia medida:** 10 min — Cais de mármore → mercado raso → aqueduto → telhados → torre do guardião. **Curva:** 18 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 10 min — Cais de mármore → mercado raso → aqueduto → telhados → torre do guardião. **Curva:** 18 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -299,7 +299,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.11 Santuario Branco
 
-**Travessia medida:** 9 min — Pórtico baço → pátio → nave sem sombra → claustro → coro do guardião. **Curva:** 17 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 9 min — Pórtico baço → pátio → nave sem sombra → claustro → coro do guardião. **Curva:** 17 comuns · 4 elites · 3 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
@@ -321,7 +321,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 
 ### 3.12 A Raiz
 
-**Travessia medida:** 12 min — Foz invertida → floresta de raízes → ponte negra → espiral da bruma → lábio do guardião. **Curva:** 20 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
+**Orçamento de travessia:** 12 min — Foz invertida → floresta de raízes → ponte negra → espiral da bruma → lábio do guardião. **Curva:** 20 comuns · 5 elites · 2 nomeados · 1 subchefe · descanso · 1 guardião.
 
 | Peça | Função | Descrição visual | Fatia 1? |
 |---|---|---|---|
