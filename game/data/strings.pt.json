@@ -12,7 +12,7 @@
     "toast.loot_exhausted": "Este tipo já entregou as dez cartas.",
     "toast.reward_save_failed": "Recompensa não gravada; nada foi consumido.",
     "toast.death": "Morreste. A voltar...",
-    "toast.respawn": "Nada se perdeu.",
+    "toast.respawn": "Regressaste ao ponto de descanso.",
     "toast.boss_defeated": "Vorgar caiu. A fatia 1 está zerada.",
     "toast.arena_reset": "Arena reiniciada.",
     "toast.class_changed": "Classe: %s (F6 troca)"
