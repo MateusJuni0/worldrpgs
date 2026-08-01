@@ -20,6 +20,7 @@ var biomes: Dictionary = {}
 var races: Dictionary = {}
 var armor: Dictionary = {}
 var equipment: Dictionary = {}
+var world: Dictionary = {}
 var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
@@ -37,6 +38,7 @@ func _ready() -> void:
 	races = _load_json("races.json")
 	armor = _load_json("armor.json")
 	equipment = _load_json("equipment.json")
+	world = _load_json("world.json")
 	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
@@ -91,6 +93,10 @@ func equipment_weapon(id: String) -> Dictionary:
 
 func equipment_armor(id: String) -> Dictionary:
 	return (equipment.get("armor", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func world_zone(id: String) -> Dictionary:
+	return (world.get("zones", {}) as Dictionary).get(id, {}) as Dictionary
 
 
 ## O JSON guarda declaracoes compactas de ataques, mas o runtime recebe sempre
@@ -786,6 +792,118 @@ func _validate() -> void:
 				_fail("[SPEC] espólio armadura '%s' não resolve" % split[1])
 			elif split[0] == "anel" and not catalogue_rings.has(split[1]):
 				_fail("[SPEC] espólio anel '%s' não resolve" % split[1])
+	checks += 1
+
+	# 12. WP8 completo (spec/69): a leitura vem antes do traçado e a rede só
+	# arranca se todas as zonas fecharem os dois círculos e as 30 portas tiverem
+	# razão visível. Isto impede que o catálogo markdown se afaste do runtime.
+	var map_reading: Dictionary = world.get("map_reading", {}) as Dictionary
+	if not bool(map_reading.get("decided_before_layout", false)):
+		_fail("[SPEC] WP8 traçado sem leitura do mapa decidida primeiro")
+	if String(map_reading.get("projection", "")) != "inclinada_40_graus":
+		_fail("[SPEC] WP8 perdeu a vista inclinada do spec/57 §5")
+	if String(map_reading.get("reveal_rule", "")) != "apenas_terreno_percorrido":
+		_fail("[SPEC] WP8 mapa revela conteúdo antes da descoberta")
+	if not String(map_reading.get("scope_decision", "")).contains("donos"):
+		_fail("[SPEC] WP8 decidiu à socapa mapa por zona vs mundo inteiro")
+
+	var world_zones: Dictionary = world.get("zones", {}) as Dictionary
+	var history_doors: Dictionary = world.get("history_doors", {}) as Dictionary
+	var world_connections: Array = world.get("connections", []) as Array
+	if world_zones.size() != 12:
+		_fail("[SPEC] catálogo WP8 tem %d zonas; spec/69 diz 12" % world_zones.size())
+	if history_doors.size() != 30:
+		_fail("[SPEC] catálogo WP8 tem %d portas de história; spec/69 diz 30" % history_doors.size())
+	if world_connections.size() < 16:
+		_fail("[SPEC] catálogo WP8 tem %d ligações e parece linear" % world_connections.size())
+	var world_slice_count := 0
+	var history_door_counts: Dictionary = {}
+	var adjacency: Dictionary = {}
+	for biome_id: String in biome_ids():
+		adjacency[biome_id] = []
+		var zone: Dictionary = world_zones.get(biome_id, {}) as Dictionary
+		if zone.is_empty():
+			_fail("[SPEC] bioma '%s' sem traçado em world.json" % biome_id)
+			continue
+		for field: String in ["nome", "biome_id", "traversal", "encounter_curve",
+				"rest_points", "landmarks", "horizontal_loop", "vertical_loop", "shortcut",
+				"dungeon", "environmental_threat", "connections", "descricao_visual",
+				"concept_art", "fatia_1"]:
+			if not zone.has(field) or str(zone.get(field, "")) == "":
+				_fail("[SPEC] zona '%s' sem '%s' (spec/69)" % [biome_id, field])
+		if String(zone.get("biome_id", "")) != biome_id:
+			_fail("[SPEC] zona '%s' aponta ao bioma '%s'" % [biome_id, zone.get("biome_id", "")])
+		var traversal_minutes := int((zone.get("traversal", {}) as Dictionary).get("clean_minutes", 0))
+		if traversal_minutes < 8 or traversal_minutes > 12:
+			_fail("[SPEC] zona '%s' mede %d min; spec/53 exige 8-12" % [biome_id, traversal_minutes])
+		var encounter_curve: Dictionary = zone.get("encounter_curve", {}) as Dictionary
+		if int(encounter_curve.get("common", 0)) < 12 or int(encounter_curve.get("common", 0)) > 20:
+			_fail("[SPEC] zona '%s' fora dos 12-20 encontros comuns" % biome_id)
+		if int(encounter_curve.get("elites", 0)) < 3 or int(encounter_curve.get("elites", 0)) > 5:
+			_fail("[SPEC] zona '%s' fora das 3-5 elites" % biome_id)
+		if int(encounter_curve.get("named", 0)) < 2 or int(encounter_curve.get("named", 0)) > 3:
+			_fail("[SPEC] zona '%s' fora dos 2-3 nomeados" % biome_id)
+		var zone_rests: Array = zone.get("rest_points", []) as Array
+		if zone_rests.size() < 2 or zone_rests.size() > 3:
+			_fail("[SPEC] zona '%s' tem %d descansos; spec/53 exige 2-3" % [biome_id, zone_rests.size()])
+		for loop_key: String in ["horizontal_loop", "vertical_loop", "shortcut"]:
+			var loop: Dictionary = zone.get(loop_key, {}) as Dictionary
+			if String(loop.get("opens_from", "")) != "interior":
+				_fail("[SPEC] %s/%s não abre do lado de dentro" % [biome_id, loop_key])
+			if String(loop.get("descricao_visual", "")).length() < 40 or typeof(loop.get("fatia_1")) != TYPE_BOOL:
+				_fail("[SPEC] %s/%s sem descrição visual/Fatia 1?" % [biome_id, loop_key])
+		if int((zone.get("vertical_loop", {}) as Dictionary).get("height_gain_m", 0)) < 4:
+			_fail("[SPEC] zona '%s' não fecha círculo vertical real" % biome_id)
+		if (zone.get("connections", []) as Array).size() < 2:
+			_fail("[SPEC] zona '%s' só tem uma direcção" % biome_id)
+		if not FileAccess.file_exists(String(zone.get("concept_art", ""))):
+			_fail("[SPEC] zona '%s' sem conceito visual arquivado" % biome_id)
+		if bool(zone.get("fatia_1", false)):
+			world_slice_count += 1
+	if world_slice_count != 1 or not bool((world_zones.get("brumal", {}) as Dictionary).get("fatia_1", false)):
+		_fail("[SPEC] Fatia 1 do mundo não é apenas Brumal")
+
+	for connection_value: Variant in world_connections:
+		var connection := connection_value as Dictionary
+		var from_id := String(connection.get("from", ""))
+		var to_id := String(connection.get("to", ""))
+		if not world_zones.has(from_id) or not world_zones.has(to_id) or from_id == to_id:
+			_fail("[SPEC] ligação WP8 inválida '%s' -> '%s'" % [from_id, to_id])
+			continue
+		(adjacency[from_id] as Array).append(to_id)
+		(adjacency[to_id] as Array).append(from_id)
+		if (connection.get("loads", []) as Array).size() != 2:
+			_fail("[SPEC] ligação %s/%s tenta carregar mais que os dois vizinhos" % [from_id, to_id])
+		if String(connection.get("descricao_visual", "")).length() < 40 or typeof(connection.get("fatia_1")) != TYPE_BOOL:
+			_fail("[SPEC] ligação %s/%s sem descrição visual/Fatia 1?" % [from_id, to_id])
+	var reached: Dictionary = {"brumal": true}
+	var frontier: Array[String] = ["brumal"]
+	while not frontier.is_empty():
+		var current: String = String(frontier.pop_front())
+		for neighbour_value: Variant in adjacency.get(current, []):
+			var neighbour := String(neighbour_value)
+			if not reached.has(neighbour):
+				reached[neighbour] = true
+				frontier.append(neighbour)
+	if reached.size() != 12:
+		_fail("[SPEC] rede WP8 só liga %d/12 biomas" % reached.size())
+
+	for door_id: String in history_doors.keys():
+		var history_door := history_doors[door_id] as Dictionary
+		for field: String in ["nome", "biome_id", "form", "what_exists_now",
+				"reason_is_legible", "future_slot", "witness", "descricao_visual", "fatia_1"]:
+			if not history_door.has(field) or str(history_door.get(field, "")) == "":
+				_fail("[SPEC] porta '%s' sem '%s'" % [door_id, field])
+		var door_biome := String(history_door.get("biome_id", ""))
+		if not world_zones.has(door_biome):
+			_fail("[SPEC] porta '%s' aponta a zona inexistente '%s'" % [door_id, door_biome])
+		history_door_counts[door_biome] = int(history_door_counts.get(door_biome, 0)) + 1
+		if bool(history_door.get("fatia_1", true)):
+			_fail("[SPEC] porta de história '%s' invadiu a Fatia 1" % door_id)
+	for biome_id: String in world_zones.keys():
+		var count := int(history_door_counts.get(biome_id, 0))
+		if count < 2 or count > 3:
+			_fail("[SPEC] zona '%s' tem %d portas; spec/53 exige 2-3" % [biome_id, count])
 	checks += 1
 
 	if load_errors.is_empty():

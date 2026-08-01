@@ -105,7 +105,7 @@ O [`39`](39-estudo-profundo.md) §8 manda **pelo menos um círculo vertical por 
 
 ⭐ **Proposta: vista inclinada, com o andar onde estás realçado e os outros esbatidos.** Vê-se o todo, percebe-se a altura, e o teu andar salta à vista.
 
-⚠️ **E isto tem de ser decidido ANTES de o WP8 desenhar as zonas** — porque se as zonas forem desenhadas sem pensar em como se lêem no mapa, **há zonas que ficam impossíveis de mapear**. `→WP8`/`→WP11`
+✅ **Cumprido antes do traçado no [`69`](69-catalogo-do-mundo.md) §1.** As zonas usam patamares com silhuetas diferentes, o andar actual realçado e os restantes esbatidos. A pergunta “mapa por zona ou do mundo inteiro” continua dos donos e não foi usada para decidir a geometria. `→WP11`
 
 ---
 
@@ -134,14 +134,14 @@ O [`39`](39-estudo-profundo.md) §8 manda **pelo menos um círculo vertical por 
 | **Mapa do mundo** que se pinta a andar | `→WP11` |
 | ⭐ **8 marcas por jogador**, visíveis para o outro **e no mundo** | `→WP11`/`→WP10` |
 | ⭐ **Vista inclinada a ~40°** para a verticalidade se ler | `→WP11` |
-| ⚠️ **Decidir a leitura do mapa antes de o WP8 traçar as zonas** | `→WP8` |
+| ✅ **Leitura decidida antes do traçado; as 12 fichas obedecem-lhe** | [`69`](69-catalogo-do-mundo.md) |
 | ✅ **Estado persistente definido no sistema de saves** | [`59`](59-saves.md) |
 
 ## O que fica em aberto
 
 | | |
 |---|---|
-| **Há mapa por zona, ou um mapa do mundo inteiro?** *(proposta: por zona, com um índice)* | `→WP11` |
+| **Há mapa por zona, ou um mapa do mundo inteiro?** *(proposta: por zona, com um índice)* | pergunta 38 do [`99`](99-perguntas-abertas.md) · `→WP11` |
 | **A vista inclinada aguenta 12 biomas com formas diferentes?** | validar no M2 |
 | **O mapa mostra os biomas que ainda não visitaste, como nomes?** *(proposta: sim — é uma porta de história)* | ⏳ donos |
 

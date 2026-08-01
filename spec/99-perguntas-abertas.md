@@ -71,7 +71,7 @@ Se o mago nível 3 lança mais depressa que o nível 1, o nível está a dar van
 ### 4. ~~"Mapa grande" é quanto?~~ ✅ RESPONDIDA
 `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — **~30 min a pé, 10+ biomas** (escala Elden Ring). A fatia 1 continua a ser Brumal sozinha; o resto cresce zona a zona. O WP8 herda três obrigações: densidade mínima por zona, estratégia de reutilização de peças, e viagem rápida. Ver [`05-mundo.md`](05-mundo.md).
 
-~~⚠️ **Diferença por acertar:** o WP8 ([`17-mundo.md`](17-mundo.md)) desenhou **6 zonas** de 2–3 min + núcleo final (~35–45 min de travessia).~~ ✅ **Acertada na volta 1** ([`49-biomas.md`](49-biomas.md)) `[FABLE]`: **12 biomas** — as 6 zonas do WP8 mantêm-se e entram mais 6. É o único número que fecha as duas contas aprovadas ao mesmo tempo: 12 × 2–3 min ≈ 30 min a pé, e 1+12+12+36 = **61 chefes** (o número do [`00-visao.md`](00-visao.md)). A rede (quem liga a quem) redesenha-se na volta 9.
+~~⚠️ **Diferença por acertar:** o WP8 ([`17-mundo.md`](17-mundo.md)) desenhou **6 zonas** de 2–3 min + núcleo final.~~ ✅ **Acertada e catalogada** ([`49`](49-biomas.md), [`69`](69-catalogo-do-mundo.md)): **12 biomas de 8–12 min numa rede compacta**, não doze em linha. As 21 ligações dão diâmetro de três travessias; Costa Quebrada (11) + Cimeira (10) + Fulgor (9) provam o alvo de **30 min**. A conta de encontros fica 1 Ultra + 12 guardiões + 12 subchefes + ~36 nomeados = **61**.
 → [`05-mundo.md`](05-mundo.md)
 
 ---
@@ -157,6 +157,7 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 35. **Quem dá ordens aos invocados em co-op?** — a escola vermelha permite vários mortos e os dois jogadores podem aprendê-la. Proposta `[CODEX]`: cada invocado obedece a quem o levantou; autoridade e limite visual ficam associados a esse `profile_id`. Alternativa: o anfitrião comandar todos, que simplifica rede mas rouba o verbo ao convidado. **Decidem Mateus + Rico.** → [`52`](52-mago-do-mal.md) §9, [`66`](66-catalogo-de-magia.md)
 36. **O Mago do mal é uma origem própria ou qualquer origem com a Escola vermelha?** — o [`54`](54-mana-meditacao-e-tracos-de-classe.md) deixou esta linha aberta e o [`66`](66-catalogo-de-magia.md) só fecha a escola, não a classe. Isto muda a ficha inicial, o traço de +40% de mana e o ecrã do [`64`](64-criacao-de-personagem.md). **Decidem Mateus + Rico.**
 37. **O Mateus confirma a proposta do Assassino do [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §5?** — Rico pediu furtividade, velocidade, sangramento e duas adagas. A proposta passa os três guardas: Passo Mudo sem IA nova · Corte Alternado em vez de +X% · Cruz Carmesim/Entre Sombras aprendíveis por qualquer origem. O catálogo e os testes podem existir; **marcar a identidade como decidida espera o Mateus.**
+38. **O mapa abre por zona com índice, ou mostra o mundo inteiro? E escreve nomes de biomas ainda não visitados?** — o [`69`](69-catalogo-do-mundo.md) não precisou de escolher: a vista inclinada, os patamares e a regra “só terreno percorrido” funcionam nos dois escopos. Proposta `[CLAUDE]`: **mapa por zona com índice**, nomes só depois de vistos; reduz sobreposição e não transforma um nome futuro em seta. **Decidem Mateus + Rico.**
 
 ---
 

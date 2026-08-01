@@ -32,6 +32,7 @@ func _ready() -> void:
 	_test_races()
 	_test_families_and_kits()
 	_test_equipment_catalogue()
+	_test_world_catalogue()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -323,6 +324,125 @@ func _test_equipment_catalogue() -> void:
 				"arma": _check(catalogue_weapons.has(split[1]), "espólio arma '%s' resolve" % split[1])
 				"armadura": _check(catalogue_armor.has(split[1]), "espólio armadura '%s' resolve" % split[1])
 				"anel": _check(rings.has(split[1]), "espólio anel '%s' resolve" % split[1])
+
+
+# --- spec/69 · catálogo WP8 completo -----------------------------------------
+
+func _test_world_catalogue() -> void:
+	var world_value: Variant = GameData.get("world")
+	_check(typeof(world_value) == TYPE_DICTIONARY,
+		"WP8: world.json e carregado pelo GameData")
+	var world: Dictionary = world_value as Dictionary if typeof(world_value) == TYPE_DICTIONARY else {}
+	var reading: Dictionary = world.get("map_reading", {}) as Dictionary
+	_check(bool(reading.get("decided_before_layout", false)),
+		"WP8: leitura do mapa fica decidida antes do tracado")
+	_check(String(reading.get("projection", "")) == "inclinada_40_graus",
+		"WP8: vista inclinada torna a verticalidade legivel")
+	_check(String(reading.get("reveal_rule", "")) == "apenas_terreno_percorrido",
+		"WP8: mapa regista descoberta, nao guia")
+	_check(String(reading.get("scope_decision", "")).contains("donos"),
+		"WP8: catalogo nao decide mapa por zona vs mundo inteiro")
+
+	var zones: Dictionary = world.get("zones", {}) as Dictionary
+	var doors: Dictionary = world.get("history_doors", {}) as Dictionary
+	var connections: Array = world.get("connections", []) as Array
+	_check(zones.size() == 12, "WP8: as 12 fichas de bioma recebem tracado")
+	_check(doors.size() >= 24 and doors.size() <= 36,
+		"WP8: 24-36 portas de historia")
+	_check(doors.size() == 30, "WP8: alvo fechado em 30 portas, 2-3 por bioma")
+	_check(connections.size() >= 16, "WP8: rede tem aneis em vez de uma linha")
+
+	var first_slice_zones := 0
+	var door_counts: Dictionary = {}
+	for biome_id: String in GameData.biome_ids():
+		var zone: Dictionary = zones.get(biome_id, {}) as Dictionary
+		_check(not zone.is_empty(), "WP8/%s: bioma tem ficha de mundo" % biome_id)
+		if zone.is_empty():
+			continue
+		for field: String in ["nome", "biome_id", "traversal", "encounter_curve", "rest_points",
+				"landmarks", "horizontal_loop", "vertical_loop", "shortcut", "dungeon",
+				"connections", "descricao_visual", "concept_art", "fatia_1"]:
+			_check(zone.has(field) and str(zone.get(field, "")) != "",
+				"WP8/%s: declara '%s'" % [biome_id, field])
+		var minutes := int((zone.get("traversal", {}) as Dictionary).get("clean_minutes", 0))
+		_check(minutes >= 8 and minutes <= 12,
+			"WP8/%s: travessia limpa fica em 8-12 min" % biome_id)
+		var curve: Dictionary = zone.get("encounter_curve", {}) as Dictionary
+		_check(int(curve.get("common", 0)) >= 12 and int(curve.get("common", 0)) <= 20,
+			"WP8/%s: 12-20 encontros comuns" % biome_id)
+		_check(int(curve.get("elites", 0)) >= 3 and int(curve.get("elites", 0)) <= 5,
+			"WP8/%s: 3-5 elites" % biome_id)
+		_check(int(curve.get("named", 0)) >= 2 and int(curve.get("named", 0)) <= 3,
+			"WP8/%s: 2-3 nomeados" % biome_id)
+		_check((zone.get("rest_points", []) as Array).size() >= 2 and
+			(zone.get("rest_points", []) as Array).size() <= 3,
+			"WP8/%s: 2-3 descansos" % biome_id)
+		for loop_key: String in ["horizontal_loop", "vertical_loop", "shortcut"]:
+			var loop: Dictionary = zone.get(loop_key, {}) as Dictionary
+			_check(String(loop.get("opens_from", "")) == "interior",
+				"WP8/%s/%s: abre-se do lado de dentro" % [biome_id, loop_key])
+			_check(String(loop.get("descricao_visual", "")).length() >= 40,
+				"WP8/%s/%s: descricao visual geravel" % [biome_id, loop_key])
+			_check(typeof(loop.get("fatia_1")) == TYPE_BOOL,
+				"WP8/%s/%s: Fatia 1? booleana" % [biome_id, loop_key])
+		var vertical: Dictionary = zone.get("vertical_loop", {}) as Dictionary
+		_check(int(vertical.get("height_gain_m", 0)) >= 4,
+			"WP8/%s: circulo vertical muda pelo menos 4 m" % biome_id)
+		_check(String(vertical.get("return_method", "")) != "",
+			"WP8/%s: circulo vertical declara como regressa" % biome_id)
+		_check((zone.get("connections", []) as Array).size() >= 2,
+			"WP8/%s: pelo menos duas direccoes" % biome_id)
+		_check(FileAccess.file_exists(String(zone.get("concept_art", ""))),
+			"WP8/%s: conceito visual arquivado" % biome_id)
+		if bool(zone.get("fatia_1", false)):
+			first_slice_zones += 1
+	_check(first_slice_zones == 1 and bool((zones.get("brumal", {}) as Dictionary).get("fatia_1", false)),
+		"WP8: so Brumal pertence a Fatia 1")
+
+	for door_id: String in doors.keys():
+		var door := doors[door_id] as Dictionary
+		for field: String in ["nome", "biome_id", "form", "what_exists_now", "reason_is_legible",
+				"future_slot", "witness", "descricao_visual", "fatia_1"]:
+			_check(door.has(field) and str(door.get(field, "")) != "",
+				"WP8/porta/%s: declara '%s'" % [door_id, field])
+		var door_biome := String(door.get("biome_id", ""))
+		_check(zones.has(door_biome), "WP8/porta/%s: bioma existe" % door_id)
+		door_counts[door_biome] = int(door_counts.get(door_biome, 0)) + 1
+		_check(not bool(door.get("fatia_1", true)),
+			"WP8/porta/%s: historia continua fora da Fatia 1" % door_id)
+	for biome_id: String in zones.keys():
+		_check(int(door_counts.get(biome_id, 0)) >= 2 and int(door_counts.get(biome_id, 0)) <= 3,
+			"WP8/%s: 2-3 portas de historia" % biome_id)
+
+	# A rede é simétrica, conectada e nenhuma garganta carrega um terceiro bioma.
+	var adjacency: Dictionary = {}
+	for biome_id: String in zones.keys():
+		adjacency[biome_id] = []
+	for connection_value: Variant in connections:
+		var connection := connection_value as Dictionary
+		var from_id := String(connection.get("from", ""))
+		var to_id := String(connection.get("to", ""))
+		_check(zones.has(from_id) and zones.has(to_id) and from_id != to_id,
+			"WP8/ligacao: extremos validos %s -> %s" % [from_id, to_id])
+		if zones.has(from_id) and zones.has(to_id):
+			(adjacency[from_id] as Array).append(to_id)
+			(adjacency[to_id] as Array).append(from_id)
+		_check((connection.get("loads", []) as Array).size() == 2,
+			"WP8/%s-%s: garganta carrega so os dois vizinhos" % [from_id, to_id])
+		_check(String(connection.get("descricao_visual", "")).length() >= 40,
+			"WP8/%s-%s: transicao tem descricao visual" % [from_id, to_id])
+		_check(typeof(connection.get("fatia_1")) == TYPE_BOOL,
+			"WP8/%s-%s: Fatia 1? booleana" % [from_id, to_id])
+	var reached: Dictionary = {"brumal": true}
+	var frontier: Array[String] = ["brumal"]
+	while not frontier.is_empty():
+		var current: String = String(frontier.pop_front())
+		for neighbour_value: Variant in adjacency.get(current, []):
+			var neighbour := String(neighbour_value)
+			if not reached.has(neighbour):
+				reached[neighbour] = true
+				frontier.append(neighbour)
+	_check(reached.size() == 12, "WP8: os 12 biomas formam uma rede ligada")
 
 
 # --- spec/50-racas.md (volta 2) · as 12 fichas de raca ------------------------

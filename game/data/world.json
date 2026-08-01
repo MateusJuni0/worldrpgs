@@ -1,0 +1,2308 @@
+{
+  "_meta": {
+    "source": "spec/69-catalogo-do-mundo.md",
+    "inherited": [
+      "spec/39 §8",
+      "spec/43 §6",
+      "spec/49",
+      "spec/53 §§2-3",
+      "spec/57 §5"
+    ],
+    "rule": "a leitura vem antes do traçado; uma zona sem círculos horizontal e vertical não está acabada"
+  },
+  "map_reading": {
+    "decided_before_layout": true,
+    "projection": "inclinada_40_graus",
+    "reveal_rule": "apenas_terreno_percorrido",
+    "current_tier": "realcado",
+    "other_tiers": "esbatidos",
+    "never_reveals": [
+      "caminhos_nao_percorridos",
+      "inimigos",
+      "itens",
+      "paredes_falsas",
+      "conteudo_atras_de_portas"
+    ],
+    "records": [
+      "caminho_percorrido",
+      "descansos_encontrados",
+      "atalhos_abertos",
+      "parceiro",
+      "portas_vistas",
+      "mancha_de_almas",
+      "marcas_dos_jogadores"
+    ],
+    "scope_decision": "mapa_por_zona_ou_mundo_inteiro — donos, pergunta 38; o traçado local não depende da resposta",
+    "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
+    "fatia_1": false
+  },
+  "world_scale": {
+    "target_endpoint_minutes": 30,
+    "proof_route": [
+      "costa_quebrada",
+      "cimeira",
+      "fulgor"
+    ],
+    "proof_minutes": 30,
+    "interpretation": "a rede compacta tem diâmetro de três travessias; 12 biomas não se somam em linha",
+    "fast_travel": "entre descansos visitados a partir de um descanso, disponível quando existirem 3+ zonas implementadas",
+    "descricao_visual": "rede de doze massas de terreno em três alturas, ligada por gargantas curtas e vários anéis, sem uma linha principal única",
+    "fatia_1": false
+  },
+  "streaming": {
+    "unit": "uma_zona",
+    "resident_set": "actual_e_vizinhas_imediatas",
+    "max_world_working_set_gb": 2.5,
+    "transition": "garganta_fisica_com_nevoeiro",
+    "coop_rule": "manda_a_maquina_mais_lenta",
+    "descricao_visual": "garganta estreita de material misto com cortina de bruma ao centro e silhuetas dos dois biomas nas extremidades",
+    "fatia_1": false
+  },
+  "connections": [
+    {
+      "id": "ligacao_01",
+      "nome": "garganta de raízes",
+      "from": "brumal",
+      "to": "selva_funda",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "brumal",
+        "selva_funda"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "raízes de carvalho-negro apertam um corredor de 5 m e tornam-se vime verde na saída",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_02",
+      "nome": "vale da bruma baixa",
+      "from": "brumal",
+      "to": "campas_cinzentas",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "brumal",
+        "campas_cinzentas"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "trilho de pedra musgosa desce entre carvalhos negros até a água cinzenta cobrir as raízes",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_03",
+      "nome": "arco da pedreira",
+      "from": "brumal",
+      "to": "fojo",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "brumal",
+        "fojo"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "arco de granito partido fecha-se num corte ocre com carris de ferro bruto sob a bruma",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_04",
+      "nome": "barranco das roldanas",
+      "from": "selva_funda",
+      "to": "fojo",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "selva_funda",
+        "fojo"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "bambu negro e seda cedem lugar a andaimes de granito e uma roldana sobre o desfiladeiro",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_05",
+      "nome": "rio das copas",
+      "from": "selva_funda",
+      "to": "costa_quebrada",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "selva_funda",
+        "costa_quebrada"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "passadiço de vime acompanha água verde até árvores baixas retorcidas pelo vento salgado",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_06",
+      "nome": "dreno da mina",
+      "from": "campas_cinzentas",
+      "to": "fojo",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "campas_cinzentas",
+        "fojo"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "canal de madeira encharcada entra num túnel de granito onde o lodo deixa marcas ferrugentas",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_07",
+      "nome": "calçada submersa",
+      "from": "campas_cinzentas",
+      "to": "cidade_afogada",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "campas_cinzentas",
+        "cidade_afogada"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "lápides inclinadas transformam-se em marcos de mármore sob água verde cada vez mais funda",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_08",
+      "nome": "rampa do veio vítreo",
+      "from": "fojo",
+      "to": "fulgor",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fojo",
+        "fulgor"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "galeria de ferro abre num planalto onde o minério passa a vidro violeta fundido por raios",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_09",
+      "nome": "escada do granizo",
+      "from": "costa_quebrada",
+      "to": "cimeira",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "costa_quebrada",
+        "cimeira"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "degraus de basalto molhado sobem entre mastros partidos até a chuva se tornar neve branca",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_10",
+      "nome": "molhe quebrado",
+      "from": "costa_quebrada",
+      "to": "cidade_afogada",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "costa_quebrada",
+        "cidade_afogada"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "molhe de madeira e bronze desce para telhados de mármore rodeados por água verde-clara",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_11",
+      "nome": "colo da tempestade",
+      "from": "cimeira",
+      "to": "fulgor",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "cimeira",
+        "fulgor"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "neve azul recua numa garganta de pedra seca onde nuvens violetas rodam abaixo da crista",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_12",
+      "nome": "procissão gelada",
+      "from": "cimeira",
+      "to": "santuario_branco",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "cimeira",
+        "santuario_branco"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "escadaria de pedra branca perde a neve e ganha filas de velas protegidas por nichos de ouro baço",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_13",
+      "nome": "campo de escória vítrea",
+      "from": "fornalha",
+      "to": "fulgor",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fornalha",
+        "fulgor"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "obsidiana rachada arrefece em areia fundida, com relâmpagos presos em agulhas violetas",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_14",
+      "nome": "chaminé de esporos",
+      "from": "fornalha",
+      "to": "raizama",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fornalha",
+        "raizama"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "conduta de obsidiana desce até raízes húmidas onde brasas laranja passam a pontos ciano",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_15",
+      "nome": "via dos cadinhos votivos",
+      "from": "fornalha",
+      "to": "santuario_branco",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fornalha",
+        "santuario_branco"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "placas de bronze queimado tornam-se degraus de ouro baço cobertos por cera derretida",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_16",
+      "nome": "fenda aterrada",
+      "from": "fulgor",
+      "to": "raiz",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fulgor",
+        "raiz"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "correntes enterradas mergulham numa abertura de pedra negra onde a bruma sobe contra a gravidade",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_17",
+      "nome": "aqueduto micelial",
+      "from": "raizama",
+      "to": "cidade_afogada",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "raizama",
+        "cidade_afogada"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "raízes e cogumelos envolvem um aqueduto de mármore até a água substituir o chão",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_18",
+      "nome": "costela petrificada",
+      "from": "raizama",
+      "to": "raiz",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "raizama",
+        "raiz"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "osso coberto de seda escurece e cresce até ser indistinguível das raízes-torre do abismo",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_19",
+      "nome": "via das estátuas lavadas",
+      "from": "cidade_afogada",
+      "to": "santuario_branco",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "cidade_afogada",
+        "santuario_branco"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "estátuas de mármore saem da água em fila e chegam secas, cobertas de cera branca",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_20",
+      "nome": "escada da sombra inteira",
+      "from": "santuario_branco",
+      "to": "raiz",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "santuario_branco",
+        "raiz"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "mármore excessivamente branco escurece degrau a degrau até virar pedra negra com prata baça",
+      "fatia_1": false
+    },
+    {
+      "id": "ligacao_21",
+      "nome": "veio da escória",
+      "from": "fojo",
+      "to": "fornalha",
+      "open_from_minute_one": true,
+      "soft_gate_only": true,
+      "loads": [
+        "fojo",
+        "fornalha"
+      ],
+      "fog_loading": "levanta quando as duas máquinas confirmam a zona vizinha pronta",
+      "descricao_visual": "carris de ferro bruto descem por granito quente até a rocha ficar negra e o bronze aparecer fundido",
+      "fatia_1": false
+    }
+  ],
+  "zones": {
+    "brumal": {
+      "nome": "Brumal",
+      "biome_id": "brumal",
+      "order": 1,
+      "map_tiers": [
+        "orla de carvalho a 0 m",
+        "lombo da árvore morta a +7 m",
+        "leito de bruma a -4 m"
+      ],
+      "traversal": {
+        "clean_minutes": 8,
+        "clean_route": "Orla → caminho médio → clareira do brutamontes → árvore morta → porta da Toca",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 40
+      },
+      "encounter_curve": {
+        "common": 12,
+        "elites": 3,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Brumal",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "carvalho-negro, ferro rude, couro de javali; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": true
+        },
+        {
+          "nome": "Descanso antes do guardião de Brumal",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "carvalho-negro, ferro rude, couro de javali; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": true
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Arco Partido",
+          "descricao_visual": "arco de granito musgoso com 9 m, metade esquerda tombada entre carvalhos negros",
+          "fatia_1": true
+        },
+        {
+          "nome": "Árvore Morta",
+          "descricao_visual": "carvalho negro sem copa com 24 m, raízes levantadas e uma fenda de rocha por baixo",
+          "fatia_1": true
+        },
+        {
+          "nome": "Farol dos Corvos",
+          "descricao_visual": "torre baixa de granito com 12 m, três varas de ferro cobertas de corvos e braseiro âmbar",
+          "fatia_1": true
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Portão da Clareira",
+        "route": "trilho exterior da clareira à orla",
+        "opens_from": "interior",
+        "return_time_seconds": 36,
+        "descricao_visual": "portão duplo de carvalho-negro com ferragens rudes, 4 m de largura, visto primeiro por trás",
+        "image_source": "res://../art/concept/brumal-caminho.png",
+        "fatia_1": true
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Brumal",
+        "height_gain_m": 7,
+        "outward_method": "escada de raiz e plataforma que desce ao leito de bruma",
+        "return_method": "escada de raiz e plataforma que desce ao leito de bruma",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "plataforma quadrada de carvalho-negro suspensa por duas correntes de ferro rude, entre raízes de 2 m",
+        "image_source": "res://../art/concept/brumal-caminho.png",
+        "fatia_1": true
+      },
+      "shortcut": {
+        "nome": "Portão da Árvore",
+        "connects": "árvore morta → Orla, repetição em 38 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "cancela de troncos negros com lingueta de ferro acessível apenas no lado da árvore morta",
+        "image_source": "res://../art/concept/brumal-caminho.png",
+        "fatia_1": true
+      },
+      "dungeon": {
+        "nome": "A Toca",
+        "entrance": "fenda sob a árvore morta",
+        "clue_count": 2,
+        "clues": [
+          "tronco sem copa visível a 60 m",
+          "corvos entram na fenda e não voltam"
+        ],
+        "rooms_before_guardian": 3,
+        "guardian_slot": "vorgar",
+        "descricao_visual": "entrada de rocha húmida com 2,5 m sob raízes de carvalho-negro, penas presas na bruma",
+        "image_source": "res://../art/concept/toca-entrada.png",
+        "fatia_1": true
+      },
+      "environmental_threat": {
+        "nome": "bruma de borda",
+        "effect": "a bruma fica opaca durante 3 s e vira o jogador para terreno seguro",
+        "telegraph": "densidade sobe em três degraus; ramos e pedras apontam de volta",
+        "escape": "recuar antes dos 3 s",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "carvalho-negro, ferro rude, couro de javali; densidade sobe em três degraus; ramos e pedras apontam de volta",
+        "fatia_1": true
+      },
+      "connections": [
+        "campas_cinzentas",
+        "fojo",
+        "selva_funda"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "floresta de carvalhos negros afogada em bruma verde-cinzenta, luz ambar de fim de tarde coada entre troncos, arco de pedra partido ao fundo",
+      "concept_art": "res://../art/concept/brumal-vista.png",
+      "fatia_1": true
+    },
+    "selva_funda": {
+      "nome": "Selva Funda",
+      "biome_id": "selva_funda",
+      "order": 2,
+      "map_tiers": [
+        "solo de raízes a 0 m",
+        "aldeia de passadiços a +18 m",
+        "copas de vigia a +40 m"
+      ],
+      "traversal": {
+        "clean_minutes": 10,
+        "clean_route": "Raízes → elevador de contrapeso → aldeia suspensa → ponte dos espinhos → ninho do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 50
+      },
+      "encounter_curve": {
+        "common": 14,
+        "elites": 4,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Selva Funda",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de Selva Funda",
+          "role": "meio_da_travessia",
+          "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Selva Funda",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Figueira Escada",
+          "descricao_visual": "figueira estranguladora com 45 m, degraus de vime enrolados no tronco e flores magenta na copa",
+          "fatia_1": false
+        },
+        {
+          "nome": "Ninho Partido",
+          "descricao_visual": "taça de espinhos gigantes com 16 m presa entre três copas, metade caída em fios de seda",
+          "fatia_1": false
+        },
+        {
+          "nome": "Cascata Verde",
+          "descricao_visual": "queda de água com 38 m coberta por trepadeiras, espuma verde visível entre os passadiços",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Anel das Copas",
+        "route": "ponte exterior que volta da aldeia ao elevador",
+        "opens_from": "interior",
+        "return_time_seconds": 46,
+        "descricao_visual": "passadiço circular de vime trançado com 3 m de largura, guarda de espinhos e flores peçonha",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Selva Funda",
+        "height_gain_m": 40,
+        "outward_method": "elevador goblin de dois cestos entre raízes e copas",
+        "return_method": "elevador goblin de dois cestos entre raízes e copas",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "dois cestos de vime com 4 m presos a roldanas de bambu negro e contrapesos de pedra",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Escada da Seiva",
+        "connects": "ninho do guardião → aldeia, repetição em 52 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "escada de corda e seda crua enrolada numa viga, solta apenas da plataforma superior",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Casulo Vazio",
+        "entrance": "bolsa de seda atrás da Cascata Verde",
+        "clue_count": 2,
+        "clues": [
+          "fios secos atravessam a água",
+          "pequenas carapaças acumulam-se na margem"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_selva_funda_wp7",
+        "descricao_visual": "casulo oval de seda crua com 5 m, rasgado por dentro e preso a raízes negras molhadas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "passadiço cedente",
+        "effect": "tábua marcada range 1,2 s antes de cair para uma rede 4 m abaixo",
+        "telegraph": "vime esbranquiçado, fibras soltas e oscilação crescente",
+        "escape": "sair da placa ou usar a queda segura para o piso inferior",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; vime esbranquiçado, fibras soltas e oscilação crescente",
+        "fatia_1": false
+      },
+      "connections": [
+        "brumal",
+        "costa_quebrada",
+        "fojo"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "selva vertical de copas fechadas, passadicos de vime goblin a 40 m do chao escuro, feixes de luz verde a cair como cordas",
+      "concept_art": "res://../art/concept/bioma-selva-funda.png",
+      "fatia_1": false
+    },
+    "campas_cinzentas": {
+      "nome": "Campas Cinzentas",
+      "biome_id": "campas_cinzentas",
+      "order": 3,
+      "map_tiers": [
+        "lodo e campas a 0 m",
+        "diques funerários a +5 m",
+        "ossário drenado a -6 m"
+      ],
+      "traversal": {
+        "clean_minutes": 9,
+        "clean_route": "Cais seco → lápides inclinadas → dique dos estandartes → ossário → capela do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 45
+      },
+      "encounter_curve": {
+        "common": 13,
+        "elites": 3,
+        "named": 3,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Campas Cinzentas",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "osso, madeira encharcada, ferro comido de ferrugem; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Campas Cinzentas",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "osso, madeira encharcada, ferro comido de ferrugem; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Salgueiro Enforcado",
+          "descricao_visual": "salgueiro morto com 19 m, raízes sobre água cinzenta e dezenas de elmos ferrugentos pendurados",
+          "fatia_1": false
+        },
+        {
+          "nome": "Dique dos Estandartes",
+          "descricao_visual": "muralha de madeira encharcada com 6 m, coberta por panos cinzentos e lanças partidas",
+          "fatia_1": false
+        },
+        {
+          "nome": "Lua no Ossário",
+          "descricao_visual": "óculo circular de pedra com 8 m reflectido no lodo, rodeado por ossos ordenados em espiral",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Dique de Regresso",
+        "route": "coroa seca em redor do pântano até ao cais",
+        "opens_from": "interior",
+        "return_time_seconds": 41,
+        "descricao_visual": "passagem de madeira encharcada sobre estacas de osso, 3 m de largura e archotes verde-água",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Campas Cinzentas",
+        "height_gain_m": 6,
+        "outward_method": "comporta baixa o lodo e revela a escada do ossário",
+        "return_method": "comporta baixa o lodo e revela a escada do ossário",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "comporta de ferro ferrugento com roda de 2 m, canais de pedra e água cinzenta a escorrer",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Comporta dos Mortos",
+        "connects": "capela → cais seco, repetição em 45 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "grade de ferro comida de ferrugem num canal estreito, manivela de osso apenas no lado da capela",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Ossário Sem Ordens",
+        "entrance": "cripta sob o dique dos estandartes",
+        "clue_count": 2,
+        "clues": [
+          "água corre para baixo entre duas lápides",
+          "um estandarte aponta contra o vento"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_campas_cinzentas_wp7",
+        "descricao_visual": "escadaria de pedra afundada entre lápides, degraus de osso seco e fogos-fátuos verde-água",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "lodo que agarra",
+        "effect": "andar no lodo reduz a deslocação para 50%; rolar sai para terreno seco",
+        "telegraph": "água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme",
+        "escape": "usar diques ou rolar para uma ilha seca",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "osso, madeira encharcada, ferro comido de ferrugem; água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme",
+        "fatia_1": false
+      },
+      "connections": [
+        "brumal",
+        "cidade_afogada",
+        "fojo"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "pantano de arvores mortas e lapides tortas meio afundadas, agua parada cinzenta, fogos-fatuos verde-agua ao longe",
+      "concept_art": "res://../art/concept/bioma-campas-cinzentas.png",
+      "fatia_1": false
+    },
+    "fojo": {
+      "nome": "Fojo",
+      "biome_id": "fojo",
+      "order": 4,
+      "map_tiers": [
+        "bordo do desfiladeiro a 0 m",
+        "andaimes de mina a -12 m",
+        "labirinto antigo a -28 m"
+      ],
+      "traversal": {
+        "clean_minutes": 9,
+        "clean_route": "Boca alta → andaimes → praça das roldanas → veio partido → labirinto do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 45
+      },
+      "encounter_curve": {
+        "common": 16,
+        "elites": 4,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Fojo",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "granito, ferro em bruto, corda e roldana; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de Fojo",
+          "role": "meio_da_travessia",
+          "descricao_visual": "granito, ferro em bruto, corda e roldana; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Fojo",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "granito, ferro em bruto, corda e roldana; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Guindaste de Pedra",
+          "descricao_visual": "pilar de granito com 22 m, braço de madeira e roda dentada de ferro em bruto sobre o abismo",
+          "fatia_1": false
+        },
+        {
+          "nome": "Veio Rubro",
+          "descricao_visual": "fenda mineral com 30 m de comprimento, ferro vermelho exposto e pó ocre suspenso",
+          "fatia_1": false
+        },
+        {
+          "nome": "Cabeça do Labirinto",
+          "descricao_visual": "fachada de granito talhada como focinho de touro com 14 m, uma narina serve de entrada",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Galeria de Contramina",
+        "route": "túnel exterior que devolve a praça à boca alta",
+        "opens_from": "interior",
+        "return_time_seconds": 41,
+        "descricao_visual": "galeria de granito com 4 m, carris de ferro bruto e escoras de madeira marcadas por picareta",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Fojo",
+        "height_gain_m": 28,
+        "outward_method": "plataforma de minério em três paragens",
+        "return_method": "plataforma de minério em três paragens",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "jaula de ferro em bruto com 5 m presa a roldana de madeira, contrapeso de blocos de granito",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Elevador do Veio",
+        "connects": "labirinto → boca alta, repetição em 58 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "plataforma de ferro de 4 m, alavanca dentada voltada para o fundo da mina e corrente grossa",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Contramina Cega",
+        "entrance": "porta lateral atrás do Veio Rubro",
+        "clue_count": 2,
+        "clues": [
+          "corrente de ar desloca a poeira",
+          "marcas de picareta terminam numa parede lisa"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "minotauro",
+        "descricao_visual": "porta rectangular de granito sem dobradiças, contorno de pó limpo e cunhas de ferro no chão",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "armadilhas kobold",
+        "effect": "placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s",
+        "telegraph": "pedra mais clara, fio de cobre e orifícios alinhados na parede",
+        "escape": "parar antes da placa, saltar a faixa ou bloquear os dardos",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "granito, ferro em bruto, corda e roldana; pedra mais clara, fio de cobre e orifícios alinhados na parede",
+        "fatia_1": false
+      },
+      "connections": [
+        "brumal",
+        "campas_cinzentas",
+        "fornalha",
+        "fulgor",
+        "selva_funda"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "desfiladeiro ocre estreito com andaimes e roldanas kobold, bocas de mina iluminadas a tocha, poeira suspensa na luz",
+      "concept_art": "res://../art/concept/bioma-fojo.png",
+      "fatia_1": false
+    },
+    "costa_quebrada": {
+      "nome": "Costa Quebrada",
+      "biome_id": "costa_quebrada",
+      "order": 5,
+      "map_tiers": [
+        "praia de destroços a 0 m",
+        "terraços de falésia a +16 m",
+        "farol quebrado a +34 m"
+      ],
+      "traversal": {
+        "clean_minutes": 11,
+        "clean_route": "Praia → casco inclinado → terraço de azinhavre → escada do farol → promontório do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 55
+      },
+      "encounter_curve": {
+        "common": 15,
+        "elites": 4,
+        "named": 3,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Costa Quebrada",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "madeira de naufragio, bronze verde de azinhavre, sal; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Costa Quebrada",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "madeira de naufragio, bronze verde de azinhavre, sal; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Navio Vertical",
+          "descricao_visual": "proa de madeira de naufrágio com 28 m cravada no basalto, mastros horizontais cobertos de corda",
+          "fatia_1": false
+        },
+        {
+          "nome": "Farol Cego",
+          "descricao_visual": "torre de basalto com 34 m, cúpula partida e lentes verdes espalhadas pela encosta",
+          "fatia_1": false
+        },
+        {
+          "nome": "Três Dentes",
+          "descricao_visual": "três agulhas de basalto no mar, cada uma com correntes de bronze verde presas ao topo",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Ronda do Farol",
+        "route": "terraço abrigado que volta do farol ao casco",
+        "opens_from": "interior",
+        "return_time_seconds": 51,
+        "descricao_visual": "caminho de basalto com 3 m entre parede molhada e parapeito de bronze coberto de azinhavre",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Costa Quebrada",
+        "height_gain_m": 34,
+        "outward_method": "guincho de carga usa a quilha do navio como contrapeso",
+        "return_method": "guincho de carga usa a quilha do navio como contrapeso",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "gaiola de convés com tábuas salgadas, aro de bronze verde e corrente presa ao mastro quebrado",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Guincho da Quilha",
+        "connects": "promontório → praia, repetição em 49 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "plataforma de madeira de naufrágio com travão de bronze, libertado apenas junto ao farol",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Porão ao Contrário",
+        "entrance": "escotilha no casco do Navio Vertical",
+        "clue_count": 2,
+        "clues": [
+          "água pinga para o lado errado",
+          "gaivotas pousam em redor mas nunca na tampa"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_costa_quebrada_wp7",
+        "descricao_visual": "escotilha quadrada de bronze verde num casco vertical, corda salgada e cracas a formar um aro",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "rajada de falésia",
+        "effect": "faixa exposta recebe empurrão máximo de 1,5 m após assobio de 1 s",
+        "telegraph": "fitas de vela, chuva inclinada e espuma movem-se antes da força",
+        "escape": "baixar-se atrás de quebra-ventos ou sair da faixa marcada",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "madeira de naufragio, bronze verde de azinhavre, sal; fitas de vela, chuva inclinada e espuma movem-se antes da força",
+        "fatia_1": false
+      },
+      "connections": [
+        "cidade_afogada",
+        "cimeira",
+        "selva_funda"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "falesias de basalto sob chuva fina, esqueletos de navios espetados nas rochas, bronze coberto de azinhavre",
+      "concept_art": "res://../art/concept/bioma-costa-quebrada.png",
+      "fatia_1": false
+    },
+    "cimeira": {
+      "nome": "Cimeira",
+      "biome_id": "cimeira",
+      "order": 6,
+      "map_tiers": [
+        "linha das nuvens a 0 m",
+        "escadaria dos vigias a +22 m",
+        "observatório a +48 m"
+      ],
+      "traversal": {
+        "clean_minutes": 10,
+        "clean_route": "Abrigo baixo → escadaria → ponte de gelo → vigia intermédia → observatório do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 50
+      },
+      "encounter_curve": {
+        "common": 14,
+        "elites": 3,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Cimeira",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "aco temperado a frio, pele de cabra-das-neves, gelo-azul; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de Cimeira",
+          "role": "meio_da_travessia",
+          "descricao_visual": "aco temperado a frio, pele de cabra-das-neves, gelo-azul; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Cimeira",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "aco temperado a frio, pele de cabra-das-neves, gelo-azul; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Agulha Azul",
+          "descricao_visual": "obelisco de gelo-azul com 31 m, translúcido e preso por três correntes de aço frio",
+          "fatia_1": false
+        },
+        {
+          "nome": "Observatório Partido",
+          "descricao_visual": "cúpula de pedra branca com 26 m, metade aberta ao céu e telescópio virado para a Raiz",
+          "fatia_1": false
+        },
+        {
+          "nome": "Cabra de Pedra",
+          "descricao_visual": "estátua de granito branco com 18 m, cornos cobertos de bandeiras azuis rasgadas",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Varanda das Nuvens",
+        "route": "cornija larga que regressa do observatório ao abrigo",
+        "opens_from": "interior",
+        "return_time_seconds": 46,
+        "descricao_visual": "varanda de pedra branca com 3 m, parapeito de aço frio e nuvens abaixo do chão",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Cimeira",
+        "height_gain_m": 48,
+        "outward_method": "elevador de vigia dentro da Agulha Azul",
+        "return_method": "elevador de vigia dentro da Agulha Azul",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "cabina octogonal de aço frio e pele branca, suspensa numa fissura de gelo-azul iluminada",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Ascensor da Agulha",
+        "connects": "observatório → abrigo baixo, repetição em 55 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "porta de aço frio sem puxador no piso baixo, alavanca azul apenas na estação superior",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Sala do Horizonte",
+        "entrance": "porta sob o Observatório Partido",
+        "clue_count": 2,
+        "clues": [
+          "a neve nunca assenta num círculo de 5 m",
+          "a sombra do telescópio aponta para a junta"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_cimeira_wp7",
+        "descricao_visual": "porta circular de aço frio com 4 m, vidro azul rachado e marcas de luvas na face interior",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "frio de exposição",
+        "effect": "após 25 s sem abrigo, stamina máxima perde 5% a cada 20 s até ao tecto de 25%",
+        "telegraph": "vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco",
+        "escape": "entrar num abrigo; recupera 10% por segundo junto a uma fogueira",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "aco temperado a frio, pele de cabra-das-neves, gelo-azul; vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco",
+        "fatia_1": false
+      },
+      "connections": [
+        "costa_quebrada",
+        "fulgor",
+        "santuario_branco"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "encosta nevada acima das nuvens, ceu limpo azul-gelo, escadaria de pedra a desaparecer na neve — o unico bioma sem bruma",
+      "concept_art": "res://../art/concept/bioma-cimeira.png",
+      "fatia_1": false
+    },
+    "fornalha": {
+      "nome": "Fornalha",
+      "biome_id": "fornalha",
+      "order": 7,
+      "map_tiers": [
+        "escória fria a 0 m",
+        "anel das forjas a +14 m",
+        "cratera alimentadora a +32 m"
+      ],
+      "traversal": {
+        "clean_minutes": 10,
+        "clean_route": "Pátio de escória → forjas gémeas → ponte de obsidiana → chaminé → cratera do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 50
+      },
+      "encounter_curve": {
+        "common": 17,
+        "elites": 5,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Fornalha",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "obsidiana, bronze fundido, couro curtido; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Fornalha",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "obsidiana, bronze fundido, couro curtido; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Martelo Imóvel",
+          "descricao_visual": "martelo de forja em bronze com 20 m, suspenso sobre uma bigorna de obsidiana partida",
+          "fatia_1": false
+        },
+        {
+          "nome": "Sete Chaminés",
+          "descricao_visual": "fileira de torres negras com 35 m, seis apagadas e uma a lançar fumo laranja",
+          "fatia_1": false
+        },
+        {
+          "nome": "Rio Preso",
+          "descricao_visual": "canal de lava com 12 m de largura congelado por comportas de bronze fundido",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Coroa da Bigorna",
+        "route": "galeria exterior em redor das forjas até ao pátio",
+        "opens_from": "interior",
+        "return_time_seconds": 46,
+        "descricao_visual": "passadiço de placas de obsidiana com 4 m, rebites de bronze e calhas de lava cobertas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Fornalha",
+        "height_gain_m": 32,
+        "outward_method": "elevador de cadinhos sobe pelo interior da chaminé activa",
+        "return_method": "elevador de cadinhos sobe pelo interior da chaminé activa",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "cesto de bronze fundido com 5 m, placas de obsidiana e correntes negras sem partes móveis simuladas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Cadinho de Regresso",
+        "connects": "cratera → pátio de escória, repetição em 57 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "elevador de cadinho com trinco cerâmico acessível só no anel superior das forjas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Forja Sem Ferreiro",
+        "entrance": "conduta por baixo do Martelo Imóvel",
+        "clue_count": 2,
+        "clues": [
+          "brasas formam pegadas que entram na parede",
+          "o bronze está quente só numa placa"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_fornalha_wp7",
+        "descricao_visual": "alçapão de bronze quadrado com 3 m, borda de obsidiana lascada e calor ondulante visível",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "crosta rubra",
+        "effect": "crosta marcada cede 1 s depois e deixa cair 4 m numa calha lateral, nunca no vazio",
+        "telegraph": "vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
+        "escape": "sair da placa ou aceitar o atalho de queda sobrevivível",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "obsidiana, bronze fundido, couro curtido; vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
+        "fatia_1": false
+      },
+      "connections": [
+        "fojo",
+        "fulgor",
+        "raizama",
+        "santuario_branco"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "monte negro de obsidiana com rios de lava, fumo a subir de chamines de pedra, forjas abandonadas ainda acesas",
+      "concept_art": "res://../art/concept/bioma-fornalha.png",
+      "fatia_1": false
+    },
+    "fulgor": {
+      "nome": "Fulgor",
+      "biome_id": "fulgor",
+      "order": 8,
+      "map_tiers": [
+        "planalto rachado a 0 m",
+        "torres de fulgurite a +17 m",
+        "olho da tempestade a +36 m"
+      ],
+      "traversal": {
+        "clean_minutes": 9,
+        "clean_route": "Marco de terra → campo rachado → bosque de vidro → espiral das torres → olho do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 45
+      },
+      "encounter_curve": {
+        "common": 16,
+        "elites": 4,
+        "named": 3,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Fulgor",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de Fulgor",
+          "role": "meio_da_travessia",
+          "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Fulgor",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Árvore de Vidro",
+          "descricao_visual": "fulgurite ramificada com 24 m, centenas de pontas violetas fundidas num único impacto",
+          "fatia_1": false
+        },
+        {
+          "nome": "Pedra Aterrada",
+          "descricao_visual": "monólito de granito com 15 m coberto por correntes que desaparecem no chão seco",
+          "fatia_1": false
+        },
+        {
+          "nome": "Olho Baixo",
+          "descricao_visual": "anel de nuvens violeta visível a 36 m de altura, centrado numa torre de vidro torcida",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Anel das Correntes",
+        "route": "trilho aterrado à volta das torres até ao marco inicial",
+        "opens_from": "interior",
+        "return_time_seconds": 41,
+        "descricao_visual": "caminho de pedra escura com 4 m, correntes enterradas e fragmentos de fulgurite fora da faixa",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Fulgor",
+        "height_gain_m": 36,
+        "outward_method": "espiral de rampas entre torres de vidro ligadas",
+        "return_method": "espiral de rampas entre torres de vidro ligadas",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "rampa helicoidal de pedra seca com 4 m, guarda de osso e fulgurite a brilhar do lado exterior",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Pára-Raios Tombado",
+        "connects": "olho → Marco de terra, repetição em 46 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "torre de fulgurite inclinada que vira ponte quando a corrente interior é libertada no topo",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Câmara do Nono Raio",
+        "entrance": "fenda sob a Pedra Aterrada",
+        "clue_count": 2,
+        "clues": [
+          "as correntes vibram sem vento",
+          "nove cicatrizes convergem na base"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_fulgor_wp7",
+        "descricao_visual": "abertura triangular no granito com 3 m, correntes negras, vidro violeta e areia fundida no limiar",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "queda de relâmpago",
+        "effect": "o impacto ocorre 1 s depois de um círculo de 3 m acender no chão",
+        "telegraph": "fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
+        "escape": "sair do círculo ou ficar sobre a Pedra Aterrada",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
+        "fatia_1": false
+      },
+      "connections": [
+        "cimeira",
+        "fojo",
+        "fornalha",
+        "raiz"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "planalto seco e rachado sob um tecto de nuvens violeta em rotacao lenta, relampagos a cravar-se em torres de vidro fulgurite",
+      "concept_art": "res://../art/concept/bioma-fulgor.png",
+      "fatia_1": false
+    },
+    "raizama": {
+      "nome": "Raizama",
+      "biome_id": "raizama",
+      "order": 9,
+      "map_tiers": [
+        "carcaça profunda a 0 m",
+        "pontes de raiz a +21 m",
+        "copas de cogumelo a +43 m"
+      ],
+      "traversal": {
+        "clean_minutes": 11,
+        "clean_route": "Costela aberta → lago de esporos → ponte de raiz → cogumelos-torre → crânio do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 55
+      },
+      "encounter_curve": {
+        "common": 15,
+        "elites": 4,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Raizama",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "quitina, madeira-cogumelo, seda de teia; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Raizama",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "quitina, madeira-cogumelo, seda de teia; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Costela-Mãe",
+          "descricao_visual": "arco de osso antigo com 38 m coberto por raízes e cogumelos ciano",
+          "fatia_1": false
+        },
+        {
+          "nome": "Lago de Luz",
+          "descricao_visual": "bacia circular com 45 m cheia de esporos luminosos, sem água visível",
+          "fatia_1": false
+        },
+        {
+          "nome": "Crânio-Catedral",
+          "descricao_visual": "crânio pétreo com 50 m, órbitas ocupadas por torres de cogumelo e teias",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Círculo das Costelas",
+        "route": "passagem exterior que liga o crânio à costela aberta",
+        "opens_from": "interior",
+        "return_time_seconds": 51,
+        "descricao_visual": "ponte de raízes entre arcos de osso, 4 m de largura, seda presa como guarda e esporos por baixo",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Raizama",
+        "height_gain_m": 43,
+        "outward_method": "elevador de seda entre a carcaça e as copas",
+        "return_method": "elevador de seda entre a carcaça e as copas",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "plataforma de quitina com 5 m presa por oito fios de seda, guiada dentro de um tronco oco",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Fio do Crânio",
+        "connects": "crânio → Costela-Mãe, repetição em 59 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "elevador de seda enrolado numa mandíbula gigante, comando de quitina apenas no topo",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Medula Oca",
+        "entrance": "fissura dentro da Costela-Mãe",
+        "clue_count": 2,
+        "clues": [
+          "esporos são sugados para a fenda",
+          "a seda forma setas viradas para dentro"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_raizama_wp7",
+        "descricao_visual": "fenda vertical de 3 m em osso antigo, borda coberta de quitina e luz ciano a respirar",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "nuvem de esporos",
+        "effect": "atravessar acumula veneno a 35 por segundo; fora da nuvem decai 20 por segundo",
+        "telegraph": "volume ciano opaco com partículas a correr para cima e barra visível",
+        "escape": "rebentar o saco à distância ou esperar a nuvem baixar",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "quitina, madeira-cogumelo, seda de teia; volume ciano opaco com partículas a correr para cima e barra visível",
+        "fatia_1": false
+      },
+      "connections": [
+        "cidade_afogada",
+        "fornalha",
+        "raiz"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "caverna colossal de raizes entrancadas e cogumelos-torre, escuro azul cortado por esporos ciano a flutuar",
+      "concept_art": "res://../art/concept/bioma-raizama.png",
+      "fatia_1": false
+    },
+    "cidade_afogada": {
+      "nome": "Cidade Afogada",
+      "biome_id": "cidade_afogada",
+      "order": 10,
+      "map_tiers": [
+        "praça inundada a 0 m",
+        "telhados e aquedutos a +13 m",
+        "campanários a +31 m"
+      ],
+      "traversal": {
+        "clean_minutes": 10,
+        "clean_route": "Cais de mármore → mercado raso → aqueduto → telhados → torre do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 50
+      },
+      "encounter_curve": {
+        "common": 18,
+        "elites": 5,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Cidade Afogada",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "marmore afogado, prata escurecida, vidro; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de Cidade Afogada",
+          "role": "meio_da_travessia",
+          "descricao_visual": "marmore afogado, prata escurecida, vidro; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Cidade Afogada",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "marmore afogado, prata escurecida, vidro; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Sino à Tona",
+          "descricao_visual": "campanário de mármore com 31 m, metade submerso, sino de prata escurecida acima da água",
+          "fatia_1": false
+        },
+        {
+          "nome": "Praça do Espelho",
+          "descricao_visual": "praça circular com 40 m sob água verde-clara, mosaico visível inteiro da cobertura",
+          "fatia_1": false
+        },
+        {
+          "nome": "Aqueduto Quebrado",
+          "descricao_visual": "arcada de mármore com 120 m, três vãos caídos e cascatas finas sobre os telhados",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Ronda dos Telhados",
+        "route": "passarela seca que regressa da torre ao cais",
+        "opens_from": "interior",
+        "return_time_seconds": 46,
+        "descricao_visual": "telhados de mármore ligados por pranchas de 4 m, corrimão de prata e vidro verde nas juntas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Cidade Afogada",
+        "height_gain_m": 31,
+        "outward_method": "contrapeso do sino move uma plataforma entre praça e campanário",
+        "return_method": "contrapeso do sino move uma plataforma entre praça e campanário",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "plataforma de mármore de 5 m suspensa por corrente de prata, água a cair das quatro bordas",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Ascensor do Sino",
+        "connects": "torre → cais, repetição em 51 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "plataforma do campanário com alavanca de prata no piso superior e contrapeso visível sob a água",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Arquivo Submerso",
+        "entrance": "porta seca sob o Aqueduto Quebrado",
+        "clue_count": 2,
+        "clues": [
+          "folhas de prata boiam contra a corrente",
+          "bolhas escapam por uma junta acima da água"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_cidade_afogada_wp7",
+        "descricao_visual": "porta de mármore azul com 4 m, moldura de prata escurecida e vidro verde intacto no centro",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "água profunda",
+        "effect": "a rota principal usa passadiços; zonas opcionais fundas desactivam ataque e esquiva enquanto se nada",
+        "telegraph": "mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
+        "escape": "ficar nos aquedutos; natação não é necessária para chegar ao guardião",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "marmore afogado, prata escurecida, vidro; mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
+        "fatia_1": false
+      },
+      "connections": [
+        "campas_cinzentas",
+        "costa_quebrada",
+        "raizama",
+        "santuario_branco"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "cidade de marmore mergulhada em agua verde-clara ate aos telhados, campanarios a tona, prata a luzir por baixo da superficie",
+      "concept_art": "res://../art/concept/bioma-cidade-afogada.png",
+      "fatia_1": false
+    },
+    "santuario_branco": {
+      "nome": "Santuario Branco",
+      "biome_id": "santuario_branco",
+      "order": 11,
+      "map_tiers": [
+        "pátio das velas a 0 m",
+        "claustro solar a +11 m",
+        "coro alto a +27 m"
+      ],
+      "traversal": {
+        "clean_minutes": 9,
+        "clean_route": "Pórtico baço → pátio → nave sem sombra → claustro → coro do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 45
+      },
+      "encounter_curve": {
+        "common": 17,
+        "elites": 4,
+        "named": 3,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de Santuario Branco",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "marmore branco, ouro baco, cera; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de Santuario Branco",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "marmore branco, ouro baco, cera; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Sol de Mármore",
+          "descricao_visual": "disco de mármore branco com 21 m suspenso por vigas douradas sobre a nave",
+          "fatia_1": false
+        },
+        {
+          "nome": "Mil Velas",
+          "descricao_visual": "escadaria com 70 m coberta por velas de cera benta, todas da mesma altura e ainda acesas",
+          "fatia_1": false
+        },
+        {
+          "nome": "Sombra Vertical",
+          "descricao_visual": "faixa negra com 27 m numa parede branca, recta apesar das colunas e da luz em redor",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Claustro do Avesso",
+        "route": "corredor exterior que volta do coro ao pórtico",
+        "opens_from": "interior",
+        "return_time_seconds": 41,
+        "descricao_visual": "claustro de mármore branco com 4 m, colunas douradas e sombras negras apontadas contra a luz",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de Santuario Branco",
+        "height_gain_m": 27,
+        "outward_method": "elevador de altar sobe pela nave atrás do Sol de Mármore",
+        "return_method": "elevador de altar sobe pela nave atrás do Sol de Mármore",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "plataforma branca de 5 m coberta por cera, guiada por correntes de ouro baço dentro da parede",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Altar Ascendente",
+        "connects": "coro → pórtico, repetição em 43 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "altar quadrado de mármore que desce quando a vela vermelha do coro é apagada pelo lado interior",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Sacristia Sem Olhos",
+        "entrance": "porta atrás da Sombra Vertical",
+        "clue_count": 2,
+        "clues": [
+          "a sombra continua por baixo da moldura",
+          "cera derretida corre para a porta em vez de sair"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_santuario_branco_wp7",
+        "descricao_visual": "porta estreita de mármore com 3 m, dez relevos sem olhos e uma linha de sangue seco na soleira",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "luz cegante",
+        "effect": "encarar um foco marcado acumula 25 por segundo após 0,8 s; a barra cheia cega durante 3 s",
+        "telegraph": "padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
+        "escape": "olhar para baixo, quebrar visão numa coluna ou entrar na sombra",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "marmore branco, ouro baco, cera; padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
+        "fatia_1": false
+      },
+      "connections": [
+        "cidade_afogada",
+        "cimeira",
+        "fornalha",
+        "raiz"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "templo de marmore branco de brilho excessivo, ouro baco, milhares de velas acesas, sombras cortadas a preto",
+      "concept_art": "res://../art/concept/bioma-santuario-branco.png",
+      "fatia_1": false
+    },
+    "raiz": {
+      "nome": "A Raiz",
+      "biome_id": "raiz",
+      "order": 12,
+      "map_tiers": [
+        "rio de bruma a 0 m",
+        "raízes petrificadas a +24 m",
+        "lábio do Portão a +52 m"
+      ],
+      "traversal": {
+        "clean_minutes": 12,
+        "clean_route": "Foz invertida → floresta de raízes → ponte negra → espiral da bruma → lábio do guardião",
+        "measurement": "corrida sem combate, sem atalhos e sem exploração lateral, do primeiro descanso à porta do guardião",
+        "target_after_shortcut_seconds": 60
+      },
+      "encounter_curve": {
+        "common": 20,
+        "elites": 5,
+        "named": 2,
+        "subbosses": 1,
+        "guardians": 1,
+        "rhythm": [
+          "comuns_faceis",
+          "comuns_mais_elite",
+          "nomeado",
+          "descida",
+          "grupo",
+          "subchefe",
+          "descanso",
+          "guardiao"
+        ]
+      },
+      "rest_points": [
+        {
+          "nome": "Descanso 1 de A Raiz",
+          "role": "entrada_e_arco_inicial",
+          "descricao_visual": "pedra negra, raiz petrificada, prata baca; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso 2 de A Raiz",
+          "role": "meio_da_travessia",
+          "descricao_visual": "pedra negra, raiz petrificada, prata baca; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        },
+        {
+          "nome": "Descanso antes do guardião de A Raiz",
+          "role": "antes_do_guardiao",
+          "descricao_visual": "pedra negra, raiz petrificada, prata baca; círculo baixo de pedra com 3 m, cinza clara ao centro e três assentos virados para o marco seguinte",
+          "fatia_1": false
+        }
+      ],
+      "landmarks": [
+        {
+          "nome": "Rio Ascendente",
+          "descricao_visual": "curso de bruma pálida com 20 m de largura que sobe em cascata para o tecto negro",
+          "fatia_1": false
+        },
+        {
+          "nome": "Raiz-Torre",
+          "descricao_visual": "raiz petrificada com 52 m, oca ao centro e cercada por plataformas de prata baça",
+          "fatia_1": false
+        },
+        {
+          "nome": "Lábio do Portão",
+          "descricao_visual": "arco de pedra negra com 30 m, selado por bruma violeta e raízes partidas para fora",
+          "fatia_1": false
+        }
+      ],
+      "horizontal_loop": {
+        "nome": "Anel da Foz",
+        "route": "ponte exterior que devolve o lábio ao rio ascendente",
+        "opens_from": "interior",
+        "return_time_seconds": 56,
+        "descricao_visual": "passagem de raiz petrificada com 5 m, placas de prata baça e bruma a correr para cima dos dois lados",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "vertical_loop": {
+        "nome": "Círculo vertical de A Raiz",
+        "height_gain_m": 52,
+        "outward_method": "espiral interior da Raiz-Torre com três patamares",
+        "return_method": "espiral interior da Raiz-Torre com três patamares",
+        "opens_from": "interior",
+        "safe_drop_limit_m": 4,
+        "lethal_drop_starts_m": 20,
+        "descricao_visual": "escada helicoidal talhada em raiz negra, 5 m de largura, prata baça nas bordas e poço de bruma ao centro",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "shortcut": {
+        "nome": "Queda Invertida",
+        "connects": "lábio → Foz invertida, repetição em 60 s",
+        "opens_from": "interior",
+        "interaction": "alavanca_ou_trinco_sem_chave",
+        "persistent": true,
+        "descricao_visual": "plataforma de raiz que desce contra o fluxo da bruma quando o selo de prata no topo é quebrado",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "dungeon": {
+        "nome": "Câmara da Primeira Fenda",
+        "entrance": "abertura por trás do Rio Ascendente",
+        "clue_count": 2,
+        "clues": [
+          "a bruma divide-se à volta de um rectângulo vazio",
+          "raízes quebradas apontam para dentro"
+        ],
+        "rooms_before_guardian": 4,
+        "guardian_slot": "guardiao_raiz_wp7",
+        "descricao_visual": "fenda rectangular de 5 m em pedra negra, moldura de prata baça e bruma pálida a contornar o vazio",
+        "image_source": "planeado_depois_da_fatia_1",
+        "fatia_1": false
+      },
+      "environmental_threat": {
+        "nome": "escuro absoluto",
+        "effect": "fora dos focos de bruma a visibilidade cai para 6 m; a lanterna ocupa a mão esquerda",
+        "telegraph": "silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
+        "escape": "usar a lanterna, caminhar junto ao rio ou trocar defesa por visão",
+        "requires_unresolved_movement": false,
+        "descricao_visual": "pedra negra, raiz petrificada, prata baca; silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
+        "fatia_1": false
+      },
+      "connections": [
+        "fulgor",
+        "raizama",
+        "santuario_branco"
+      ],
+      "density_gate": "não entra na build sem rota medida, curva completa, subchefe, dungeon, dois círculos e atalho provado",
+      "descricao_visual": "abismo de pedra negra onde rios de bruma palida correm para cima, escuro quase total, raizes petrificadas do tamanho de torres",
+      "concept_art": "res://../art/concept/bioma-raiz.png",
+      "fatia_1": false
+    }
+  },
+  "history_doors": {
+    "porta_brumal_01": {
+      "nome": "Porta dos Sete Ferrolhos",
+      "biome_id": "brumal",
+      "form": "porta_selada",
+      "what_exists_now": "uma laje sob raízes tem sete linguetas de ferro sem fechadura",
+      "reason_is_legible": "sete riscos no arco e uma chave sem dentes gravada numa pedra próxima",
+      "future_slot": "dungeon sob Brumal",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "laje de granito com 4 m apertada por raízes negras, sete ferrolhos de ferro rude e musgo intacto",
+      "fatia_1": false
+    },
+    "porta_brumal_02": {
+      "nome": "Torre dos Corvos",
+      "biome_id": "brumal",
+      "form": "torre_desabada",
+      "what_exists_now": "a metade superior vê-se para lá da borda de bruma, sem caminho até ela",
+      "reason_is_legible": "corvos voam entre a Árvore Morta e a torre, sempre com palha no bico",
+      "future_slot": "zona vertical de vigia",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "torre de granito partida com 18 m para lá de bruma cinzenta, varas de ferro e ninhos negros no topo",
+      "fatia_1": false
+    },
+    "porta_brumal_03": {
+      "nome": "Nhal, Rei sem Bruma",
+      "biome_id": "brumal",
+      "form": "nome_sem_dono",
+      "what_exists_now": "o nome está riscado em três pedras, mas nenhuma figura o representa",
+      "reason_is_legible": "as três inscrições repetem uma coroa antes de a bruma subir",
+      "future_slot": "chefe futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "três estelas de granito cobertas de musgo, cada uma com o mesmo nome e uma coroa vazia talhada",
+      "fatia_1": false
+    },
+    "porta_selva_funda_01": {
+      "nome": "Casulo da Matriarca",
+      "biome_id": "selva_funda",
+      "form": "porta_selada",
+      "what_exists_now": "um casulo de pedra e seda não reage a fogo nem golpe",
+      "reason_is_legible": "Tecelões deixam oferendas frescas diante da costura central",
+      "future_slot": "dungeon de ninhada",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "casulo de granito verde com 7 m envolto em seda crua, costura vertical de quitina e flores magenta",
+      "fatia_1": false
+    },
+    "porta_selva_funda_02": {
+      "nome": "A Copa Sem Tronco",
+      "biome_id": "selva_funda",
+      "form": "torre_desabada",
+      "what_exists_now": "uma aldeia suspensa aparece acima das copas sem qualquer árvore por baixo",
+      "reason_is_legible": "pontes cortadas apontam para ela e uma roldana continua a girar",
+      "future_slot": "zona de copa superior",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "grupo de cabanas de vime a 55 m, suspensas por fios de seda no vazio verde entre feixes de luz",
+      "fatia_1": false
+    },
+    "porta_selva_funda_03": {
+      "nome": "Iria das Oito Mãos",
+      "biome_id": "selva_funda",
+      "form": "nome_sem_dono",
+      "what_exists_now": "o nome surge em nós de seda que nenhum Tecelão actual usa",
+      "reason_is_legible": "oito padrões idênticos aparecem nas guardas das pontes mais antigas",
+      "future_slot": "chefe tecelão futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "oito faixas de seda branca trançadas numa árvore negra, cada uma com o mesmo nó espiral",
+      "fatia_1": false
+    },
+    "porta_campas_cinzentas_01": {
+      "nome": "Cripta do Último Estandarte",
+      "biome_id": "campas_cinzentas",
+      "form": "porta_selada",
+      "what_exists_now": "uma porta de osso não abre e os mortos ajoelham-se virados para ela",
+      "reason_is_legible": "o estandarte cinzento preso na moldura nunca apodrece",
+      "future_slot": "dungeon militar",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "porta de osso com 5 m entre lápides afundadas, pano cinzento seco e fechos de ferro ferrugento",
+      "fatia_1": false
+    },
+    "porta_campas_cinzentas_02": {
+      "nome": "Campanário Caído",
+      "biome_id": "campas_cinzentas",
+      "form": "torre_desabada",
+      "what_exists_now": "um sino toca debaixo do lodo onde só a ponta da torre é visível",
+      "reason_is_legible": "ondas circulares aparecem sem vento a cada toque",
+      "future_slot": "torre subterrânea",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "agulha de campanário em pedra cinzenta a sair 3 m do lodo, sino verde visível numa fenda",
+      "fatia_1": false
+    },
+    "porta_campas_cinzentas_03": {
+      "nome": "General Sem Estandarte",
+      "biome_id": "campas_cinzentas",
+      "form": "nome_sem_dono",
+      "what_exists_now": "ordens gravadas acabam sempre antes do nome do comandante",
+      "reason_is_legible": "um elmo sem brasão ocupa sozinho uma mesa de pedra seca",
+      "future_slot": "chefe morto-vivo futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "mesa de pedra sobre água cinzenta com um elmo ferrugento sem brasão e doze lanças apontadas para ele",
+      "fatia_1": false
+    },
+    "porta_fojo_01": {
+      "nome": "Face de Bronze",
+      "biome_id": "fojo",
+      "form": "porta_selada",
+      "what_exists_now": "uma cara metálica fecha o túnel e sopra poeira pelas narinas",
+      "reason_is_legible": "marcas kobold avisam para não responder quando ela pergunta",
+      "future_slot": "labirinto falante",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "rosto de bronze com 6 m encaixado no granito, olhos vazios, dentes quadrados e pó ocre nas narinas",
+      "fatia_1": false
+    },
+    "porta_fojo_02": {
+      "nome": "Poço da Décima Mina",
+      "biome_id": "fojo",
+      "form": "passagem_tapada",
+      "what_exists_now": "carris terminam num desabamento numerado dez, embora só existam nove galerias",
+      "reason_is_legible": "vagonetas vazias chegam viradas para o desabamento após cada descanso",
+      "future_slot": "mina adicional",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "túnel de granito tapado por blocos, carris de ferro bruto entram nos escombros e o número X está pintado a ferrugem",
+      "fatia_1": false
+    },
+    "porta_fojo_03": {
+      "nome": "O Escultor do Touro",
+      "biome_id": "fojo",
+      "form": "nome_sem_dono",
+      "what_exists_now": "a assinatura repete-se em estátuas anteriores à chegada dos kobolds",
+      "reason_is_legible": "ferramentas grandes demais permanecem alinhadas junto à Cabeça do Labirinto",
+      "future_slot": "chefe construtor futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "cinzéis de ferro com 2 m encostados a uma cabeça de touro inacabada em granito ocre",
+      "fatia_1": false
+    },
+    "porta_costa_quebrada_01": {
+      "nome": "Farol Cego",
+      "biome_id": "costa_quebrada",
+      "form": "porta_selada",
+      "what_exists_now": "a porta verde do farol não tem abertura exterior",
+      "reason_is_legible": "uma lente intacta projecta à noite a imagem de uma chave partida",
+      "future_slot": "dungeon do farol",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "porta arqueada de bronze com azinhavre, 4 m, no basalto molhado, sem puxador e com lente verde por cima",
+      "fatia_1": false
+    },
+    "porta_costa_quebrada_02": {
+      "nome": "Quarto Mastro",
+      "biome_id": "costa_quebrada",
+      "form": "torre_desabada",
+      "what_exists_now": "três mastros estão nos destroços; um quarto ergue-se numa agulha sem acesso",
+      "reason_is_legible": "cordas tensas ligam-no aos navios sempre que sopra vento de oeste",
+      "future_slot": "ilha de naufrágio",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "mastro salgado com 26 m sobre agulha de basalto, velas rasgadas e cordas esticadas sobre espuma branca",
+      "fatia_1": false
+    },
+    "porta_costa_quebrada_03": {
+      "nome": "Almirante sem Corpo",
+      "biome_id": "costa_quebrada",
+      "form": "nome_sem_dono",
+      "what_exists_now": "o título aparece em sinos de três navios, mas nenhum registo tem nome",
+      "reason_is_legible": "cada sino traz a mesma mão de bronze de seis dedos",
+      "future_slot": "chefe naval futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "três sinos de bronze verde alinhados na praia, cada um gravado com uma mão de seis dedos",
+      "fatia_1": false
+    },
+    "porta_cimeira_01": {
+      "nome": "Observatório Interior",
+      "biome_id": "cimeira",
+      "form": "porta_selada",
+      "what_exists_now": "o telescópio aponta para uma cúpula fechada dentro da montanha",
+      "reason_is_legible": "mapas riscados mostram uma segunda abóbada por baixo da visível",
+      "future_slot": "dungeon astronómica",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "porta circular de aço frio com 5 m sob gelo azul, constelações perfuradas e neve sem pegadas",
+      "fatia_1": false
+    },
+    "porta_cimeira_02": {
+      "nome": "Torre Além das Nuvens",
+      "biome_id": "cimeira",
+      "form": "torre_desabada",
+      "what_exists_now": "uma agulha aparece só quando as nuvens abrem, sem ponte nem trilho",
+      "reason_is_legible": "correntes cortadas na Agulha Azul têm a mesma espessura das que a sustentam",
+      "future_slot": "torre de vigia futura",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "agulha de pedra branca acima das nuvens, 40 m, varanda de aço azul e corrente cortada a pender no vazio",
+      "fatia_1": false
+    },
+    "porta_cimeira_03": {
+      "nome": "A Vigia que Não Desceu",
+      "biome_id": "cimeira",
+      "form": "nome_sem_dono",
+      "what_exists_now": "um lugar à mesa recebe comida nova apesar de estar vazio",
+      "reason_is_legible": "pegadas começam na cadeira e terminam no bordo voltado para a Raiz",
+      "future_slot": "chefe vigia futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "mesa de granito branco com uma tigela fumegante, cadeira vazia e pegadas na neve até ao precipício",
+      "fatia_1": false
+    },
+    "porta_fornalha_01": {
+      "nome": "Oitava Chaminé",
+      "biome_id": "fornalha",
+      "form": "passagem_tapada",
+      "what_exists_now": "uma base octogonal tapada por escória completa a fila das Sete Chaminés",
+      "reason_is_legible": "brasas respiram sob as pedras ao ritmo da chaminé activa",
+      "future_slot": "forja profunda",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "base de chaminé em obsidiana com 9 m, coberta por escória negra rachada e luz laranja nas juntas",
+      "fatia_1": false
+    },
+    "porta_fornalha_02": {
+      "nome": "Altar do Primeiro Carvão",
+      "biome_id": "fornalha",
+      "form": "altar_apagado",
+      "what_exists_now": "um cadinho frio recebe oferendas mas nunca acende",
+      "reason_is_legible": "as oferendas são ferramentas novas colocadas por mãos ausentes",
+      "future_slot": "pacto ou ferreiro futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "cadinho de bronze com 2 m sobre altar de obsidiana, carvão branco intacto e tenazes alinhadas",
+      "fatia_1": false
+    },
+    "porta_fulgor_01": {
+      "nome": "Galeria de Vidro Negro",
+      "biome_id": "fulgor",
+      "form": "passagem_tapada",
+      "what_exists_now": "um túnel vitrificado termina numa parede transparente com movimento atrás",
+      "reason_is_legible": "relâmpagos percorrem a parede mas desviam-se de uma junta em forma de porta",
+      "future_slot": "dungeon da tempestade",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "parede de vidro negro com 6 m, relâmpagos violetas ramificados e silhuetas distantes por trás",
+      "fatia_1": false
+    },
+    "porta_fulgor_02": {
+      "nome": "Pastor do Nono Raio",
+      "biome_id": "fulgor",
+      "form": "nome_sem_dono",
+      "what_exists_now": "oito torres têm dono gravado; a nona traz apenas este título",
+      "reason_is_legible": "pegadas de casco rodeiam a torre e nunca saem do círculo",
+      "future_slot": "chefe minotauro futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "nona torre de fulgurite torcida, círculo de pegadas de casco na poeira e título gravado em osso polido",
+      "fatia_1": false
+    },
+    "porta_raizama_01": {
+      "nome": "Túnel da Seda Negra",
+      "biome_id": "raizama",
+      "form": "porta_selada",
+      "what_exists_now": "uma membrana escura pulsa numa raiz onde os esporos não pousam",
+      "reason_is_legible": "Tecelões cortam todos os fios que se aproximam da membrana",
+      "future_slot": "colónia profunda",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "membrana oval negra com 5 m entre raízes, aro de quitina, fios de seda cortados e nenhum esporo ciano",
+      "fatia_1": false
+    },
+    "porta_raizama_02": {
+      "nome": "Altar da Carcaça",
+      "biome_id": "raizama",
+      "form": "altar_apagado",
+      "what_exists_now": "um altar de osso tem espaço para um órgão que já não está",
+      "reason_is_legible": "raízes crescem para o vazio central e param a um palmo dele",
+      "future_slot": "pacto da criatura morta",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "altar de costelas brancas com cavidade de 2 m, raízes húmidas suspensas e cogumelos apagados",
+      "fatia_1": false
+    },
+    "porta_cidade_afogada_01": {
+      "nome": "Sino Debaixo da Praça",
+      "biome_id": "cidade_afogada",
+      "form": "torre_desabada",
+      "what_exists_now": "um campanário inteiro é visível sob o mosaico rachado da praça",
+      "reason_is_legible": "o sino toca e levanta bolhas sem mover a superfície",
+      "future_slot": "bairro submerso",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "campanário de mármore invertido sob água verde, sino de prata e mosaico circular rachado por cima",
+      "fatia_1": false
+    },
+    "porta_cidade_afogada_02": {
+      "nome": "Sineira sem Voz",
+      "biome_id": "cidade_afogada",
+      "form": "nome_sem_dono",
+      "what_exists_now": "o nome está em partituras impermeáveis, mas falta sempre a linha da voz",
+      "reason_is_legible": "os sinos respondem quando as páginas são aproximadas da água",
+      "future_slot": "chefe ou NPC futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "estante de prata à tona com partituras de vidro, pauta vazia e campanários reflectidos na água",
+      "fatia_1": false
+    },
+    "porta_santuario_branco_01": {
+      "nome": "Porta da Cera Fria",
+      "biome_id": "santuario_branco",
+      "form": "porta_selada",
+      "what_exists_now": "uma porta inteiramente coberta de cera não derrete junto das velas",
+      "reason_is_legible": "mãos impressas na cera apontam todas para fora",
+      "future_slot": "cripta penitente",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "porta de mármore com 5 m sob camada grossa de cera branca, dezenas de mãos fundas e ouro baço na moldura",
+      "fatia_1": false
+    },
+    "porta_santuario_branco_02": {
+      "nome": "Altar da Sombra Ausente",
+      "biome_id": "santuario_branco",
+      "form": "altar_apagado",
+      "what_exists_now": "mil velas iluminam o altar mas ele não projecta sombra",
+      "reason_is_legible": "um recipiente vazio tem a forma exacta de uma chama negra",
+      "future_slot": "pacto de sombra futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "altar branco com 3 m cercado por velas, recipiente de ouro vazio e chão sem qualquer sombra",
+      "fatia_1": false
+    },
+    "porta_raiz_01": {
+      "nome": "Passagem da Raiz Cortada",
+      "biome_id": "raiz",
+      "form": "passagem_tapada",
+      "what_exists_now": "uma raiz-torre foi serrada e empilhada para fechar um arco antigo",
+      "reason_is_legible": "serradura negra continua fresca e a bruma evita os blocos",
+      "future_slot": "ligação a bioma futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "arco de pedra negra com 8 m tapado por secções de raiz petrificada, cortes claros e prata baça nas fendas",
+      "fatia_1": false
+    },
+    "porta_raiz_02": {
+      "nome": "Primeiro Sem-Rosto",
+      "biome_id": "raiz",
+      "form": "nome_sem_dono",
+      "what_exists_now": "o nome está escrito onde devia existir um rosto numa estátua lisa",
+      "reason_is_legible": "doze máscaras de outras raças olham para a estátua a partir do chão",
+      "future_slot": "chefe primordial futuro",
+      "witness": "sinal_de_cenario_persistente",
+      "state": "promessa_nao_construida",
+      "descricao_visual": "estátua de pedra negra com 10 m e face lisa, cercada por doze máscaras de osso e rios de bruma ascendente",
+      "fatia_1": false
+    }
+  }
+}

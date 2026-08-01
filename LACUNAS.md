@@ -22,7 +22,7 @@
 | ✅ | ~~O espelho é mais fácil do que o parry~~ **RESOLVIDO 01-08** — janela de 0,25 s, recuperação se falhar, escala pelo instrumento, e recompensa maior quando acerta | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §4 |
 | ✅ | ~~O intervalo de 0,20 s entre atacantes não chega~~ **CORRIGIDO 01-08** — conta-se a partir de **quando o jogador pode agir**, não do relógio. E o tecto de 2 agressores passa a garantir **rota de fuga** em vez de um número | [`38`](spec/38-ataques-e-honestidade.md) §3 |
 | ✅ | ~~⚠️ **Melhoria de armas (+10%/nível) era a Lei 2 quebrada**~~ **RESOLVIDO 01-08** — base + seis níveis abrem postura/moveset, arte, troca de escala ou conversão elemental; zero aumento de dano base | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §3 |
-| ✅ | ~~61 chefes = um encontro a cada 30–40 s~~ **DECIDIDO 01-08 pelo Mateus** — 13 verdadeiros + 12 subchefes + ~36 nomeados, travessia de 8–12 min, e **24–36 portas de história abertas** para crescer no futuro | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) |
+| ✅ | ~~61 chefes = um encontro a cada 30–40 s~~ **RESOLVIDO 01-08** — 13 verdadeiros + 12 subchefes + ~36 nomeados, travessia de 8–12 min, e **30 portas de história catalogadas** para crescer no futuro | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) · [`69`](spec/69-catalogo-do-mundo.md) |
 | ⏳ | ⭐ **Ordem de corte com menor perda**, se for preciso cortar: 1.ª pessoa → 48 chefes reclassificados → 5 slots de armadura → 6 slots de anel → armas acima de 24 → feitiços acima de 24. **Não cortar:** co-op, esquiva/parry/stamina, as 8 famílias, a identidade dos 12 biomas | auditoria §4 |
 
 ---
@@ -101,7 +101,7 @@
 | 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
 | ✅ | ~~**Sistema de saves sem uma linha**~~ **RESOLVIDO 01-08** — formato campo a campo, morte sem save-scumming, escrita atómica, recuperação e migração, com código e testes | [`59`](spec/59-saves.md) · `game/src/autoload/save_system.gd` |
 | 🟠 | **Um save v1 criado antes do catálogo pode conservar `sabedoria` e não ter `inteligencia`/`fe`.** Fazer a conversão determinística na migração v1→v2 já prevista pelo criador; não gastar uma versão intermédia só para o greybox | encontrado ao alinhar [`11`](spec/11-formulas.md) com o [`66`](spec/66-catalogo-de-magia.md) |
-| 🟠 | ⚠️ **A leitura do mapa tem de ser decidida ANTES de o WP8 traçar as zonas** — senão há zonas impossíveis de mapear | [`57`](spec/57-mapa-e-minimapa.md) §5 |
+| ✅ | ~~⚠️ **A leitura do mapa tinha de ser decidida antes do traçado**~~ **RESOLVIDO NO CONTRATO 01-08** — vista inclinada a ~40°, só terreno percorrido, andar actual realçado; a escolha zona/mundo continua dos donos sem bloquear a geometria | [`57`](spec/57-mapa-e-minimapa.md) §5 · [`69`](spec/69-catalogo-do-mundo.md) §1 |
 | 🟠 | ⚠️ **Os packs CC0 estão em `art/`, mas quase nada está integrado em `game/`.** Biblioteca não é runtime: cada modelo/som ainda precisa de importação, orçamento e prova no motor | [`22`](spec/22-assets.md), verificado no [`64`](spec/64-criacao-de-personagem.md) |
 | 🟠 | ⚠️ **Ligar os três produtores ao `SaveSystem`** — o greybox ainda não tem almas/inventário/mapa persistentes; quando cada sistema entrar, tem de emitir os eventos do [`59`](spec/59-saves.md) §3. Hoje `main.gd` ainda diz «Nada se perdeu» | encontrado ao implementar o [`59`](spec/59-saves.md) |
 | 🔴 | ⭐ **A infra-estrutura de afinação escrita no `23`/`28` não existe** — sem CSV, `tp arena_vorgar`, `latencia`, overlays ou fixtures A/B; só a semente fixa do greybox existe. Construir `TuningRecorder` antes de chamar qualquer valor “confirmado” | encontrado ao verificar o código para o [`63`](spec/63-como-se-afinam-os-numeros.md) |
@@ -117,7 +117,10 @@
 | | Lacuna | Origem |
 |---|---|---|
 | 🟠 | **Nadar, escalar, saltar: existem?** Nunca foram mencionados | [`36`](spec/36-fisica.md) |
-| 🟠 | ⚠️ **O traçado das zonas e o orçamento de memória desenham-se juntos** — um atalho entre zonas distantes obriga a ter as duas prontas | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 |
+| ✅ | ~~⚠️ **Traçado e orçamento de memória tinham de nascer juntos**~~ **RESOLVIDO NO CONTRATO 01-08** — 21 gargantas carregam exactamente os dois vizinhos; atalhos fecham dentro da própria zona; conjunto residente = actual + vizinhas, tecto 2,5 GB | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 · [`69`](spec/69-catalogo-do-mundo.md) §2 |
+| 🔴 | **O catálogo do mundo não tem runtime.** `world.json` carrega e é validado, mas não existem topologia, streaming por garganta, mapa/minimapa, elevadores, atalhos persistentes nem as 11 zonas fora de Brumal | encontrado ao fechar o [`69`](spec/69-catalogo-do-mundo.md) |
+| 🟠 | **Brumal cresceu do greybox de 2–3/4–6 min para uma travessia catalogada de 8 min.** O nível actual tem de ganhar círculos horizontal/vertical, atalho por dentro, segundo descanso e densidade sem virar corredor; só fica confirmado depois de cinco corridas medidas em ambas as perspectivas | [`10`](spec/10-fatia-1.md) · [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §3 · [`69`](spec/69-catalogo-do-mundo.md) §3.1 |
+| 🟠 | **As 30 portas são malha estática e escrita, não conteúdo futuro construído.** Quando uma for promovida, precisa de novo `Fatia 1?`, orçamento, destino e revisão da promessa; hoje nenhuma entra na primeira fatia | [`69`](spec/69-catalogo-do-mundo.md) §4 |
 
 ---
 
@@ -142,6 +145,8 @@ Estão no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). As que mais
 | **32** | ⚠️ Matar um chefe no mundo do outro muda o teu próprio mundo? | proposta: vitória/recompensa viaja; mundo e atalhos não |
 | **28** | ⚠️ Se a magia faz tudo, como é que o mago não é a classe correcta? | cinco travões propostos |
 | **24** | Chefe a dois: +40% de vida ou zero? | proposta: +40%, e desce quando um morre |
+| **37** | O Mateus confirma o Assassino do catálogo? | proposta completa no `68`, sem fingir aprovação |
+| **38** | Mapa por zona ou do mundo inteiro; mostra nomes não visitados? | proposta: por zona, nomes só depois de vistos |
 
 E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precisam de uma gravação — **o nome do jogo incluído**.
 

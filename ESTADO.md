@@ -1,14 +1,14 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, catálogo WP5 completo.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, catálogos WP4/WP5/WP6/WP8 completos.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
-> **Porque existe:** a spec tem 70 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
+> **Porque existe:** a spec tem 71 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
 ---
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **7398 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8231 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,9 +44,9 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **70** em `spec/` | — | — |
-| Código e dados | 16 ficheiros `.gd` · 12 catálogos JSON | — | — |
-| Testes | **7398, todos a passar** | — | — |
+| Documentos de spec | **71** em `spec/` | — | — |
+| Código e dados | 17 ficheiros `.gd` · 13 catálogos JSON | — | — |
+| Testes | **8231, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
 | **Armaduras** | **68 peças** · 9 slots · 3 cargas · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
@@ -54,7 +54,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 | **Feitiços** | **53 fichas · 3 executáveis/Fatia 1** ([`66`](spec/66-catalogo-de-magia.md)) | catálogo largo | 50 renderers/comportamentos e roda |
 | **Inimigos** | **33 tipos comuns · 100 ataques comuns · Vorgar migrado** ([`67`](spec/67-catalogo-do-bestiario.md)) | 12 raças + 61 chefes | modelos/animações dos 31 fora da Fatia 1 · chefes WP7 |
 | Habilidades de classe | 6 | 6 | ✅ |
-| **Biomas** | **12 fichas** ([`49`](spec/49-biomas.md) + `game/data/biomes.json`) | 12 | ✅ volta 1 |
+| **Mundo / biomas** | **12 fichas · 21 ligações · 24 círculos · 12 atalhos · 30 portas** ([`69`](spec/69-catalogo-do-mundo.md) + `game/data/world.json`) | 12 | só Brumal é Fatia 1; mapa/streaming e 11 zonas não estão no runtime |
 | **Raças** | **12 fichas + mímico** ([`50`](spec/50-racas.md) + `game/data/races.json`) | 10–15 | ✅ volta 2 |
 
 ⭐ **E a instrução que daí sai:** o motor é data-driven — o `game_data.gd` recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em `spec/` **e** em `game/data/*.json`, no mesmo PR.
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 7398 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8231 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -129,6 +129,14 @@ A melhoria numérica foi revogada: base + seis níveis abrem postura/moveset, ar
 
 Os **11 ícones de armadura da Fatia 1** foram gerados, curados para alfa real e registados no manifesto; os cinco ícones de arma são reutilizados. Catálogo não é runtime: sete golpes, estados, offhand, equipar, votos e dedos adicionais continuam explicitamente em M2/WP11.
 
+## 1l. ✅ O WP8 deixou de ser seis caixas numa linha
+
+O [`69`](spec/69-catalogo-do-mundo.md) fixa a leitura **antes** da topologia: vista inclinada a ~40°, apenas terreno percorrido, andar actual realçado e restantes esbatidos. Não decide a pergunta dos donos “mapa por zona ou do mundo inteiro”. Depois fecha **12 zonas de 8–12 min**, uma rede compacta com **21 ligações e diâmetro de três travessias**, 12 círculos horizontais, 12 verticais e 12 atalhos que se abrem pelo interior.
+
+Cada zona tem curva de 12–20 comuns, 3–5 elites, 2–3 nomeados, subchefe, guardião, 2–3 descansos, dungeon com duas pistas, ameaça com saída e geometria que não depende de nadar/escalar/saltar. As **30 portas de história** cumprem o alvo 24–36: 2–3 por bioma, cada uma com razão visível para não parecer bug.
+
+Os 12 conceitos de bioma já estavam arquivados; Brumal reutiliza também `brumal-caminho` e `toca-entrada`, portanto o bloco não inventou produção visual nova da Fatia 1. Catálogo não é nível: hoje só há o greybox curto de Brumal; topologia, streaming, mapa, atalhos e as outras onze zonas continuam por implementar e medir.
+
 ## 2. Decisões que mudaram documentos de execução antigos
 
 **~35 decisões, das quais estas são as que mais mudam trabalho já escrito.** A lista completa e por ordem está no [`DECISOES.md`](DECISOES.md).
@@ -146,7 +154,7 @@ Os **11 ícones de armadura da Fatia 1** foram gerados, curados para alfa real e
 | ⭐ **A magia é a área mais vasta do jogo** | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §6, [`42`](spec/42-estudo-magia.md) | WP3, WP4 |
 | ⭐ **Armas por família, não por classe** | [`35`](spec/35-estudo-referencia.md) §1, [`41`](spec/41-estudo-armas-e-golpes.md) §2 | WP5 |
 | ⭐ **O contrato de honestidade** — 5 cláusulas, e o teste do rolamento | [`38`](spec/38-ataques-e-honestidade.md) | WP6, WP7, WP15B |
-| ⭐ **Toda a zona fecha um círculo · descanso à vista do chefe** | [`39`](spec/39-estudo-profundo.md) §8 | WP8 |
+| ⭐ **Toda a zona fecha dois círculos e um atalho por dentro · descanso antes do guardião, não do subchefe** | [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §3, [`69`](spec/69-catalogo-do-mundo.md) | WP8 |
 | ⭐ **Carregamento por área · a porta de nevoeiro é a barreira** | [`43`](spec/43-estudo-espolio-inventario-mundo.md) §6 | WP14, WP8 |
 | ⭐ **Mochila sem limite — só o equipado pesa** | [`40`](spec/40-decisoes-espolio-magia-inventario.md) §9 | WP11, WP5 |
 | ⭐ **Controlos configuráveis no jogo** | [`45`](spec/45-controlos-configuraveis.md) | WP11 |
@@ -171,7 +179,7 @@ Os **11 ícones de armadura da Fatia 1** foram gerados, curados para alfa real e
         │           O MOTOR DE PRODUÇÃO ESTÁ COMPLETO — cada descrição
         │           é agora uma intersecção de duas fichas que existem
         ▼
-2. Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
+2. ✅ Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
         │           cada item = intersecção de uma ficha de bioma
         │           com uma de raça — a descrição sai quase sozinha
         │
@@ -185,7 +193,8 @@ Os **11 ícones de armadura da Fatia 1** foram gerados, curados para alfa real e
         │                   contra-ataque · baralho · soft caps · piso de 30% ·
         │                   carregamento por área)
         ▼
-4. O MUNDO  (WP8: círculos, atalhos, 12 biomas, descanso à porta do chefe)
+4. ✅ O CATÁLOGO DO MUNDO  (WP8: leitura, 12 biomas, círculos, atalhos e 30 portas)
+        │                   faltam cenas, streaming, mapa e prova jogada
         ▼
 5. O ALINHAMENTO dos documentos antigos contra o DECISOES.md
 ```
@@ -258,7 +267,7 @@ E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3)
 
 ## 6. O risco, dito uma vez
 
-Mundo vasto + ~61 chefes + 10+ biomas + 120 armas + 68 armaduras + 70 anéis + catálogo de magia largo, **feito por duas pessoas e dois agentes**.
+Mundo vasto + ~61 encontros maiores + 12 biomas + 120 armas + 68 armaduras + 70 anéis + catálogo de magia largo, **feito por duas pessoas e dois agentes**.
 
 **Os donos sabem e decidiram avançar** — e a decisão é deles. Fica registado que a alavanca que dá vastidão sem custar produção são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8), e que a coluna `Fatia 1?` é o que impede o catálogo de virar um plano de dez anos.
 
@@ -268,10 +277,10 @@ Mundo vasto + ~61 chefes + 10+ biomas + 120 armas + 68 armaduras + 70 anéis + c
 
 | Quem | O quê |
 |---|---|
-| **Codex** | **tarefa 3.4 — mundo:** leitura do mapa antes do traçado, 12 biomas, travessias 8–12 min, círculos/atalhos, verticalidade e 24–36 portas de história |
-| **Fable** | não duplicar os catálogos 66/67/68; usar as localizações de anel do 68 ao desenhar o mundo |
+| **Codex** | tarefa 3 concluída — catálogos 66/67/68/69 entregues; aguarda a próxima ordem |
+| **Fable** | não duplicar os catálogos 66/67/68/69; o traçado canónico está no `world.json` |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
-| **Donos** | as perguntas 24, 28, 32 e **37 (Assassino)** do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
+| **Donos** | as perguntas 24, 28, 32, **37 (Assassino)** e **38 (escopo do mapa)** do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
 | **Claude** | rever o que chega; os 11 ícones de armadura já estão no manifesto |
 
 ### As três voltas de 31-07, e onde estão

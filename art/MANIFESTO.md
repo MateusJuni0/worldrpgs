@@ -21,6 +21,8 @@ Todos os assets visuais da fatia 1, cada um com o seu **ID** (é assim que a spe
 
 Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](../spec/49-biomas.md). **Brumal já tinha** ([`con_brumal_vista`](concept/brumal-vista.png)).
 
+✅ **Auditoria WP8 (01-08):** o [`69`](../spec/69-catalogo-do-mundo.md) reutiliza estes 12 conceitos. Os elementos da Fatia 1 apontam ainda para `brumal-caminho` e `toca-entrada`; por isso o novo traçado não abre nenhuma imagem prioritária em falta.
+
 | ID | Asset | Caminho | Dim. | Prompt | Estado |
 |---|---|---|---|---|---|
 | `con_bioma_selva_funda` | Selva Funda — selva vertical de copas fechadas, passadicos de vime goblin … | `art/concept/bioma-selva-funda.png` | 1536×1024 | volta 1 | ✅ |

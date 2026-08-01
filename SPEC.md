@@ -52,7 +52,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; catálogo completo no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 15 | [Bestiário — primeira camada](spec/15-inimigos.md) | IA e primeiros encontros (WP6) | 🔵 catálogo substituído pelo [`67`](spec/67-catalogo-do-bestiario.md); a máquina comum e a Fatia 1 continuam herdadas |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
-| 17 | [Mundo e mapa](spec/17-mundo.md) | Rede de zonas, dungeons, traçado (WP8) | ⚠️ **6 zonas contra 10+ biomas aprovados** |
+| 17 | [Mundo e mapa](spec/17-mundo.md) | Primeira proposta de rede, dungeons e traçado (WP8) | 🔵 substituído pelo catálogo completo do [`69`](spec/69-catalogo-do-mundo.md) |
 | 18 | [Progressão e loot](spec/18-progressao.md) | Curva, loot, economia (WP9) | ⚠️ **curva linear, devia ser cúbica** · "XP" devia ser "almas" |
 | 19 | [Multiplayer e rede](spec/19-rede.md) | Autoridade, transporte, quedas (WP10) | 🟠 proposta `[FABLE]` — transporte aguarda os dois |
 | 20 | [Interface](spec/20-interface.md) | HUD, mochila, menus (WP11) | ⚠️ **o mapa de teclas tem de fechar de uma vez** — [`45`](spec/45-controlos-configuraveis.md) |
@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–68)
+### Decisões e estudos (32–69)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 69 | [**Catálogo do mundo: doze círculos que se aprendem**](spec/69-catalogo-do-mundo.md) | leitura antes do traçado · 12 zonas de 8–12 min · 21 ligações · círculos horizontais/verticais · atalhos por dentro · 30 portas de história | 🟢 WP8 fechado 01-08; mapa, streaming e 11 zonas continuam por construir |
 | 68 | [**Catálogo de armas, armaduras, estados e anéis**](spec/68-catalogo-de-armas-armaduras-e-aneis.md) | 120 armas · 68 armaduras · 70 anéis · 8×11 golpes · melhoria sem força · estados · Assassino | 🟢 WP5 fechado 01-08; 5 armas e 11 armaduras na Fatia 1; Assassino aguarda confirmação do Mateus |
 | 67 | [**Catálogo do bestiário**](spec/67-catalogo-do-bestiario.md) | 33 tipos · 100 ataques comuns · contacto/vector · 10 cartas · cues · massa · almas e 12 orçamentos | 🟢 WP6 fechado 01-08; recompensa, modelos/animações e colocação continuam WP9/WP15/WP8 |
 | 66 | [**Catálogo de magia: mana, formas e verbos**](spec/66-catalogo-de-magia.md) | 53 feitiços · 4 escolas · 12 formas · grelha sem vazios · custos · melhoria 0–5 · meditação/favoritos | 🟢 WP4 fechado 01-08; 3 da Fatia 1 executáveis, formas restantes por implementar |
@@ -121,7 +122,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 5. **Qualquer classe pega em qualquer arma** — a diferença vem de atributos e habilidades
 6. Atributos distribuídos por nível, tecto **100**
 7. Magia do bem e do mal, com usos limitados
-8. **Mundo vasto**, por biomas, ~30 min a pé, **10+ biomas**, dungeons escondidas
+8. **Mundo vasto**, por biomas, ~30 min a pé, **12 biomas catalogados**, dungeons escondidas
 9. **Mochila sem limite** — só o equipado pesa (70%)
 10. **A máquina alvo é a do Rico** — 8 GB, Iris Xe, 1080p @ 60 Hz. Manda em tudo
 11. **A barra visual não é PlayStation 1** — 8–15 mil tri por personagem
@@ -137,7 +138,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 **Nada trava a construção.** O que falta são decisões que se tomam a jogar, não a escrever — estão no [`99`](spec/99-perguntas-abertas.md) e o [`ESTADO.md`](ESTADO.md) diz quais são mesmo urgentes.
 
-⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 chefes + 10+ biomas + 120 armas + 68 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8).
+⚠️ **O único risco vermelho é de escopo, e é conhecido:** mundo vasto + ~61 encontros maiores + 12 biomas + 120 armas + 68 armaduras + 70 anéis, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 
 ## Sessões
 

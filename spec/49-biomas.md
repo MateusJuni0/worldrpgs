@@ -12,12 +12,12 @@
 
 | Conta | Com 12 | A decisão que tem de bater |
 |---|---|---|
-| **Tempo a pé** | 12 zonas × 2–3 min de travessia (a régua do WP8) = **~30 min** | *"~30 min a pé"* `[DECIDIDO]` (31-07) — bate exacto |
-| **Chefes** | 1 Ultra + 12 subchefes + 12 guardiões + 36 de campo = **61** | os **~61 chefes** prometidos desde o [`00-visao.md`](00-visao.md) — bate exacto ([`46`](46-coerencia-bioma-raca-item.md) §6) |
+| **Tempo a pé** | rede de 12 zonas com diâmetro de 3 travessias; Costa 11 + Cimeira 10 + Fulgor 9 = **30 min** | *"~30 min a pé"* `[DECIDIDO]` (31-07), fechado no [`69`](69-catalogo-do-mundo.md) |
+| **Encontros maiores** | 1 Ultra + 12 subchefes + 12 guardiões + ~36 nomeados = **61** | a reclassificação aprovada no [`53`](53-chefes-ritmo-e-o-mago-forte.md) preserva escala sem 61 arenas |
 
-*Alternativas descartadas:* **10 biomas** → 51 chefes e ~25 min — fica abaixo das duas promessas; **15 biomas** → 76 chefes e ~38 min — rebenta o orçamento de produção de duas pessoas sem que nenhuma decisão o peça.
+*Alternativas descartadas:* **10 biomas** perde duas identidades já escritas; **15 biomas** acrescenta três kits, três guardiões e produção que nenhuma decisão pede. O tempo não se calcula somando os 12 em linha: o [`53`](53-chefes-ritmo-e-o-mago-forte.md) substituiu cada travessia por 8–12 min e o [`69`](69-catalogo-do-mundo.md) fechou a rede compacta.
 
-Isto fecha a *"diferença por acertar"* da pergunta 4 (o WP8 tinha desenhado 6 zonas; **as 6 mantêm-se e entram mais 6**) e dá à pergunta 13 o total que ficou *"em aberto de propósito — conta-se quando houver mapa"*. **Há mapa: 61.** O redesenho da rede de zonas do [`17-mundo.md`](17-mundo.md) é a volta 9; nada daqui obriga a mexer-lhe já.
+Isto fechou a *"diferença por acertar"* da pergunta 4 e deu à pergunta 13 o total que ficou *"em aberto de propósito — conta-se quando houver mapa"*. **Há mapa: 61 encontros maiores.** A rede, os círculos e os atalhos estão agora materializados no [`69`](69-catalogo-do-mundo.md) e em `game/data/world.json`.
 
 **O Portão** (núcleo final) fica **fora da conta** — é a arena própria do Ultra, não um bioma: não tem colheita, não tem raça residente, não se vive lá.
 
@@ -269,7 +269,7 @@ Quatro fichas contam-no sem uma linha de diálogo (1, 6, 11, 12 — e a paleta d
 
 **Fecha** (com carimbo `[FABLE]` — os donos podem trocar o 12 por outro número, mas barato só até à volta 5, quando o bestiário começa a multiplicar raça × bioma):
 
-- **Pergunta 4, a diferença por acertar** — as 6 zonas do WP8 crescem para 12; os ~30 min mantêm-se.
+- **Pergunta 4, a diferença por acertar** — 12 zonas em rede, com três travessias a provar os ~30 min no [`69`](69-catalogo-do-mundo.md).
 - **Pergunta 13, o total** — *"conta-se quando houver mapa"*: há mapa, e a conta dá **61**.
 
 **Abre:**
@@ -278,8 +278,8 @@ Quatro fichas contam-no sem uma linha de diálogo (1, 6, 11, 12 — e a paleta d
 |---|---|
 | As 8 linhas de cada raça nova (6) | **volta 2** — já sabem onde vivem e porquê |
 | Que peças de armadura cada raça larga por bioma | volta 5 (WP6) — herda da decisão da armadura por peças |
-| A rede: quem liga a quem, círculos e atalhos das 6 zonas novas | volta 9 (WP8) |
-| Números do frio (6), do lodo (3) e da cegueira (11) | volta 9, com a Lei 1 como tecto |
+| ~~A rede, círculos e atalhos~~ | ✅ [`69`](69-catalogo-do-mundo.md): 21 ligações, 24 círculos e 12 atalhos por dentro |
+| ~~Números do frio, lodo e cegueira~~ | ✅ fichas de ameaça no [`69`](69-catalogo-do-mundo.md); continuam afináveis no M2 |
 
 **Entrega já:**
 

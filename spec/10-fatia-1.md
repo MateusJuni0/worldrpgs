@@ -6,7 +6,7 @@
 
 **Sistemas completos, conteúdo mínimo.**
 
-A fatia 1 não é uma demo nem um tutorial. É o jogo inteiro, encolhido: tudo o que faz o género funcionar — esquiva, parry, stamina, magia com cargas, morte, co-op — presente de corpo inteiro; e o conteúdo (mapa, chefes, armas) na quantidade mínima que ainda diverte.
+A fatia 1 não é uma demo nem um tutorial. É o jogo inteiro, encolhido: tudo o que faz o género funcionar — esquiva, parry, stamina, mana sem regeneração, morte, co-op — presente de corpo inteiro; e o conteúdo (mapa, chefes, armas) na quantidade mínima que ainda diverte.
 
 **Porquê assim:** o risco nº1 do projeto é o combate não ser bom — e isso só se descobre a jogar ([`00-visao.md`](00-visao.md) · risco de escopo). A fatia existe para responder barato à pergunta cara. Se o combate da fatia for bom, mais conteúdo torna o jogo maior. Se for mau, mais conteúdo só o torna mais comprido.
 
@@ -22,7 +22,7 @@ Os nomes — Brumal, a Toca, Vorgar — são `[FABLE]` provisórios, para este d
 
 | Conteúdo | Na fatia 1 | Notas | Detalha-se em |
 |---|---|---|---|
-| Zonas abertas | **1** — Brumal (floresta) | travessia limpa 2–3 min a pé; ao ritmo do género (~5 m/s de corrida) são ~600–900 m de caminho; velocidade final é do WP1 | WP8 |
+| Zonas abertas | **1** — Brumal (floresta) | **8 min** do primeiro descanso à porta de Vorgar, sem combate/atalhos/exploração; substitui os 2–3 min depois da decisão do [`53`](53-chefes-ritmo-e-o-mago-forte.md) | [`69`](69-catalogo-do-mundo.md) |
 | Dungeons | **1** — a Toca | 3 salas + arena; entrada escondida, descoberta por exploração | WP8 |
 | Chefes | **1** — Vorgar, 2 fases | camada de baixo da pirâmide (03:25) — a hierarquia fica de pé, constrói-se por cima | WP7 |
 | Tipos de inimigo | **2** — orc lanceiro, orc brutamontes | o lanceiro é rápido e ensina a esquiva; o brutamontes é lento, telegrafado, e ensina o parry | WP6 |
@@ -31,13 +31,14 @@ Os nomes — Brumal, a Toca, Vorgar — são `[FABLE]` provisórios, para este d
 | Magias | **3** — Dardo, Ruína, Égide | três verbos diferentes, não três escalões de dano (Lei 2) | WP4 |
 | Níveis | **1–10** | pontos por nível nos atributos; lista final de atributos é do WP2 | WP2 |
 | Jogadores | **1–2** | co-op desde o primeiro dia — pilar 2 não é um extra a acrescentar no fim | WP10 |
-| Montarias, moeda, vendedores, encantamentos, armadura | **0** | fora da fatia — justificação abaixo | — |
+| Armaduras | **11 peças iniciais** | os ícones e as fichas estão no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md); equipar continua WP11 | WP5/WP11 |
+| Montarias, moeda, vendedores, encantamentos | **0** | fora da fatia — justificação abaixo | — |
 
 ## Quanto dura
 
 | Medida | Alvo |
 |---|---|
-| Travessia limpa até à entrada da Toca (quem já sabe) | 4–6 min |
+| Travessia limpa do primeiro descanso à porta de Vorgar (quem já sabe) | **8 min** |
 | Primeira vitória sobre Vorgar (jogador novo, somando mortes) | 45–90 min |
 | Noite típica de co-op | 60–120 min — chega para zerar a fatia |
 | Recomeço depois de morrer no chefe | **< 30 s** |
@@ -88,15 +89,14 @@ A fatia joga-se a um, desenhada para dois. O pilar 2 diz "sempre **disponível**
 
 | O quê | Porquê fica fora | Volta em |
 |---|---|---|
-| **Arco e flecha** | Decidido no jogo (00:16), fora da fatia: se atacar de longe for seguro, ninguém esquiva nem apara — as duas mecânicas centrais morrem ([`01-combate.md`](01-combate.md)). A magia já cobre "longe" com custo auto-limitado (cargas). O arco entra quando o WP1 tiver o sistema de pressão (munição, tempo de puxar, inimigos que fecham). | WP1 define, fatia 2 constrói |
+| **Arco e flecha** | Decidido no jogo (00:16), fora da fatia: se atacar de longe for seguro, ninguém esquiva nem apara — as duas mecânicas centrais morrem ([`01-combate.md`](01-combate.md)). A magia já cobre "longe" com mana que não regenera; o arco entra quando o sistema de munição/pressão estiver construído. | WP1 define, fatia 2 constrói |
 | **Batedor** | É a classe do arco — entra com ele. | fatia 2 |
 | **Mago do mal** | A pergunta 8 **já foi respondida** (bem/mal aprovado a 31-07), mas a fatia foi aprovada com **seis classes** e esta não é uma delas. Entra na fatia 2. | fatia 2 |
-| **Evoluções de classe** | `[TENSÃO]` aberta com a Lei 1 (pergunta 3). Não se constrói em cima de uma tensão por resolver. | WP3 propõe |
+| **Evoluções de classe** | A opção A já foi aprovada, mas não muda a pergunta que a primeira fatia precisa de responder. | fatia 2 |
 | **Encantamentos** | Dependem do catálogo de itens; não mudam a pergunta que a fatia responde. | WP5 |
-| **Biomas múltiplos / mapa grande** | A fatia prova a **forma** decidida — zona aberta + dungeon escondida (02:50, 03:12) — à escala mínima. A escala precisa de número (pergunta 4) e a tensão dos biomas (pergunta 2) é deles. | WP8 |
-| **Pirâmide de ~61 chefes** | Vorgar é um da camada de baixo. A pirâmide (03:25) fica de pé; constrói-se chefe a chefe por cima da fatia. | WP7 |
+| **Biomas múltiplos / mapa grande** | A rede de 12 está catalogada no [`69`](69-catalogo-do-mundo.md); a fatia constrói e mede apenas Brumal antes de abrir a seguinte. | WP8 |
+| **Restantes 12 chefes verdadeiros** | Vorgar é o primeiro dos 12 guardiões; ficam ainda 11 guardiões e o Ultra, mais os subchefes/nomeados do mundo. | WP7 |
 | **Progresso individual em mundo partilhado** | O sistema mais complexo do jogo, descrito numa frase (12:34). Não se resolve de passagem. | WP10 |
-| **Armadura** | Nunca foi mencionada na gravação (pergunta 14) — existir ou não é decisão deles. | WP5 |
 | **Montarias** | Um mapa de minutos não precisa de cavalo. O cavalo (05:15) fica guardado. | WP5/WP8 |
 | **História, NPCs, missões, vendedores, moeda, viagem rápida, dia/noite** | A fatia responde a combate + co-op, não a mundo vivo. | WP8/WP9 |
 
@@ -123,7 +123,7 @@ Nada disto é corte. É ordem.
 
 ## O que a fatia NÃO responde, de propósito
 
-**Actualizado a 31-07:** as perguntas 2 (biomas → soft gating), 3 (evoluções → opção A), 4 (mapa → ~30 min, 10+ biomas) e 8 (bem/mal → aprovado) **fecharam**, com a aprovação dos dois. Continuam abertas: **10** (o que se perde ao morrer — o tom), **14** (existe armadura), **15** (paleta e referências visuais concretas). A fatia joga com provisórios marcados nessas três; não fecha nada à socapa.
+**Actualizado a 01-08:** biomas, evoluções, escala, bem/mal e armadura fecharam; o [`69`](69-catalogo-do-mundo.md) aplica os 8 min a Brumal. Continuam abertas para esta experiência: **10** (o que se perde ao morrer — o tom), **15** (paleta final) e **37** (aprovação da identidade proposta do Assassino). A fatia não as fecha à socapa.
 
 ## Ligações
 

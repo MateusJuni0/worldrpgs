@@ -171,7 +171,7 @@ comuns em grupo ──► SUBCHEFE (sem aviso) ──► descanso ──► GUAR
 
 | | |
 |---|---|
-| **Quais são as 24–36 portas?** É criativo — do Fable, com o [`49`](49-biomas.md) à frente | `→WP8` |
+| ~~**Quais são as 24–36 portas?**~~ ✅ **30 catalogadas**, 2–3 por bioma, todas com razão visível e reserva futura | [`69`](69-catalogo-do-mundo.md) §4 |
 | **O nomeado tem espólio próprio ou o do inimigo base?** *(proposta: o baralho base + uma carta garantida)* | `→WP6` |
 | Dos ~20 feitiços do [`52`](52-mago-do-mal.md) §8, **quais é que o Mateus corta** | ⏳ dele |
 
