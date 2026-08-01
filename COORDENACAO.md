@@ -89,7 +89,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 55 | Claude | as formas de um feitiço |
 | 56 | Claude | voz e vendedores |
 | 57 | Claude | mapa e minimapa |
-| **58+** | **livre** | |
+| 58 | Claude | fim do jogo, ciclos e a curva |
+| **59+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 

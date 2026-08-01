@@ -70,6 +70,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 58 | [**O fim do jogo, os ciclos e a curva**](spec/58-fim-do-jogo-ciclos-e-a-curva.md) | Porque é que aos 70 estás forte e é assim que deve ser · a Brasa que resolve a pergunta 22 · NG+ com tecto no 7 · as portas que abrem no segundo percurso | 🟢 01-08 |
 | 57 | [**O mapa e o minimapa**](spec/57-mapa-e-minimapa.md) | Mostra onde já estiveste, nunca onde as coisas estão · marcas partilhadas · vista inclinada para a verticalidade se ler | 🟢 01-08 |
 | 56 | [**Voz no co-op e vendedores**](spec/56-voz-e-vendedores.md) | Voz pelo cano que já existe, posicional · e o vendedor vende o que TU encontraste | 🟢 01-08 |
 | 55 | [**As formas de um feitiço**](spec/55-formas-de-feitico.md) | 12 formas de entrega diferentes · o espaço como variável (a chuva morre debaixo de tecto) · velocidade com rendimentos decrescentes · como se escapa a cada forma | 🟢 estudo 01-08 |

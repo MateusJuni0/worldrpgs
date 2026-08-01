@@ -142,8 +142,8 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 | 🔴 | ⭐ **Sistema de saves** — onde vive o progresso, e como funciona a dois | **três clientes já dependem dele**: progresso, inventário e o mapa. É fundação, e fundações metem-se primeiro |
 | 🔴 | ⭐ **Texturas, modelos 3D e som: ZERO** | os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados. **É o que separa o greybox do jogo**, e nenhuma volta cobre |
 | 🟠 | ⭐ **Desenho de arena de chefe** | 13 chefes precisam de 13 arenas. Sem regras, saem 13 círculos vazios |
-| 🟠 | ⭐ **O fim do jogo** | mata-se o Ultra e depois? **Nunca foi escrito.** Sem isto não há razão para o nível 100 nem para o segundo percurso |
-| 🟠 | ⭐ **Ciclo novo (NG+)** | o [`40`](spec/40-decisoes-espolio-magia-inventario.md) §1 diz *"até ao próximo ciclo"* — e o ciclo **não existe em lado nenhum** |
+| ✅ | ~~O fim do jogo~~ **ESCRITO 01-08** — escolha final que **os dois têm de concordar**; estrutura fixada, conteúdo depende das 7 perguntas de narrativa | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
+| ✅ | ~~Ciclo novo (NG+)~~ **ESCRITO 01-08** — +40% no NG+, +8% por ciclo, ⚠️ **tecto no NG+7**. E a **Brasa** sobe UMA zona sem recomeçar o jogo | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | 🟠 | **Criação de personagem** | escolhe-se classe, e mais? Aspecto, nome, o primeiro ecrã do jogo |
 | 🟠 | ⭐ **Quem afina os 226 números** | há centenas de valores `[FABLE]`/`[CLAUDE]` marcados *"validam-se a jogar"*. **Ninguém escreveu como** |
 | 🟠 | ⚠️ **Desligar a meio de um chefe** | o [`19`](spec/19-rede.md) trata quedas, mas não **o que fica** — o chefe recupera vida? O progresso conta? |
