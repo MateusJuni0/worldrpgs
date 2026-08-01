@@ -95,7 +95,7 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 62 | Codex | acessibilidade auditiva (tarefa 2.2) |
 | 63 | Codex | como se afinam os números (tarefa 2.3) |
 | 64 | Codex | criação de personagem (tarefa 2.4) |
-| **65+** | **livre** | |
+| 65 | Codex | música e ambiente (tarefa 2.5) |
 
 ⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
 
