@@ -10,6 +10,24 @@
 
 ---
 
+## 🔒 O gerador do mapa publicava nomes de ficheiros privados — corrigido 01-08
+
+**Encontrado ao investigar um link partido, e é maior do que o link.**
+
+O `MAPA.md` é gerado pelo [`tools/mapa.mjs`](tools/mapa.mjs), que **varria o disco** com uma lista de exclusões escrita à mão. Essa lista **não batia com o `.gitignore`** — e o `.gitignore` exclui `design/transcripts/` e `design/ideas/` **por privacidade**: são conversas privadas dos donos num repositório público.
+
+| | |
+|---|---|
+| **O sintoma** | dois links partidos, e o guarda da spec a falhar para toda a gente, para sempre |
+| ⚠️ **O problema a sério** | o mapa **publicava os nomes e as datas** das transcrições privadas na `main`. Fuga de metadados exactamente daquilo que o `.gitignore` protegia |
+| **A causa** | uma lista de exclusões à mão que diverge do `.gitignore` diverge **sempre**, mais cedo ou mais tarde |
+| ✅ **A correcção** | o gerador passa a perguntar ao git (`git ls-files`) em vez de varrer o disco. Estruturalmente, **não consegue** listar um ficheiro que não está no repositório |
+| **A prova** | criei um ficheiro em `design/transcripts/`, corri o gerador, e ele **não entrou** no mapa |
+
+⭐ **A lição, que vale para outras ferramentas:** qualquer coisa que gere conteúdo para um repositório público a partir do disco tem de perguntar ao git o que é público, não adivinhar.
+
+---
+
 ## 🌐 A camada de rede — o que ficou por ligar
 
 **Escrito 01-08 pelo Fable, ao entregar `game/src/net/`.** A camada existe, tem 26 verificações e o orçamento de banda está **medido**. O que falta é **ligá-la ao jogo**, e cada linha aqui precisa de um ficheiro que **tem outro dono** ([`prompts/PARA-O-OPUS-DO-RICO.md`](prompts/PARA-O-OPUS-DO-RICO.md) §3) — por isso está escrito aqui em vez de eu lhe mexer.
