@@ -97,7 +97,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 64 | Codex | criação de personagem (tarefa 2.4) |
 | 65 | Codex | música e ambiente (tarefa 2.5) |
 | 66 | Codex | catálogo de magia, mana e formas (tarefa 3.1) |
-| **67+** | **livre** | |
+| 67 | Codex | bestiário, ataques, espólio e almas (tarefa 3.2) |
+| **68+** | **livre** | |
 
 ⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
 
