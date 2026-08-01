@@ -1,6 +1,6 @@
 # LACUNAS — o que falta, e ninguém está a fazer
 
-**Actualizado: 31-07-2026.** Mantido pelo **Claude**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
+**Actualizado: 01-08-2026.** Mantido pelo **Claude**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
 
 > **Porque existe:** as lacunas que eu encontro a rever viviam em **comentários de PR**. Um comentário lê-se uma vez e desaparece — e uma lacuna esquecida é uma lacuna que se descobre no fim, quando custa dez vezes mais.
 >
@@ -89,10 +89,10 @@
 | | Lacuna | Origem |
 |---|---|---|
 | 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
-| 🟠 | ⚠️ **Sistema de saves** — ⭐ **agora com TRÊS clientes à espera**: progresso, inventário e o **mapa** ([`57`](spec/57-mapa-e-minimapa.md) §6). Continua sem uma linha na spec |
+| ✅ | ~~**Sistema de saves sem uma linha**~~ **RESOLVIDO 01-08** — formato campo a campo, morte sem save-scumming, escrita atómica, recuperação e migração, com código e testes | [`59`](spec/59-saves.md) · `game/src/autoload/save_system.gd` |
 | 🟠 | ⚠️ **A leitura do mapa tem de ser decidida ANTES de o WP8 traçar as zonas** — senão há zonas impossíveis de mapear | [`57`](spec/57-mapa-e-minimapa.md) §5 |
 | 🟠 | ⚠️ **Texturas, modelos 3D e som: ZERO.** Os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados nem importados. **Nenhuma volta cobre isto** |
-| 🟠 | ~~Sistema de saves~~ *(linha antiga)* — onde vive o progresso, e como funciona a dois. **Sem cobertura** | [`48`](spec/48-arcos-bestas-escudos.md) |
+| 🟠 | ⚠️ **Ligar os três produtores ao `SaveSystem`** — o greybox ainda não tem almas/inventário/mapa persistentes; quando cada sistema entrar, tem de emitir os eventos do [`59`](spec/59-saves.md) §3. Hoje `main.gd` ainda diz «Nada se perdeu» | encontrado ao implementar o [`59`](spec/59-saves.md) |
 | 🟠 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | [`29`](spec/29-perspectiva.md) |
 | 🟠 | **A cura à distância funciona com que latência?** | [`42`](spec/42-estudo-magia.md) |
 
@@ -119,13 +119,13 @@
 
 ## ⏳ Dos donos — não são para os agentes resolverem
 
-Estão no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). As três que mais mudam o jogo:
+Estão no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). As que mais mudam o jogo:
 
 | # | | |
 |---|---|---|
+| **32** | ⚠️ Matar um chefe no mundo do outro muda o teu próprio mundo? | proposta: vitória/recompensa viaja; mundo e atalhos não |
 | **28** | ⚠️ Se a magia faz tudo, como é que o mago não é a classe correcta? | cinco travões propostos |
 | **24** | Chefe a dois: +40% de vida ou zero? | proposta: +40%, e desce quando um morre |
-| **22** | Se os inimigos param de reaparecer, de onde vêm as almas para o nível 100? | ou o mundo é maior, ou o 100 não é para uma passagem |
 
 E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precisam de uma gravação — **o nome do jogo incluído**.
 
@@ -208,7 +208,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 
 | | Buraco | Porque dói tarde |
 |---|---|---|
-| 🔴 | ⭐ **Sistema de saves** — onde vive o progresso, e como funciona a dois | **três clientes já dependem dele**: progresso, inventário e o mapa. É fundação, e fundações metem-se primeiro |
+| ✅ | ~~⭐ **Sistema de saves**~~ **ESCRITO E IMPLEMENTADO 01-08** — dois domínios, escrita atómica, backup, checksum, recuperação e migrações | [`59`](spec/59-saves.md) · 19 auto-testes novos |
 | 🔴 | ⭐ **Texturas, modelos 3D e som: ZERO** | os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados. **É o que separa o greybox do jogo**, e nenhuma volta cobre |
 | 🔴 | ⚠️ **O `.gitignore` NÃO trava os binários, ao contrário do que o [`game/CLAUDE.md`](game/CLAUDE.md) afirma.** Ele diz *"Binários: modelos, texturas, áudio, builds — `.gitignore` já os trava"*. **É falso:** o `game/.gitignore` trava `*.zip`, `*.exe`, `*.pck` e mais nada — `.glb`, `.gltf`, `.fbx`, `.obj`, `.png` e `.ogg` passam. O `.gitignore` da raiz só trava `art/models/_local/` e `art/audio/_local/`. **Consequência:** um pack CC0 largado em `art/models/` entra no repositório **público e para sempre** (o git guarda o histórico). Precisa de decisão antes da fase 1.2 — ver abaixo | encontrado 01-08 ao preparar a fase 1.2 |
 | 🟠 | ⭐ **Os packs entraram, mas NENHUM MODELO ESTÁ NO JOGO.** A fase 1.2 tinha três partes: descarregar ✅ · importar em `game/` ⬜ · substituir as cápsulas ⬜. **Só a primeira está feita.** As cápsulas continuam lá, e o jogo continua greybox | fase 1.2, 01-08 |
@@ -220,7 +220,8 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ✅ | ~~Ciclo novo (NG+)~~ **ESCRITO 01-08** — +40% no NG+, +8% por ciclo, ⚠️ **tecto no NG+7**. E a **Brasa** sobe UMA zona sem recomeçar o jogo | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | 🟠 | **Criação de personagem** | escolhe-se classe, e mais? Aspecto, nome, o primeiro ecrã do jogo |
 | 🟠 | ⭐ **Quem afina os 226 números** | há centenas de valores `[FABLE]`/`[CLAUDE]` marcados *"validam-se a jogar"*. **Ninguém escreveu como** |
-| 🟠 | ⚠️ **Desligar a meio de um chefe** | o [`19`](spec/19-rede.md) trata quedas, mas não **o que fica** — o chefe recupera vida? O progresso conta? |
+| ✅ | ~~⚠️ **Desligar a meio de um chefe**~~ **RESOLVIDO 01-08** — sem progresso parcial; commit autoritativo em HP zero; recibo persistente e idempotente para a queda depois da morte | [`59`](spec/59-saves.md) §8 |
+| 🔵 | **Medir p95 da escrita com o mapa completo na máquina do Rico** — a fixture actual tem guarda < 64 KiB; o orçamento cheio é 2 MiB e ainda não existe conteúdo para o medir | [`59`](spec/59-saves.md) §10 |
 | 🟠 | **Música e ambiente** | o [`21`](spec/21-arte-render.md) propõe; existem **12 sons sintetizados** e mais nada |
 | 🟠 | ⭐ **Acessibilidade auditiva** | ⚠️ o [`38`](spec/38-ataques-e-honestidade.md) §3 **obriga** a que cada ataque se anuncie por som, e a 1.ª pessoa depende disso. **Quem não ouve bem fica trancado** — precisa de indicador visual equivalente |
 | 🔵 | **Onde vivem os textos** | português decidido; falta dizer se as strings estão em ficheiro ou no código |

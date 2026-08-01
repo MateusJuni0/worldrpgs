@@ -27,7 +27,122 @@ func _ready() -> void:
 	_test_biomes()
 	_test_races()
 	_test_families_and_kits()
+	_test_save_round_trip()
+	_test_atomic_save()
+	_test_corrupt_save_recovery()
+	_test_save_migration()
 	_report()
+
+
+# --- spec/59-saves.md · persistencia -----------------------------------------
+
+func _test_save_round_trip() -> void:
+	var path := "user://worldrpgs-self-test/round-trip.json"
+	_remove_save_artifacts(path)
+	var state := SaveSystem.create_save("self-test", "warrior")
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	progression["level"] = 7
+	progression["souls_held"] = 4321
+	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+	inventory["items"] = {"longsword": 1, "frasco_bruma": 3}
+
+	_check(SaveSystem.save_to_path(path, state), "save: round-trip grava")
+	var loaded := SaveSystem.load_from_path(path)
+	var expected: Variant = JSON.parse_string(JSON.stringify(state, "", true))
+	_check(loaded == expected,
+		"save: round-trip preserva todo o estado")
+	_check(GameData.save_state_snapshot() == loaded,
+		"save: estado carregado fica ligado ao GameData")
+	var bytes := FileAccess.get_file_as_bytes(path).size()
+	_check(bytes < 64 * 1024, "save: fixture da fatia 1 ocupa %d B (< 64 KiB)" % bytes)
+	_remove_save_artifacts(path)
+
+
+func _test_atomic_save() -> void:
+	var path := "user://worldrpgs-self-test/atomic.json"
+	_remove_save_artifacts(path)
+	var first := SaveSystem.create_save("first", "warrior")
+	_check(SaveSystem.save_to_path(path, first), "save atomico: primeira geracao confirmada")
+
+	# Simula energia cortada enquanto so o temporario estava a ser escrito.
+	var interrupted := FileAccess.open(path + ".tmp", FileAccess.WRITE)
+	interrupted.store_string("{\"format_version\":")
+	interrupted.flush()
+	interrupted.close()
+	var after_interruption := SaveSystem.load_from_path(path, false)
+	_check(String((after_interruption.get("character", {}) as Dictionary).get("profile_id", "")) == "first",
+		"save atomico: temporario incompleto nao substitui o confirmado")
+
+	var second := SaveSystem.create_save("second", "sorcerer")
+	_check(SaveSystem.save_to_path(path, second), "save atomico: segunda geracao confirmada")
+	var current := SaveSystem.load_from_path(path, false)
+	_check(String((current.get("character", {}) as Dictionary).get("profile_id", "")) == "second",
+		"save atomico: rename publica a geracao nova")
+	_check(FileAccess.file_exists(path + ".bak"),
+		"save atomico: geracao anterior fica no backup")
+	if FileAccess.file_exists(path + ".bak"):
+		var backup := SaveSystem.load_from_path(path + ".bak", false)
+		_check(String((backup.get("character", {}) as Dictionary).get("profile_id", "")) == "first",
+			"save atomico: backup conserva a geracao anterior inteira")
+	_check(not FileAccess.file_exists(path + ".tmp"),
+		"save atomico: temporario desaparece depois do commit")
+	_remove_save_artifacts(path)
+
+
+func _test_corrupt_save_recovery() -> void:
+	var path := "user://worldrpgs-self-test/corrupt.json"
+	_remove_save_artifacts(path)
+	var first := SaveSystem.create_save("recover-me", "warrior")
+	var second := SaveSystem.create_save("broken-newer", "sorcerer")
+	SaveSystem.save_to_path(path, first)
+	SaveSystem.save_to_path(path, second)
+
+	var tampered: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)) as Dictionary
+	(tampered.get("character", {}) as Dictionary)["profile_id"] = "alterado-sem-checksum"
+	var broken := FileAccess.open(path, FileAccess.WRITE)
+	broken.store_string(JSON.stringify(tampered, "\t", true))
+	broken.flush()
+	broken.close()
+	var recovered := SaveSystem.load_from_path(path)
+	var recovery_was_reported := SaveSystem.last_load_recovered
+	_check(String((recovered.get("character", {}) as Dictionary).get("profile_id", "")) == "recover-me",
+		"save corrompido: recupera a ultima geracao integra")
+	_check(recovery_was_reported, "save corrompido: recuperacao fica sinalizada")
+	_check(FileAccess.file_exists(path + ".corrupt"),
+		"save corrompido: ficheiro partido fica preservado")
+	var restored := SaveSystem.load_from_path(path, false)
+	_check(String((restored.get("character", {}) as Dictionary).get("profile_id", "")) == "recover-me",
+		"save corrompido: backup recuperado volta a ser o activo")
+	_remove_save_artifacts(path)
+
+
+func _test_save_migration() -> void:
+	var path := "user://worldrpgs-self-test/migration.json"
+	_remove_save_artifacts(path)
+	var legacy := {
+		"player": {
+			"profile_id": "legacy",
+			"identity": {"class_id": "tank"},
+			"progression": {"level": 9, "souls_held": 77},
+		},
+		"world": {"owner_profile_id": "legacy", "bosses_defeated": ["vorgar"]},
+	}
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(legacy, "\t", true))
+	file.close()
+
+	var migrated := SaveSystem.load_from_path(path, false)
+	_check(SaveSystem.last_load_migrated, "save: versao antiga passa pela migracao")
+	_check(int(migrated.get("format_version", 0)) == SaveSystem.CURRENT_FORMAT_VERSION,
+		"save: migracao sobe para a versao actual")
+	var character: Dictionary = migrated.get("character", {}) as Dictionary
+	_check(int((character.get("progression", {}) as Dictionary).get("level", 0)) == 9,
+		"save: migracao preserva progresso antigo")
+	_check(typeof(character.get("inventory")) == TYPE_DICTIONARY
+		and typeof((migrated.get("world", {}) as Dictionary).get("map")) == TYPE_DICTIONARY,
+		"save: migracao acrescenta campos novos com defaults")
+	_remove_save_artifacts(path)
 
 
 # --- spec/51-familias.md (volta 3) · familias, escudos, armadura e kits -------
@@ -543,6 +658,13 @@ func _make_player() -> Player:
 	var p := Player.new()
 	p.setup("warrior", {})
 	return p
+
+
+func _remove_save_artifacts(path: String) -> void:
+	for suffix: String in ["", ".tmp", ".bak", ".corrupt"]:
+		var absolute := ProjectSettings.globalize_path(path + suffix)
+		if FileAccess.file_exists(path + suffix):
+			DirAccess.remove_absolute(absolute)
 
 
 func _check(condition: bool, description: String) -> void:

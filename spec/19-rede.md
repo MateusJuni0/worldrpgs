@@ -85,7 +85,7 @@ As consequências, uma a uma:
 |---|---|
 | **WP9** | o saco "personagem" transporta as flags que o 40% precisa |
 | **WP11** | UI de convite (< 2 min), aviso de latência > 150 ms, indicador de alvo do chefe |
-| **WP14** | transporte agnóstico; simulação separada da rede; os dois sacos de estado como formato de gravação |
+| **WP14** | transporte agnóstico; simulação separada da rede; os dois sacos de estado no formato atómico do [`59`](59-saves.md) |
 | **WP15** | o marco de rede testa: entrar em < 2 min, esquiva do convidado justa a 100 ms simulados, queda a meio do Vorgar |
 | **WP15B** | teste com latência artificial (80/150/250 ms) faz parte do protocolo |
 

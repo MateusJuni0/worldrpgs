@@ -60,14 +60,9 @@ data/
 
 ## Gravação de progresso
 
-Os dois sacos do WP10, literalmente:
+✅ **Detalhado e implementado no [`59-saves.md`](59-saves.md).** Os dois sacos do WP10 continuam literais, mas vivem juntos em cada `slot_NN.json`: `character` viaja; `world` só muda quando o perfil hospeda. O singleton escreve `.tmp`, valida checksum, roda o activo para `.bak` e publica por rename; versões antigas passam por migrações sequenciais.
 
-- `personagem_<nome>.json` — tudo o que viaja (nível, XP, inventário, flags de chefes, verbos). Um por personagem, no PC do dono.
-- `mundo_<personagem>.json` — atalhos, estado de zona. Do anfitrião.
-- **Escrita atómica** (escreve ao lado + renomeia — uma queda de luz nunca corrompe um save), nos 4 momentos do WP11 (descanso, item, morte, saída).
-- Campo `versao` em ambos; migração para a frente quando o formato mudar; **cópia `.bak` da versão anterior** sempre.
-- Divergência entre os dois jogadores **não existe por construção** — cada personagem é dono do seu ficheiro; o mundo é sempre o do anfitrião da sessão (WP10).
-- Sem cloud, sem encriptação — são dois amigos; um save editável à mão é ferramenta de teste, não falha de segurança.
+Sem cloud nem encriptação — são dois amigos; editar à mão não é ameaça. ⚠️ A única divergência que não se fecha por construção é dos donos: matar um chefe no mundo alheio dá recompensa apenas, ou também muda o mundo próprio? [`99`](99-perguntas-abertas.md), pergunta 32.
 
 ## Plataformas, build e distribuição
 

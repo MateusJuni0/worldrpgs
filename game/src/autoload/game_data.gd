@@ -19,6 +19,7 @@ var abilities: Dictionary = {}
 var biomes: Dictionary = {}
 var races: Dictionary = {}
 var armor: Dictionary = {}
+var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
 
@@ -501,3 +502,13 @@ func race_ids() -> Array[String]:
 		if not k.begins_with("_"):
 			out.append(k)
 	return out
+
+
+# --- Estado persistente (spec/59-saves.md) -----------------------------------
+
+func replace_save_state(state: Dictionary) -> void:
+	save_state = state.duplicate(true)
+
+
+func save_state_snapshot() -> Dictionary:
+	return save_state.duplicate(true)

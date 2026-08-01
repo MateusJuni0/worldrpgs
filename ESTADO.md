@@ -1,14 +1,14 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 31-07-2026, fim do dia.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, sistema de saves.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
-> **Porque existe:** a spec tem 46 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
+> **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
 ---
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias, o Vorgar com 2 fases, frasco de cura, habilidades de classe, 12 sons sintetizados. **130 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 (i-frames 0,08→0,38, parry de 8 frames + contra-golpe, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias, o Vorgar com 2 fases, frasco de cura, habilidades de classe, 12 sons sintetizados. **245 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,9 +44,9 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 47 · 6330 linhas | — | — |
-| Código | 46 ficheiros · 4033 linhas · 717 de dados | — | — |
-| Testes | **130, todos a passar** | — | — |
+| Documentos de spec | 62 · 9563 linhas | — | — |
+| Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
+| Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
 | **Armas** | 5 instâncias · **8 famílias** ([`51`](spec/51-familias.md)) | ~120 | as instâncias (camada 2) |
 | **Armaduras** | **11 peças** · 9 slots · 3 cargas ([`51`](spec/51-familias.md)) | ~30 | ~19 |
@@ -58,6 +58,12 @@ $ godot --headless --path game/ scenes/selftest.tscn
 | **Raças** | **12 fichas + mímico** ([`50`](spec/50-racas.md) + `game/data/races.json`) | 10–15 | ✅ volta 2 |
 
 ⭐ **E a instrução que daí sai:** o motor é data-driven — o `game_data.gd` recusa arrancar se os dados divergirem da spec. **Escrever o catálogo não é documentar o jogo: é construí-lo.** O catálogo escreve-se em `spec/` **e** em `game/data/*.json`, no mesmo PR.
+
+## 1c. ✅ A fundação de saves existe
+
+O [`59`](spec/59-saves.md) define e o `SaveSystem` implementa: estado separado de personagem/mundo ligado ao `GameData`, autosave sem botão de recarregar, escrita `.tmp` + rename, geração `.bak`, checksum, recuperação de corrupção e migrações de formato. **19 verificações novas** cobrem round-trip, interrupção, corrupção silenciosa e v0→v1.
+
+⚠️ **Isto desbloqueia, mas não finge que os clientes já existem:** o greybox ainda não tem almas, mochila ou mapa persistentes. Quando cada sistema entrar, chama a fronteira única do save. A regra de progresso de chefe no mundo alheio continua `[TENSÃO]`, pergunta 32 do [`99`](spec/99-perguntas-abertas.md).
 
 ## 2. O que está decidido e ainda não está na spec de execução
 
@@ -111,8 +117,9 @@ $ godot --headless --path game/ scenes/selftest.tscn
         └──► desbloqueia O CONTEÚDO ──► o motor é data-driven:
                                         o catálogo É o jogo
         ▼
-3. Os SISTEMAS que faltam  (interrupção · contra-ataque · baralho ·
-        │                   soft caps · piso de 30% · carregamento por área)
+3. Os SISTEMAS que faltam  (saves: fundação ✅, faltam os clientes · interrupção ·
+        │                   contra-ataque · baralho · soft caps · piso de 30% ·
+        │                   carregamento por área)
         ▼
 4. O MUNDO  (WP8: círculos, atalhos, 12 biomas, descanso à porta do chefe)
         ▼
@@ -151,7 +158,7 @@ Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nenhu
 |---|---|---|
 | **28** | ⚠️ Se a magia faz tudo, como é que o mago não é a classe correcta? | cinco travões — o principal é **quem lança muito, cura pouco** |
 | **24** | Chefe a dois: +40% de vida, ou zero? | **+40%, dano igual, e a escala desce quando um morre** |
-| **22** | Se os inimigos param de reaparecer, de onde vêm as almas para o nível 100? | ou o mundo é maior, **ou o 100 não é para uma passagem** |
+| **32** | ⚠️ Matar um chefe no mundo do outro muda o teu próprio mundo? | proposta: a recompensa viaja; o estado do mundo não |
 
 E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3) continuam a precisar de uma gravação — **nome do jogo incluído**.
 
@@ -199,7 +206,7 @@ Mundo vasto + ~61 chefes + 10+ biomas + ~120 armas + 30 armaduras + ~70 anéis +
 |---|---|
 | **Fable** | ⚠️ **a identidade do Assassino** (marcada *em revisão* no [`12-classes.md`](spec/12-classes.md)), depois a **volta 4 — magia** |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
-| **Donos** | as perguntas 22, 24 e 28 do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
+| **Donos** | as perguntas 24, 28 e 32 do [`99`](spec/99-perguntas-abertas.md), e uma gravação para a narrativa |
 | **Claude** | rever o que chega · ⭐ **gerar os 11 ícones de armadura** (fatia 1, prioridade sobre biomas e raças) |
 
 ### As três voltas de 31-07, e onde estão

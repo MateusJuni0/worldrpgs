@@ -54,7 +54,7 @@ O teste que este marco pedia correu antes do plano existir ([`09-tecnico.md`](09
 
 ### M7 — A fatia 1 inteira
 
-**Existe no fim:** tudo dos marcos anteriores, junto: as 6 classes com habilidades (WP3), criação de personagem, menus completos (WP11), gravação nos 4 momentos.
+**Existe no fim:** tudo dos marcos anteriores, junto: as 6 classes com habilidades (WP3), criação de personagem, menus completos (WP11), e todos os produtores ligados à gravação atómica do [`59`](59-saves.md).
 **Verifica-se:** **os 7 critérios do WP0, um a um, com o CSV a prová-los** — rede < 2 min, jogador novo < 2 h, nível-1-zero-pontos, morte < 30 s, 60 fps quentes nas duas máquinas, telegrafia 8/10, e o voto dos dois ("queremos a fatia 2?").
 **Depois disto:** a gravação da sessão 2 (as decisões pendentes do 99) e a fatia 2 (Selva ou Campas — deles).
 

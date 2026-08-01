@@ -138,7 +138,7 @@ E resolve um problema concreto que a spec tem em aberto: **o mago é frágil ao 
 | **Inimigos que lançam magia** — usam as mesmas regras do jogador? *(proposta: sim, incluindo interrupção)* | `→WP6` |
 | **Desenho de arena de chefe** — tamanho, obstáculos, onde o jogador se refugia | `→WP7` |
 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | `→WP1B` |
-| **Sistema de saves** — onde vive o progresso, e como funciona a dois | `→WP14` |
+| ~~**Sistema de saves**~~ ✅ formato, co-op, escrita atómica e recuperação no [`59`](59-saves.md) | `WP14` |
 
 ## Ligações
 

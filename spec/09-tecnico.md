@@ -132,7 +132,7 @@ Ou seja: as imagens resolvem uma fatia grande do trabalho visual, mas **os model
 
 ## Gravação de progresso
 
-`[EM ABERTO]` — Com progresso individual num mundo partilhado ([`07-multiplayer.md`](07-multiplayer.md)), falta decidir onde fica o estado de cada jogador e quem manda quando divergem.
+~~`[EM ABERTO]` — Com progresso individual num mundo partilhado, faltava decidir onde fica o estado.~~ ✅ **A arquitectura está implementada no [`59-saves.md`](59-saves.md):** um slot local por perfil, com os sacos `character` e `world`, escrita atómica e recuperação. Continua `[TENSÃO]` apenas se uma vitória no mundo alheio também muda o mundo próprio — pergunta 32 do [`99`](99-perguntas-abertas.md).
 
 ## Nota sobre o método
 

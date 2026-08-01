@@ -66,11 +66,12 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolo da Lei 1, métricas, sintomas (WP15B) | ⚠️ **falta o teste do rolamento** — [`38`](spec/38-ataques-e-honestidade.md) §2 |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–45)
+### Decisões e estudos (32–60)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
 | 60 | [**O agente que joga**](spec/60-o-agente-que-joga.md) | Banco de ensaio automático: guiões, modo macaco, varrimento de 1728 combinações · ⏳ constrói-se depois do catálogo | 🟢 desenhado 01-08 |
+| 59 | [**Saves: progresso que não volta atrás**](spec/59-saves.md) | Campos de personagem/mundo · autosave na morte · escrita atómica · recuperação · migrações · tensão do progresso co-op | 🟢 spec + código + testes 01-08 |
 | 58 | [**O fim do jogo, os ciclos e a curva**](spec/58-fim-do-jogo-ciclos-e-a-curva.md) | Porque é que aos 70 estás forte e é assim que deve ser · a Brasa que resolve a pergunta 22 · NG+ com tecto no 7 · as portas que abrem no segundo percurso | 🟢 01-08 |
 | 57 | [**O mapa e o minimapa**](spec/57-mapa-e-minimapa.md) | Mostra onde já estiveste, nunca onde as coisas estão · marcas partilhadas · vista inclinada para a verticalidade se ler | 🟢 01-08 |
 | 56 | [**Voz no co-op e vendedores**](spec/56-voz-e-vendedores.md) | Voz pelo cano que já existe, posicional · e o vendedor vende o que TU encontraste | 🟢 01-08 |

@@ -121,7 +121,7 @@ O [`39`](39-estudo-profundo.md) §8 manda **pelo menos um círculo vertical por 
 | ⚠️ **Marcas guardadas e partilhadas** | mais estado no save |
 | **Um renderizador próprio** | o mapa não é o jogo visto de cima; é outra coisa |
 
-⚠️ **E o que isto abre e ainda não existe:** ⭐ **o sistema de saves**, que continua sem uma linha na spec ([`LACUNAS.md`](../LACUNAS.md)). **O mapa é a terceira coisa a precisar dele** — depois do progresso e do inventário. `→WP14`
+✅ **A fundação que isto exigia já existe:** o [`59-saves.md`](59-saves.md) guarda o bitset de exploração e até 8 marcas por jogador no saco do mundo. Falta o mapa produzir esses campos quando for implementado. `→WP11`
 
 ---
 
@@ -135,7 +135,7 @@ O [`39`](39-estudo-profundo.md) §8 manda **pelo menos um círculo vertical por 
 | ⭐ **8 marcas por jogador**, visíveis para o outro **e no mundo** | `→WP11`/`→WP10` |
 | ⭐ **Vista inclinada a ~40°** para a verticalidade se ler | `→WP11` |
 | ⚠️ **Decidir a leitura do mapa antes de o WP8 traçar as zonas** | `→WP8` |
-| ⚠️ **Precisa do sistema de saves, que não existe** | `→WP14` |
+| ✅ **Estado persistente definido no sistema de saves** | [`59`](59-saves.md) |
 
 ## O que fica em aberto
 

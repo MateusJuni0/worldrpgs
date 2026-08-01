@@ -45,7 +45,7 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 | **Principal** | Continuar (último save) · Jogar a dois (hospedar / juntar por código — o fluxo < 2 min do WP10) · Novo personagem · Opções · Sair |
 | **Criação** | classe (as 6 fichas do WP3 com "como se joga" numa frase) · voz grave/agudo (WP12) · nome |
 | **Pausa** (Esc) | Retomar · Opções · Sair para o menu — **o mundo nunca pára** (coerência com a mochila e com o co-op); "pausar" é encostar num sítio seguro, como no género |
-| **Gravação** | automática: no descanso, ao apanhar item, ao morrer, ao sair — sem botão de gravar (WP14 detalha); o menu mostra "última gravação há Xs" |
+| **Gravação** | automática: no descanso, ao apanhar item, ao morrer, ao sair — sem botão de gravar; o [`59`](59-saves.md) acrescenta todos os eventos permanentes e recuperação; o menu mostra "última gravação há Xs" |
 
 ## Configurações — a lista completa
 
@@ -73,7 +73,7 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 |---|---|
 | **WP12/WP13** | a lista de ícones com tamanhos (3 magias 72 px, hotbar 72 px, pips 14 px, retratos de classe da criação) — entra no manifesto |
 | **WP10** | o fluxo hospedar/juntar por código, e o olho âmbar de alvo do chefe |
-| **WP14** | gravação automática nos 4 momentos; settings num ficheiro legível |
+| **WP14** | gravação automática, atómica e recuperável no [`59`](59-saves.md); settings num ficheiro legível separado |
 | **WP15B** | o "fantasma" da barra de vida e a simulação de ponto são instrumentos de leitura nos testes |
 
 ## O que continua aberto
