@@ -91,7 +91,6 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 57 | Claude | mapa e minimapa |
 | 58 | Claude | fim do jogo, ciclos e a curva |
 | 59 | Fable | sistema de saves (fase 1.1 do `TERMINAR-A-SPEC`) |
-| 60 | Fable | arena de chefe (fase 2.3) |
 | 61 | Fable | acessibilidade auditiva (fase 2.4) |
 | 62 | Fable | como se afinam os números (fase 2.5) |
 | 63 | Fable | criação de personagem (fase 2.6) |
