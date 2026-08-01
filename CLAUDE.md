@@ -68,6 +68,8 @@ Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus
 | | |
 |---|---|
 | ⭐ [`LACUNAS.md`](LACUNAS.md) | **O que falta e ninguém está a fazer** — agrupado por volta. Encontraste um buraco? Escreve lá no mesmo acto |
+| ⭐ [`MAPA.md`](MAPA.md) | A estrutura e **as fundações** — quem cita quem. Gerado por `node tools/mapa.mjs`, não se edita à mão |
+| [`prompts/CODEX-CONTEXTO.md`](prompts/CODEX-CONTEXTO.md) | **O contexto permanente do executor** — lê-se no início de cada tarefa |
 | ⭐ [`ESTADO.md`](ESTADO.md) | **Lê primeiro.** O que é verdade hoje, o que falta e por que ordem |
 | ⭐ [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md) | **O prompt actual** — fechar a spec, em 4 fases |
 | [`LACUNAS.md`](LACUNAS.md) | O que falta e ninguém está a fazer. Encontraste um buraco? Escreve lá no mesmo acto |
