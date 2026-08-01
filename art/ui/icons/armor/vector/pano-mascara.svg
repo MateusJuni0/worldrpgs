@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Máscara de pano escuro">
+  <defs>
+    <linearGradient id="cloth" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#59666a"/><stop offset="1" stop-color="#252d31"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="#394449" d="m101 69-72-25 45 67-47 43 82-22zM155 69l72-25-45 67 47 43-82-22z"/>
+    <path fill="url(#cloth)" d="m68 83 60-28 60 28-13 92-47 50-47-50Z"/>
+    <path fill="#20282c" d="M80 111q48 20 96 0l-5 32q-43 18-86 0z"/>
+    <path fill="none" stroke="#849b9b" stroke-width="6" d="M87 91q41 17 82 0M87 158q41 17 82 0" opacity=".65"/>
+    <path fill="none" stroke="#4f5c60" stroke-width="5" d="m102 75 26 150 26-150"/>
+  </g>
+</svg>

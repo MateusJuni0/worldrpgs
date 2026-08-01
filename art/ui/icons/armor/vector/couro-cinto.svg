@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Cinto de bolsas">
+  <defs>
+    <linearGradient id="leather" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8b6041"/><stop offset="1" stop-color="#3d2923"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="#53382b" d="M18 88h220v54H18Z"/>
+    <path fill="#b28953" d="M101 79h54v72h-54Z"/>
+    <path fill="#253034" d="M114 94h28v42h-28Z"/>
+    <path fill="url(#leather)" d="M24 118h53l8 81-12 18H28l-12-18Z"/>
+    <path fill="url(#leather)" d="M79 124h42l2 70-10 17H86l-10-17Z"/>
+    <path fill="url(#leather)" d="M135 124h42l3 70-10 17h-27l-10-17Z"/>
+    <path fill="url(#leather)" d="M179 118h53l8 81-12 18h-45l-12-18Z"/>
+    <path fill="#9d7348" d="M23 127h55l3 26H20zM80 132h40l1 23H79zM136 132h40l1 23h-40zM178 127h55l3 26h-61z"/>
+  </g>
+  <g fill="#c7b27a" stroke="#111a1e" stroke-width="4"><path d="m42 105 7-26h12l5 26z"/><path d="m197 105 4-31h12l8 31z"/></g>
+</svg>

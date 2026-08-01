@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Peitoral de ferro rude">
+  <defs>
+    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#899493"/><stop offset="1" stop-color="#354043"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="#4c342a" d="M76 42 108 24h40l32 18 18 41-19 144H77L58 83Z"/>
+    <path fill="url(#iron)" d="M78 47 108 28h40l30 19-9 149-41 29-41-29Z"/>
+    <path fill="#586466" d="M77 48 43 58 22 88l20 39 39-15 13-42zM179 48l34 10 21 30-20 39-39-15-13-42z"/>
+    <path fill="#455053" d="m88 109 40-18 40 18-5 55-35 22-35-22z"/>
+    <path fill="none" stroke="#aeb9b5" stroke-width="5" d="m93 58 35 21 35-21M92 175h72" opacity=".65"/>
+  </g>
+  <g fill="#b28a56" stroke="#111a1e" stroke-width="4"><circle cx="89" cy="65" r="5"/><circle cx="167" cy="65" r="5"/><circle cx="92" cy="184" r="5"/><circle cx="164" cy="184" r="5"/></g>
+</svg>

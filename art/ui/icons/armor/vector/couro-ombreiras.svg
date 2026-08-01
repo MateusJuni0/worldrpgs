@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Ombreiras de couro com pelo">
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="#5b463b" d="M24 90 43 43l24 9 14-28 23 24 24-30 24 30 23-24 14 28 24-9 19 47-19 58-62-27H105l-62 27Z"/>
+    <path fill="#8a765f" d="m31 82 20-41 17 19 17-32 23 31 20-35 20 35 23-31 17 32 17-19 20 41-27 32-48-20h-44l-48 20Z"/>
+    <path fill="#704a34" d="M33 107q40-38 82-10l-20 64-58 11-19-36zM223 107q-40-38-82-10l20 64 58 11 19-36z"/>
+    <path fill="none" stroke="#a67b4c" stroke-width="13" d="m65 147 126 72M191 147 65 219"/>
+    <path fill="none" stroke="#87a29d" stroke-width="5" d="M39 112q35-25 65-8M217 112q-35-25-65-8" opacity=".6"/>
+  </g>
+</svg>

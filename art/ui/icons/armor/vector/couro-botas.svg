@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Botas de couro">
+  <defs>
+    <linearGradient id="leather" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#875d40"/><stop offset="1" stop-color="#3b2925"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="url(#leather)" d="M42 29h68l-8 115 25 45-12 33-84 7-9-31 28-48Z"/>
+    <path fill="url(#leather)" d="M146 29h68l20 121 1 58-22 19-82-12-4-31 28-42Z"/>
+    <path fill="#2d2422" d="m31 198 84-9 12 20-12 13-84 7zM131 189l103 19-21 19-82-12z"/>
+    <g fill="none" stroke="#b98955" stroke-width="7">
+      <path d="m45 61 56 17M42 91l57 17M39 121l57 17"/>
+      <path d="m151 65 66 16M153 96l70 17M155 127l72 18"/>
+    </g>
+  </g>
+  <path fill="none" stroke="#82a4a1" stroke-width="5" opacity=".65" d="M51 42h49M155 43h49"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Botas de pano">
+  <defs>
+    <linearGradient id="cloth" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#5a676a"/><stop offset="1" stop-color="#252c30"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="url(#cloth)" d="M49 31h61l-9 111 25 43-13 33-83 8-7-28 29-50Z"/>
+    <path fill="url(#cloth)" d="M147 31h61l-4 111 29 48-8 29-88-4-10-30 28-43Z"/>
+    <path fill="#1c2428" d="m30 198 83-7 13 18-13 9-83 8zM137 191l96-1-8 29-88-4z"/>
+    <g fill="none" stroke="#809695" stroke-width="7" opacity=".8">
+      <path d="m45 58 60 23M42 89l61 23M39 120l62 23"/>
+      <path d="m151 58 53 23M148 89l56 23M145 120l59 23"/>
+    </g>
+  </g>
+</svg>
