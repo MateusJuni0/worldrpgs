@@ -50,6 +50,7 @@ var is_two_handed := false
 
 var camera: PlayerCamera
 var lock_on: LockOn
+var input_enabled := true
 
 # --- Ataque em curso ----------------------------------------------------------
 var _atk: Dictionary = {}
@@ -178,8 +179,11 @@ func _physics_process(delta: float) -> void:
 	state_frame += 1
 
 	if state != State.DEAD:
-		_read_input()
-		lock_on.tick(delta)
+		if input_enabled:
+			_read_input()
+			lock_on.tick(delta)
+		else:
+			_buffered = ""
 		stamina.tick(delta, state == State.BLOCK)
 		if _ability_cd > 0.0:
 			_ability_cd = maxf(0.0, _ability_cd - delta)

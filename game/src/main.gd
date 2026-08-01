@@ -20,6 +20,8 @@ var _respawn_point := Vector3.ZERO
 var _respawning := false
 var _rest_points: Dictionary = {}
 var _nearest_rest_id := ""
+var _learning_points: Dictionary = {}
+var _learning_elapsed := 0.0
 
 
 func _ready() -> void:
@@ -138,7 +140,8 @@ func _build_hud() -> void:
 	hud.player = player
 	SaveSystem.save_completed.connect(_on_save_completed)
 	if not Bench.is_benchmarking():
-		hud.toast(GameData.ui_text("toast.start") % _preset.get("_name", "?"), 6.0)
+		hud.toast(GameData.ui_text("toast.start") % [
+			SettingsSystem.binding_label("toggle_help"), _preset.get("_name", "?")], 6.0)
 
 
 # --- Povoamento ---------------------------------------------------------------
@@ -185,12 +188,21 @@ func _populate_zone() -> void:
 	var p := world.path_points
 	# Brumal: orcs ao longo do caminho. O lanceiro ensina a esquiva primeiro;
 	# o brutamontes aparece depois, quando ja ha esquiva para o ler.
-	_spawn("orc_spearman", p[1] + Vector3(5, 0.5, -2))
+	var first_spear_position := p[1] + Vector3(5, 0.5, -2)
+	_spawn("orc_spearman", first_spear_position)
 	_spawn("orc_spearman", p[2] + Vector3(-6, 0.5, 3))
-	_spawn("orc_brute", p[2] + Vector3(4, 0.5, -6))
-	_spawn("orc_spearman", p[3] + Vector3(6, 0.5, 1))
+	_spawn("orc_spearman", p[2] + Vector3(5, 0.5, -3))
+	var first_brute_position := p[3] + Vector3(2, 0.5, -2)
+	_spawn("orc_brute", first_brute_position)
+	_spawn("orc_spearman", p[4] + Vector3(5, 0.5, 2))
 	_spawn("orc_brute", p[4] + Vector3(-5, 0.5, -2))
 	_spawn("orc_spearman", p[5] + Vector3(4, 0.5, 4))
+	_learning_points = {
+		"attack": first_spear_position,
+		"dodge": p[2],
+		"parry": first_brute_position,
+		"flask": p[4],
+	}
 
 	# A Toca: um em cada sala.
 	var e := world.lair_entrance
@@ -368,6 +380,52 @@ func _binding_label(action_name: String) -> String:
 	return SettingsSystem.binding_label(action_name)
 
 
+func set_local_input_enabled(enabled: bool) -> void:
+	if is_instance_valid(player):
+		player.input_enabled = enabled
+
+
+# --- Aprendizagem contextual -------------------------------------------------
+
+func _tick_learning(delta: float) -> void:
+	if _scene_kind != "zone" or not SettingsSystem.context_tips_enabled() \
+			or not is_instance_valid(player) or not player.input_enabled \
+			or not is_instance_valid(hud) or hud.has_context_tip():
+		return
+	_learning_elapsed += delta
+	if _combat_is_active():
+		return
+	if _learning_elapsed >= 1.2 and not SettingsSystem.tip_seen("movement"):
+		_show_learning_tip("movement")
+		return
+	for tip_id: String in ["attack", "dodge", "parry"]:
+		if SettingsSystem.tip_seen(tip_id) or not _learning_points.has(tip_id):
+			continue
+		if player.global_position.distance_to(_learning_points[tip_id] as Vector3) <= 23.0:
+			_show_learning_tip(tip_id)
+			return
+	if not SettingsSystem.tip_seen("flask") and player.health < player.max_health \
+			and player.global_position.distance_to(
+				_rest_points.get("toca_entrada", Vector3(9999, 9999, 9999)) as Vector3) <= 18.0:
+		_show_learning_tip("flask")
+
+
+func _combat_is_active() -> bool:
+	for node: Node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy != null and enemy.state in [Enemy.State.CHASE, Enemy.State.ATTACK]:
+			return true
+	return false
+
+
+func _show_learning_tip(tip_id: String) -> void:
+	var message := GameShell.tutorial_tip_text(tip_id)
+	if message == "":
+		return
+	SettingsSystem.mark_tip_seen(tip_id)
+	hud.context_tip(message, 4.0)
+
+
 # --- Teclas de sessao ---------------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -398,6 +456,7 @@ var _pilot_t := 0.0
 func _process(delta: float) -> void:
 	if not Bench.is_benchmarking():
 		_tick_rest_points()
+		_tick_learning(delta)
 		return
 	if not is_instance_valid(player):
 		return

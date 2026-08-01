@@ -41,6 +41,22 @@ const ACTION_LABELS := {
 	"reset_arena": "Reiniciar arena", "debug_class_next": "Classe de teste seguinte",
 	"pause_menu": "Pausa",
 }
+const INSTRUCTION_GROUPS := [
+	{"title": "MOVIMENTO E CÂMARA", "actions": [
+		"move_forward", "move_back", "move_left", "move_right",
+		"look_left", "look_right", "look_up", "look_down"]},
+	{"title": "COMBATE", "actions": [
+		"attack", "heavy_mod", "block", "parry", "dodge_sprint",
+		"lock_on", "toggle_grip", "ability"]},
+	{"title": "MAGIA E ITENS", "actions": [
+		"next_spell", "cast", "meditate", "use_item", "hotbar_1",
+		"hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]},
+	{"title": "MUNDO E SISTEMA", "actions": [
+		"interact", "loadout_next", "loadout_prev", "toggle_perf",
+		"toggle_help", "toggle_mouse", "reset_arena", "debug_class_next",
+		"pause_menu"]},
+]
+const LEARNING_TIP_IDS := ["movement", "attack", "dodge", "parry", "flask"]
 
 var _layer: CanvasLayer
 var _screen: Control
@@ -74,6 +90,9 @@ var _pending_binding_event: InputEvent
 var _pending_binding_action := ""
 var _pending_binding_add := false
 var _selected_control_action := ""
+var _instructions_layer: CanvasLayer
+var _instructions_open := false
+var _instructions_paused_here := false
 
 
 func _ready() -> void:
@@ -83,7 +102,10 @@ func _ready() -> void:
 	if _capture_screen != "":
 		Bench.set_overlay_visible(false)
 	var measured_screen := Bench.scene_arg if Bench.is_benchmarking() else ""
-	if measured_screen.begins_with("ui-settings") or _capture_screen.begins_with("settings"):
+	if measured_screen == "ui-instructions" or _capture_screen == "instructions":
+		show_main_menu()
+		_show_instructions()
+	elif measured_screen.begins_with("ui-settings") or _capture_screen.begins_with("settings"):
 		show_main_menu()
 		_settings_tab = _settings_variant(measured_screen if measured_screen != "" else _capture_screen)
 		_show_settings("main")
@@ -91,6 +113,9 @@ func _ready() -> void:
 		show_main_menu()
 	elif measured_screen == "ui-creation" or _capture_screen == "creation":
 		show_character_creation()
+	elif measured_screen == "ui-tip" or _capture_screen == "tip":
+		_start_gameplay()
+		call_deferred("_show_capture_tip")
 	elif measured_screen == "ui-pause" or _capture_screen == "pause":
 		_start_gameplay()
 		call_deferred("_show_pause_menu")
@@ -102,6 +127,15 @@ func _ready() -> void:
 
 
 func _unhandled_input(_event: InputEvent) -> void:
+	if InputMap.has_action("toggle_help") and Input.is_action_just_pressed("toggle_help"):
+		_toggle_instructions()
+		get_viewport().set_input_as_handled()
+		return
+	if _instructions_open and InputMap.has_action("pause_menu") \
+			and Input.is_action_just_pressed("pause_menu"):
+		_close_instructions()
+		get_viewport().set_input_as_handled()
+		return
 	if not is_instance_valid(_gameplay) or not InputMap.has_action("pause_menu"):
 		return
 	if Input.is_action_just_pressed("pause_menu"):
@@ -148,6 +182,7 @@ func _process(_delta: float) -> void:
 
 
 func show_main_menu() -> void:
+	_close_instructions()
 	_close_pause_layer()
 	_clear_gameplay()
 	_begin_screen()
@@ -536,12 +571,21 @@ func _continue_last_save() -> void:
 
 
 func _start_gameplay() -> void:
+	_close_instructions()
 	_close_pause_layer()
 	_clear_screen()
 	if is_instance_valid(_gameplay):
 		_gameplay.queue_free()
 	_gameplay = GAMEPLAY_SCENE.instantiate()
 	add_child(_gameplay)
+
+
+func _show_capture_tip() -> void:
+	if not is_instance_valid(_gameplay):
+		return
+	var capture_hud := _gameplay.get("hud") as Hud
+	if capture_hud != null:
+		capture_hud.context_tip(tutorial_tip_text("dodge"), 30.0)
 
 
 func return_to_main_menu() -> void:
@@ -554,6 +598,7 @@ func _show_pause_menu() -> void:
 	_pause_open = true
 	var coop := _is_coop_session()
 	get_tree().paused = pause_world_for_mode(coop)
+	_set_gameplay_input(false)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_pause_layer = CanvasLayer.new()
 	_pause_layer.layer = 400
@@ -603,6 +648,10 @@ func _show_pause_menu() -> void:
 	settings.custom_minimum_size.x = 588
 	settings.pressed.connect(_show_settings.bind("pause"))
 	menu.add_child(settings)
+	var instructions := _menu_button("COMANDOS", "Ver todas as tuas teclas num só ecrã")
+	instructions.custom_minimum_size.x = 588
+	instructions.pressed.connect(_show_instructions)
+	menu.add_child(instructions)
 	var leave := _menu_button("SAIR PARA O MENU", "Guarda os eventos confirmados e abandona o mundo")
 	leave.custom_minimum_size.x = 588
 	leave.pressed.connect(_leave_gameplay_to_menu)
@@ -633,6 +682,7 @@ func _close_pause_layer() -> void:
 	if is_instance_valid(_pause_layer):
 		_pause_layer.free()
 	_pause_layer = null
+	_set_gameplay_input(true)
 
 
 func _is_coop_session() -> bool:
@@ -646,6 +696,153 @@ static func pause_world_for_mode(is_coop: bool) -> bool:
 
 func _binding_label_for_ui(action_name: String) -> String:
 	return SettingsSystem.binding_label(action_name).to_upper()
+
+
+static func instruction_actions() -> Array[String]:
+	var actions: Array[String] = []
+	for group: Dictionary in INSTRUCTION_GROUPS:
+		for action_name: String in group.get("actions", []):
+			actions.append(action_name)
+	return actions
+
+
+static func tutorial_tip_text(tip_id: String) -> String:
+	match tip_id:
+		"movement":
+			return "%s / %s / %s / %s — mover  ·  rato — câmara" % [
+				SettingsSystem.binding_label("move_forward"),
+				SettingsSystem.binding_label("move_back"),
+				SettingsSystem.binding_label("move_left"),
+				SettingsSystem.binding_label("move_right")]
+		"attack":
+			return "%s — ataque leve" % SettingsSystem.binding_label("attack")
+		"dodge":
+			return "%s — esquiva; uma estocada falhada deixa as costas abertas" % \
+				SettingsSystem.binding_label("dodge_sprint")
+		"parry":
+			return "%s — aparar; toca durante a preparação do golpe" % \
+				SettingsSystem.binding_label("parry")
+		"flask":
+			return "%s — Frasco de Bruma" % SettingsSystem.binding_label("use_item")
+	return ""
+
+
+func _toggle_instructions() -> void:
+	if _instructions_open:
+		_close_instructions()
+	else:
+		_show_instructions()
+
+
+func _show_instructions() -> void:
+	if _instructions_open:
+		return
+	_instructions_open = true
+	_instructions_paused_here = false
+	if is_instance_valid(_gameplay) and not _pause_open:
+		_instructions_paused_here = pause_world_for_mode(_is_coop_session())
+		if _instructions_paused_here:
+			get_tree().paused = true
+		_set_gameplay_input(false)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_instructions_layer = CanvasLayer.new()
+	_instructions_layer.layer = 550
+	_instructions_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_instructions_layer)
+	var root := Control.new()
+	root.theme = _theme
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_instructions_layer.add_child(root)
+	var background := ColorRect.new()
+	background.color = Color("071014")
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.add_child(background)
+	var title := Label.new()
+	title.text = "COMANDOS"
+	title.position = Vector2(48, 28)
+	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_color_override("font_color", Color("eadbb9"))
+	root.add_child(title)
+	var subtitle := Label.new()
+	subtitle.text = "Este ecrã lê as tuas ligações actuais. Tocar e manter são acções diferentes."
+	subtitle.position = Vector2(48, 76)
+	subtitle.add_theme_color_override("font_color", Color("96a3a4"))
+	root.add_child(subtitle)
+	var world_rule := Label.new()
+	world_rule.text = ("CO-OP · O MUNDO CONTINUA" if is_instance_valid(_gameplay) \
+		and _is_coop_session() else "SOLO · O MUNDO ESTÁ EM PAUSA" if \
+		_instructions_paused_here else "REFERÊNCIA · TODAS AS ACÇÕES NUM ECRÃ")
+	world_rule.position = Vector2(1240, 44)
+	world_rule.size = Vector2(420, 36)
+	world_rule.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	world_rule.add_theme_color_override("font_color", Color("d4b36f"))
+	root.add_child(world_rule)
+	var close := Button.new()
+	close.text = "VOLTAR"
+	close.position = Vector2(1680, 30)
+	close.size = Vector2(190, 54)
+	close.pressed.connect(_close_instructions)
+	root.add_child(close)
+	for group_index: int in INSTRUCTION_GROUPS.size():
+		var group: Dictionary = INSTRUCTION_GROUPS[group_index]
+		var panel := Panel.new()
+		panel.position = Vector2(48 + group_index * 462, 126)
+		panel.size = Vector2(438, 828)
+		root.add_child(panel)
+		var heading := Label.new()
+		heading.text = String(group.get("title", ""))
+		heading.position = Vector2(24, 22)
+		heading.add_theme_font_size_override("font_size", 19)
+		heading.add_theme_color_override("font_color", Color("d4b36f"))
+		panel.add_child(heading)
+		var row_y := 70.0
+		for action_name: String in group.get("actions", []):
+			var action_label := Label.new()
+			action_label.text = String(ACTION_LABELS.get(action_name, action_name))
+			action_label.position = Vector2(24, row_y)
+			action_label.size = Vector2(390, 24)
+			action_label.add_theme_font_size_override("font_size", 16)
+			panel.add_child(action_label)
+			var binding := Label.new()
+			binding.text = SettingsSystem.binding_label(action_name)
+			binding.position = Vector2(24, row_y + 25)
+			binding.size = Vector2(390, 24)
+			binding.clip_text = true
+			binding.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			binding.add_theme_font_size_override("font_size", 14)
+			binding.add_theme_color_override("font_color", Color("d4b36f"))
+			panel.add_child(binding)
+			row_y += 78.0
+	var footer := Label.new()
+	footer.text = "%s — fechar  ·  As dicas contextuais aparecem uma vez e nunca durante combate." % \
+		_binding_label_for_ui("toggle_help")
+	footer.position = Vector2(48, 990)
+	footer.size = Vector2(1820, 42)
+	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	footer.add_theme_color_override("font_color", Color("7f8e90"))
+	root.add_child(footer)
+	close.grab_focus()
+
+
+func _close_instructions() -> void:
+	if not _instructions_open:
+		return
+	if _instructions_paused_here:
+		get_tree().paused = false
+	_instructions_paused_here = false
+	_instructions_open = false
+	if is_instance_valid(_instructions_layer):
+		_instructions_layer.free()
+	_instructions_layer = null
+	if is_instance_valid(_gameplay) and not _pause_open and not is_instance_valid(_settings_layer):
+		_set_gameplay_input(true)
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _set_gameplay_input(enabled: bool) -> void:
+	if is_instance_valid(_gameplay) and _gameplay.has_method("set_local_input_enabled"):
+		_gameplay.call("set_local_input_enabled", enabled)
 
 
 func _show_settings(origin: String) -> void:
@@ -856,6 +1053,12 @@ func _build_controls_settings() -> void:
 	fov_value.custom_minimum_size.x = 55
 	preferences.add_child(fov_value)
 	fov_slider.value_changed.connect(_fov_changed.bind(fov_value))
+	var context_tips := CheckButton.new()
+	context_tips.text = "Mostrar uma vez as dicas contextuais dos primeiros minutos"
+	context_tips.button_pressed = SettingsSystem.context_tips_enabled()
+	context_tips.custom_minimum_size = Vector2(1120, 42)
+	context_tips.toggled.connect(SettingsSystem.set_context_tips_enabled)
+	box.add_child(context_tips)
 	var toolbar := HBoxContainer.new()
 	toolbar.custom_minimum_size = Vector2(1120, 48)
 	toolbar.add_theme_constant_override("separation", 8)
@@ -876,7 +1079,7 @@ func _build_controls_settings() -> void:
 	add.pressed.connect(_start_selected_binding.bind(true))
 	toolbar.add_child(add)
 	var list := Tree.new()
-	list.custom_minimum_size = Vector2(1170, 500)
+	list.custom_minimum_size = Vector2(1170, 440)
 	list.columns = 2
 	list.column_titles_visible = true
 	list.set_column_title(0, "ACÇÃO")

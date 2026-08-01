@@ -21,9 +21,10 @@ var _info: Label
 var _boss_bg: ColorRect
 var _boss_bar: ColorRect
 var _boss_label: Label
-var _help: Label
 var _toast: Label
 var _toast_time := 0.0
+var _lesson: Label
+var _lesson_time := 0.0
 var _prompt: Label
 var _save_status: Label
 var _save_status_time := 0.0
@@ -85,16 +86,24 @@ func _build_labels() -> void:
 	_save_status = _styled_label(Vector2(1580, 34), 16)
 	_save_status.size = Vector2(300, 40)
 	_save_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-
-	_help = _styled_label(Vector2(1180, 120))
-	_help.visible = false
-	_help.text = GameData.ui_text("hud.help", "COMANDOS")
+	_lesson = _styled_label(Vector2(510, 748), 20)
+	_lesson.size = Vector2(900, 58)
+	_lesson.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_lesson.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var lesson_background := StyleBoxFlat.new()
+	lesson_background.bg_color = Color(0.02, 0.035, 0.04, 0.92)
+	lesson_background.border_color = Color(0.60, 0.45, 0.24, 0.82)
+	lesson_background.set_border_width_all(1)
+	lesson_background.corner_radius_top_left = 3
+	lesson_background.corner_radius_top_right = 3
+	lesson_background.corner_radius_bottom_left = 3
+	lesson_background.corner_radius_bottom_right = 3
+	_lesson.add_theme_stylebox_override("normal", lesson_background)
+	_lesson.add_theme_color_override("font_color", Color("eadbb9"))
+	_lesson.visible = false
 
 
 func _process(delta: float) -> void:
-	if InputMap.has_action("toggle_help") and Input.is_action_just_pressed("toggle_help"):
-		_help.visible = not _help.visible
-
 	if _toast_time > 0.0:
 		_toast_time -= delta
 		if _toast_time <= 0.0:
@@ -103,6 +112,11 @@ func _process(delta: float) -> void:
 		_save_status_time -= delta
 		if _save_status_time <= 0.0:
 			_save_status.text = ""
+	if _lesson_time > 0.0:
+		_lesson_time -= delta
+		if _lesson_time <= 0.0:
+			_lesson.visible = false
+			_lesson.text = ""
 
 	if not is_instance_valid(player):
 		return
@@ -138,6 +152,16 @@ func _update_boss() -> void:
 func toast(message: String, seconds := 2.5) -> void:
 	_toast.text = message
 	_toast_time = seconds
+
+
+func context_tip(message: String, seconds := 4.0) -> void:
+	_lesson.text = message
+	_lesson.visible = true
+	_lesson_time = seconds
+
+
+func has_context_tip() -> bool:
+	return _lesson_time > 0.0
 
 
 func set_prompt(message: String) -> void:

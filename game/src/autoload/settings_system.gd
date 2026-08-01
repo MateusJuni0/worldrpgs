@@ -44,6 +44,10 @@ func _defaults() -> Dictionary:
 			"Ambiente": 0.8,
 			"Vozes": 1.0,
 		},
+		"learning": {
+			"context_tips": true,
+			"seen_tips": [],
+		},
 	}
 
 
@@ -175,7 +179,7 @@ func _ensure_audio_buses() -> void:
 func binding_label(action_name: String, include_all := false) -> String:
 	var labels: Array[String] = []
 	for event: InputEvent in InputMap.action_get_events(action_name):
-		var label := event.as_text().replace(" (Physical)", "")
+		var label := event.as_text().replace(" (Physical)", "").replace(" - Physical", "")
 		if event is InputEventJoypadMotion or event is InputEventJoypadButton:
 			label = label.replace("Joypad", "Comando")
 		labels.append(label)
@@ -244,6 +248,27 @@ func set_fov(value: float) -> void:
 
 func control_value(key: String, fallback: Variant) -> Variant:
 	return (data.get("controls", {}) as Dictionary).get(key, fallback)
+
+
+func context_tips_enabled() -> bool:
+	return bool((data.get("learning", {}) as Dictionary).get("context_tips", true))
+
+
+func set_context_tips_enabled(enabled: bool) -> void:
+	(data.get("learning", {}) as Dictionary)["context_tips"] = enabled
+	save()
+
+
+func tip_seen(tip_id: String) -> bool:
+	return tip_id in ((data.get("learning", {}) as Dictionary).get("seen_tips", []) as Array)
+
+
+func mark_tip_seen(tip_id: String) -> void:
+	var seen: Array = (data.get("learning", {}) as Dictionary).get("seen_tips", []) as Array
+	if tip_id in seen:
+		return
+	seen.append(tip_id)
+	save()
 
 
 func _apply_controls() -> void:

@@ -125,21 +125,34 @@ func _test_settings_contract() -> void:
 	var declared_actions: Dictionary = GameData.controls.get("actions", {}) as Dictionary
 	_check(GameShell.ACTION_LABELS.size() == declared_actions.size(),
 		"configuracoes: todas as accoes declaradas aparecem no ecra")
+	var instruction_actions := GameShell.instruction_actions()
+	_check(instruction_actions.size() == declared_actions.size(),
+		"instrucoes: esquema unico cobre todas as accoes")
 	for action_name: String in declared_actions:
 		_check(GameShell.ACTION_LABELS.has(action_name),
 			"configuracoes: %s e remapeavel com nome legivel" % action_name)
+		_check(instruction_actions.count(action_name) == 1,
+			"instrucoes: %s aparece exactamente uma vez" % action_name)
 	var test_event := InputEventKey.new()
 	test_event.physical_keycode = KEY_F12
+	var original_parry_events := InputMap.action_get_events("parry")
+	InputMap.action_erase_events("parry")
 	InputMap.action_add_event("parry", test_event)
 	_check(SettingsSystem.find_conflict(test_event, "cast") == "parry",
 		"configuracoes: conflito diz qual e a outra accao")
 	_check(SettingsSystem.binding_label("parry", true).contains("F12"),
 		"configuracoes: texto consulta o mapa actual, nao a tecla de fabrica")
+	_check(GameShell.tutorial_tip_text("parry").contains("F12"),
+		"aprendizagem: dica contextual consulta a tecla actual")
+	_check(GameShell.LEARNING_TIP_IDS.size() == 5 and SettingsSystem.data.has("learning"),
+		"aprendizagem: cinco batidas podem ser desligadas e lembradas por perfil")
 	var encoded := SettingsSystem.encode_event(test_event)
 	var decoded := SettingsSystem.decode_event(encoded)
 	_check(decoded != null and SettingsSystem.events_match(test_event, decoded),
 		"configuracoes: remapeamento persiste fora do save da personagem")
-	InputMap.action_erase_event("parry", test_event)
+	InputMap.action_erase_events("parry")
+	for original_event: InputEvent in original_parry_events:
+		InputMap.action_add_event("parry", original_event)
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

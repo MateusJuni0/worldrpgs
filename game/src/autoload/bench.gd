@@ -219,7 +219,7 @@ func _refresh_text() -> void:
 	elif _fps_shown < 59.0:
 		colour = Color(1.0, 0.9, 0.4)
 	_text.add_theme_color_override("font_color", colour)
-	_text.text = "%.0f fps  (%.2f ms)   min 3s: %.0f   min sessao: %.0f\n%s / %s  %dx%d   draw %d   vram %.0f MB\nF1 esconde  ·  F2 comandos" % [
+	_text.text = "%.0f fps  (%.2f ms)   min 3s: %.0f   min sessao: %.0f\n%s / %s  %dx%d   draw %d   vram %.0f MB\n%s esconde  ·  %s comandos" % [
 		_fps_shown, ms, _worst_shown,
 		(_session_worst if _session_worst < 9000.0 else 0.0),
 		RenderingServer.get_current_rendering_method(),
@@ -227,4 +227,6 @@ func _refresh_text() -> void:
 		int(vp.x), int(vp.y),
 		int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),
 		Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
+		SettingsSystem.binding_label("toggle_perf"),
+		SettingsSystem.binding_label("toggle_help"),
 	]
