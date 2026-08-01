@@ -81,7 +81,7 @@ A regra de paralelismo para dois construtores (ou um agente e dois donos): **art
 
 ## O que continua aberto
 
-- Nome do repositório de construção e versão exacta do Godot → M0
+- O repositório `worldrpgs` e Godot 4.7.1-stable estão materializados; já não são trabalho de M0.
 - O carimbo dos dois nas propostas 🔴 do 99 — não travam a fatia, mas a **sessão 2 gravada** deve acontecer antes do fim do M5, para a fatia 2 ter chão
 
 ## Ligações

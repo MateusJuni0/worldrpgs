@@ -81,11 +81,11 @@ O ponto 3 é o que faz isto valer a pena: **a comparação existe para encontrar
 
 Registado agora, para não parecer descoberta depois:
 
-- **Variedade de armas:** 5 na fatia contra as dezenas de um jogo completo. Intencional para a fatia; por decidir para o jogo inteiro
-- **Número de chefes:** os nossos ~61 planeados são mais do que a maioria dos jogos do género tem. Já está assinalado como o maior risco de escopo ([`00-visao.md`](00-visao.md))
-- **Densidade de conteúdo por zona:** com 10+ biomas, é a pergunta que o WP8 tem de responder com um número
+- **Variedade de armas:** 5 executáveis na fatia e **120 fichas em 8 famílias** no jogo completo ([`68`](68-catalogo-de-armas-armaduras-e-aneis.md))
+- **Hierarquia de encontros:** **13 chefes verdadeiros + 12 subchefes + ~36 nomeados**. Os 61 são encontros notáveis, não 61 chefes de produção completa
+- **Densidade de conteúdo por zona:** os 12 biomas declaram 12–20 comuns, 3–5 elites, 2–3 nomeados, subchefe, guardião e 2–3 descansos ([`69`](69-catalogo-do-mundo.md))
 - **Melhoria de armas:** já existe no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) como base + seis escolhas de verbo/escala/conversão, sem aumento linear de dano (`→WP5`)
-- **Estados alterados** (veneno, sangramento, queimadura): nem mencionados na sessão 1, e são parte grande do género
+- **Estados alterados:** veneno, sangramento e queimadura têm agora medidor, aplicação/decadência, saída, imunidades e contrato simétrico no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md)
 
 ## Ligações
 

@@ -183,10 +183,9 @@ Começam-se com **dois dedos** e ganham-se até dez. Todos são passivos ou cond
 ## 9. O que continua aberto
 
 - ⏳ Mateus confirmar ou alterar a proposta do Assassino; este catálogo não transforma a instrução do Rico em consenso.
-- 🔴 Implementar no M2 os sete golpes novos, troca uma/duas mãos, artes e estados; os dados já fixam o contrato.
-- 🟠 O WP9 ainda resolve os 40 materiais e 17 consumíveis usados pelos baralhos do bestiário.
+- 🔴 Implementar no M2 os sete golpes novos, artes e estados; a troca uma/duas mãos já executa em 12 frames e os dados fixam o restante contrato.
 - 🟠 O ecrã de equipamento/anéis, ganho dos oito dedos adicionais e persistência dos votos pertencem ao WP11/save v2.
-- 🟠 Contra-ataque universal vs só perfuração, piso de escudo e uma/duas mãos continuam nas perguntas já existentes; nenhuma tensão foi decidida.
+- ✅ O [`70`](70-fecho-dos-sistemas-de-combate.md) fechou contra-ataque só em perfuração, piso corporal fora do bloqueio e empunhadura; a tensão elemental dos escudos é agora a pergunta 43.
 
 ## Ligações
 

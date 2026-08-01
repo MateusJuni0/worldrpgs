@@ -5,6 +5,8 @@
 > **O que isto é.** O [`35-estudo-referencia.md`](35-estudo-referencia.md) estudou seis áreas. Este vai ao resto — **os sistemas que nunca abrimos**, com os números reais e a fonte de cada um.
 >
 > ⚠️ **A linha do [`31-referencias.md`](31-referencias.md) mantém-se:** aqui não há nomes de armas, de chefes, de zonas nem de personagens. Há **fórmulas, limiares e arquitecturas** — e o que cada uma nos ensina.
+>
+> ⚠️ **ESTADO POSTERIOR (01-08):** frases como “não existe”, “falta-nos” e “criar” registam o diagnóstico deste estudo. A execução posterior manda: mana/meditação no [`54`](54-mana-meditacao-e-tracos-de-classe.md)/[`66`](66-catalogo-de-magia.md), curvas/carga/queda/NG+/bloqueio no [`70`](70-fecho-dos-sistemas-de-combate.md) e economia no [`72`](72-materiais-consumiveis-e-economia.md). As tabelas da referência continuam referência, não valores do WorldRPGs.
 
 **A descoberta maior deste estudo, se só leres uma linha:** o jogo de referência tem, escrito na fórmula do dano, **um piso de 30%**. Nenhuma quantidade de armadura, nível ou defesa reduz um golpe abaixo de 30% do valor dele. **É a nossa Lei 1 em forma de equação** — e nós não a tínhamos.
 

@@ -414,7 +414,7 @@ Uma zona e vizinhas imediatas, tecto total de 2,5 GB; gargantas seguram o jogado
 ## 7. O que continua aberto sem ser decidido aqui
 
 - **Mapa por zona ou do mundo inteiro** e se nomes de bioma não visitados aparecem — pergunta 38, donos.
-- **Nadar, escalar e saltar:** as rotas obrigatórias não dependem deles; a água opcional da Cidade preserva o espaço de decisão.
+- ~~**Nadar, escalar e saltar**~~: ✅ não existem como verbos livres; água é perigo/fundo caminhável e toda a verticalidade usa ligações autoradas, segundo o [`73`](73-fecho-dos-buracos-de-integracao.md) §2.
 - **Conteúdo das reservas futuras:** as 30 portas declaram forma e razão, não data nem obrigação de as preencher.
 - Nomes definitivos de zonas, dungeons e sementes de história continuam sujeitos à gravação narrativa; IDs técnicos ficam estáveis.
 

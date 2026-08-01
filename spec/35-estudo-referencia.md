@@ -3,6 +3,8 @@
 > **Feito a 31-07-2026 pelo Claude**, aplicando o protocolo do [`31-referencias.md`](31-referencias.md) que nenhum dos 11 documentos do PR #11 chegou a usar. Dados de fontes públicas, com ligação.
 >
 > ⚠️ **A linha, outra vez:** isto estuda **estrutura**, não copia **conteúdo**. Não há aqui nomes de armas, de chefes, de zonas nem de personagens. Há contagens, arquitecturas e o que elas nos ensinam sobre as nossas.
+>
+> ⚠️ **ESTADO POSTERIOR (01-08):** as colunas “Nós” preservam o diagnóstico que originou trabalho, não o estado corrente. Hoje mandam os catálogos [`67`](67-catalogo-do-bestiario.md)–[`72`](72-materiais-consumiveis-e-economia.md): 13 chefes verdadeiros, 12 subchefes e ~36 nomeados; 68 peças em 9 slots; curva cúbica; três estados; melhoria sem aumento linear.
 
 ---
 
@@ -32,16 +34,16 @@
 
 | | Referência (DS2) | Nós | Diferença |
 |---|---|---|---|
-| Peças | 4 espaços: elmo, peito, mãos, pernas | 4 espaços (já decidido) | ✅ igual |
-| Conjuntos | **mais de 100** | ~30 alvo | eles têm 3× mais |
+| Peças | 4 espaços: elmo, peito, mãos, pernas | **68 peças em 9 slots** | mais combinações de silhueta, menos volume total |
+| Conjuntos | **mais de 100** | catálogo por peça, não 30 conjuntos | comparação deixou de ser unidade equivalente |
 | Mistura de peças | livre, sem bónus de conjunto | livre | ✅ igual |
-| Melhoria | +5 dá **+50%** de defesa · +10 dá **+100%** | não existe | ⬜ lacuna |
+| Melhoria | +5 dá **+50%** de defesa · +10 dá **+100%** | seis votos de arma sem aumento linear; armadura não sobe por escalão | diferença intencional da Lei 2 |
 
 **Cada peça carrega:** defesa física, mágica, de fogo e de raio · **poise** (resistência a ser interrompido) · resistências a veneno, sangramento, escuro, petrificação e maldição.
 
 ### O que isto nos diz
 
-1. **30 armaduras não são muitas — são poucas.** Como são 4 peças, 30 *conjuntos* dão 120 peças, e aí o número faz sentido. Mas se "30 armaduras" significar 30 peças no total, o jogador terá pouca escolha. `→WP5` tem de dizer qual dos dois.
+1. **O diagnóstico obrigava a escolher uma unidade.** O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) resolveu-a como **68 peças individuais em 9 slots**, não “30 armaduras” ambíguas.
 2. **A nossa ideia de "resistências por tipo em vez de defesa plana" já é o modelo deles** — e é a saída para a tensão com a Lei 1 que registámos no [`33-morte-e-almas.md`](33-morte-e-almas.md). Boa notícia: não estamos a inventar, estamos a seguir um padrão provado.
 3. ⚠️ **O detalhe do DS2 que vale ouro para nós:** naquele jogo, a velocidade do rolamento **não depende só do peso** — depende de um atributo próprio (Adaptabilidade). Isso foi das mecânicas mais criticadas do jogo, precisamente porque **esconde uma coisa de perícia (a esquiva) atrás de uma estatística.**
 
@@ -116,13 +118,11 @@ E repara no que o sangramento deles faz: **ataca a stamina**, não a vida. Isso 
 
 | | Referência (DS2) | Nós |
 |---|---|---|
-| Jogo base | **33** | ~61 planeados |
+| Jogo base | **33** | **13 chefes verdadeiros** |
 | Com todo o conteúdo adicional | **42** | — |
 | Na fatia inicial | — | 1 |
 
-**Um jogo inteiro e aclamado do género tem 33 chefes.** Nós temos 61 planeados, **feitos por duas pessoas**. Isto já estava assinalado como o maior risco de escopo ([`00-visao.md`](00-visao.md)); agora tem um número ao lado para comparar.
-
-Não é para cortar hoje. É para saber que **61 é quase o dobro de um jogo completo com estúdio por trás**, e que a pergunta certa não é "quantos chefes" mas "quantos na fatia 2".
+**Um jogo inteiro e aclamado do género tem 33 chefes.** O diagnóstico inicial confundia **61 encontros notáveis** com 61 chefes. A decisão posterior reclassificou-os em **13 chefes verdadeiros, 12 subchefes e ~36 nomeados que reutilizam fichas comuns**. O risco não desapareceu, mas a comparação já não multiplica chefes de produção completa por engano.
 
 **Fonte:** [Bosses — DS2 Wiki](https://darksouls2.wiki.fextralife.com/Bosses)
 
@@ -133,13 +133,13 @@ Não é para cortar hoje. É para saber que **61 é quase o dobro de um jogo com
 | # | Descoberta | Onde bate |
 |---|---|---|
 | 1 | **Organizar armas por família de movimento, não por classe** — 20 armas por classe reintroduz a divisão que a Lei 3 recusa | `→WP5` **reescrever** |
-| 2 | A curva de nível deles é **cúbica**; a nossa (`80 + 20n`) é **linear** e perde a tensão | `→WP2/WP9` **rever** |
-| 3 | **30 armaduras**: são 30 conjuntos (=120 peças) ou 30 peças? Muda tudo | `→WP5` **definir** |
+| 2 | A curva de nível deles é **cúbica**; a nossa curva linear precisava de substituição | ✅ curva cúbica fechada no [`72`](72-materiais-consumiveis-e-economia.md) |
+| 3 | **30 armaduras** era uma unidade ambígua | ✅ 68 peças individuais em 9 slots no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 4 | Melhoria de frascos tem **dois eixos** (quantidade e potência), com moedas diferentes | `→WP5` |
-| 5 | Estados alterados: **medidor visível que enche e desce**; o de sangramento ataca a **stamina**, não a vida | `→WP5/WP6` |
-| 6 | **Melhoria de armas** existe lá como sistema inteiro (+5/+10 com percentagens); na nossa spec não existe | `→WP5` |
+| 5 | Estados alterados: **medidor visível que enche e desce**; o de sangramento ataca a **stamina**, não a vida | ✅ três estados fechados no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 6 | **Melhoria de armas** existe lá como sistema inteiro (+5/+10 com percentagens) | ✅ a nossa abre verbos/escala/conversão sem aumento linear no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 7 | ⚠️ **A esquiva deles depende de um atributo — não copiar.** É o que a nossa Lei 1 proíbe, e foi das coisas mais criticadas do jogo | regra a manter |
-| 8 | Um jogo completo do género tem **33 chefes**; nós planeámos 61 | `→WP7` calibrar |
+| 8 | Um jogo completo do género tem **33 chefes**; nós chamávamos “chefes” a 61 encontros | ✅ reclassificados em 13 + 12 + ~36 no [`53`](53-chefes-ritmo-e-o-mago-forte.md) |
 
 ## O que ainda não foi estudado
 

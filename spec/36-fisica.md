@@ -151,8 +151,8 @@ Tudo isto corre numa máquina com 8 GB e gráficos integrados:
 |---|---|
 | Validar todas estas constantes a jogar | WP15B, marco 2 |
 | Como a mira do arco comunica a queda | WP11 |
-| Arenas com precipícios: quais e como se sinalizam | WP8 / WP7 |
-| Nadar, escalar, saltar: existem? | WP8 — nunca foram mencionados |
+| Quais das 12 arenas futuras usam precipícios | conteúdo WP7; os quatro sinais e a faixa segura já estão fechados no [`61`](61-arenas-de-chefe.md) |
+| ~~Nadar, escalar, saltar: existem?~~ | ✅ sem verbos livres; passo automático ≤0,45 m e ligações verticais autoradas no [`73`](73-fecho-dos-buracos-de-integracao.md) §2 |
 | ~~Massa de cada inimigo (para o empurrão)~~ | ✅ [`67`](67-catalogo-do-bestiario.md): 33 comuns + Vorgar, validada no arranque |
 
 ## Ligações

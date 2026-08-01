@@ -189,8 +189,8 @@ matas o ULTRA
 | ⏳ **Quantos desfechos, e quais** — precisa das 7 perguntas de narrativa | donos |
 | ⏳ **Se os dois discordarem do desfecho, o que acontece?** | donos — **e é uma boa cena** |
 | **Quantas portas abrem em NG+, e quais** | `→WP8` |
-| **A brasa custa quanto, e onde se encontra** | `→WP9` |
-| **Números exactos da curva cúbica ajustada ao tecto 100** | `→WP2`, valida-se no M2 |
+| **Colocação exacta da Brasa em cada zona** | não se compra: uma por zona/ciclo, recompensa única, fechado no [`70`](70-fecho-dos-sistemas-de-combate.md); a planta WP8 escolhe o sítio |
+| ~~**Números exactos da curva cúbica ajustada ao tecto 100**~~ | ✅ fórmula e marcos 20/40/70/100 no [`72`](72-materiais-consumiveis-e-economia.md) e `economy.json`; feel ainda se valida no M2 |
 
 ## Ligações
 

@@ -106,8 +106,8 @@ Protocolo completo no WP15B; os limiares que disparam alarme vivem aqui:
 ## O que continua aberto
 
 - **O carimbo dos dois na engine** — a escolha está feita com dados, mas a pergunta 17 é deles; assinar por baixo de números, como a 0b pediu
-- Nome e criação do repositório de construção → arranque do WP15
-- Versão exacta do Godot a congelar → arranque da construção
+- ✅ O repositório existe como `worldrpgs` e contém `game/`; já não é uma decisão por tomar.
+- ✅ O protótipo e os testes correntes congelam **Godot 4.7.1-stable**; mudar de versão exige migração medida, não preencher esta lista.
 
 ## Ligações
 
