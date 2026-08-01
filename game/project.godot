@@ -20,6 +20,7 @@ InventorySystem="*res://src/autoload/inventory_system.gd"
 Bench="*res://src/autoload/bench.gd"
 SettingsSystem="*res://src/autoload/settings_system.gd"
 Sfx="*res://src/autoload/sfx.gd"
+NetSession="*res://src/net/net_session.gd"
 
 [debug]
 
