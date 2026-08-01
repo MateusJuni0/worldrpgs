@@ -4,7 +4,7 @@
 >
 > Mostra **os links reais entre documentos**. Um documento muito citado é uma fundação: mexer nele mexe em tudo o que aponta para lá.
 
-**127 documentos · 19 870 linhas**
+**127 documentos · 19 864 linhas**
 
 ## ⭐ As fundações — o que mais se cita
 
@@ -38,7 +38,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`DECISOES.md`](DECISOES.md) — Registo de decisões | 222 | 17 |
 | [`ESTADO.md`](ESTADO.md) — ESTADO — o que é verdade hoje | 304 | 17 |
 | [`LACUNAS.md`](LACUNAS.md) — LACUNAS — o que falta, e ninguém está a fazer | 309 | 18 |
-| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 197 | 6 |
+| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 191 | 6 |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) — Rico, lê isto primeiro | 94 | 3 |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) — Ponte Claude — guia do Rico | 62 | 2 |
 | [`README.md`](README.md) — WorldRPGs | 73 | 2 |
