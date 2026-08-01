@@ -10,6 +10,15 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 01-08-2026
 
+### ⭐ O Mago do Mal é uma **origem própria** — a 7.ª classe · fecha a pergunta 36
+**[DECIDIDO] (Mateus, 01-08-2026) ⏳ falta a confirmação do Rico** — respondeu à pergunta 36 do [`99`](spec/99-perguntas-abertas.md) depois de lhe serem apresentadas as três saídas.
+
+- ⭐ **O Mago do Mal entra no ecrã de criação ao lado das outras seis**, com ficha inicial, traço de mana e postura próprias. Passam a ser **sete origens**
+- **Não é o Feiticeiro.** O Feiticeiro é o mago que fica atrás; este **anda entre os mortos**, porque precisa dos corpos para trabalhar. É o argumento do [`52`](spec/52-mago-do-mal.md) §5: *"uma classe com postura própria, não uma variante de números"*
+- **Alternativa descartada:** a Escola vermelha aberta a qualquer origem. *Perdia* a identidade — o traço de +40% de mana e a ficha inicial deixavam de fazer sentido, e o mago do mal passava a ser um ramo de magia em vez de alguém que se é
+- ⚠️ **O que isto obriga a mexer:** o ecrã de criação do [`64`](spec/64-criacao-de-personagem.md), o kit inicial em `weapons.json`, o traço em [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md), e **todos os testes que verificam "exactamente seis origens"**
+- ⚠️ **Continua `[TENSÃO]` e não é para os agentes:** o Voto de Sangue por trocas de verbo do [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §§4–5 colide com o +30/+60/+90% que o Mateus decidiu. Essa fica aberta
+
 ### ⭐ Os vendedores vendem **tudo**, e a loja separa-se por slot como no Dark Souls
 **[DECIDIDO] (Mateus, 01-08-2026)** — *"os vendedores vendem tudo do jogo nao so o que eu achei.. faz direitinho separa as coisas por slot igual é do darksouls"*
 
