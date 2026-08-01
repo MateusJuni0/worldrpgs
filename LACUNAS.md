@@ -133,6 +133,51 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 
 ---
 
+---
+
+## 🔬 Da auditoria de comparação com DS2/DS3 (01-08)
+
+[`docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md`](docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md). ⚠️ **A primeira é um erro de conta meu, já corrigido.**
+
+| | Achado | Origem |
+|---|---|---|
+| ✅ | ~~*"do 70 ao 100 custa 3× tudo o que gastaste do 1 ao 70"*~~ **ERRO MEU, CORRIGIDO** — somei só o termo cúbico e ignorei `3,06N²` e `105,6N`, que pesam mais nos níveis baixos. **A conta certa é 1,92×** (680 663 contra 1 308 518). Refiz-a e confirma | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §2 |
+| 🔴 | ⭐ **Meditar 40 s em qualquer sítio não é um custo — é tempo morto.** A mana volta sempre a 100% e as artes continuam a dizer que custam "energia", que foi revogada. **Não há economia de recursos entre descansos.** Proposta: um recurso único, meditação com **cargas finitas** (2 por descanso) e a repor **40–50%**, não 100% | [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) §3 |
+| 🔴 | ⭐ **Uma mão / duas mãos não tem comando nem estado.** Cada arma declara duas artes e **não há forma de trocar** — é conteúdo que não pode ser seleccionado. É a regra do fio solto a apanhar-nos. Precisa de input, estado e transição (~12 frames, interrompível) | [`34`](spec/34-catalogo-e-comandos.md) §2b |
+| 🔴 | ⭐ **Os 8 favoritos mudáveis a qualquer momento = os 25 feitiços estão sempre preparados.** Morre a decisão *"o que levo para esta zona?"*. **Só se muda fora de combate ou no descanso** | [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) §6 |
+| 🟠 | ⚠️ **Parry com 4 frames de arranque é reactivo demais** — no DS3 o mais rápido começa aos **8**. Com 4, aparas depois de já veres o golpe. **Subir para 8–12** | [`01`](spec/01-combate.md) |
+| 🟠 | ⚠️ **Soft cap de 40 em tudo é errado** — DS2/DS3 usam curvas diferentes por atributo. Proposta: **vida 20/50 · stamina 20/40 · mana 35 · dano 40/60 · carga 30/50/70** | [`39`](spec/39-estudo-profundo.md) §2 |
+| 🟠 | **Queda fatal aos 25 m** — o DS2 mata aos 19,5 m e os limiares do género rondam os 20. **Baixar para 20 m** | [`37`](spec/37-aneis-e-elementos.md) §3 |
+| 🟠 | ⚠️ **Falta o estado de sobrecarga (>100%)** — hoje um jogador a 71% e outro a 140% movem-se igual. **Acima de 100%: sem rolamento nem sprint, só marcha** | [`39`](spec/39-estudo-profundo.md) §3 |
+| 🟠 | **NG+ com +40% em vida E dano é demasiado grosseiro** — separar. Proposta: **+30% vida / +15% dano**, ciclos seguintes **+5%/+3%** | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §5 |
+| 🟠 | **Contra-ataque +30% universal** — no DS3 é **só para perfuração**. Proposta: ×1,30 perfuração · ×1,40 lança · ×1,45 só na estocada da katana | [`41`](spec/41-estudo-armas-e-golpes.md) §3 |
+| 🟠 | ⭐ **Separar "contra-ataque" de "instável"** — apanhar alguém a meio do ataque e apanhar alguém desequilibrado são coisas diferentes. Instável só em guarda quebrada, parry falhado e aterragem pesada | [`41`](spec/41-estudo-armas-e-golpes.md) §3 |
+| 🟠 | ⭐ **Não há ressalto contra paredes nem escudos.** Um golpe que bate numa parede devia ser cancelado com 12–18 frames de recuo. **Sem isto, o espaço quase não interage com o combate** | [`38`](spec/38-ataques-e-honestidade.md) |
+| 🟠 | **O piso de 30% aplicado a escudos elimina os escudos de 100% físico** — misturámos absorção de armadura com bloqueio. **São sistemas diferentes** | [`48`](spec/48-arcos-bestas-escudos.md) §3 |
+| 🔵 | **Regeneração de stamina: o DS3 não penaliza entre 30–70%** — a nossa penalização de −10% no escalão médio não existe lá | [`41`](spec/41-estudo-armas-e-golpes.md) §5 |
+
+### ⭐ Gramática de combate que nos falta (secção 4 da auditoria)
+
+Vocabulário de situações que o DS tem e a nossa spec **não menciona em lado nenhum**:
+
+| | |
+|---|---|
+| 🟠 | **Ataques inimigos que atravessam escudo** |
+| 🟠 | **Esmagamento de guarda dedicado** — um golpe cujo trabalho é abrir quem bloqueia |
+| 🟠 | ⭐ **Mesmo aviso, dois tempos de largada** — o inimigo faz a mesma pose e larga mais tarde. **É o que ensina a não rolar por reflexo** |
+| 🟠 | **Ramos condicionais de combo** — a sequência muda conforme o que tu fazes |
+| 🟠 | ⭐ **Falsa recuperação** — parece que acabou, e não acabou |
+| 🟠 | ⭐ **Castigo de cura** — o inimigo reage a ver-te beber |
+| 🟠 | **Fingir morte, e atacar ao levantar** |
+
+### E os sistemas deles que o Codex diz para **não** copiar
+
+Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só gera viagens ao descanso)* · invasões, pactos e sinais de invocação *(resolvem emparelhamento público — nós somos dois)* · penalização de vida máxima por morrer *(espiral de fracasso)*.
+
+⭐ **E disse que o nosso mapa é melhor do que não ter mapa**, para dois amigos. Fica.
+
+---
+
 ## 🕳️ Buracos de sistema — coisas que NUNCA foram escritas
 
 **Varrimento de 01-08.** Não são detalhes por afinar: são sistemas inteiros que a spec assume e nunca definiu. Ordenados por quanto custa descobri-los tarde.

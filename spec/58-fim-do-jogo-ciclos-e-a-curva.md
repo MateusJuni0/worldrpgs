@@ -33,7 +33,16 @@
 
 ### ⭐ E o número que responde à tua pergunta
 
-> **Ir do nível 70 ao 100 custa cerca de TRÊS VEZES tudo o que gastaste do 1 ao 70.**
+⚠️ **CORRIGIDO a 01-08.** Eu tinha escrito *"três vezes"* e **estava errado** — somei só o termo cúbico e ignorei os termos `3,06×N²` e `105,6×N`, **que pesam mais nos níveis baixos**. A [auditoria de comparação](../docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md) apanhou-o; refiz a conta e confirma.
+
+| Troço | Custo acumulado |
+|---|---|
+| **1 → 70** | **680 663** |
+| **71 → 100** | **1 308 518** |
+
+> **Ir do nível 70 ao 100 custa cerca de 1,9 VEZES tudo o que gastaste do 1 ao 70.**
+
+⚠️ **Continua a ser o dobro — mas não o triplo.** Se quisermos mesmo 3×, a curva tem de ser **mais inclinada** do que a da referência, e isso é decisão a tomar com números na mão. *(Nota: esta fórmula é a do DS1/DS3; o DS2 usa outra tabela.)*
 
 **Não é um erro de desenho — é o desenho.** Os últimos 30 níveis não são progressão: são **obsessão**, e são opcionais.
 
