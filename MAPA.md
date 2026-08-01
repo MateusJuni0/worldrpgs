@@ -4,7 +4,7 @@
 >
 > Mostra **os links reais entre documentos**. Um documento muito citado é uma fundação: mexer nele mexe em tudo o que aponta para lá.
 
-**114 documentos · 17 443 linhas**
+**114 documentos · 17 448 linhas**
 
 ## ⭐ As fundações — o que mais se cita
 
@@ -16,8 +16,8 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`spec/01-combate.md`](spec/01-combate.md) — Combate | **28** | 4 | 237 |
 | [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md) — Ataques dos inimigos e o contrato de honestidade | **28** | 10 | 275 |
 | [`spec/39-estudo-profundo.md`](spec/39-estudo-profundo.md) — Estudo profundo: como o jogo de referência funciona por dentro | **23** | 8 | 481 |
+| [`spec/62-acessibilidade-auditiva.md`](spec/62-acessibilidade-auditiva.md) — Acessibilidade auditiva: a mesma informação por outro canal | **21** | 14 | 279 |
 | [`spec/10-fatia-1.md`](spec/10-fatia-1.md) — Fatia 1 · o primeiro jogável | **20** | 5 | 134 |
-| [`spec/62-acessibilidade-auditiva.md`](spec/62-acessibilidade-auditiva.md) — Acessibilidade auditiva: a mesma informação por outro canal | **20** | 14 | 279 |
 | [`spec/31-referencias.md`](spec/31-referencias.md) — Como usar o Dark Souls como referência | **19** | 5 | 93 |
 | [`spec/00-visao.md`](spec/00-visao.md) — Visão | **18** | 9 | 94 |
 | [`spec/34-catalogo-e-comandos.md`](spec/34-catalogo-e-comandos.md) — A escala do catálogo, e a regra dos comandos | **18** | 8 | 152 |
@@ -38,7 +38,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`DECISOES.md`](DECISOES.md) — Registo de decisões | 217 | 16 |
 | [`ESTADO.md`](ESTADO.md) — ESTADO — o que é verdade hoje | 259 | 10 |
 | [`LACUNAS.md`](LACUNAS.md) — LACUNAS — o que falta, e ninguém está a fazer | 261 | 10 |
-| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 173 | 2 |
+| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 178 | 2 |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) — Rico, lê isto primeiro | 94 | 3 |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) — Ponte Claude — guia do Rico | 62 | 2 |
 | [`README.md`](README.md) — WorldRPGs | 73 | 2 |
@@ -112,11 +112,11 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`58-fim-do-jogo-ciclos-e-a-curva.md`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) — O fim do jogo, os ciclos, e a matemática do nível 100 | 208 | 6 |
 | [`59-saves.md`](spec/59-saves.md) — Saves: progresso que não volta atrás | 282 | 14 |
 | [`60-o-agente-que-joga.md`](spec/60-o-agente-que-joga.md) — O agente que joga: banco de ensaio automático | 170 | 4 |
-| [`61-arenas-de-chefe.md`](spec/61-arenas-de-chefe.md) — Arenas de chefe: o espaço também luta | 235 | 8 |
-| [`62-acessibilidade-auditiva.md`](spec/62-acessibilidade-auditiva.md) — Acessibilidade auditiva: a mesma informação por outro canal | 279 | 20 |
-| [`63-como-se-afinam-os-numeros.md`](spec/63-como-se-afinam-os-numeros.md) — Como se afinam os números: medir, mudar um, provar | 291 | 8 |
-| [`64-criacao-de-personagem.md`](spec/64-criacao-de-personagem.md) — Criação de personagem: escolher um começo, não uma prisão | 249 | 12 |
-| [`65-musica-e-ambiente.md`](spec/65-musica-e-ambiente.md) — Música e ambiente: atmosfera que nunca tapa informação | 321 | 12 |
+| [`61-arenas-de-chefe.md`](spec/61-arenas-de-chefe.md) — Arenas de chefe: o espaço também luta | 235 | 9 |
+| [`62-acessibilidade-auditiva.md`](spec/62-acessibilidade-auditiva.md) — Acessibilidade auditiva: a mesma informação por outro canal | 279 | 21 |
+| [`63-como-se-afinam-os-numeros.md`](spec/63-como-se-afinam-os-numeros.md) — Como se afinam os números: medir, mudar um, provar | 291 | 9 |
+| [`64-criacao-de-personagem.md`](spec/64-criacao-de-personagem.md) — Criação de personagem: escolher um começo, não uma prisão | 249 | 13 |
+| [`65-musica-e-ambiente.md`](spec/65-musica-e-ambiente.md) — Música e ambiente: atmosfera que nunca tapa informação | 321 | 13 |
 | [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) — Perguntas em aberto | 170 | 33 |
 
 ### prompts/ — instruções para agentes — 7 ficheiros
