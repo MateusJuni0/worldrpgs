@@ -9,6 +9,7 @@ extends Node3D
 ##   zone    a fatia: Brumal -> Toca -> Vorgar   (defeito)
 
 const NAVIGATION_HUD_SCRIPT = preload("res://src/ui/navigation_hud.gd")
+const NECROMANCY_RUNTIME_SCRIPT = preload("res://src/summons/necromancy_runtime.gd")
 
 var world: Greybox
 var player: Player
@@ -16,6 +17,7 @@ var partner: Player
 var hud: Hud
 var boss: Enemy
 var navigation: CanvasLayer
+var necromancy_runtime: NecromancyRuntime
 
 var _preset: Dictionary = {}
 var _palette: Dictionary = {}
@@ -44,6 +46,7 @@ func _ready() -> void:
 	_build_rest_points()
 	_build_player()
 	_build_hud()
+	_build_necromancy_runtime()
 	_populate()
 	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
 	_build_navigation()
@@ -157,6 +160,87 @@ func _build_hud() -> void:
 			SettingsSystem.binding_label("toggle_help"), _preset.get("_name", "?")], 6.0)
 
 
+func _build_necromancy_runtime() -> void:
+	_clear_necromancy_runtime()
+	if not is_instance_valid(player) or player.class_id != "evil_mage":
+		return
+	necromancy_runtime = NECROMANCY_RUNTIME_SCRIPT.new() as NecromancyRuntime
+	necromancy_runtime.name = "NecromancyRuntime"
+	add_child(necromancy_runtime)
+	var presentation := GameData.enemies.get("_presentation", {}) as Dictionary
+	if not necromancy_runtime.setup(player, self, &"local-player", &"local-simulation",
+			GameData.attributes, GameData.abilities, GameData.spells, _palette,
+			presentation):
+		push_error("[necromancia] o runtime recusou os catalogos da partida")
+		remove_child(necromancy_runtime)
+		necromancy_runtime.queue_free()
+		necromancy_runtime = null
+		return
+	player.raise_requested.connect(_on_raise_requested)
+	for node: Node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy != null:
+			_watch_enemy_for_necromancy(enemy)
+
+
+func _clear_necromancy_runtime() -> void:
+	if is_instance_valid(player) and player.raise_requested.is_connected(
+			_on_raise_requested):
+		player.raise_requested.disconnect(_on_raise_requested)
+	if not is_instance_valid(necromancy_runtime):
+		necromancy_runtime = null
+		return
+	remove_child(necromancy_runtime)
+	necromancy_runtime.queue_free()
+	necromancy_runtime = null
+
+
+func _watch_enemy_for_necromancy(enemy: Enemy) -> void:
+	if not is_instance_valid(necromancy_runtime):
+		return
+	var ability := GameData.ability("evil_mage")
+	var sizes := ability.get("corpse_body_size_by_role", {}) as Dictionary
+	var body_size := String(sizes.get(String(enemy.data.get("role", "")), ""))
+	if not body_size.is_empty():
+		enemy.data = enemy.data.duplicate(true)
+		enemy.data["necromancy_body_size"] = body_size
+	necromancy_runtime.watch_enemy(enemy)
+
+
+func _on_raise_requested(spell_id: String) -> void:
+	if not is_instance_valid(necromancy_runtime) or not is_instance_valid(player):
+		return
+	var preview: Dictionary = necromancy_runtime.validate_raise_target(spell_id)
+	if not bool(preview.get("accepted", false)):
+		_show_raise_feedback(String(preview.get("reason", "rejected")))
+		return
+	var base_max_health := GameData.max_health_for(int(player.attrs.get("vida", 8)))
+	var health_cost := base_max_health * float(preview.get(
+		"health_cost_fraction", 0.0))
+	if player.health <= health_cost or is_equal_approx(player.health, health_cost):
+		_show_raise_feedback("insufficient_current_health")
+		return
+	var health_before := player.health
+	var result: Dictionary = necromancy_runtime.raise_nearest(spell_id)
+	if not bool(result.get("accepted", false)):
+		_show_raise_feedback(String(result.get("reason", "rejected")))
+		return
+	# O runtime reserva a mesma fraccao na barra maxima. Esta linha faz o custo
+	# sair tambem dos PV actuais sem cobrar duas vezes quando a barra estava cheia.
+	player.health = minf(player.max_health, health_before - health_cost)
+	_show_raise_feedback("accepted")
+
+
+func _show_raise_feedback(reason: String) -> void:
+	if not is_instance_valid(hud):
+		return
+	var feedback := GameData.ability("evil_mage").get(
+		"raise_feedback", {}) as Dictionary
+	var message := String(feedback.get(reason, feedback.get("rejected", "")))
+	if not message.is_empty():
+		hud.toast(message, 3.0)
+
+
 func _build_navigation() -> void:
 	if _scene_kind == "combat":
 		return
@@ -176,6 +260,7 @@ func _spawn(enemy_id: String, at: Vector3) -> Enemy:
 	e.target = player
 	e.home = at
 	e.died.connect(_on_enemy_died)
+	_watch_enemy_for_necromancy(e)
 	return e
 
 
@@ -418,6 +503,8 @@ func _rest_at(rest_id: String) -> void:
 		hud.toast("Não foi possível guardar este descanso.", 3.0)
 		return
 	_respawn_point = (_rest_points[rest_id] as Vector3) + REST_SPAWN_OFFSET
+	if is_instance_valid(necromancy_runtime):
+		necromancy_runtime.rest()
 	player.health = player.max_health
 	player.stamina.current = player.stamina.maximum
 	player.mana = player.max_mana
@@ -644,7 +731,9 @@ func _exit_tree() -> void:
 # --- Troca de classe (F6, ferramenta de teste) ---------------------------------
 # Para o Rico sentir as 6 classes sem menu (o menu de escolha vem com o WP11).
 
-const CLASSES: Array[String] = ["warrior", "tank", "berserker", "sorcerer", "assassin", "paladin"]
+const CLASSES: Array[String] = [
+	"warrior", "tank", "berserker", "sorcerer", "assassin", "paladin", "evil_mage",
+]
 var _class_index := 0
 
 
@@ -653,6 +742,7 @@ func _cycle_class() -> void:
 	var class_id := CLASSES[_class_index]
 	var pos := player.global_position
 	var cam := player.camera
+	_clear_necromancy_runtime()
 	player.died.disconnect(_on_player_died)
 	player.queue_free()
 
@@ -665,6 +755,7 @@ func _cycle_class() -> void:
 	cam.target = player
 	player.died.connect(_on_player_died)
 	hud.player = player
+	_build_necromancy_runtime()
 	if is_instance_valid(navigation):
 		navigation.set("player", player)
 		var surface: Control = navigation.get("_minimap_surface")

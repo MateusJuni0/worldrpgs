@@ -16,6 +16,7 @@ const WorldBoundsWarningScene = preload("res://src/world/bounds_warning.gd")
 signal died
 signal state_changed(state: int)
 signal casting_fallback(reason: String)
+signal raise_requested(spell_id: String)
 
 enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING, GRIP_SWITCH }
 
@@ -304,6 +305,10 @@ func _read_input() -> void:
 		_buffer("flask")
 	if Input.is_action_just_pressed("ability"):
 		_buffer("ability")
+	var raise_input_action := String(_ability.get("raise_input_action", ""))
+	if not raise_input_action.is_empty() \
+			and Input.is_action_just_pressed(raise_input_action):
+		_buffer("raise_dead")
 	if Input.is_action_just_pressed("toggle_grip"):
 		_buffer("toggle_grip")
 	if Input.is_action_just_pressed("lock_on"):
@@ -403,6 +408,7 @@ func _tick_free(delta: float) -> void:
 		"meditate": _start_meditation()
 		"flask":  _start_flask()
 		"ability": _start_ability()
+		"raise_dead": _request_raise_dead()
 		"toggle_grip": _start_grip_switch()
 
 
@@ -1320,6 +1326,11 @@ func state_name() -> String:
 # spec/12-classes.md: verbos novos, nao numeros. Cooldown fixo, nada escala.
 # Implementadas: Impeto (warrior), Furia (berserker), Provocacao (tank).
 # Eco, Passo Sombra e Julgamento: registadas nos dados, entram por iteracao.
+
+func _request_raise_dead() -> void:
+	var spell_id := String(_ability.get("raise_spell_id", ""))
+	if not spell_id.is_empty():
+		raise_requested.emit(spell_id)
 
 func _start_ability() -> void:
 	if _ability.is_empty() or _ability_cd > 0.0:

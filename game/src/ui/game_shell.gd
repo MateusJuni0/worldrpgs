@@ -33,6 +33,7 @@ const ACTION_LABELS := {
 	"dodge_sprint": "Esquivar (tocar) / correr (manter)", "lock_on": "Fixar alvo",
 	"next_spell": "Magia seguinte / roda", "cast": "Conjurar", "meditate": "Meditar",
 	"use_item": "Usar item", "ability": "Habilidade de origem",
+	"raise_dead": "Levantar corpo",
 	"toggle_grip": "Uma / duas mãos", "interact": "Interagir / descansar",
 	"hotbar_1": "Atalho 1", "hotbar_2": "Atalho 2", "hotbar_3": "Atalho 3",
 	"hotbar_4": "Atalho 4", "hotbar_5": "Atalho 5",
@@ -51,7 +52,7 @@ const INSTRUCTION_GROUPS := [
 		"attack", "heavy_mod", "block", "parry", "dodge_sprint",
 		"lock_on", "toggle_grip", "ability"]},
 	{"title": "MAGIA E ITENS", "actions": [
-		"next_spell", "cast", "meditate", "use_item", "hotbar_1",
+		"next_spell", "cast", "raise_dead", "meditate", "use_item", "hotbar_1",
 		"hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]},
 	{"title": "MUNDO E SISTEMA", "actions": [
 		"interact", "loadout_next", "loadout_prev", "toggle_perf",

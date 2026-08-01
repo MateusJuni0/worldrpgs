@@ -1,6 +1,6 @@
 {
   "_fonte": "spec/12-classes.md (WP3) + DECISOES.md 01-08 para a 7.a origem. Habilidade especial por origem, sob a Lei 2: verbos novos, nao numeros. Cooldowns fixos, nada escala com nivel.",
-  "_tecla": "A accao remapeavel ability existe em controls.json: V no teclado e Start/Options no comando por defeito.",
+  "_tecla": "A accao remapeavel ability existe em controls.json: V no teclado e Start/Options no comando por defeito. O mago do mal declara ainda raise_dead: B por defeito, sempre lido do mapa de controlos.",
   "_execution_baseline": "[CODEX] Tarefa 5: tempos de activacao/compromisso e regra de cooldown sao ponto de partida mensuravel; validar feel no M2 e manter a pergunta 45 aberta.",
 
   "warrior":   { "id": "impeto",        "display_name": "Impeto",        "effect_type": "dash_then_strike",       "cooldown_s": 15.0, "activation_s": 0.35, "commit_point_s": 0.18, "interruptible_before_commit": true, "cooldown_starts": "on_commit", "stamina_cost": 30.0, "dash_m": 6.0, "dash_seconds": 0.35, "strike_mv": 1.2 },
@@ -14,6 +14,24 @@
     "display_name": "Cortejo Carmim",
     "effect_type": "toggle_summon_order",
     "input_action": "ability",
+    "raise_input_action": "raise_dead",
+    "raise_spell_id": "levantar",
+    "corpse_body_size_by_role": {
+      "grupo": "pequeno",
+      "distancia": "pequeno",
+      "armadilha": "pequeno",
+      "rapido": "medio",
+      "pesado": "grande"
+    },
+    "raise_feedback": {
+      "accepted": "O corpo levantou-se e luta ao teu lado.",
+      "no_eligible_corpse": "Nenhum corpo reclamável à tua frente.",
+      "insufficient_current_health": "PV insuficientes: Levantar deixava-te morto.",
+      "insufficient_health_budget": "PV máximos insuficientes: o pacto já consumiu a tua margem.",
+      "corpse_already_claimed": "Esse corpo já foi reclamado.",
+      "missing_body_size_data": "Esse corpo não tem tamanho de necromancia definido.",
+      "rejected": "Não foi possível levantar esse corpo."
+    },
     "cooldown_s": 1.0,
     "activation_s": 0.30,
     "commit_point_s": 0.15,
