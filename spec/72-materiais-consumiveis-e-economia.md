@@ -104,6 +104,6 @@ A infraestrutura **não escolhe** de quem é o enviesamento. Recebe `receiver_cl
 
 ## 6. Fronteira honesta
 
-O catálogo de **materiais/consumíveis**, as fórmulas e a transacção local estão completos. Os cinco acessórios obrigatórios continuam fora do contrato. Ficam ainda de propósito para M2/WP10–11: UI do altar/inventário, renderer dos efeitos, apresentação final da carta e política de destinatário em co-op. A última é decisão dos donos; as outras são clientes dos contratos já fechados.
+O catálogo de **materiais/consumíveis**, as fórmulas e a transacção local estão completos. Os cinco acessórios antigos já foram migrados para anéis/consumível pelo [`74`](74-fecho-da-revisao-2.md); não resta uma categoria de acessório fora do contrato. Ficam ainda de propósito para M2/WP10–11: UI do altar/inventário, renderer dos efeitos, apresentação final da carta e política de destinatário em co-op. A última é decisão dos donos; as outras são clientes dos contratos já fechados.
 
 Este documento não decide nenhuma `[TENSÃO]`.

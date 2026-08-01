@@ -1,6 +1,6 @@
 # LACUNAS — o que falta, e ninguém está a fazer
 
-**Actualizado: 01-08-2026, Tarefa 5.** Mantido pelo **Claude/Codex**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
+**Actualizado: 01-08-2026, Revisão 3.** Mantido pelo **Claude/Codex**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
 
 > **Porque existe:** as lacunas que eu encontro a rever viviam em **comentários de PR**. Um comentário lê-se uma vez e desaparece — e uma lacuna esquecida é uma lacuna que se descobre no fim, quando custa dez vezes mais.
 >
@@ -42,6 +42,26 @@
 | 🔴 | ⚠️ **Invocações sem tecto colidem com o máximo de oito actores animados.** Um encontro de 2 jogadores + 5 inimigos já ocupa 7; sobra uma vaga para invocações dos dois, chefe portátil e qualquer reserva. Sem orçamento global, a promessa do mago pode exceder a Lei 4 na primeira conjuração extra | revisão 2 · [`21`](spec/21-arte-render.md) §2 · [`52`](spec/52-mago-do-mal.md) §10 · pergunta 51 |
 | 🟠 | ⚠️ **Os 53 VFX não têm política de residência.** Não é o número de feitiços que custa por frame, é pré-carregá-los: uma implementação ingénua com 3 texturas RGBA8 1024² + mipmaps por feitiço rondaria **848 MiB**, acima do orçamento residente de texturas de 500 MB antes de cenário/personagens. Usar atlas partilhado e carregar só favoritos/escola/encounter; medir antes de produzir 50 VFX futuros | revisão 2 · [`21`](spec/21-arte-render.md) §2 · [`66`](spec/66-catalogo-de-magia.md) |
 | ⏳ | ⭐ **Ordem de corte com menor perda**, se for preciso cortar: 1.ª pessoa → 48 chefes reclassificados → 5 slots de armadura → 6 slots de anel → armas acima de 24 → feitiços acima de 24. **Não cortar:** co-op, esquiva/parry/stamina, as 8 famílias, a identidade dos 12 biomas | auditoria §4 |
+
+---
+
+## 🎮 Da Revisão 3 — lacunas de experiência
+
+Relatório completo: [`docs/REVISAO-3.md`](docs/REVISAO-3.md). As linhas `⏳` são decisões dos donos; não autorizam um agente a redesenhar a spec.
+
+| | Lacuna | Origem |
+|---|---|---|
+| ⏳ | 🔴 **O combate comum ainda não prova co-op:** nenhum encontro da Fatia 1 exige salvar, preparar uma abertura ou executar tarefas simultâneas; o jogador melhor pode limpar o caminho enquanto o outro acompanha | revisão 3 · perguntas 59/32 |
+| ⏳ | 🔴 **Brumal pede densidade larga com só dois tipos `fatia_1:true`.** O Batedor e um nomeado que depende dele aparecem no orçamento, mas continuam fora da fatia; decidir promover o terceiro papel ou cortar para 6–7 batidas | revisão 3 · pergunta 57 |
+| ⏳ | 🔴 **Meditação segura cria até 80 s de espera para o parceiro; ressurreição exige 5–7 s onde Vorgar/refúgios só declaram janelas abaixo de 2 s.** Falta agência do caído e uma janela executável | revisão 3 · perguntas 58/60 |
+| 🔴 | **O orçamento de almas não pode ser pago pelo runtime corrente:** baralho/transacção fecham após 10 derrotas do tipo; `souls_ten_rewarded_clears` multiplica cada colocação por 10. Separar almas de cartas depois de Mateus + Rico fecharem o contador | revisão 3 · pergunta 23 · [`67`](spec/67-catalogo-do-bestiario.md) §6 · [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 |
+| ⏳ | 🟠 **Mochila infinita + loot instanciado + garantia + chefe que larga tudo transforma descoberta em checklist.** Falta uma escolha que preserve a garantia contra azar | revisão 3 · pergunta 61 |
+| ⏳ | 🟠 **“Nunca se zera” não tem exemplar jogável:** recompensas/corpos esgotam, as 30 portas não devem resposta e a segunda leitura de Brumal não está autorada | revisão 3 · pergunta 62 |
+| ⏳ | 🟠 **A promessa mais própria — cadáveres/Voto/chefe portátil — não é testada pela Fatia 1.** Decidir spike/epílogo antes de produzir 50 feitiços futuros | revisão 3 · pergunta 63 |
+| 🟠 | **Vorgar ainda não tem as sequências SEPARAR/JUNTAR nem uma janela de ressurreição materializadas no greybox.** O contrato já as exige; falta autoria/prova M2 | revisão 3 · [`61`](spec/61-arenas-de-chefe.md) §7 |
+| ⏳ | 🟡 **Até dez anéis + nove peças + oito favoritos podem transformar build em espera de menu co-op.** Validar 4 anéis/presets no descanso antes de abrir a escala toda | revisão 3 · pergunta 64 |
+| ✅ | ~~O teste de honestidade só provava a esquiva certa~~ **CORRIGIDO** — agora duas esquivas sem sobreposição com o activo têm de falhar 10/10; um teste verde deixa de aceitar janela/hitbox que não discrimina timing | revisão 3 · [`38`](spec/38-ataques-e-honestidade.md) cláusula 5 |
+| ✅ | ~~O fecho do `72` ainda dizia que cinco acessórios ficavam fora do contrato~~ **CORRIGIDO** — a fronteira reconhece a migração já feita pelo `74` | revisão 3 · [`72`](spec/72-materiais-consumiveis-e-economia.md) §6 |
 
 ---
 

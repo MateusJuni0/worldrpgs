@@ -159,6 +159,8 @@ Já estava decidido (WP1) e repete-se aqui porque é o outro pecado conhecido: n
 
 Se falhar uma vez, é bug — nunca "o jogador enganou-se". Investiga-se por esta ordem: a hitbox está viva demasiado tempo? o inimigo rodou durante o golpe? a hitbox é maior do que o modelo?
 
+**Controlo negativo obrigatório:** o mesmo ensaio inclui uma esquiva cujo intervalo de invencibilidade termina antes dos frames activos e outra que começa depois deles. Se a hitbox visível atravessar o corpo, ambas recebem o golpe **10 vezes em 10**. Provar apenas que a esquiva certa passa não prova timing: uma hitbox que falha sempre ou uma janela permissiva demais também daria verde.
+
 ⚠️ **E o teste da rede:** o mesmo, em co-op, do lado do convidado. Se a latência quebrar isto, a decisão de autoridade do WP10 está errada — não é o jogador que tem de compensar.
 
 ---

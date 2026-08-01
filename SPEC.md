@@ -8,6 +8,8 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, souls-like, co-op pa
 
 > **Fase: construção.** Os 20 pacotes de spec estão escritos. O jogo já se joga ([`spec/44-prototipo.md`](spec/44-prototipo.md)). Regras da fase em [`spec/32-construcao.md`](spec/32-construcao.md); o plano é o [`spec/24-plano.md`](spec/24-plano.md), M0 a M7.
 
+> **Última revisão:** a [`REVISAO-3`](docs/REVISAO-3.md) pergunta se isto vai dar um bom jogo. Veredito: a base de combate é forte, mas Brumal ainda tem de provar cooperação real, variedade e uma memória partilhada antes de o conteúdo se multiplicar. As escolhas estão nas perguntas 57–64, 23 e 32 do [`99`](spec/99-perguntas-abertas.md).
+
 > Cada afirmação traz a origem: `(sessão N · MM:SS)`. Nada entra por invenção.
 
 ## Etiquetas
@@ -143,7 +145,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 As cinco lacunas `🔴` herdadas da Revisão 1 foram fechadas no [`74`](spec/74-fecho-da-revisao-2.md): 12 efeitos têm mecanismo, melhorias futuras ficam indisponíveis até 41, o fallback mágico de escudo deixou de inventar 50%, as 18 fugas são provadas e não há `acessorio:*`.
 
-**Ainda travam `ready`:** o frame pacing de cinco esqueletos reprova p99 (**18,323 ms > 16,67 ms**), falta o gate quente integrado 2+5 e as `[TENSÃO]` 50–51 ainda não fecham orçamento de streaming/actores. Estão no [`LACUNAS`](LACUNAS.md); propostas e recomendações dos donos continuam no [`99`](spec/99-perguntas-abertas.md).
+**Ainda travam `ready`:** o frame pacing de cinco esqueletos reprova p99 (**18,323 ms > 16,67 ms**), falta o gate quente integrado 2+5 e as `[TENSÃO]` 50–51 ainda não fecham orçamento de streaming/actores. **Ainda trava multiplicar conteúdo:** a Fatia 1 não provou os verbos co-op, a variedade de Brumal nem uma janela executável de ressurreição identificados pela Revisão 3. Estão no [`LACUNAS`](LACUNAS.md); propostas e recomendações dos donos continuam no [`99`](spec/99-perguntas-abertas.md).
 
 ⚠️ **Mesmo depois de fechar as cinco lacunas, o maior risco continua a ser escopo:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 

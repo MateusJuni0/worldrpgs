@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, Tarefa 5 concluída.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, Revisão 3 concluída.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem **75 documentos** e ~50 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -117,9 +117,9 @@ O protótipo trocou cargas por **mana**: `60 + 4×maior(Int, Fé)` até 35; a Es
 
 O [`67`](spec/67-catalogo-do-bestiario.md) fecha **33 tipos comuns** (dentro da conta 30–36 do [`50`](spec/50-racas.md)), **100 ataques comuns** e os cinco de Vorgar migrados. Cada ficha declara massa, almas, descrição visual, Fatia 1 e dez cartas sem reposição. Cada ataque compilado traz contacto instantâneo/móvel/persistente, 1–2 dos nove vectores, compromisso, seguimento `180→30→0°/s`, som próprio e equivalente visual de seis campos.
 
-As 12 zonas têm população de referência e orçamento recalculado pelo teste: **390→2 050 almas** na primeira limpeza e exactamente ×10 no limite recompensado. `GameplayCue` apresenta a mesma informação por som e geometria/glifo/bordo; padrões de IA e baralhos aceitam semente. Os três conceitos imediatos — lanceiro, brutamontes e Vorgar — foram auditados e reutilizados; as outras 31 fichas ficam sem imagem até `Fatia 1?` mudar.
+As 12 zonas têm população de referência e orçamento aritmético no catálogo: **390→2 050 almas** na primeira limpeza e ×10 no limite declarado. ⚠️ A Revisão 3 encontrou que a transacção corrente não consegue pagar esse ×10: o baralho fecha após dez derrotas do **tipo**, antes das dez mortes de cada colocação que a conta assume. A separação entre almas/cartas espera a decisão do contador, pergunta 23. `GameplayCue` apresenta a mesma informação por som e geometria/glifo/bordo; padrões de IA e baralhos aceitam semente. Os três conceitos imediatos — lanceiro, brutamontes e Vorgar — foram auditados e reutilizados; as outras 31 fichas ficam sem imagem até `Fatia 1?` mudar.
 
-✅ O WP9 que este catálogo exigia foi entregue no [`72`](spec/72-materiais-consumiveis-e-economia.md): morte compra e grava carta/recibo, 40 materiais e 15 consumíveis canónicos resolvem. Os 17 tokens antigos continham uma Brasa repetível ilegal e uma grafia duplicada, ambas corrigidas. Os 31 inimigos futuros continuam sem modelo/animação/hitbox; a pergunta 29 só decide o destinatário co-op e não foi escolhida por Mateus/Rico.
+✅ O WP9 que este catálogo exigia foi entregue no [`72`](spec/72-materiais-consumiveis-e-economia.md): as primeiras dez mortes do tipo compram e gravam carta/almas/recibo atomicamente, e 40 materiais + 15 consumíveis canónicos resolvem. A fronteira acima das dez cartas continua incompleta para o orçamento de almas até fechar 23. Os 17 tokens antigos continham uma Brasa repetível ilegal e uma grafia duplicada, ambas corrigidas. Os 31 inimigos futuros continuam sem modelo/animação/hitbox; a pergunta 29 só decide o destinatário co-op e não foi escolhida por Mateus/Rico.
 
 ## 1k. ✅ O WP5 deixou de ser cinco armas e uma promessa de anéis
 
@@ -173,6 +173,14 @@ A investigação de animação separou custo de carga e apresentação. Sem VSyn
 
 Portanto, **não se declara o jogo completo nem `ready`**. Os contratos pedidos estão coerentes e verdes; frame pacing, gate integrado 2+5, streaming e orçamento de actores ainda precisam de prova/decisão.
 
+## 1p. 🎮 Revisão 3 — o combate promete; o jogo a dois ainda tem de se provar
+
+A [`REVISAO-3`](docs/REVISAO-3.md) leu a Fatia 1 como experiência. O veredito não invalida a base: compromisso/hitbox/vector, duas perspectivas, mancha, atalhos e Vorgar dão material concreto para um bom souls-like. O risco novo é outro: **Brumal pode tornar-se dois solos honestos lado a lado**, com só dois papéis inimigos, o jogador melhor a resolver o caminho e o convidado a repetir depois o progresso no próprio mundo.
+
+As decisões de experiência estão no [`99`](spec/99-perguntas-abertas.md): 57–64 cobrem densidade/terceiro papel, meditação, verbos co-op, jogador caído, escolha de loot, “nunca se zera”, prova do mago forte e carga de menus; 23 e 32 ganharam a tensão que faltava. A recomendação principal é **não multiplicar zonas até um percurso curto de Brumal provar salvar, preparar uma abertura e separar/reunir os dois jogadores**.
+
+Duas correcções não dependiam dos donos e já entraram: o [`38`](spec/38-ataques-e-honestidade.md) exige controlos negativos de timing, e o [`72`](spec/72-materiais-consumiveis-e-economia.md) deixou de declarar como pendurados os acessórios já migrados. Nenhum número decidido, área de mundo, asset ou arte foi alterado.
+
 ## 2. Decisões que mudaram documentos de execução antigos
 
 **~35 decisões, das quais estas são as que mais mudam trabalho já escrito.** A lista completa e por ordem está no [`DECISOES.md`](DECISOES.md).
@@ -222,7 +230,7 @@ As fichas de bioma/raça, os catálogos e o alinhamento histórico estão feitos
 7. UMA ZONA DE CADA VEZ ─ ficha + conteúdo + guardião/subchefe + prova; só depois a seguinte
 ```
 
-O relatório [`docs/REVISAO-2.md`](docs/REVISAO-2.md) explica as dependências e os ciclos. A regra operacional é: **não produzir 50 feitiços, 11 zonas ou 23 confrontos sobre uma interface ainda implícita**. Fecha-se uma interface com um exemplar jogável, prova-se na máquina do Rico e só então se multiplica o conteúdo.
+O relatório [`docs/REVISAO-2.md`](docs/REVISAO-2.md) explica as dependências e os ciclos; a [`REVISAO-3`](docs/REVISAO-3.md) acrescenta o gate de experiência. A regra operacional é: **não produzir 50 feitiços, 11 zonas ou 23 confrontos sobre uma interface implícita nem sobre um loop co-op ainda não provado**. Fecha-se uma interface e uma história jogável a dois com um exemplar, prova-se na máquina do Rico e só então se multiplica o conteúdo.
 
 ---
 
@@ -234,15 +242,16 @@ O relatório [`docs/REVISAO-2.md`](docs/REVISAO-2.md) explica as dependências e
 
 ## 4. O que é dos donos, e só deles
 
-Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). O [`74`](spec/74-fecho-da-revisao-2.md) não decidiu nenhuma `[TENSÃO]`: 41/43 bloqueiam progressão futura de magia e afinidades de escudo; 44–49 e 52–56 têm baselines ou conteúdo explicitamente indisponível; **50–51 continuam a bloquear `ready`** por memória e actores. Há trabalho independente que pode continuar; produção larga não transforma baseline `[CODEX]` em aprovação dos donos.
+Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). O [`74`](spec/74-fecho-da-revisao-2.md) não decidiu nenhuma `[TENSÃO]`: 41/43 bloqueiam progressão futura de magia e afinidades de escudo; 44–49 e 52–56 têm baselines ou conteúdo explicitamente indisponível; **50–51 continuam a bloquear `ready`** por memória e actores. A Revisão 3 acrescenta 57–64 e reabre 23/32 como tensões de experiência. Há trabalho independente que pode continuar; produção larga não transforma baseline `[CODEX]` nem recomendação de design em aprovação dos donos.
 
-**As três que mais mudam o jogo se a resposta for diferente da proposta:**
+**As quatro que mais mudam o jogo se a resposta for diferente da proposta:**
 
 | # | Pergunta | Proposta em cima da mesa |
 |---|---|---|
+| **59** | ⚠️ O combate comum é co-op ou dois solos lado a lado? | provar **salvar · preparar abertura · separar/reunir** num percurso curto |
+| **57** | ⚠️ Brumal mantém densidade larga com só dois papéis? | promover o Batedor ou cortar para **6–7 batidas autoradas** |
 | **28** | ⚠️ Se a magia faz tudo, como é que o mago não é a classe correcta? | cinco travões — o principal é **quem lança muito, cura pouco** |
-| **24** | Chefe a dois: +40% de vida, ou zero? | **+40%, dano igual, e a escala desce quando um morre** |
-| **32** | ⚠️ Matar um chefe no mundo do outro muda o teu próprio mundo? | proposta: a recompensa viaja; o estado do mundo não |
+| **32** | ⚠️ Matar um chefe no mundo do outro muda o teu próprio mundo? | **campanha de dupla opt-in** espelha o que ambos abriram juntos; modo solto mantém anfitrião/convidado |
 
 E as sete perguntas de narrativa ([`26-narrativa.md`](spec/26-narrativa.md) §3) continuam a precisar de uma gravação — **nome do jogo incluído**.
 
@@ -288,10 +297,10 @@ Mundo vasto + 13 chefes + 12 subchefes + 36 nomeados + 12 biomas + 120 armas + 6
 
 | Quem | O quê |
 |---|---|
-| **Codex** | tarefa 5 concluída — contratos/referências/perseguições fechados no `74`; frame pacing investigado e ainda vermelho; não fazer push |
+| **Codex** | Revisão 3 concluída — relatório de experiência no `docs/REVISAO-3.md`, tensões 57–64/23/32 registadas; não fazer push |
 | **Fable** | não duplicar os catálogos 66/67/68/69; o traçado canónico está no `world.json` |
 | **Mateus** | ⏳ **6 instruções do Rico à espera do 👍** — [`DECISOES.md`](DECISOES.md), 31-07 · noite. E os PRs #14, #15, #16 |
-| **Donos** | perguntas 24, 28, 29, 32, 34–56 do [`99`](spec/99-perguntas-abertas.md); prioridade técnica 50–51, sem apagar as restantes; e a gravação da narrativa |
+| **Donos** | perguntas 23, 24, 28, 29, 32, 34–64 do [`99`](spec/99-perguntas-abertas.md); prioridade técnica 50–51 e prioridade de experiência 57–63, sem apagar as restantes; e a gravação da narrativa |
 | **Claude** | rever o que chega; os 11 ícones de armadura já estão no manifesto |
 
 ### As três voltas de 31-07, e onde estão
