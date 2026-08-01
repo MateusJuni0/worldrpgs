@@ -10,6 +10,302 @@
     "discarded_alternative": "reutilizar uma pose generica; deixava IDs e frames diferentes com a mesma leitura visual"
   },
 
+  "_movesets": {
+    "_fonte": "spec/75 + spec/41 + spec/68 + spec/70",
+    "_decisao": "[CODEX] moveset por familia e empunhadura; cada arma recebe a sua arte por regra de familia, com poucas excepcoes. Razao: conserva verbos diferentes sem multiplicar 120 conjuntos. Alternativa descartada nesta proposta: um conjunto de animacoes integralmente unico por arma.",
+    "movimentos_base": [
+      "leve", "pesado", "cadeia", "leve_para_pesado", "em_corrida",
+      "a_rolar", "a_saltar", "de_cima", "empurrao"
+    ],
+    "familias": {
+      "espada_recta": {
+        "one_hand": {"animation_set": "moveset/espada_recta/one_hand", "posture": "guarda_central"},
+        "two_hands": {"animation_set": "moveset/espada_recta/two_hands", "posture": "guarda_alta"}
+      },
+      "adaga": {
+        "one_hand": {"animation_set": "moveset/adaga/one_hand", "posture": "ponta_oculta"},
+        "two_hands": {"animation_set": "moveset/adaga/two_hands", "posture": "laminas_cruzadas"}
+      },
+      "pesada_corte": {
+        "one_hand": {"animation_set": "moveset/pesada_corte/one_hand", "posture": "peso_ao_ombro"},
+        "two_hands": {"animation_set": "moveset/pesada_corte/two_hands", "posture": "peso_atras"}
+      },
+      "katana": {
+        "one_hand": {"animation_set": "moveset/katana/one_hand", "posture": "bainha_lateral"},
+        "two_hands": {"animation_set": "moveset/katana/two_hands", "posture": "guarda_de_tecto"}
+      },
+      "haste": {
+        "one_hand": {"animation_set": "moveset/haste/one_hand", "posture": "ponta_baixa"},
+        "two_hands": {"animation_set": "moveset/haste/two_hands", "posture": "ponta_em_linha"}
+      },
+      "cajado": {
+        "one_hand": {"animation_set": "moveset/cajado/one_hand", "posture": "foco_aberto"},
+        "two_hands": {"animation_set": "moveset/cajado/two_hands", "posture": "foco_ancorado"}
+      },
+      "arco": {
+        "one_hand": {"animation_set": "moveset/arco/one_hand", "posture": "arco_baixo"},
+        "two_hands": {"animation_set": "moveset/arco/two_hands", "posture": "corda_firmada"}
+      },
+      "besta": {
+        "one_hand": {"animation_set": "moveset/besta/one_hand", "posture": "coronha_baixa"},
+        "two_hands": {"animation_set": "moveset/besta/two_hands", "posture": "coronha_ao_ombro"}
+      }
+    }
+  },
+
+  "_artes": {
+    "_fonte": "spec/75 + spec/38; papeis editoriais e custos herdados de _weapon_arts",
+    "_decisao": "[CODEX] perfis temporais iniciais partilhados por peso e empunhadura. Razao: o compromisso fica testavel antes das animacoes finais. Alternativa descartada: copiar frames de outra obra ou fingir timings medidos; estes valores exigem afinacao em jogo.",
+    "input_action": "weapon_art",
+    "resource": "mana",
+    "free_state": "LIVRE",
+    "one_handed_grip": "one_hand",
+    "two_handed_grip": "two_hands",
+    "empunhaduras": ["one_hand", "two_hands"],
+    "base_roles": {"one_hand": "base_one_hand", "two_hands": "base_two_hands"},
+    "interrupt_life_restore_percent": 100,
+    "upgrade_level_count": 7,
+    "vectores_fuga_permitidos": [
+      "sair_da_linha", "rolar_para_dentro", "rolar_para_fora", "afastar_se",
+      "aproximar_se", "quebrar_visao", "sair_da_area", "aparar",
+      "bloquear_e_aguentar"
+    ],
+    "orcamento_runtime": {
+      "benchmark_iterations": 7,
+      "resolve_p95_usec_max": 250.0,
+      "catalogue_utf8_bytes_max": 262144
+    },
+    "perfis_temporais": {
+      "agil_1m": {
+        "momento_compromisso_frame": 16, "active_start_frame": 16,
+        "active_end_frame": 19, "recovery_end_frame": 34,
+        "curva_seguimento": [
+          {"ate_frame": 8, "graus_por_segundo": 180.0},
+          {"ate_frame": 16, "graus_por_segundo": 0.0}
+        ]
+      },
+      "agil_2m": {
+        "momento_compromisso_frame": 22, "active_start_frame": 22,
+        "active_end_frame": 28, "recovery_end_frame": 46,
+        "curva_seguimento": [
+          {"ate_frame": 10, "graus_por_segundo": 180.0},
+          {"ate_frame": 18, "graus_por_segundo": 30.0},
+          {"ate_frame": 22, "graus_por_segundo": 0.0}
+        ]
+      },
+      "medio_1m": {
+        "momento_compromisso_frame": 22, "active_start_frame": 22,
+        "active_end_frame": 27, "recovery_end_frame": 48,
+        "curva_seguimento": [
+          {"ate_frame": 10, "graus_por_segundo": 180.0},
+          {"ate_frame": 18, "graus_por_segundo": 30.0},
+          {"ate_frame": 22, "graus_por_segundo": 0.0}
+        ]
+      },
+      "medio_2m": {
+        "momento_compromisso_frame": 30, "active_start_frame": 30,
+        "active_end_frame": 36, "recovery_end_frame": 64,
+        "curva_seguimento": [
+          {"ate_frame": 14, "graus_por_segundo": 180.0},
+          {"ate_frame": 24, "graus_por_segundo": 30.0},
+          {"ate_frame": 30, "graus_por_segundo": 0.0}
+        ]
+      },
+      "pesado_1m": {
+        "momento_compromisso_frame": 34, "active_start_frame": 34,
+        "active_end_frame": 41, "recovery_end_frame": 76,
+        "curva_seguimento": [
+          {"ate_frame": 16, "graus_por_segundo": 180.0},
+          {"ate_frame": 28, "graus_por_segundo": 30.0},
+          {"ate_frame": 34, "graus_por_segundo": 0.0}
+        ]
+      },
+      "pesado_2m": {
+        "momento_compromisso_frame": 40, "active_start_frame": 40,
+        "active_end_frame": 48, "recovery_end_frame": 86,
+        "curva_seguimento": [
+          {"ate_frame": 18, "graus_por_segundo": 180.0},
+          {"ate_frame": 32, "graus_por_segundo": 30.0},
+          {"ate_frame": 40, "graus_por_segundo": 0.0}
+        ]
+      },
+      "preparado_1m": {
+        "momento_compromisso_frame": 30, "active_start_frame": 30,
+        "active_end_frame": 34, "recovery_end_frame": 58,
+        "curva_seguimento": [
+          {"ate_frame": 14, "graus_por_segundo": 180.0},
+          {"ate_frame": 24, "graus_por_segundo": 30.0},
+          {"ate_frame": 30, "graus_por_segundo": 0.0}
+        ]
+      },
+      "preparado_2m": {
+        "momento_compromisso_frame": 44, "active_start_frame": 44,
+        "active_end_frame": 56, "recovery_end_frame": 84,
+        "curva_seguimento": [
+          {"ate_frame": 20, "graus_por_segundo": 180.0},
+          {"ate_frame": 36, "graus_por_segundo": 30.0},
+          {"ate_frame": 44, "graus_por_segundo": 0.0}
+        ]
+      }
+    },
+    "familias": {
+      "espada_recta": {
+        "one_hand": {
+          "perfil_temporal": "medio_1m",
+          "pergunta": "vais atravessar uma abertura estreita ou guardar a mana para controlar o grupo?",
+          "vector_fuga": "sair_da_linha", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.espada_recta.one_hand", "descricao": "metal curto a alinhar a ponta", "perfil": "attack_parry", "alcance_m": 10.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "ponta_da_lamina", "forma": "linha_fina_frontal", "inicio": "brilho corre ate a ponta", "compromisso": "a linha fecha e deixa de seguir", "fim": "o brilho parte para a frente", "fora_ecra": "seta curta na direccao da ponta"}
+        },
+        "two_hands": {
+          "perfil_temporal": "medio_2m",
+          "pergunta": "vais fechar os flancos com um arco largo ou manter a resposta precisa de uma mao?",
+          "vector_fuga": "rolar_para_dentro", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.espada_recta.two_hands", "descricao": "lamina raspa e ganha arco", "perfil": "attack_area", "alcance_m": 13.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "lamina_inteira", "forma": "arco_largo_lateral", "inicio": "rasto nasce junto ao punho", "compromisso": "o arco fixa o lado de saida", "fim": "rasto varre e apaga atras", "fora_ecra": "cunha lateral aponta o varrimento"}
+        }
+      },
+      "adaga": {
+        "one_hand": {
+          "perfil_temporal": "agil_1m",
+          "pergunta": "vais entrar na guarda para procurar costas ou conservar distancia?",
+          "vector_fuga": "afastar_se", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.adaga.one_hand", "descricao": "clique seco do punho junto ao corpo", "perfil": "attack_hunter", "alcance_m": 7.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "mao_da_adaga", "forma": "agulha_curta", "inicio": "lamina recolhe e escurece", "compromisso": "agulha aponta sem corrigir", "fim": "risco curto atravessa o alvo", "fora_ecra": "piscar estreito junto ao atacante"}
+        },
+        "two_hands": {
+          "perfil_temporal": "agil_2m",
+          "pergunta": "vais ocupar os dois lados e perder a saida segura por tras?",
+          "vector_fuga": "bloquear_e_aguentar", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.adaga.two_hands", "descricao": "dois cortes de ar em ritmos diferentes", "perfil": "attack_moving", "alcance_m": 9.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "duas_laminas", "forma": "duas_meias_luas", "inicio": "rastos alternam esquerda e direita", "compromisso": "as meias-luas cruzam", "fim": "o cruzamento avanca com o corpo", "fora_ecra": "duas marcas cruzadas na margem"}
+        }
+      },
+      "pesada_corte": {
+        "one_hand": {
+          "perfil_temporal": "pesado_1m",
+          "pergunta": "vais saltar sobre a linha e aceitar uma aterragem exposta?",
+          "vector_fuga": "sair_da_linha", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.pesada_corte.one_hand", "descricao": "peso arranca do chao com sopro grave", "perfil": "attack_moving", "alcance_m": 15.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "cabeca_da_arma", "forma": "corredor_e_circulo_de_queda", "inicio": "po marca a linha de salto", "compromisso": "circulo fixa o ponto de queda", "fim": "onda curta nasce no impacto", "fora_ecra": "seta grossa acompanha a trajectoria"}
+        },
+        "two_hands": {
+          "perfil_temporal": "pesado_2m",
+          "pergunta": "vais dominar a area inteira e entregar as costas no fim do rodopio?",
+          "vector_fuga": "afastar_se", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.pesada_corte.two_hands", "descricao": "vento grave cresce antes do rodopio", "perfil": "attack_area", "alcance_m": 18.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "pe_do_atacante", "forma": "anel_com_abertura_traseira", "inicio": "anel desenha-se do lado da arma", "compromisso": "anel fecha sem seguir o alvo", "fim": "rasto completo revela as costas", "fora_ecra": "anel pulsante na margem"}
+        }
+      },
+      "katana": {
+        "one_hand": {
+          "perfil_temporal": "medio_1m",
+          "pergunta": "vais apostar no instante do golpe inimigo ou perder a janela sem premio?",
+          "vector_fuga": "aparar", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.katana.one_hand", "descricao": "bainha prende a lamina num clique agudo", "perfil": "attack_parry", "alcance_m": 9.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "boca_da_bainha", "forma": "fio_horizontal", "inicio": "fio acende dentro da bainha", "compromisso": "fio fecha no alvo actual", "fim": "corte aparece antes do rasto", "fora_ecra": "fio branco corta a margem"}
+        },
+        "two_hands": {
+          "perfil_temporal": "medio_2m",
+          "pergunta": "vais encadear dois cortes e aceitar que o segundo denuncia a saida?",
+          "vector_fuga": "bloquear_e_aguentar", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.katana.two_hands", "descricao": "duas respiracoes separadas por um toque de bainha", "perfil": "attack_dodge", "alcance_m": 12.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "lamina_e_bainha", "forma": "xis_desfasado", "inicio": "primeira diagonal cresce", "compromisso": "segunda diagonal fixa o retorno", "fim": "o xis apaga pela primeira linha", "fora_ecra": "duas diagonais alternam na margem"}
+        }
+      },
+      "haste": {
+        "one_hand": {
+          "perfil_temporal": "medio_1m",
+          "pergunta": "vais varrer os pes de quem entra ou ceder o centro da guarda?",
+          "vector_fuga": "rolar_para_fora", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.haste.one_hand", "descricao": "haste rola na palma junto ao chao", "perfil": "attack_dodge", "alcance_m": 11.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "ponta_da_haste", "forma": "arco_raso", "inicio": "linha nasce rente ao solo", "compromisso": "arco fixa o lado baixo", "fim": "po acompanha o varrimento", "fora_ecra": "meia-lua baixa na margem"}
+        },
+        "two_hands": {
+          "perfil_temporal": "pesado_2m",
+          "pergunta": "vais consumir o corredor numa carga que nao vira depois de firmada?",
+          "vector_fuga": "sair_da_linha", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.haste.two_hands", "descricao": "passo pesado e assobio continuo da ponta", "perfil": "attack_moving", "alcance_m": 17.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "ponta_da_haste", "forma": "corredor_longo", "inicio": "corredor segue lentamente o alvo", "compromisso": "bordas ficam rigidas", "fim": "linha avanca ate ao limite", "fora_ecra": "seta longa fixa a direccao"}
+        }
+      },
+      "cajado": {
+        "one_hand": {
+          "perfil_temporal": "medio_1m",
+          "pergunta": "vais empurrar para ganhar espaco ou guardar mana para a proxima magia?",
+          "vector_fuga": "aproximar_se", "tipo_contacto": "volume_movel",
+          "som_anuncio": {"cue_id": "weapon_art.cajado.one_hand", "descricao": "bruma inspira para o foco e estala para fora", "perfil": "attack_moving", "alcance_m": 12.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "foco_do_cajado", "forma": "cone_curto", "inicio": "bruma recolhe contra o fluxo", "compromisso": "cone fixa a abertura", "fim": "nuvem empurra e dissolve", "fora_ecra": "nevoa aponta para dentro da margem"}
+        },
+        "two_hands": {
+          "perfil_temporal": "pesado_1m",
+          "pergunta": "vais firmar a proxima conjuracao e ficar parado durante a preparacao?",
+          "vector_fuga": "afastar_se", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.cajado.two_hands", "descricao": "dois tons sustentados convergem no foco", "perfil": "attack_parry", "alcance_m": 16.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "duas_maos_no_cajado", "forma": "circulo_de_foco", "inicio": "dois arcos aproximam-se", "compromisso": "circulo sela junto ao foco", "fim": "selo passa para a proxima magia", "fora_ecra": "circulo incompleto pulsa na margem"}
+        }
+      },
+      "arco": {
+        "one_hand": {
+          "perfil_temporal": "preparado_1m",
+          "pergunta": "vais fixar um alvo por um disparo limpo e perder a leitura dos flancos?",
+          "vector_fuga": "sair_da_linha", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.arco.one_hand", "descricao": "corda tensiona com um unico rangido longo", "perfil": "attack_hunter", "alcance_m": 15.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "ponta_da_flecha", "forma": "linha_de_mira", "inicio": "linha estreita enquanto segue", "compromisso": "linha fica rigida", "fim": "pulso viaja pela linha", "fora_ecra": "reticulo direccional na margem"}
+        },
+        "two_hands": {
+          "perfil_temporal": "preparado_2m",
+          "pergunta": "vais negar uma zona distante e abandonar quem entrar debaixo do arco?",
+          "vector_fuga": "sair_da_area", "tipo_contacto": "persistente",
+          "som_anuncio": {"cue_id": "weapon_art.arco.two_hands", "descricao": "corda multiplica-se num coro ascendente", "perfil": "attack_area", "alcance_m": 20.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "zona_de_queda", "forma": "circulo_pontilhado", "inicio": "pontos fecham do exterior", "compromisso": "circulo deixa de seguir", "fim": "pontos caem em vagas", "fora_ecra": "chuva inclinada marca a margem"}
+        }
+      },
+      "besta": {
+        "one_hand": {
+          "perfil_temporal": "agil_1m",
+          "pergunta": "vais soltar o virote ja carregado ou guardar a resposta instantanea?",
+          "vector_fuga": "sair_da_linha", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.besta.one_hand", "descricao": "trava solta com estalo metalico", "perfil": "attack_hunter", "alcance_m": 14.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "canal_do_virote", "forma": "linha_curta_rigida", "inicio": "trava pisca e a linha alinha", "compromisso": "linha deixa de corrigir", "fim": "clarão percorre o canal", "fora_ecra": "pino luminoso aponta a linha"}
+        },
+        "two_hands": {
+          "perfil_temporal": "preparado_2m",
+          "pergunta": "vais preparar um disparo de emboscada e denunciar a recarga longa?",
+          "vector_fuga": "quebrar_visao", "tipo_contacto": "instantaneo",
+          "som_anuncio": {"cue_id": "weapon_art.besta.two_hands", "descricao": "cremalheira sobe dente a dente antes de travar", "perfil": "attack_hunter", "alcance_m": 18.0, "inicio_frame": 0},
+          "sinal_visual_equivalente": {"ancora": "cremalheira_da_besta", "forma": "segmentos_de_mira", "inicio": "segmentos acendem a cada dente", "compromisso": "segmentos formam uma linha", "fim": "linha colapsa no disparo", "fora_ecra": "tres segmentos fecham na margem"}
+        }
+      }
+    },
+    "excepcoes_por_arma": {
+      "espada_prata_santuario": {
+        "base_two_hands": {"definition_id": "espada_prata_santuario/voto_de_luz", "nome": "Voto de luz", "verbo": "firmar uma linha segura para um aliado atravessar", "pergunta": "vais abrir passagem ao aliado e anunciar onde a defesa fica vazia?", "tradeoff": "a linha e publica e prende-te ao seu eixo", "vector_fuga": "sair_da_linha"}
+      },
+      "faca_goblin_bruma": {
+        "base_one_hand": {"definition_id": "faca_goblin_bruma/passo_de_bruma", "nome": "Passo de bruma", "verbo": "trocar de lado dentro de uma nuvem curta", "pergunta": "vais esconder a travessia e aceitar que o som denuncia a saida?", "tradeoff": "a bruma nao protege onde termina", "vector_fuga": "afastar_se"}
+      },
+      "clava_cogumelo_goblin": {
+        "base_two_hands": {"definition_id": "clava_cogumelo_goblin/esporos_no_chao", "nome": "Esporos no chao", "verbo": "selar o espaco aos pes durante a recuperacao", "pergunta": "vais prender a aproximacao e ficar no centro do proprio aviso?", "tradeoff": "o centro e legivel e nao acompanha o atacante", "vector_fuga": "sair_da_area"}
+      },
+      "katana_brumal_sabre_de_vigilia": {
+        "base_one_hand": {"definition_id": "katana_brumal_sabre_de_vigilia/linha_de_vigilia", "nome": "Linha de vigilia", "verbo": "esperar o cruzamento exacto e responder sem perseguir", "pergunta": "vais fechar a linha agora ou deixar o inimigo mudar de angulo?", "tradeoff": "falhar o cruzamento entrega a recuperacao", "vector_fuga": "aparar"}
+      },
+      "lanca_aco_frio": {
+        "base_two_hands": {"definition_id": "lanca_aco_frio/trilho_de_geada", "nome": "Trilho de geada", "verbo": "desenhar um corredor frio que obriga a escolher um lado", "pergunta": "vais comprometer o corredor antes de saber por que lado ele foge?", "tradeoff": "depois do compromisso a carga nao vira", "vector_fuga": "sair_da_linha"}
+      },
+      "diapasao_penitente": {
+        "base_two_hands": {"definition_id": "diapasao_penitente/acorde_partido", "nome": "Acorde partido", "verbo": "separar duas zonas por uma onda audivel", "pergunta": "vais dividir o campo e oferecer o intervalo silencioso entre as ondas?", "tradeoff": "o intervalo permite aproximacao", "vector_fuga": "aproximar_se"}
+      },
+      "arco_encharcado_campas": {
+        "base_two_hands": {"definition_id": "arco_encharcado_campas/chuva_de_campas", "nome": "Chuva das campas", "verbo": "marcar uma zona lenta antes de a saturar", "pergunta": "vais negar a zona e aceitar que o primeiro aviso mostra o centro?", "tradeoff": "quem sai antes do compromisso conserva a iniciativa", "vector_fuga": "sair_da_area"}
+      },
+      "besta_fornalha_besta_de_fornalha": {
+        "base_two_hands": {"definition_id": "besta_fornalha_besta_de_fornalha/ferrolho_de_fornalha", "nome": "Ferrolho de fornalha", "verbo": "fechar uma linha com um virote anunciado pelo calor", "pergunta": "vais carregar a linha e revelar o alvo pelo brilho?", "tradeoff": "o brilho entrega a emboscada antes do disparo", "vector_fuga": "quebrar_visao"}
+      }
+    }
+  },
+
   "golpes_universais": {
     "_fonte": "spec/51 §1 + spec/68 §2 — constantes universais; equipment.json materializa os 11 golpes nas 8 familias.",
     "_estado": "catalogo fechado; no prototipo so leve, pesado, cadeia e bash executam. Os outros entram no M2.",
