@@ -75,24 +75,6 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 | `ui_menu_fundo` | Fundo do menu principal | `art/ui/menus/menu-fundo.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 | `sky_brumal` | Céu de Brumal (entardecer enevoado) | `art/sky/brumal-ceu.png` | 1536×1024 | [06](prompts/06-ui-ceu.md) | ✅ |
 
-## Conceitos de bioma — volta 1 ([`../spec/49-biomas.md`](../spec/49-biomas.md))
-
-> A `descrição visual` de cada um está na ficha (spec/49 §3) e em `game/data/biomes.json`. Brumal já tem cenário (`con_brumal_vista`) — estes são os 11 que faltam. **Nenhum é da fatia 1**: geram-se quando o orçamento de créditos deixar, por ordem de zona.
-
-| ID | Asset | Caminho | Dim. | Prompt | Estado |
-|---|---|---|---|---|---|
-| `con_bioma_selva_funda` | Selva Funda (selva vertical, passadiços goblin) | `art/concept/bioma-selva-funda.png` | 1536×1024 | ficha §3.2 | ⬜ |
-| `con_bioma_campas` | Campas Cinzentas (pântano dos mortos) | `art/concept/bioma-campas.png` | 1536×1024 | ficha §3.3 | ⬜ |
-| `con_bioma_fojo` | Fojo (desfiladeiros e minas kobold) | `art/concept/bioma-fojo.png` | 1536×1024 | ficha §3.4 | ⬜ |
-| `con_bioma_costa` | Costa Quebrada (falésias dos naufrágios) | `art/concept/bioma-costa.png` | 1536×1024 | ficha §3.5 | ⬜ |
-| `con_bioma_cimeira` | Cimeira (a montanha limpa, sem bruma) | `art/concept/bioma-cimeira.png` | 1536×1024 | ficha §3.6 | ⬜ |
-| `con_bioma_fornalha` | Fornalha (o monte-forja) | `art/concept/bioma-fornalha.png` | 1536×1024 | ficha §3.7 | ⬜ |
-| `con_bioma_fulgor` | Fulgor (planalto da tempestade presa) | `art/concept/bioma-fulgor.png` | 1536×1024 | ficha §3.8 | ⬜ |
-| `con_bioma_raizama` | Raizama (caverna do grande morto) | `art/concept/bioma-raizama.png` | 1536×1024 | ficha §3.9 | ⬜ |
-| `con_bioma_cidade_afogada` | Cidade Afogada (ruínas na água parada) | `art/concept/bioma-cidade-afogada.png` | 1536×1024 | ficha §3.10 | ⬜ |
-| `con_bioma_santuario` | Santuário Branco (o templo que rezou de mais) | `art/concept/bioma-santuario.png` | 1536×1024 | ficha §3.11 | ⬜ |
-| `con_bioma_raiz` | A Raiz (o abismo de onde a bruma sai) | `art/concept/bioma-raiz.png` | 1536×1024 | ficha §3.12 | ⬜ |
-
 ## Conceitos das raças novas — volta 2 ([`../spec/50-racas.md`](../spec/50-racas.md))
 
 > As 6 raças `[FABLE]` da volta 2. A `descrição visual` está na ficha (spec/50) e em `game/data/races.json`. As 7 raças aprovadas já têm retrato. **Nenhuma é da fatia 1.**
@@ -124,7 +106,7 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 | `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 512×512 | Paladino | ⬜ |
 | `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 512×512 | Feiticeiro | ⬜ |
 
-**Total: 32 assets gerados + 11 ícones de armadura (fatia 1) + 11 conceitos de bioma + 6 de raça.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
+**Total: 43 imagens geradas** (25 da fatia 1 + 7 do bestiário + **11 conceitos de bioma**) **+ 10 ícones de interface.** Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
 > **Nota de contagem:** este manifesto dizia "22" na primeira versão. São 25 — a soma estava errada, não a lista.
 >
