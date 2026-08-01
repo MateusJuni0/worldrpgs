@@ -97,7 +97,7 @@ Se a mana voltasse sozinha, a jogada óptima seria **esperar** — e esperar já
 
 **Isto é um sistema novo, e é bom:** cada classe tem **uma coisa passiva que nunca perde**, e que a define mesmo depois de trocar todo o equipamento.
 
-⭐ **É a resposta certa à Lei 3.** Qualquer classe pega em qualquer arma — mas o **traço** não se troca. É o que faz um guerreiro com um cajado continuar a ser um guerreiro.
+⭐ **É a resposta certa à Lei 3, com o limite fechado no [`64`](64-criacao-de-personagem.md).** Qualquer origem pega em qualquer arma, magia e técnica encontrada — mas o **traço de origem** não se troca. É identidade persistente, não caminho: nunca abre/fecha item, escola, espólio, NPC, zona ou chefe.
 
 | Classe | ⭐ Traço `[CLAUDE]`, proposta |
 |---|---|

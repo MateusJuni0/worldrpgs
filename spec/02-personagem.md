@@ -113,3 +113,5 @@ Isto é a peça que resolve o problema das armas: não se bloqueia o uso de uma 
 - Nome, história, motivação
 - Reespecialização (mudar de classe ou redistribuir pontos)
 - Se os dois jogadores podem escolher a mesma classe
+
+> **RESOLVIDO 01-08 no [`64`](64-criacao-de-personagem.md):** nome, aspecto/voz e fluxo de criação; os dois podem escolher a mesma origem. A classe é preset inicial e não fecha arma, magia, atributo, espólio ou conteúdo. Reespecialização continua separada e em aberto.

@@ -196,6 +196,8 @@ A fatia já dava a arma ([`10-fatia-1.md`](10-fatia-1.md), `loadouts`); passa a 
 
 Cada peça tem `descrição visual` no [`armor.json`](../game/data/armor.json). **Fatia 1? ✅ nas 10 peças dos kits** — são as primeiras armaduras que o Claude gera.
 
+Na criação, a classe selecciona este kit como **preset**, não como restrição futura: qualquer origem pode equipar qualquer peça/arma que encontre. O acento cosmético do [`64`](64-criacao-de-personagem.md) altera só a zona secundária permitida; material, silhueta, peso e estatísticas continuam a vir desta ficha.
+
 ---
 
 ## 6. O espólio de equipamento — as regras do Rico (31-07, ⏳ falta o Mateus)

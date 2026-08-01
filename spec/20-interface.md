@@ -43,7 +43,7 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 | Menu | Conteúdo |
 |---|---|
 | **Principal** | Continuar (último save) · Jogar a dois (hospedar / juntar por código — o fluxo < 2 min do WP10) · Novo personagem · Opções · Sair |
-| **Criação** | classe (as 6 fichas do WP3 com "como se joga" numa frase) · voz grave/agudo (WP12) · nome |
+| **Criação** | fluxo completo no [`64`](64-criacao-de-personagem.md): 6 presets de arranque · aspecto finito · voz independente · nome · revisão · save atómico; a frase “podes usar tudo” fica sempre visível |
 | **Pausa** (Esc) | Retomar · Opções · Sair para o menu — **o mundo nunca pára** (coerência com a mochila e com o co-op); "pausar" é encostar num sítio seguro, como no género |
 | **Gravação** | automática: no descanso, ao apanhar item, ao morrer, ao sair — sem botão de gravar; o [`59`](59-saves.md) acrescenta todos os eventos permanentes e recuperação; o menu mostra "última gravação há Xs" |
 
@@ -84,4 +84,4 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 ## Ligações
 
-[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md)
+[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md)

@@ -93,9 +93,11 @@
 | 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
 | ✅ | ~~**Sistema de saves sem uma linha**~~ **RESOLVIDO 01-08** — formato campo a campo, morte sem save-scumming, escrita atómica, recuperação e migração, com código e testes | [`59`](spec/59-saves.md) · `game/src/autoload/save_system.gd` |
 | 🟠 | ⚠️ **A leitura do mapa tem de ser decidida ANTES de o WP8 traçar as zonas** — senão há zonas impossíveis de mapear | [`57`](spec/57-mapa-e-minimapa.md) §5 |
-| 🟠 | ⚠️ **Texturas, modelos 3D e som: ZERO.** Os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados nem importados. **Nenhuma volta cobre isto** |
+| 🟠 | ⚠️ **Os packs CC0 estão em `art/`, mas quase nada está integrado em `game/`.** Biblioteca não é runtime: cada modelo/som ainda precisa de importação, orçamento e prova no motor | [`22`](spec/22-assets.md), verificado no [`64`](spec/64-criacao-de-personagem.md) |
 | 🟠 | ⚠️ **Ligar os três produtores ao `SaveSystem`** — o greybox ainda não tem almas/inventário/mapa persistentes; quando cada sistema entrar, tem de emitir os eventos do [`59`](spec/59-saves.md) §3. Hoje `main.gd` ainda diz «Nada se perdeu» | encontrado ao implementar o [`59`](spec/59-saves.md) |
 | 🔴 | ⭐ **A infra-estrutura de afinação escrita no `23`/`28` não existe** — sem CSV, `tp arena_vorgar`, `latencia`, overlays ou fixtures A/B; só a semente fixa do greybox existe. Construir `TuningRecorder` antes de chamar qualquer valor “confirmado” | encontrado ao verificar o código para o [`63`](spec/63-como-se-afinam-os-numeros.md) |
+| 🔴 | **O criador não existe** — o greybox só troca classe com F6. Faltam ecrã/slots, `appearance.json`, validação do nome, save v2 + migração v1 e teste 6 origens × armas | encontrado ao escrever o [`64`](spec/64-criacao-de-personagem.md) |
+| 🟠 | **Os corpos Quaternius, classes KayKit e 11 peças não têm retarget/encaixe provado; os 2 conjuntos de voz também não existem** | conteúdo e integração exigidos pelo [`64`](spec/64-criacao-de-personagem.md) |
 | 🟠 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | [`29`](spec/29-perspectiva.md) |
 | 🟠 | **A cura à distância funciona com que latência?** | [`42`](spec/42-estudo-magia.md) |
 
@@ -221,7 +223,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | ✅ | ~~⭐ **Desenho de arena de chefe**~~ **ESCRITO 01-08** — 13 arenas seladas, bolsas abertas para subchefes, bordo legível, nevoeiro/carregamento e espaço desenhado para dois | [`61`](spec/61-arenas-de-chefe.md) |
 | ✅ | ~~O fim do jogo~~ **ESCRITO 01-08** — escolha final que **os dois têm de concordar**; estrutura fixada, conteúdo depende das 7 perguntas de narrativa | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | ✅ | ~~Ciclo novo (NG+)~~ **ESCRITO 01-08** — +40% no NG+, +8% por ciclo, ⚠️ **tecto no NG+7**. E a **Brasa** sobe UMA zona sem recomeçar o jogo | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
-| 🟠 | **Criação de personagem** | escolhe-se classe, e mais? Aspecto, nome, o primeiro ecrã do jogo |
+| ✅ | ~~**Criação de personagem**~~ **ESCRITO 01-08** — seis presets sem caminhos fechados, aspecto finito, voz independente, nome seguro, revisão e save atómico | [`64`](spec/64-criacao-de-personagem.md) |
 | ✅ | ~~⭐ **Quem afina os números**~~ **ESCRITO 01-08** — inventário, ordem causal, papéis, passos máximos, A/B, diagnóstico e critério para congelar sem transformar partidas em finais | [`63`](spec/63-como-se-afinam-os-numeros.md) |
 | ✅ | ~~⚠️ **Desligar a meio de um chefe**~~ **RESOLVIDO 01-08** — sem progresso parcial; commit autoritativo em HP zero; recibo persistente e idempotente para a queda depois da morte | [`59`](spec/59-saves.md) §8 |
 | 🔵 | **Medir p95 da escrita com o mapa completo na máquina do Rico** — a fixture actual tem guarda < 64 KiB; o orçamento cheio é 2 MiB e ainda não existe conteúdo para o medir | [`59`](spec/59-saves.md) §10 |

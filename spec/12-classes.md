@@ -8,6 +8,8 @@
 - **Habilidade especial** existe por classe `[DECIDIDO]` (08:08); o conteúdo foi adiado por eles (08:31) — as propostas abaixo são `[FABLE]`, debaixo da Lei 2: **verbos novos, não números**.
 - Atributos: todos começam em 8; a classe distribui **+14** (total 62) — WP2.
 
+> **FECHADO PELO [`64`](64-criacao-de-personagem.md):** “classe” é a **origem/preset de arranque**: atributos, kit, verbo e técnica iniciais. Conserva o traço de origem do [`54`](54-mana-meditacao-e-tracos-de-classe.md), mas nunca fecha armas, armaduras, magia, atributos, espólio, conteúdo ou técnicas encontradas no mundo. As evoluções abaixo acrescentam variantes ao verbo de origem; não criam uma árvore exclusiva que proíba o resto do jogo.
+
 ## As fichas
 
 Seis na fatia 1; Batedor e Mago do mal ficam com as condições de entrada escritas.
@@ -56,7 +58,7 @@ Nenhuma escala com atributos ou nível; custos e tempos fixos. *Teste da Lei 2, 
 
 - **Formato: lista, não árvore.** Cada skill é uma técnica concreta; sem pré-requisitos em cadeia. *Alternativa descartada:* árvore — profundidade ilusória, e com 8 classes é combinatória a mais para dois jogadores.
 - **2 slots activos**; troca livre fora de combate.
-- **Na fatia 1: a técnica de assinatura de cada classe** (1 skill, já no slot). Como se ganham mais: proposta — **largadas por chefes e dungeons** (a Lei 2 aplicada ao loot: chefes dão opções novas, não números). Fica `[FABLE]` a confirmar com o resto da economia (WP9).
+- **Na fatia 1: a técnica de assinatura de cada origem** (1 skill, já no slot). Como se ganham mais: proposta — **largadas por chefes e dungeons**, sem filtro pela origem (a Lei 2 e a Lei 3 aplicadas ao loot: chefes dão opções novas, não números nem caminhos fechados). Fica `[FABLE]` a confirmar com o resto da economia (WP9).
 
 | Classe | Técnica de assinatura | Efeito |
 |---|---|---|
@@ -109,5 +111,5 @@ Até lá, a fatia 1 **não tem evoluções** (patamar 1 para toda a gente), port
 ## O que continua aberto
 
 - **Pergunta 3** — a decisão A/B acima. Deles.
-- Reespecialização (redistribuir pontos), aparência, nomes de personagem: **não discutidos na gravação**; ficam para quando doerem.
+- Reespecialização (redistribuir pontos) continua por decidir. Aparência e nomes de personagem foram fechados no [`64`](64-criacao-de-personagem.md).
 - As fichas completas de Batedor e Mago do mal — cada um espera pela sua porta (arco · pergunta 8).

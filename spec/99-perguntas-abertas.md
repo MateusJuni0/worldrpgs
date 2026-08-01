@@ -114,8 +114,8 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 
 **→ Respondida pelo Rico (30-07-2026, instrução directa): seis na fatia 1** — Guerreiro, Feiticeiro, Tanque, Assassino, Berserker, Paladino. O Batedor espera pelo arco; o Mago do mal, pela pergunta 8. Ver [`10-fatia-1.md`](10-fatia-1.md).
 
-✅ **CONFIRMADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — seis classes na fatia, com o custo aceite de olhos abertos (6 habilidades + 5 conjuntos de animação).
-→ [`02-personagem.md`](02-personagem.md)
+✅ **CONFIRMADA** `[DECIDIDO]` (Mateus + Rico, 31-07-2026) — seis classes na fatia, com o custo aceite de olhos abertos (6 habilidades + 5 conjuntos de animação). O [`64`](64-criacao-de-personagem.md) fecha a apresentação: são **presets de arranque**, nunca caminhos fechados, e só as seis prontas aparecem no primeiro ecrã.
+→ [`02-personagem.md`](02-personagem.md), [`12-classes.md`](12-classes.md), [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md)
 
 ### 10. ~~O que acontece quando se morre?~~ ✅ RESPONDIDA
 `[DECIDIDO]` (Mateus, 31-07-2026) — **perdem-se as almas** (a moeda e a experiência ao mesmo tempo), que ficam no sítio onde se morreu; morrer outra vez antes de as apanhar perde-as de vez. Renasce-se no último ponto de descanso. **Em co-op**: ficas no mundo do parceiro e ele tem **1 minuto** para te ressuscitar, ficando **5 segundos** em cima do corpo. Detalhe em [`33-morte-e-almas.md`](33-morte-e-almas.md).

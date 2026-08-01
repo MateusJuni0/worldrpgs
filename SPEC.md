@@ -47,7 +47,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | ⚠️ **sem soft caps e sem o piso de 30%** — [`39`](spec/39-estudo-profundo.md) §1–2 |
-| 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | ⚠️ **nenhuma habilidade tem tecla** — [`44`](spec/44-prototipo.md) §3.1 |
+| 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Escolas, catálogo, cargas (WP4) | ⚠️ **o maior buraco** — falta tudo o que está no [`42`](spec/42-estudo-magia.md) |
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | ⚠️ **por classe, devia ser por família** — [`35`](spec/35-estudo-referencia.md) §1 |
 | 15 | [Bestiário](spec/15-inimigos.md) | IA, as 7 raças, encontros (WP6) | ⚠️ falta o baralho e preencher **som + visual equivalente** por ataque — [`62`](spec/62-acessibilidade-auditiva.md) |
@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–63)
+### Decisões e estudos (32–64)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 64 | [**Criação de personagem: escolher um começo, não uma prisão**](spec/64-criacao-de-personagem.md) | Fluxo inicial · seis presets · aspecto finito · nome · save · prova da Lei 3 | 🟢 sistema fechado 01-08; UI, retarget e save v2 por construir |
 | 63 | [**Como se afinam os números: medir, mudar um, provar**](spec/63-como-se-afinam-os-numeros.md) | Inventário · ordem causal · papéis · A/B de uma variável · diagnóstico por sintoma · quando congelar | 🟢 método fechado 01-08; CSV/comandos assumidos pelo 28 não existem no código |
 | 62 | [**Acessibilidade auditiva: a mesma informação por outro canal**](spec/62-acessibilidade-auditiva.md) | Evento único · forma visual por tipo de som · timing/direcção equivalentes · combate, co-op, segredos e estados sem áudio | 🟢 regra fechada 01-08; renderer e migração dos 12 ataques continuam por construir |
 | 61 | [**Arenas de chefe: o espaço também luta**](spec/61-arenas-de-chefe.md) | Tamanho por camada · obstáculos/refúgios · bordo letal legível · nevoeiro como carregamento · ataques para separar e juntar dois jogadores | 🟢 sistema fechado 01-08; 12 fichas de guardião + Ultra são conteúdo do WP7 |

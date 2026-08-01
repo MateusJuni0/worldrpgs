@@ -37,7 +37,7 @@ O estilo (estilizado com orçamento consciente — [`30-qualidade-visual.md`](30
 
 | Preciso de | Candidato primeiro | Alternativa | Nota |
 |---|---|---|---|
-| Corpo base humanóide ×6 classes | KayKit Adventurers | Quaternius RPG characters | Lei 3: um corpo base + armas/peças trocadas vale mais que 6 modelos distintos — confirmar ao descarregar que o esqueleto é partilhado |
+| Corpo base humanóide ×6 classes | KayKit Adventurers | Quaternius Base Characters | [`64`](64-criacao-de-personagem.md): duas bases + cabelo/acento finitos, um esqueleto e cápsula comuns; confirmar retarget e encaixe dos 11 kits antes de expor no criador |
 | Orc lanceiro + brutamontes | Quaternius Monsters | KayKit Skeletons como fallback de silhueta | O brutamontes precisa de aguentar a animação de armar exagerada |
 | Vorgar (chefe) | Orc do pack ampliado ×1,6 escala + adereços de armadura | modelar por cima de base CC0 | Chefe único justifica trabalho manual por cima do pack |
 | Floresta de Brumal | Quaternius Nature / Kenney Nature | Poly Haven para texturas de chão | Névoa faz metade do trabalho (Lei 4) |

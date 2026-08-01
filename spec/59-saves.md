@@ -73,6 +73,8 @@ Os IDs (`class_id`, `boss_id`, `item_id`, `zone_id`) são IDs estáveis do `Game
 | `checkpoint.rest_point_id` | ID | ponto onde o personagem reaparece; não se grava posição livre para saltar caminho |
 | `death.soul_stain` | `null` ou objecto | mancha activa: `stain_id`, `amount`, `zone_id`, `position:[x,y,z]` e `death_sequence` |
 
+⚠️ **O v1 aprovado fica intacto.** O criador do [`64`](64-criacao-de-personagem.md) exige que a próxima versão acrescente `identity.appearance` (corpo, pele, cabelo, sobrancelhas, acento e voz). A migração v1→v2 aplica a aparência de fábrica e preserva todos os campos existentes; implementar criador sem subir versão é partir o contrato deste documento.
+
 `death_sequence` sobe em cada morte. Uma mancha nova substitui a anterior no mesmo commit que põe `souls_held = 0`; assim, morrer outra vez perde a primeira de verdade.
 
 ### `world` — o que pertence à casa do anfitrião
@@ -255,6 +257,8 @@ O singleton `SaveSystem`, carregado depois de `GameData`, expõe:
 
 Os sinais `save_completed`, `save_failed` e `recovery_completed` permitem à UI informar sem conhecer ficheiros.
 
+Quando o [`64`](64-criacao-de-personagem.md) entrar, `new_game` recebe também a identidade já validada. A UI nunca envia atributos ou kit: esses continuam derivados do `class_id` pelo `GameData`.
+
 ⚠️ **O que ainda não está ligado:** o greybox não implementa almas, mochila nem mapa persistente; logo ainda não produz esses eventos. O `SaveSystem` e o estado no `GameData` estão prontos, mas os três clientes têm de chamar `save_current()` quando forem construídos.
 
 ---
@@ -274,4 +278,4 @@ O custo de `flush()` é deliberado só nos eventos que não podem voltar atrás.
 
 ## Ligações
 
-[`19-rede.md`](19-rede.md) · [`33-morte-e-almas.md`](33-morte-e-almas.md) · [`40-decisoes-espolio-magia-inventario.md`](40-decisoes-espolio-magia-inventario.md) · [`57-mapa-e-minimapa.md`](57-mapa-e-minimapa.md) · [`23-tecnico.md`](23-tecnico.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)
+[`19-rede.md`](19-rede.md) · [`33-morte-e-almas.md`](33-morte-e-almas.md) · [`40-decisoes-espolio-magia-inventario.md`](40-decisoes-espolio-magia-inventario.md) · [`57-mapa-e-minimapa.md`](57-mapa-e-minimapa.md) · [`23-tecnico.md`](23-tecnico.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md) · [`99-perguntas-abertas.md`](99-perguntas-abertas.md)

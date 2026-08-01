@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, método de afinação.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, criação de personagem.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem 62 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -44,7 +44,7 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | 65 · 10 379 linhas | — | — |
+| Documentos de spec | 66 · 10 637 linhas | — | — |
 | Código | 16 ficheiros `.gd` · 4862 linhas · 1311 de dados | — | — |
 | Testes | **245, todos a passar** | — | — |
 | Imagens | 32 (cenários, classes, 7 raças) | — | ⚠️ **zero ícones de objecto** |
@@ -88,6 +88,14 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
 ⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 245 auto-testes provam coerência, não feel.
+
+## 1g. ✅ A primeira escolha já não fecha o resto do jogo
+
+O [`64`](spec/64-criacao-de-personagem.md) fecha o percurso **classe → aspecto/voz → nome → revisão → save**. As seis classes são presets que escolhem os +14 pontos, kit, verbo, técnica e futuro traço iniciais; nunca bloqueiam arma, magia, atributo, espólio, conteúdo ou composição co-op. Os cartões têm de dizer isso à vista.
+
+O aspecto é finito e baseado no que está em `art/models/`: 2 corpos, 4 tons, 0+6 cabelos, 6 cores, 2 sobrancelhas, 6 acentos e 2 vozes, todos com a mesma cápsula e frames. Nome aceita 1–24 grafemas Unicode seguros e nunca serve de ID.
+
+⚠️ **Desenho não é runtime:** hoje só existe a troca F6 do greybox. Faltam o ecrã, `appearance.json`, prova de retarget/encaixe dos kits, os dois conjuntos de voz e o **save v2 com migração do v1 aprovado**.
 
 ## 2. O que está decidido e ainda não está na spec de execução
 

@@ -58,7 +58,7 @@ A medição da pergunta 0b ([`09-tecnico.md`](09-tecnico.md)) validou o greybox:
 
 ### Construção
 
-- **Um corpo base + peças fixas por classe** (cabeça/vestes coladas offline), **um esqueleto para as 6 classes**; troca-se em jogo só a arma na mão e o escudo no antebraço. É o caminho que o WP13 apontou (KayKit/Quaternius como âncora de autor) levado à regra. *Alternativa descartada:* sistema modular de peças em jogo — rigging e atravessamentos ao quadrado, para uma gaveta (armadura) que a recomendação do WP5 nem quer.
+- **Um esqueleto comum + duas bases de corpo**, cabelo/acento discretos e peças de kit fixas por classe; troca-se em jogo arma, escudo e equipamento já previsto, não se monta uma personagem de vinte peças por frame. O conjunto finito e os guardas de hitbox vivem no [`64`](64-criacao-de-personagem.md). *Alternativa descartada:* editor facial e sistema modular irrestrito — rigging e atravessamentos ao quadrado sem ganho para o combate.
 - **Lanceiro e brutamontes partilham a malha base de orc** (brutamontes a 1,3× com ombros próprios) — 1 esqueleto, 2 variações. Vorgar é malha própria (1,6×, adereços de armadura — lista de compras do WP13).
 
 ### A lista fina de animações — durações-contrato
