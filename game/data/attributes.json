@@ -1,6 +1,6 @@
 {
   "_fonte": "spec/11-formulas.md (WP2). Lei.",
-  "_lei_1": "A regeneracao de stamina, as janelas de esquiva/parry e a velocidade NUNCA escalam com atributos. O nivel compra margem (PV, STA, defesa, cargas), nunca compra as ferramentas.",
+  "_lei_1": "A regeneracao de stamina, as janelas de esquiva/parry e a velocidade NUNCA escalam com atributos. O nivel compra margem (PV, STA, defesa, mana), nunca compra as ferramentas.",
 
   "base_value": 8,
   "class_bonus_points": 14,
@@ -20,7 +20,8 @@
     "health":  { "_f": "PV = 200 + 22*Vida (acima do soft cap: +8/ponto)", "base": 200, "per_point": 22, "per_point_after_soft_cap": 8 },
     "stamina": { "_f": "STA = 80 + 2*Stamina", "base": 80, "per_point": 2, "regen_scales": false },
     "defense": { "_f": "DEF = 2*Constituicao, nunca acima de 40% do dano do golpe", "per_point": 2, "max_fraction_of_damage": 0.40 },
-    "charges": { "_f": "cargas TOTAIS = 4 + floor(Sabedoria/4)", "base": 4, "points_per_charge": 4 }
+    "charges": { "_revogado": "spec/54: substituido por mana" },
+    "mana": { "_f": "mana = 60 + 4*max(Inteligencia, Fe); acima de 35, +1/ponto", "base": 60, "per_point": 4, "soft_cap": 35, "per_point_after_soft_cap": 1 }
   },
 
   "damage": {
@@ -33,16 +34,16 @@
     "below_requirement_scale": 1.0
   },
 
-  "attribute_ids": ["vida", "stamina", "constituicao", "sabedoria", "forca", "destreza"],
+  "attribute_ids": ["vida", "stamina", "constituicao", "inteligencia", "fe", "forca", "destreza"],
 
   "classes": {
     "_fonte": "spec/12-classes.md (WP3), tabela das seis fichas. LEI — deixou de ser [PROTO] quando o WP3 chegou.",
-    "_verificacao": "Feiticeiro Sab 14 -> 7 cargas (4+floor(14/4)), que e o caso de referencia que o WP4 usa. Berserker cumpre o machadao exactamente (For 14). Assassino sobra na adaga (Des 14 > 10).",
-    "warrior":   { "display_name": "Guerreiro",  "vida": 11, "stamina": 11, "constituicao": 10, "sabedoria": 8,  "forca": 12, "destreza": 10 },
-    "sorcerer":  { "display_name": "Feiticeiro", "vida": 10, "stamina": 10, "constituicao": 9,  "sabedoria": 14, "forca": 9,  "destreza": 10 },
-    "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 13, "sabedoria": 8,  "forca": 11, "destreza": 8 },
-    "assassin":  { "display_name": "Assassino",  "vida": 10, "stamina": 12, "constituicao": 9,  "sabedoria": 8,  "forca": 9,  "destreza": 14 },
-    "berserker": { "display_name": "Berserker",  "vida": 11, "stamina": 12, "constituicao": 9,  "sabedoria": 8,  "forca": 14, "destreza": 8 },
-    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 10, "sabedoria": 11, "forca": 11, "destreza": 9 }
+    "_verificacao": "Feiticeiro Int 14 -> 116 mana. Paladino Fe 11 -> 104 mana. Berserker cumpre o machadao exactamente (For 14). Assassino sobra na adaga (Des 14 > 10).",
+    "warrior":   { "display_name": "Guerreiro",  "vida": 11, "stamina": 11, "constituicao": 10, "inteligencia": 8,  "fe": 8,  "forca": 12, "destreza": 10 },
+    "sorcerer":  { "display_name": "Feiticeiro", "vida": 10, "stamina": 10, "constituicao": 9,  "inteligencia": 14, "fe": 8,  "forca": 9,  "destreza": 10 },
+    "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 13, "inteligencia": 8,  "fe": 8,  "forca": 11, "destreza": 8 },
+    "assassin":  { "display_name": "Assassino",  "vida": 10, "stamina": 12, "constituicao": 9,  "inteligencia": 8,  "fe": 8,  "forca": 9,  "destreza": 14 },
+    "berserker": { "display_name": "Berserker",  "vida": 11, "stamina": 12, "constituicao": 9,  "inteligencia": 8,  "fe": 8,  "forca": 14, "destreza": 8 },
+    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 10, "inteligencia": 8,  "fe": 11, "forca": 11, "destreza": 9 }
   }
 }

@@ -320,15 +320,32 @@ func _graphics_fog() -> String:
 # --- spec/13-magia.md (WP4) · o catalogo --------------------------------------
 
 func _test_spell_catalogue() -> void:
-	# magia, cargas, tempo, dano base, alcance
+	_check(GameData.has_method("max_mana_for"),
+		"a magia usa uma reserva publica de mana, nao cargas revogadas")
+	var sorcerer_attrs := GameData.class_attributes("sorcerer")
+	_check(sorcerer_attrs.has("inteligencia") and sorcerer_attrs.has("fe"),
+		"as quatro escolas recebem Inteligencia e Fe separadas")
+	_check(GameData.max_mana_for(sorcerer_attrs) == 116,
+		"Feiticeiro com Inteligencia 14 arranca com 116 de mana")
+	var schools: Dictionary = GameData.spells.get("_schools", {}) as Dictionary
+	_check(schools.keys().size() == 4,
+		"o catalogo tem as quatro escolas de spec/42")
+	_check(String((schools.get("mal", {}) as Dictionary).get("scaling", "")) == "menor_int_fe",
+		"a escola vermelha escala com o MENOR de Inteligencia e Fe")
+	var split_caster := {"inteligencia": 30, "fe": 12}
+	_check(GameData.casting_attribute_for("mal", split_caster) == 12.0,
+		"Int 30 / Fe 12 da 12 de escala vermelha")
+	_check(GameData.casting_attribute_for("piromancia", split_caster) == 21.0,
+		"a piromancia usa a media de Inteligencia e Fe")
+	# magia, mana, tempo, dano base, alcance
 	var table := [
-		["dardo", 1, 0.8, 45, 18.0],
-		["ruina", 3, 1.6, 70, 12.0],
-		["egide", 2, 0.5, 0,  0.0],
+		["dardo", 12, 0.8, 45, 18.0],
+		["ruina", 35, 1.6, 70, 12.0],
+		["egide", 25, 0.5, 0,  0.0],
 	]
 	for row: Array in table:
 		var s := GameData.spell(String(row[0]))
-		_check(int(s.get("charge_cost")) == int(row[1]), "%s custa %d cargas" % [row[0], row[1]])
+		_check(int(s.get("mana_cost")) == int(row[1]), "%s custa %d mana" % [row[0], row[1]])
 		_check(absf(float(s.get("cast_time")) - float(row[2])) < 0.001,
 			"%s conjura em %.1f s" % [row[0], row[2]])
 		if int(row[3]) > 0:
@@ -344,14 +361,110 @@ func _test_spell_catalogue() -> void:
 	_check(bool(GameData.spell("ruina").get("movement_locked")), "Ruina conjura-se parado")
 	_check(absf(float(GameData.spell("ruina").get("telegraph_seconds")) - 0.5) < 0.001,
 		"Ruina marca o chao 0,5 s antes")
-	_check(bool(GameData.spells.get("_rules", {}).get("requires_staff")),
-		"conjurar exige cajado equipado")
+	_check(bool(GameData.spells.get("_rules", {}).get("requires_declared_instrument", false)),
+		"conjurar exige o instrumento declarado pela escola")
 
-	# O bolso unico e o puzzle: Sab 14 = 7 cargas = 7 Dardos ou 2 Ruinas + 1 Dardo.
-	var pool := GameData.max_charges_for(14)
-	_check(pool == 7, "bolso do Feiticeiro: 7 cargas")
-	_check(2 * int(GameData.spell("ruina").get("charge_cost")) + 1 <= pool,
-		"2 Ruinas + 1 Dardo cabem no bolso")
+	var pool := GameData.max_mana_for(sorcerer_attrs)
+	_check(pool == 116, "reserva do Feiticeiro: 116 mana")
+	_check(2 * int(GameData.spell("ruina").get("mana_cost"))
+		+ int(GameData.spell("dardo").get("mana_cost")) <= pool,
+		"2 Ruinas + 1 Dardo cabem na reserva")
+
+	var forms: Array = GameData.spells.get("_delivery_forms", []) as Array
+	_check(forms.size() == 12, "as 12 formas de entrega estao declaradas")
+	var escape_vectors: Array = GameData.spells.get("_escape_vectors", []) as Array
+	_check(escape_vectors.size() == 9, "os 9 vectores de fuga do spec/38 estao fechados")
+	var used_forms := {}
+	var slice_spells: Array[String] = []
+	var required_fields := ["display_name", "school", "question", "formula", "mana_cost",
+		"cast_time", "delivery_form", "invalid_where", "escape_vector", "escape_method",
+		"contact_type", "descricao_visual", "sound_cue", "visual_cue", "fatia_1"]
+	for spell_id: Variant in GameData.spells.get("order", []):
+		var spell := GameData.spell(String(spell_id))
+		for field: String in required_fields:
+			_check(spell.has(field) and str(spell.get(field, "")).length() > 0,
+				"%s traz o campo obrigatorio %s" % [spell_id, field])
+		_check(String(spell.get("school", "")) in schools.keys(),
+			"%s pertence a uma das quatro escolas" % spell_id)
+		_check(typeof(spell.get("fatia_1")) == TYPE_BOOL,
+			"%s declara Fatia 1? como booleano" % spell_id)
+		var form := String(spell.get("delivery_form", ""))
+		_check(form in forms, "%s usa uma das 12 formas" % spell_id)
+		used_forms[form] = true
+		var contact := String(spell.get("contact_type", ""))
+		_check(contact in ["instantaneo", "volume_movel", "volume_persistente", "nenhum"],
+			"%s declara tipo de contacto valido" % spell_id)
+		if contact != "nenhum":
+			_check(String(spell.get("escape_vector", "")) in escape_vectors,
+				"%s usa um dos 9 vectores de fuga" % spell_id)
+		var upgrades: Array = spell.get("upgrades", []) as Array
+		_check(upgrades.size() == 6, "%s tem tabela de melhoria 0..5" % spell_id)
+		if upgrades.size() == 6:
+			for upgrade_level: int in range(6):
+				_check(int((upgrades[upgrade_level] as Dictionary).get("level", -1)) == upgrade_level,
+					"%s tem o nivel %d na posicao certa" % [spell_id, upgrade_level])
+			for upgrade_level: int in [1, 3, 5]:
+				var axis := String((upgrades[upgrade_level] as Dictionary).get("axis", ""))
+				_check(axis in ["area", "lancamentos"],
+					"%s nivel %d abre area ou lancamentos" % [spell_id, upgrade_level])
+		if bool(spell.get("fatia_1", false)):
+			slice_spells.append(String(spell_id))
+			var icon_file := ProjectSettings.globalize_path(
+				"res://../%s" % String(spell.get("icon_path", "")))
+			_check(String(spell.get("icon_id", "")).begins_with("ico_magia_")
+				and FileAccess.file_exists(icon_file),
+				"%s liga o icone aprovado da Fatia 1" % spell_id)
+	for form: Variant in forms:
+		_check(used_forms.has(String(form)), "forma '%s' tem pelo menos um feitico" % form)
+	_check(slice_spells == ["dardo", "ruina", "egide"],
+		"Fatia 1 mantem Dardo, Ruina e Egide")
+	var spell_rules: Dictionary = GameData.spells.get("_rules", {}) as Dictionary
+	var meditation: Dictionary = spell_rules.get("meditation", {}) as Dictionary
+	_check(int(meditation.get("seconds", 0)) == 40,
+		"meditar demora os 40 s decididos")
+	_check(int(meditation.get("uses_per_rest", 0)) == 2
+		and bool(meditation.get("use_consumed_on_start", false)),
+		"meditacao tem duas tentativas finitas por descanso")
+	_check(float(meditation.get("mana_restored_fraction", 0.0)) == 1.0
+		and bool(meditation.get("partial_mana_kept", false)),
+		"meditacao completa repoe tudo e interrupcao conserva o parcial")
+	_check(spell_rules.get("favorites_change_when", []) == ["fora_de_combate", "descanso"],
+		"os oito favoritos nao mudam durante combate")
+	var default_favorites: Array = spell_rules.get("default_favorites", []) as Array
+	_check(default_favorites == ["dardo", "ruina", "egide"]
+		and default_favorites.size() <= int(spell_rules.get("favorite_limit", 0)),
+		"a Fatia 1 prepara so os tres favoritos e respeita o limite de oito")
+	_check(String(((GameData.weapons.get("golpes_universais", {}) as Dictionary)
+		.get("arte_da_arma", {}) as Dictionary).get("custo", "")) == "mana",
+		"artes de arma gastam mana, nunca energia revogada")
+
+	var meditator := Player.new()
+	meditator.max_mana = 100
+	meditator.mana = 10
+	meditator.meditation_uses = 2
+	meditator._meditation_frames_total = 2400
+	meditator._start_meditation()
+	_check(meditator.state == Player.State.MEDITATING and meditator.meditation_uses == 1,
+		"meditacao gasta a tentativa ao sentar")
+	meditator.state_frame = 1200
+	meditator._tick_meditating(1.0 / 60.0)
+	_check(meditator.mana == 55,
+		"meditacao repoe linearmente e pode conservar progresso parcial")
+	meditator.state_frame = 2400
+	meditator._tick_meditating(1.0 / 60.0)
+	_check(meditator.mana == 100 and meditator.state == Player.State.FREE,
+		"meditacao completa repoe 100% aos 40 s")
+	meditator.queue_free()
+
+	var spell_wheel := Player.new()
+	spell_wheel.favorite_spells.assign(default_favorites)
+	spell_wheel.selected_spell = "dardo"
+	spell_wheel._cycle_spell()
+	spell_wheel._cycle_spell()
+	spell_wheel._cycle_spell()
+	_check(spell_wheel.selected_spell == "dardo",
+		"F percorre favoritos e nunca o catalogo inteiro")
+	spell_wheel.queue_free()
 
 
 # --- spec/25-controlo.md (WP1B) · buffer e impacto ----------------------------
@@ -530,14 +643,14 @@ func _test_damage_worked_example() -> void:
 
 	# As fichas do WP3 (spec/12-classes.md), a letra.
 	var sheets := {
-		"warrior":   [11, 11, 10, 8,  12, 10],
-		"sorcerer":  [10, 10, 9,  14, 9,  10],
-		"tank":      [12, 10, 13, 8,  11, 8],
-		"assassin":  [10, 12, 9,  8,  9,  14],
-		"berserker": [11, 12, 9,  8,  14, 8],
-		"paladin":   [11, 10, 10, 11, 11, 9],
+		"warrior":   [11, 11, 10, 8,  8, 12, 10],
+		"sorcerer":  [10, 10, 9,  14, 8, 9,  10],
+		"tank":      [12, 10, 13, 8,  8, 11, 8],
+		"assassin":  [10, 12, 9,  8,  8, 9,  14],
+		"berserker": [11, 12, 9,  8,  8, 14, 8],
+		"paladin":   [11, 10, 10, 8, 11, 11, 9],
 	}
-	var order := ["vida", "stamina", "constituicao", "sabedoria", "forca", "destreza"]
+	var order := ["vida", "stamina", "constituicao", "inteligencia", "fe", "forca", "destreza"]
 	for class_id: String in sheets.keys():
 		var c := GameData.class_attributes(class_id)
 		var want: Array = sheets[class_id]
@@ -547,7 +660,8 @@ func _test_damage_worked_example() -> void:
 				ok = false
 		_check(ok, "ficha do WP3: %s" % class_id)
 
-	_check(GameData.max_charges_for(14) == 7, "Feiticeiro (Sab 14) arranca com 7 cargas")
+	_check(GameData.max_mana_for(GameData.class_attributes("sorcerer")) == 116,
+		"Feiticeiro (Int 14) arranca com 116 mana")
 	_check(GameData.meets_requirements("greataxe", GameData.class_attributes("berserker")),
 		"Berserker cumpre o machadao (For 14)")
 	_check(not GameData.meets_requirements("greataxe", warrior),
@@ -560,7 +674,8 @@ func _test_damage_worked_example() -> void:
 	_check(absf(dmg - 37.4) < 0.6, "leve de espada no lanceiro = ~37 (deu %.1f)" % dmg)
 
 	# Lei 3: abaixo do requisito continua a funcionar, so custa em numeros.
-	var weak := {"forca": 8, "destreza": 8, "sabedoria": 8, "vida": 8, "stamina": 8, "constituicao": 8}
+	var weak := {"forca": 8, "destreza": 8, "inteligencia": 8, "fe": 8,
+		"vida": 8, "stamina": 8, "constituicao": 8}
 	var weak_dmg := GameData.compute_damage(1.0, "greataxe", weak, 0.0)
 	_check(weak_dmg > 0.0, "Lei 3: machadao abaixo do requisito ainda da dano (%.1f)" % weak_dmg)
 	_check(absf(weak_dmg - 52.0 * 0.6) < 0.1, "abaixo do requisito: dano x0,6")

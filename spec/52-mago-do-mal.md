@@ -28,7 +28,7 @@
 
 **Este é o desenho todo numa linha:**
 
-> **A escola vermelha não se paga com cargas. Paga-se com o que morreu, e com a tua própria vida.**
+> **A escola vermelha não se paga só com mana. Paga-se também com o que morreu, e com a tua própria vida.**
 
 ### Porquê
 
@@ -38,7 +38,7 @@ E a resposta veio do estudo. Na referência de mundo aberto, o invocado mais pod
 
 | Recurso | Para quê |
 |---|---|
-| **Cargas** (o bolo do [`39`](39-estudo-profundo.md) §7) | os feitiços de dano |
+| **Mana** ([`54`](54-mana-meditacao-e-tracos-de-classe.md)) | todos os feitiços; não regenera passivamente |
 | ⭐ **Cadáveres** | tudo o que levanta mortos. **Só se levanta o que morreu à tua frente** |
 | ⭐ **Vida própria** | levantar custa PV, e o PV **não volta** com o descanso — volta com frascos, que são os mesmos da cura |
 
@@ -102,7 +102,7 @@ E a resposta veio do estudo. Na referência de mundo aberto, o invocado mais pod
 | **O que se levanta** | ⭐ **qualquer coisa que morreu à tua frente** — teus mortos, do Rico, ou de outro inimigo |
 | **O que ele é depois** | ⭐ **o mesmo que era.** Um lanceiro levantado luta como lanceiro, com os mesmos ataques e a mesma telegrafia |
 | **Quantos ao mesmo tempo** | **3** `[CLAUDE]` |
-| **Custo** | **cargas + PV**. Quanto maior o morto, mais vida custa |
+| **Custo** | **mana + PV**. Quanto maior o morto, mais vida custa |
 | **Vida deles** | **60% do que tinham**, e ⚠️ **não regeneram nem se curam** |
 | **Duram** | até morrerem, até saíres da zona, **ou até descansares** `[DECIDIDO]` |
 | **Não se repete** | um corpo levantado que volta a cair **não se levanta outra vez** |
@@ -172,7 +172,7 @@ O contrato garante que **todo o ataque avisa com pelo menos 0,50 s**. O espelho 
 | **Lança-se** | rápido — **0,4 s** |
 | **Dura** | ⭐ **1,5 s.** Curto de propósito |
 | **Faz** | o **próximo** golpe recebido não te magoa — **volta inteiro para quem o deu** |
-| **Custa** | cargas, e **não** vida |
+| **Custa** | mana, e **não** vida |
 | **Não funciona** | contra queimação, veneno, área, ou queda — **só contra um golpe** |
 
 ⭐ **Porque é que é tão bom:** não é um escudo. **É um parry que se lança.** Tens de ler a telegrafia e adivinhar o tempo — e se acertas, o inimigo leva o próprio golpe na cara. Se falhas, gastaste a carga e levas o golpe na mesma.

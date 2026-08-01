@@ -22,7 +22,7 @@ Antes de falar de famílias, é preciso saber **quantos golpes uma arma tem**. N
 | **A saltar** | golpe próprio, tem hiper-armadura | ⬜ **falta** |
 | **De cima** (queda) | crítico, é um dos quatro ([`39`](39-estudo-profundo.md) §5) | ⬜ **falta** |
 | **Pontapé / empurrão** | quebra a guarda de quem bloqueia | ⬜ **falta** |
-| **Arte da arma** | 1 mão e 2 mãos, custa energia | ✅ decidido |
+| **Arte da arma** | 1 mão e 2 mãos, custa **mana** — “energia” foi revogada pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md) | ✅ alinhado no [`66`](66-catalogo-de-magia.md) |
 
 ⚠️ **Sete linhas por declarar.** E não são enfeite: **o golpe em corrida é o que torna a distância jogável**, e **o golpe a rolar é o que faz a esquiva ser ofensiva** em vez de só defensiva. Sem eles, o combate resume-se a *bate, recua, bate*.
 
@@ -192,13 +192,13 @@ Já decidido em [`34`](34-catalogo-e-comandos.md) §2b (uma tecla, arte diferent
 
 | | Como é lá |
 |---|---|
-| Custo | **energia**, do mesmo bolo dos feitiços |
+| Custo | **mana**, da mesma reserva dos feitiços ([`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md)) |
 | ⭐ Interrupção | a arte **repõe a vida de interrupção a 100%**; um ataque normal só repõe a 80% |
 | Redução de custo | existe equipamento que corta **30%** ao custo das artes |
 
 ⭐ **A linha do meio é a mais importante, e explica para que serve uma arte.** Não é só um golpe especial: é **o golpe que aguenta**. Repor a 100% significa que a arte é o que se usa **quando se quer trocar** — levar o golpe dele para meter o nosso. É a Lei 2 numa mecânica.
 
-`→WP5` — **coluna obrigatória:** custo em energia, e o que a arte faz à vida de interrupção.
+`→WP5` — **coluna obrigatória:** custo em mana, e o que a arte faz à vida de interrupção.
 
 **Fonte:** [DS3 mechanics cheat sheet](https://github.com/gastevens/dark-souls-3-mechanics-cheat-sheet/blob/master/ds3mechanicscheatsheet.md)
 

@@ -121,7 +121,7 @@ Todos **passivos** (§2 — armaduras não gastam teclas):
 | Categoria | Exemplos do género |
 |---|---|
 | Movimento e física | menos dano de queda · passos silenciosos · rolamento mais longo |
-| Recursos | mais almas ganhas · stamina regenera mais depressa · mais uma carga de magia |
+| Recursos | mais almas ganhas · stamina regenera mais depressa · mais mana máxima/recuperada |
 | Resistências | veneno, sangramento, fogo — por tipo, nunca defesa plana (Lei 1) |
 | Situacionais | melhor com pouca vida · melhor de noite · melhor sozinho |
 

@@ -1,14 +1,14 @@
 # 13 — Magia, por dentro
 
-> **WP4 · Fable** (31-07-2026). O documento de execução da magia: a mecânica proposta para o bem e o mal, o catálogo com números, cargas, aprendizagem e encantamentos. O registo da sessão 1 continua em [`03-magia.md`](03-magia.md) — nada de lá muda. **A proposta bem/mal é a peça grande deste documento e pede confirmação dos dois** (pergunta 8): pode ser o sistema mais interessante do jogo, e não se carimba um desses sem os donos.
+> **WP4 · Fable** (31-07-2026). Primeira proposta de execução da magia, preservada pelo raciocínio de bem/mal, aprendizagem e encantamentos. **Cargas, atributos e o catálogo foram substituídos** pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md) + [`66`](66-catalogo-de-magia.md). O registo da sessão 1 continua em [`03-magia.md`](03-magia.md) — nada de lá muda. **A proposta bem/mal é a peça grande deste documento e pede confirmação dos dois** (pergunta 8): pode ser o sistema mais interessante do jogo, e não se carimba um desses sem os donos.
 
 ## O que eles decidiram (e este documento obedece)
 
 - Magia do bem e magia do mal `[DECIDIDO]` (00:40, 05:04)
-- Usos limitados — cargas, não mana `[DECIDIDO]` (03:50)
+- ~~Usos limitados por cargas~~ — **substituído por mana sem regeneração passiva** no [`54`](54-mana-meditacao-e-tracos-de-classe.md) `[DECIDIDO]` mais recente
 - Magias desenhadas à mão, "certinhas", com o inimigo certo a importar `[DECIDIDO]` (05:04)
 - Encantamentos existem; "espada de fogo" `[DECIDIDO]` (00:38 → 00:45)
-- Do WP1: conjurar trava o movimento a 40%; **interrupção gasta a carga**; o cajado é o plano B sem custo. Do WP2: `cargas = 4 + ⌊Sabedoria/4⌋`; dano de magia escala com Sabedoria (peso 1,0).
+- Do WP1: conjurar trava o movimento a 40%; **interrupção gasta a mana já paga**; o instrumento é o plano B sem custo. Atributos, mana, quatro escolas e catálogo executável estão no [`66`](66-catalogo-de-magia.md); esta proposta inicial já não manda nesses campos.
 
 ## A proposta para o bem e o mal `[FABLE]` — pede o sim dos dois
 

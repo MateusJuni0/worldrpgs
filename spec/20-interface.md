@@ -10,8 +10,8 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 |---|---|---|---|
 | **Vida** | canto sup. esquerdo (32, 28) | 340×20 px | barra; dano mostra "fantasma" vermelho que encolhe em 0,6 s (lê-se quanto doeu) |
 | **Stamina** | sob a vida (32, 54) | 300×14 px | âmbar; some 1,5 s depois de cheia — só existe quando interessa; pisca 2× ao esgotar (WP12) |
-| **Cargas de magia** | sob a stamina | pips de 14 px | 1 pip por carga total (Sab 14 → 7 pips); vazios ficam ocos |
-| **Magias equipadas** | canto inf. esquerdo (32, 940) | 3 quadrados de 72 px | a activa à frente e maior; **F** roda (WP1); o custo em cargas no canto do ícone — responde ao 04:55: **3 visíveis, sempre** |
+| **Mana** | sob a stamina | barra 300×14 px | não regenera; valor actual/máximo aparece ao lançar ou meditar; progresso de meditação sobrepõe-se sem esconder risco |
+| **Feitiços favoritos** | canto inf. esquerdo (32, 940) | activo + 7 marcas compactas | **F** percorre os 8; a roda abre a lista; custo em mana no canto do ícone; favoritos só mudam fora de combate/no descanso ([`66`](66-catalogo-de-magia.md)) |
 | **Hotbar** | fundo ao centro (760–1160, 1000) | **5 espaços** de 72 px | teclas 1–5 (WP1); o item activo (R) com moldura; quantidade no canto |
 | **Habilidade de classe** | à direita da hotbar | 72 px | ícone + recarga em varrimento circular; tecla **V** |
 | **Vida do chefe** | fundo (480–1440, 944) | 960×22 px + nome | só em arena; a barra de postura dele por baixo, fina (960×6) |

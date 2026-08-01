@@ -58,15 +58,15 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 
 | ID | Asset | Caminho | Dim. | Prompt | Estado |
 |---|---|---|---|---|---|
-| `ico_arma_espada_longa` | Espada longa | `art/ui/icons/items/espada-longa.png` | 512×512 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_escudo_madeira` | Escudo de madeira | `art/ui/icons/items/escudo-madeira.png` | 512×512 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_cajado` | Cajado | `art/ui/icons/items/cajado.png` | 512×512 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_adaga` | Adaga | `art/ui/icons/items/adaga.png` | 512×512 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_machadao` | Machadão | `art/ui/icons/items/machadao.png` | 512×512 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_item_pocao_vida` | Poção de vida | `art/ui/icons/items/pocao-vida.png` | 512×512 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_dardo` | Dardo (projéctil directo) | `art/ui/icons/spells/dardo.png` | 512×512 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_ruina` | Ruína (dano de área) | `art/ui/icons/spells/ruina.png` | 512×512 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_egide` | Égide (protecção) | `art/ui/icons/spells/egide.png` | 512×512 | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_arma_espada_longa` | Espada longa | `art/ui/icons/items/espada-longa.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_escudo_madeira` | Escudo de madeira | `art/ui/icons/items/escudo-madeira.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_cajado` | Cajado | `art/ui/icons/items/cajado.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_adaga` | Adaga | `art/ui/icons/items/adaga.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_machadao` | Machadão | `art/ui/icons/items/machadao.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_item_pocao_vida` | Poção de vida | `art/ui/icons/items/pocao-vida.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_dardo` | Dardo (projéctil directo) | `art/ui/icons/spells/dardo.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_ruina` | Ruína (dano de área) | `art/ui/icons/spells/ruina.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_egide` | Égide (protecção) | `art/ui/icons/spells/egide.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
 
 ## Interface e céu
 
@@ -112,7 +112,7 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 >
 > **Modelo:** `nano_banana_pro` (Nano Banana Pro — o modelo de imagem do Gemini) via Higgsfield CLI, 2 créditos cada. **Todas as 25 saíram do mesmo gerador**, que é o que mantém a consistência de pé. Os 5 cenários foram primeiro feitos com gpt-image pelo browser e depois regenerados aqui, por decisão do Mateus — não misturar.
 >
-> **Ícones:** gerados com fundo cinzento chapado e depois passados pelo removedor de fundo do Higgsfield (1 crédito cada) — ficam RGBA com transparência real, que é o que a hotbar precisa.
+> **Ícones:** gerados a 2048² com fundo cinzento chapado e depois passados pelo removedor de fundo do Higgsfield (1 crédito cada) — ficam RGBA com transparência real. Ao importar no runtime, o limite é **512²**; o manifesto regista acima a dimensão real da fonte, não a dimensão comprimida da hotbar.
 
 
 ## Bestiário — as 7 raças do WP6 (fatia 2+)

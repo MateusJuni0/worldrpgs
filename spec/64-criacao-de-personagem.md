@@ -64,7 +64,7 @@ Cada cartão lê os mesmos dados que criam o save — não mantém uma segunda t
 | **Sofre quando** | papel + “onde é má” do equipamento | nunca é o especialista da situação |
 | **Verbo de assinatura** | `abilities.json` | Ímpeto: fecha 6 m e golpeia |
 | **Traço de origem** | catálogo a fechar pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md) | mostra apenas quando o traço estiver aprovado e implementado |
-| **Atributos iniciais** | `attributes.json` | seis valores e diferença face à base 8 |
+| **Atributos iniciais** | `attributes.json` | sete valores e diferença face à base 8 |
 
 E, sem rodapé nem tooltip, todos mostram:
 
@@ -94,7 +94,7 @@ O traço permanente decidido no [`54`](54-mana-meditacao-e-tracos-de-classe.md) 
 
 ### Comparar sem uma folha de cálculo
 
-Seleccionar outra classe actualiza boneco, kit e seis barras na mesma escala. A UI destaca apenas diferenças face ao valor base 8 (`+6 Sabedoria`, não “14 melhor”). Um botão `Comparar com anterior` sobrepõe os deltas e nada mais. Dano final, DPS e “dificuldade” não aparecem: dependem da ferramenta, do encontro e de números ainda por afinar no [`63`](63-como-se-afinam-os-numeros.md).
+Seleccionar outra classe actualiza boneco, kit e sete barras na mesma escala. A UI destaca apenas diferenças face ao valor base 8 (`+6 Inteligência`, não “14 melhor”). Um botão `Comparar com anterior` sobrepõe os deltas e nada mais. Dano final, DPS e “dificuldade” não aparecem: dependem da ferramenta, do encontro e de números ainda por afinar no [`63`](63-como-se-afinam-os-numeros.md).
 
 ---
 

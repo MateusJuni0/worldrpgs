@@ -163,7 +163,7 @@
     "lose_nothing": true,
     "restore_health": true,
     "restore_stamina": true,
-    "restore_charges": true,
+    "restore_mana": true,
     "boss_full_reset": true,
     "respawn_fade_seconds": 1.2,
     "_alvo": "nova tentativa no chefe em < 30 s"

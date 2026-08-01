@@ -122,20 +122,20 @@ Reescrita do catálogo do [`52`](52-mago-do-mal.md) §8 **com a forma declarada*
 | **Nova Escura** | onda à volta de si | um alvo longe | afastar-se |
 | **Coroa de Brasa** | ⭐ orbitante | campo aberto | não chegar perto |
 | **Chuva Cinzenta** | cone | um alvo só | sair do cone |
-| **Marca Ardente** | marca no alvo | — | ⭐ **não há** — mas o medidor vê-se e dá tempo |
+| **Marca Ardente** | marca no alvo | alvos que removem queimadura ou morrem cedo | sair da linha antes de o selo tocar; depois, remover a queimadura |
 | **Febre** | marca que salta | inimigos isolados | separar-se dos outros |
-| **Chama Faminta** | marca + dreno | — | matar o mago |
+| **Chama Faminta** | feixe + dreno | fora de 12 m ou atrás de cobertura | quebrar a linha antes de o feixe fechar |
 | **Sanguessuga** | ⭐ feixe curto | fora de alcance | quebrar a linha |
-| **Fôlego Roubado** | feixe curto | — | quebrar a linha |
-| **Espelho** | reactivo | — | ⭐ **não atacar** |
-| **Peso** | marca | — | esperar que passe |
-| **Cegueira** | marca | — | — |
-| **Voto de Sangue** | próprio | — | — |
-| **Levantar** · **Erguer o Guardião** | próprio | sem cadáveres | — |
+| **Fôlego Roubado** | feixe curto | fora de alcance, cobertura ou alvo sem stamina | quebrar a linha |
+| **Espelho** | reactivo | veneno, queimadura, área ou queda | ⭐ **não atacar** durante 1,5 s |
+| **Peso** | onda sem dano | alvos ancorados ou fora de 7 m | rolar para dentro antes de fechar |
+| **Cegueira** | projéctil de marca | criaturas sem visão ou chefes que conservam engate | sair da linha |
+| **Voto de Sangue** | próprio | vida insuficiente | interromper antes do selo fechar |
+| **Levantar** · **Erguer o Guardião** | feixe rasteiro | sem cadáver/corpo de chefe ou vida insuficiente | interromper antes do fio chegar ao corpo |
 | **Rebentar** | área num invocado | sem invocados | afastar-se dele |
-| **Coro** | ⭐ isco | — | — |
+| **Coro** | ⭐ isco | sem invocados ou contra quem não muda de alvo | afastar-se ou destruir os invocados |
 
-⚠️ **Faltam-nos três formas** que a referência tem e nós não temos: **perseguidor** · **chuva** · **forma de arma** (um golpe de corpo a corpo feito de magia). `→WP4` — **as três valem a pena**, e a de forma de arma resolve o *"o mago é frágil ao perto"* melhor do que a besta.
+✅ **As três formas que faltavam entraram no [`66`](66-catalogo-de-magia.md):** perseguidor (**Caçador Carmim**) · chuva (**Granizo Carmim**) · forma de arma (**Cutelo Carmim**). A forma de arma resolve o *"mago frágil ao perto"* com um golpe de perícia, sem transformar a besta na resposta universal.
 
 ---
 
@@ -148,7 +148,7 @@ Reescrita do catálogo do [`52`](52-mago-do-mal.md) §8 **com a forma declarada*
 | ⭐ **E declara como o inimigo lhe escapa** — já era obrigatório, agora sabe-se que a resposta **varia por forma** | `→WP4` |
 | **Velocidade de lançamento com rendimentos decrescentes** — só compensa a quem usa feitiços lentos | `→WP2`/`→WP4` |
 | ⚠️ **O traçado das zonas passa a afectar a magia** — tectos, corredores, terreno partido | `→WP8` |
-| **Duas formas novas a acrescentar** — perseguidor e chuva; a de arma fica em proposta | `→WP4` |
+| ✅ **Três formas acrescentadas** — perseguidor, chuva e forma de arma | [`66`](66-catalogo-de-magia.md) |
 
 ## Ligações
 

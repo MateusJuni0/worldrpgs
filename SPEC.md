@@ -48,7 +48,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 |---|---|---|---|
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | ⚠️ **sem soft caps e sem o piso de 30%** — [`39`](spec/39-estudo-profundo.md) §1–2 |
 | 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
-| 13 | [Magia, por dentro](spec/13-magia.md) | Escolas, catálogo, cargas (WP4) | ⚠️ **o maior buraco** — falta tudo o que está no [`42`](spec/42-estudo-magia.md) |
+| 13 | [Magia, por dentro](spec/13-magia.md) | Primeira proposta de escolas/catálogo (WP4) | 🔵 substituído pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) + [`66`](spec/66-catalogo-de-magia.md) |
 | 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | ⚠️ **por classe, devia ser por família** — [`35`](spec/35-estudo-referencia.md) §1 |
 | 15 | [Bestiário](spec/15-inimigos.md) | IA, as 7 raças, encontros (WP6) | ⚠️ falta o baralho e preencher **som + visual equivalente** por ataque — [`62`](spec/62-acessibilidade-auditiva.md) |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
@@ -66,10 +66,11 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 28 | [Testar e equilibrar](spec/28-testes.md) | Protocolos, métricas e sintomas (WP15B) | 🟢 completado pelo ciclo operacional do [`63`](spec/63-como-se-afinam-os-numeros.md); ferramentas continuam por construir |
 | 01 | [Combate](spec/01-combate.md) | Máquina de estados, esquiva, parry, as 5 armas (WP1) | ⚠️ **falta interrupção, contra-ataque e os 11 golpes** — [`41`](spec/41-estudo-armas-e-golpes.md) |
 
-### Decisões e estudos (32–65)
+### Decisões e estudos (32–66)
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 66 | [**Catálogo de magia: mana, formas e verbos**](spec/66-catalogo-de-magia.md) | 53 feitiços · 4 escolas · 12 formas · grelha sem vazios · custos · melhoria 0–5 · meditação/favoritos | 🟢 WP4 fechado 01-08; 3 da Fatia 1 executáveis, formas restantes por implementar |
 | 65 | [**Música e ambiente: atmosfera que nunca tapa informação**](spec/65-musica-e-ambiente.md) | Inventário dos 182 OGG · mapa por uso · estados/transições · ambiente · buses/ducking · prova de mascaramento | 🟢 sistema fechado 01-08; zero música/loops e audio director por construir |
 | 64 | [**Criação de personagem: escolher um começo, não uma prisão**](spec/64-criacao-de-personagem.md) | Fluxo inicial · seis presets · aspecto finito · nome · save · prova da Lei 3 | 🟢 sistema fechado 01-08; UI, retarget e save v2 por construir |
 | 63 | [**Como se afinam os números: medir, mudar um, provar**](spec/63-como-se-afinam-os-numeros.md) | Inventário · ordem causal · papéis · A/B de uma variável · diagnóstico por sintoma · quando congelar | 🟢 método fechado 01-08; CSV/comandos assumidos pelo 28 não existem no código |
@@ -93,7 +94,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 45 | [**Controlos configuráveis**](spec/45-controlos-configuraveis.md) | O jogador escolhe as teclas dentro do jogo — dissolve a guerra do parry | 🟢 `[DECIDIDO]` 31-07 |
 | 44 | [**O protótipo**](spec/44-prototipo.md) | Medições com artefactos, o que já se joga, lacunas encontradas a construir | 🟢 metade da ressalva do 0b fechada |
 | 43 | [**Estudo: espólio, inventário, segredos, carregamento**](spec/43-estudo-espolio-inventario-mundo.md) | O baralho de 10, espaços, mímicos, a porta de nevoeiro | 🟢 10 accionáveis |
-| 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | 4 escolas, o instrumento, espaços, melhoria, catálogo de verbos | 🟢 a base do WP4 |
+| 42 | [**Estudo: magia**](spec/42-estudo-magia.md) | 4 escolas, instrumento, melhoria e grelha de verbos | 🟢 base herdada pelo 66; espaços/energia revogados pelo 54 |
 | 41 | [**Estudo: armas e golpes**](spec/41-estudo-armas-e-golpes.md) | Os 11 golpes, o que separa cada família, contra-ataque, interrupção | 🟢 a base do WP5 |
 | 40 | [**Decisões: espólio, magia, inventário**](spec/40-decisoes-espolio-magia-inventario.md) | 15 decisões do Mateus | 🟢 registo |
 | 39 | [**Estudo profundo da referência**](spec/39-estudo-profundo.md) | Dano, saturação, interrupção, carga, críticos, mundo, co-op, descoberta | 🟢 18 accionáveis |

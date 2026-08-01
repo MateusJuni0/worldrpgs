@@ -43,9 +43,9 @@
 |---|---|
 | **Especificação** | **~60 documentos**, ~15 000 linhas, em `spec/` |
 | **Jogo** | **corre** — Godot **4.7.1**, renderer **Mobile**, em `game/` |
-| **Testes** | **226 auto-testes** contra a spec, todos a passar |
+| **Testes** | **1854 auto-testes** contra a spec, todos a passar |
 | **Desempenho** | 416 fps na máquina do Rico *(greybox, sem animação de esqueleto)* |
-| **Arte** | 43 conceitos gerados + **10 packs CC0** (785 modelos, 1954 texturas, 182 sons) |
+| **Arte** | 43 imagens curadas (32 conceitos, 9 ícones, menu e céu) + **10 packs CC0** (785 modelos, 1954 texturas, 182 sons) |
 | ⚠️ **Estado visual** | **greybox** — cones por árvores, cápsulas por personagens. Os packs estão no repositório mas **não estão importados** |
 
 ---
@@ -173,9 +173,9 @@ Os **modelos 3D, texturas e sons** já vêm dos packs CC0 em `art/`. **O que fal
 
 | O que | Quantos |
 |---|---|
-| Famílias de arma | **8** — já definidas, geráveis agora |
-| Peças de armadura | 9 (só 3 definidas) |
-| Feitiços | por definir na volta da magia |
+| Famílias de arma | **8** — cinco ícones da Fatia 1 prontos; o resto segue o catálogo WP5 |
+| Peças de armadura | **11 da Fatia 1**, todas definidas e por gerar |
+| Feitiços | **53 fichas**; Dardo, Ruína e Égide já têm ícone, os outros esperam pela sua fatia |
 | Anéis | ~70 |
 | Consumíveis | frascos, brasa, tomos |
 | Retratos das 6 raças novas | 6 |

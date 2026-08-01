@@ -55,7 +55,7 @@
 
 | | Lacuna | Origem |
 |---|---|---|
-| 🟠 | ⭐ **Três formas que nos faltam:** perseguidor, chuva, e forma de arma (golpe de corpo a corpo feito de magia — resolve o "mago frágil ao perto" melhor que a besta) | [`55`](spec/55-formas-de-feitico.md) §5 |
+| ✅ | ~~⭐ **Três formas em falta**~~ **RESOLVIDO 01-08** — Caçador Carmim, Granizo Carmim e Cutelo Carmim ocupam perseguidor, chuva e forma de arma; as 12 formas têm pelo menos um feitiço | [`66`](spec/66-catalogo-de-magia.md) §4–6 |
 | 🟠 | ⚠️ **O traçado das zonas passa a afectar a magia** — tectos, corredores, terreno partido. A chuva morre debaixo de tecto | [`55`](spec/55-formas-de-feitico.md) §2 |
 
 ⭐ **A escola vermelha já está desenhada** — [`52-mago-do-mal.md`](spec/52-mago-do-mal.md), feita pelo Claude a pedido do Mateus (é o personagem dele). O WP4 herda-a; **não a reescreve.**
@@ -65,8 +65,11 @@
 | ⏳ | ~~As 6 perguntas do mago do mal~~ ✅ **4 respondidas 31-07** (chefe portátil · sem tecto de invocados · Voto empilha 3× · instrumento livre). Faltam: que feitiços cortar, e o tecto de máquina | [`52`](spec/52-mago-do-mal.md) §11 |
 | 🟠 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* | [`50`](spec/52-mago-do-mal.md) §9 |
 | 🟠 | **Inimigos que lançam magia usam as mesmas regras?** *(proposta: sim, incluindo ser interrompíveis)* | [`42`](spec/42-estudo-magia.md), [`48`](spec/48-arcos-bestas-escudos.md) |
-| 🟠 | **Quantos feitiços na fatia 1** *(proposta: 3 — dano, cura, utilidade)* | [`42`](spec/42-estudo-magia.md) |
+| ✅ | ~~**Quantos feitiços na fatia 1**~~ **RESOLVIDO 01-08** — Dardo, Ruína e Égide; os três têm ícone aprovado e ficha completa | [`66`](spec/66-catalogo-de-magia.md) |
 | 🟠 | **O material de melhoria de feitiço é o mesmo das armas, ou outro?** | [`42`](spec/42-estudo-magia.md) §6 |
+| 🔴 | **O catálogo tem 53 feitiços, mas o runtime só executa os 3 da Fatia 1 e três renderers (`projectile`, `aoe`, `barrier`).** As outras formas não podem entrar numa fatia futura sem comportamento, hitbox e cue próprios | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
+| 🔴 | **Roda e edição dos 8 favoritos não existem.** A regra “só fora de combate/no descanso” está nos dados, mas ainda não há UI que a aplique | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
+| 🟠 | **Só o cajado existe como instrumento no runtime.** Sino, talismã, chama e relicário estão declarados por escola, mas faltam instâncias de WP5 e validação por feitiço | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
 
 ### Volta 5 — bestiário
 
@@ -92,6 +95,7 @@
 |---|---|---|
 | 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
 | ✅ | ~~**Sistema de saves sem uma linha**~~ **RESOLVIDO 01-08** — formato campo a campo, morte sem save-scumming, escrita atómica, recuperação e migração, com código e testes | [`59`](spec/59-saves.md) · `game/src/autoload/save_system.gd` |
+| 🟠 | **Um save v1 criado antes do catálogo pode conservar `sabedoria` e não ter `inteligencia`/`fe`.** Fazer a conversão determinística na migração v1→v2 já prevista pelo criador; não gastar uma versão intermédia só para o greybox | encontrado ao alinhar [`11`](spec/11-formulas.md) com o [`66`](spec/66-catalogo-de-magia.md) |
 | 🟠 | ⚠️ **A leitura do mapa tem de ser decidida ANTES de o WP8 traçar as zonas** — senão há zonas impossíveis de mapear | [`57`](spec/57-mapa-e-minimapa.md) §5 |
 | 🟠 | ⚠️ **Os packs CC0 estão em `art/`, mas quase nada está integrado em `game/`.** Biblioteca não é runtime: cada modelo/som ainda precisa de importação, orçamento e prova no motor | [`22`](spec/22-assets.md), verificado no [`64`](spec/64-criacao-de-personagem.md) |
 | 🟠 | ⚠️ **Ligar os três produtores ao `SaveSystem`** — o greybox ainda não tem almas/inventário/mapa persistentes; quando cada sistema entrar, tem de emitir os eventos do [`59`](spec/59-saves.md) §3. Hoje `main.gd` ainda diz «Nada se perdeu» | encontrado ao implementar o [`59`](spec/59-saves.md) |
@@ -169,9 +173,9 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 | | Achado | Origem |
 |---|---|---|
 | ✅ | ~~*"do 70 ao 100 custa 3× tudo o que gastaste do 1 ao 70"*~~ **ERRO MEU, CORRIGIDO** — somei só o termo cúbico e ignorei `3,06N²` e `105,6N`, que pesam mais nos níveis baixos. **A conta certa é 1,92×** (680 663 contra 1 308 518). Refiz-a e confirma | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) §2 |
-| 🔴 | ⭐ **Meditar 40 s em qualquer sítio não é um custo — é tempo morto.** A mana volta sempre a 100% e as artes continuam a dizer que custam "energia", que foi revogada. **Não há economia de recursos entre descansos.** Proposta: um recurso único, meditação com **cargas finitas** (2 por descanso) e a repor **40–50%**, não 100% | [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) §3 |
+| ✅ | ~~⭐ **Meditação infinita + artes a gastar “energia” revogada**~~ **RESOLVIDO 01-08** — 2 tentativas por descanso, consumidas ao sentar; 40 s/100% preservados por serem decisão dos donos; interrupção guarda o parcial; artes gastam mana | [`66`](spec/66-catalogo-de-magia.md) §3 · runtime testado |
 | 🔴 | ⭐ **Uma mão / duas mãos não tem comando nem estado.** Cada arma declara duas artes e **não há forma de trocar** — é conteúdo que não pode ser seleccionado. É a regra do fio solto a apanhar-nos. Precisa de input, estado e transição (~12 frames, interrompível) | [`34`](spec/34-catalogo-e-comandos.md) §2b |
-| 🔴 | ⭐ **Os 8 favoritos mudáveis a qualquer momento = os 25 feitiços estão sempre preparados.** Morre a decisão *"o que levo para esta zona?"*. **Só se muda fora de combate ou no descanso** | [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) §6 |
+| ✅ | ~~⭐ **8 favoritos mudáveis a qualquer momento**~~ **RESOLVIDO NO CONTRATO 01-08** — só mudam fora de combate/no descanso; a UI que aplica a regra está registada acima como construção em falta | [`66`](spec/66-catalogo-de-magia.md) §3 |
 | 🟠 | ⚠️ **Parry com 4 frames de arranque é reactivo demais** — no DS3 o mais rápido começa aos **8**. Com 4, aparas depois de já veres o golpe. **Subir para 8–12** | [`01`](spec/01-combate.md) |
 | 🟠 | ⚠️ **Soft cap de 40 em tudo é errado** — DS2/DS3 usam curvas diferentes por atributo. Proposta: **vida 20/50 · stamina 20/40 · mana 35 · dano 40/60 · carga 30/50/70** | [`39`](spec/39-estudo-profundo.md) §2 |
 | 🟠 | **Queda fatal aos 25 m** — o DS2 mata aos 19,5 m e os limiares do género rondam os 20. **Baixar para 20 m** | [`37`](spec/37-aneis-e-elementos.md) §3 |

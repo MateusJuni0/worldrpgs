@@ -18,6 +18,7 @@
 
     "next_spell":     [{ "type": "key", "key": "F" }],
     "cast":           [{ "type": "key", "key": "C" }],
+    "meditate":       [{ "type": "key", "key": "M" }],
     "use_item":       [{ "type": "key", "key": "R" }],
     "ability":        [{ "type": "key", "key": "V" }],
     "interact":       [{ "type": "key", "key": "E" }],

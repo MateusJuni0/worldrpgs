@@ -1,6 +1,6 @@
 class_name Hud
 extends CanvasLayer
-## HUD minimo — spec/08-ui.md exige, no minimo: vida, STAMINA, cargas de magia
+## HUD minimo — spec/54 exige, no minimo: vida, stamina e mana
 ## e barra de vida do chefe.
 ##
 ## A stamina e obrigatoria e nao e decoracao: a esquiva e o parry dependem dela e
@@ -90,6 +90,7 @@ RMB segurar   bloqueio     (LMB com escudo = bash)
 Q             parry        janela 8 f
 Tab           lock-on      18 m engate / 25 m quebra
 C             conjurar     F: magia seguinte
+M             meditar 40 s (2 tentativas por descanso)
 [ ]           trocar de arma (Lei 3)
 F1 fps · F2 esta ajuda · F3 rato · F5 reiniciar · Esc sair"""
 
@@ -112,10 +113,10 @@ func _process(delta: float) -> void:
 	_stamina.color = Color(0.85, 0.35, 0.3) if player.stamina.locked_out else Color(0.45, 0.78, 0.35)
 
 	var spell_name: String = GameData.spell(player.selected_spell).get("display_name", "?")
-	_info.text = "%d/%d PV   %d/%d STA   cargas %d/%d   frasco %d/%d   hab: %s   magia: %s   %s   [%s]" % [
+	_info.text = "%d/%d PV   %d/%d STA   mana %d/%d   frasco %d/%d   hab: %s   magia: %s   %s   [%s]" % [
 		int(player.health), int(player.max_health),
 		int(player.stamina.current), int(player.stamina.maximum),
-		player.charges, player.max_charges,
+		player.mana, player.max_mana,
 		player.flask_uses, player.flask_max,
 		player.ability_label(),
 		spell_name, player.loadout_label(), player.state_name()]

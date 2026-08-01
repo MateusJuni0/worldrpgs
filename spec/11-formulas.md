@@ -2,16 +2,17 @@
 
 > **WP2 · Fable** (31-07-2026). Este documento resolve a sobreposição de atributos da sessão 1, fixa a fórmula de dano, e escreve as curvas dos inimigos da fatia 1 **a partir das restrições que o WP1 impôs** ([`01-combate.md`](01-combate.md), secção Ataques). Tudo `[FABLE]` salvo indicação; valida-se no protótipo (marco 2) junto com os números do combate.
 
-## Os atributos — de 4 confusos para 6 claros
+## Os atributos — de 4 nomes provisórios para 7 papéis claros
 
-O que eles decidiram: modelo Dark Souls, pontos por nível, distribuídos à escolha `[DECIDIDO]` (sessão 1 · 06:33), com quatro nomes ditos: vida, sabedoria, constituição, stamina. E o sistema de requisitos de arma do Dark Souls `[DECIDIDO]` (06:14). A sobreposição Vida/Constituição era a pergunta 12; os requisitos pedem atributos de ataque que ninguém nomeou.
+O que eles decidiram: modelo Dark Souls, pontos por nível, distribuídos à escolha `[DECIDIDO]` (sessão 1 · 06:33), com quatro nomes ditos: vida, sabedoria, constituição, stamina. E o sistema de requisitos de arma do Dark Souls `[DECIDIDO]` (06:14). **“Sabedoria” fica como registo histórico dessa conversa:** o modelo de quatro escolas do [`42`](42-estudo-magia.md) separou-o em **Inteligência** e **Fé**, e o [`54`](54-mana-meditacao-e-tracos-de-classe.md) revogou cargas/slots em favor de mana. A sobreposição Vida/Constituição era a pergunta 12; os requisitos pedem atributos de ataque que ninguém nomeou.
 
 | Atributo | O que faz, exactamente | Origem |
 |---|---|---|
 | **Vida** | PV máximos: `PV = 200 + 22×Vida` (após 30: +8/ponto) | `[DECIDIDO]` 06:33 |
 | **Stamina** | Stamina máxima: `STA = 80 + 2×Stamina`. A regeneração (40/s) **não escala** | `[DECIDIDO]` 06:33 |
 | **Constituição** | Defesa física: `DEF = 2×Constituição`, subtraída por golpe, **nunca acima de 40% do dano do golpe** | `[DECIDIDO]` 06:33 · papel `[FABLE]` |
-| **Sabedoria** | Cargas de magia totais: `cargas = 4 + ⌊Sabedoria/4⌋` + requisito das magias | `[DECIDIDO]` 06:33, 03:50 |
+| **Inteligência** | escala Feitiçaria; entra na média da Piromancia e no menor valor da Escola vermelha | [`42`](42-estudo-magia.md) · fechado no [`66`](66-catalogo-de-magia.md) |
+| **Fé** | escala Milagre; entra na média da Piromancia e no menor valor da Escola vermelha | [`42`](42-estudo-magia.md) · fechado no [`66`](66-catalogo-de-magia.md) |
 | **Força** | Requisito e escala das armas pesadas | `[FABLE]` |
 | **Destreza** | Requisito e escala das armas rápidas | `[FABLE]` |
 
@@ -20,7 +21,8 @@ O que eles decidiram: modelo Dark Souls, pontos por nível, distribuídos à esc
 **Força e Destreza** `[FABLE]`: o sistema de requisitos que eles próprios escolheram (06:14, "o mesmo sistema que o Dark Souls") não funciona sem atributos de ataque. *Alternativa descartada:* escalar armas por skills — menos legível numa ficha, e as skills já têm o seu papel (WP3).
 
 - Todos os atributos começam em **8**; a classe distribui **+14** iniciais (WP3). Máximo por atributo: **50**. *Soft cap:* acima de 30, o ganho por ponto cai (Vida +8 em vez de +22; escala de arma a metade).
-- A regeneração de stamina, as janelas de esquiva/parry e a velocidade **nunca escalam com atributos** — são a gramática do jogo, igual do nível 1 ao 100. É a Lei 1 em fórmula: o nível compra margem (PV, STA, defesa, cargas), nunca compra as ferramentas.
+- A regeneração de stamina, as janelas de esquiva/parry e a velocidade **nunca escalam com atributos** — são a gramática do jogo, igual do nível 1 ao 100. É a Lei 1 em fórmula: o nível compra margem (PV, STA, defesa, mana), nunca compra as ferramentas.
+- Mana máxima `[CODEX]`: `60 + 4×maior(Inteligência, Fé)` até 35; cada ponto acima de 35 soma 1. Razão e alternativa estão no [`66`](66-catalogo-de-magia.md) §2. Não regenera passivamente.
 
 ## Nível e pontos
 
@@ -54,11 +56,11 @@ escala_de_atributos = 1 + 0,015 × (atributo_relevante − 8) × peso_da_escala
 | Adaga | 32 | Des 10 | Destreza | forte 1,0 | ✅ |
 | Espada longa | 40 | For 10 · Des 8 | Força | médio 0,6 | ✅ |
 | Machadão | 52 | For 14 | Força | forte 1,0 | ✅ |
-| Cajado (pancada) | 30 | — | Sabedoria | fraco 0,3 | ✅ |
+| Cajado (pancada) | 30 | — | Inteligência | fraco 0,3 | ✅ |
 | Escudo (bash) | 25 | For 8 | Força | fraco 0,3 | ✅ |
 | Arco | 38 | Des 12 | Destreza | médio 0,6 | ⬜ fatia 2 |
 
-O dano das **magias** escala com Sabedoria (peso forte 1,0) sobre o dano base de cada magia — catálogo no WP4.
+O dano das **magias** usa o atributo declarado pela escola: Feitiçaria = Inteligência; Milagre = Fé; Piromancia = média; Escola vermelha = ⭐ menor dos dois. Cada feitiço pode declarar o seu peso de escala — catálogo no [`66`](66-catalogo-de-magia.md).
 
 ### Exemplo resolvido, ponta a ponta
 
@@ -108,8 +110,8 @@ Contra o jogador nível 1 (Vida 10 → **420 PV**, Con 10 → DEF 20):
 
 | Para | O quê |
 |---|---|
-| **WP3** | os 6 atributos, o 8 base + 14 pontos iniciais por classe, requisitos das armas por classe de arranque |
-| **WP4** | `cargas = 4 + ⌊Sab/4⌋`; escala de magia = Sabedoria peso 1,0 |
+| **WP3** | os 7 atributos, o 8 base + 14 pontos iniciais por classe, requisitos das armas por classe de arranque |
+| **WP4** | mana máxima pela maior de Inteligência/Fé; escala por escola, com a vermelha pelo menor dos dois |
 | **WP5** | a tabela de armas (dano base, requisitos, escala) pronta a estender |
 | **WP6/WP7** | PV, DEF, dano e postura dos 3 inimigos da fatia, com a derivação à vista |
 | **Protótipo (marco 2)** | tudo isto em dados afináveis — se os TTK falharem as janelas do WP1, mexe-se aqui primeiro |

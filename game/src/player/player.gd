@@ -13,7 +13,7 @@ extends CharacterBody3D
 signal died
 signal state_changed(state: int)
 
-enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY }
+enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING }
 
 # Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
 var _buffer_life := 24        # 400 ms
@@ -36,9 +36,12 @@ var attrs: Dictionary = {}
 var class_id := "warrior"
 
 var stamina := Stamina.new()
-var charges := 6
-var max_charges := 6
+var mana := 100
+var max_mana := 100
+var meditation_uses := 0
+var meditation_uses_max := 0
 var selected_spell := "dardo"
+var favorite_spells: Array[String] = []
 
 var main_weapon := "longsword"
 var offhand_weapon := "shield"
@@ -69,6 +72,8 @@ var _cast_spell: Dictionary = {}
 var _cast_frames_total := 0
 var _egide_shield := 0.0
 var _egide_time := 0.0
+var _meditation_start_mana := 0
+var _meditation_frames_total := 0
 
 # --- Entrada ------------------------------------------------------------------
 var _buffered := ""
@@ -94,8 +99,18 @@ func setup(p_class_id: String, palette: Dictionary) -> void:
 	health = max_health
 	defense = GameData.defense_for(int(attrs.get("constituicao", 8)))
 	stamina.configure(GameData.section("stamina"), GameData.max_stamina_for(int(attrs.get("stamina", 8))))
-	max_charges = GameData.max_charges_for(int(attrs.get("sabedoria", 8)))
-	charges = max_charges
+	max_mana = GameData.max_mana_for(attrs)
+	mana = max_mana
+	var meditation: Dictionary = GameData.spells.get("_rules", {}).get("meditation", {}) as Dictionary
+	meditation_uses_max = int(meditation.get("uses_per_rest", 2))
+	meditation_uses = meditation_uses_max
+	_meditation_frames_total = int(float(meditation.get("seconds", 40.0)) * 60.0)
+	favorite_spells.clear()
+	var spell_rules: Dictionary = GameData.spells.get("_rules", {}) as Dictionary
+	for spell_id: Variant in spell_rules.get("default_favorites", []):
+		favorite_spells.append(String(spell_id))
+	if not selected_spell in favorite_spells and not favorite_spells.is_empty():
+		selected_spell = favorite_spells[0]
 	flask_max = int(GameData.section("flask").get("uses", 3))
 	flask_uses = flask_max
 	_ability = GameData.ability(class_id)
@@ -216,6 +231,8 @@ func _read_input() -> void:
 		_buffer("parry")
 	if Input.is_action_just_pressed("cast"):
 		_buffer("cast")
+	if Input.is_action_just_pressed("meditate"):
+		_buffer("meditate")
 	if Input.is_action_just_pressed("use_item"):
 		_buffer("flask")
 	if Input.is_action_just_pressed("ability"):
@@ -293,6 +310,7 @@ func _tick_state(delta: float) -> void:
 		State.RIPOSTE:   _tick_riposte(delta)
 		State.USING_ITEM: _tick_flask(delta)
 		State.ABILITY:   _tick_ability(delta)
+		State.MEDITATING: _tick_meditating(delta)
 		State.HITSTUN:   _tick_locked(delta, _hitstun_frames)
 		State.GUARD_BREAK:
 			_tick_locked(delta, int(GameData.section("block").get("guard_break_duration", 1.5) * 60.0))
@@ -314,6 +332,7 @@ func _tick_free(delta: float) -> void:
 		"dodge":  _start_dodge()
 		"parry":  _start_parry()
 		"cast":   _start_cast()
+		"meditate": _start_meditation()
 		"flask":  _start_flask()
 		"ability": _start_ability()
 
@@ -718,24 +737,44 @@ func _broken_posture_target() -> Node3D:
 
 # --- Magia --------------------------------------------------------------------
 
+func _start_meditation() -> void:
+	if mana >= max_mana or meditation_uses <= 0:
+		return
+	meditation_uses -= 1
+	_meditation_start_mana = mana
+	_change_state(State.MEDITATING)
+
+
+func _tick_meditating(delta: float) -> void:
+	# A reserva volta de forma linear: se houver interrupcao, o que ja entrou fica.
+	velocity.x = move_toward(velocity.x, 0.0, delta * 20.0)
+	velocity.z = move_toward(velocity.z, 0.0, delta * 20.0)
+	var progress := clampf(float(state_frame) / maxf(float(_meditation_frames_total), 1.0), 0.0, 1.0)
+	mana = maxi(mana, roundi(lerpf(float(_meditation_start_mana), float(max_mana), progress)))
+	if state_frame >= _meditation_frames_total:
+		mana = max_mana
+		_change_state(State.FREE)
+
 func _cycle_spell() -> void:
-	var order: Array = GameData.spells.get("order", [])
-	var i := order.find(selected_spell)
-	selected_spell = order[(i + 1) % order.size()]
+	if favorite_spells.is_empty():
+		return
+	var i := favorite_spells.find(selected_spell)
+	selected_spell = favorite_spells[(i + 1) % favorite_spells.size()]
 
 
 func _start_cast() -> void:
 	var s := GameData.spell(selected_spell)
 	if s.is_empty():
 		return
-	# WP4: conjurar exige cajado equipado — a magia ocupa uma mao, como qualquer arma.
-	if bool(GameData.spells.get("_rules", {}).get("requires_staff", true)) \
+	# Na Fatia 1, o unico instrumento implementado e o cajado. O catalogo completo
+	# declara os restantes por escola; nenhum feitico pode ignorar esse contrato.
+	if bool(GameData.spells.get("_rules", {}).get("requires_declared_instrument", true)) \
 			and not bool(GameData.weapon(main_weapon).get("can_cast", false)):
 		return
-	var cost := int(s.get("charge_cost", 1))
-	if charges < cost:
-		return   # sem cargas: o plano B e a pancada do cajado (Lei 1 nao fica refem)
-	charges -= cost
+	var cost := int(s.get("mana_cost", 1))
+	if mana < cost:
+		return   # sem mana: o plano B e a pancada do cajado (Lei 1 nao fica refem)
+	mana -= cost
 	_cast_spell = s
 	_cast_frames_total = int(float(s.get("cast_time", 0.8)) * 60.0)
 	_change_state(State.CASTING)
@@ -837,9 +876,12 @@ func take_damage(info: DamageInfo) -> void:
 	if health <= 0.0:
 		return
 
-	# 5. Conjurar: levar dano interrompe E a carga ja foi gasta (spec).
+	# 5. Conjurar: levar dano interrompe e a mana ja foi gasta. Meditar tambem
+	# interrompe, mas conserva a mana que entrou ate este frame (spec/54 + 66).
 	if state == State.CASTING and not has_hyper_armor():
 		_cast_spell = {}
+		_change_state(State.FREE)
+	elif state == State.MEDITATING:
 		_change_state(State.FREE)
 
 	# 6. Hiper-armadura: leva o dano, nao e interrompido.
@@ -878,7 +920,8 @@ func respawn_at(p: Vector3) -> void:
 	velocity = Vector3.ZERO
 	health = max_health
 	stamina.refill()
-	charges = max_charges
+	mana = max_mana
+	meditation_uses = meditation_uses_max
 	_egide_shield = 0.0
 	_combo_index = 0
 	_buffered = ""
@@ -940,6 +983,7 @@ func state_name() -> String:
 		State.DEAD: return "morto"
 		State.USING_ITEM: return "a beber"
 		State.ABILITY: return "habilidade"
+		State.MEDITATING: return "a meditar"
 	return "?"
 
 

@@ -230,6 +230,8 @@ O estudo anterior viu os dois eixos de melhoria. Falta a peça melhor.
 
 ### Como funciona lá
 
+> ⚠️ **MODELO REVOGADO PELO [`54`](54-mana-meditacao-e-tracos-de-classe.md):** o parágrafo abaixo fica como investigação histórica. O jogo actual separa frascos, mana e artes de arma; artes gastam mana e meditação segue o [`66`](66-catalogo-de-magia.md).
+
 Há **dois frascos**: um cura vida, o outro repõe a energia que alimenta magias **e artes de arma**.
 
 > **O total de cargas entre os dois chega a 15, e o jogador distribui-as como quiser** num sítio próprio.

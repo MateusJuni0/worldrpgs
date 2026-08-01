@@ -1,73 +1,3137 @@
 {
-  "_fonte": "spec/13-magia.md (WP4), 'O catalogo' — cargas, tempo, alcance, dano base. LEI: deixou de ser [PROTO] quando o WP4 chegou.",
-  "_fonte_regras": "spec/01-combate.md (interrupcao gasta a carga, movimento a 40%) + spec/11-formulas.md (bolso unico = 4 + floor(Sab/4), escala pela Sabedoria peso forte).",
-  "_lei_2": "Tres verbos diferentes, zero escaloes de dano: projectil, area, barreira.",
-
-  "_rules": {
-    "move_multiplier_while_casting": 0.40,
-    "interrupt_spends_charge": true,
-    "charges_regen_in_combat": false,
-    "charges_restored_on_rest": true,
-    "charges_restored_on_death": true,
-    "shared_charge_pool": true,
-    "requires_staff": true,
-    "scaling_attribute": "sabedoria",
-    "scale_weight": "forte",
-    "_nota_cajado": "WP4: conjurar exige cajado equipado — a magia ocupa uma mao, como qualquer arma.",
-    "_nota_interrupcao": "Levar dano a conjurar interrompe E gasta a carga. Conjurar na cara de um inimigo tem de ser uma aposta.",
-    "_nota_bolso": "Bolso unico partilhado pelas tres. O Feiticeiro de arranque (Sab 14) tem 7 cargas: 7 Dardos, ou 2 Ruinas + 1 Dardo, ou 2 Egides + 3 Dardos. O bolso e o puzzle."
+  "_fonte": "spec/66-catalogo-de-magia.md; herda spec/52 sem reescrever a escola vermelha e aplica spec/54-55",
+  "_lei_2": "Cada melhoria abre forma, area ou lancamentos; nenhuma linha e apenas forca.",
+  "_schools": {
+    "feiticaria": {
+      "nome": "Feitiçaria",
+      "scaling": "inteligencia",
+      "instrumentos": [
+        "cajado"
+      ],
+      "cor": "azul"
+    },
+    "milagre": {
+      "nome": "Milagre",
+      "scaling": "fe",
+      "instrumentos": [
+        "sino",
+        "talisma"
+      ],
+      "cor": "dourado"
+    },
+    "piromancia": {
+      "nome": "Piromancia",
+      "scaling": "media_int_fe",
+      "instrumentos": [
+        "chama"
+      ],
+      "cor": "laranja"
+    },
+    "mal": {
+      "nome": "Escola vermelha",
+      "scaling": "menor_int_fe",
+      "instrumentos": [
+        "cajado",
+        "relicario",
+        "instrumento_hibrido"
+      ],
+      "cor": "vermelho"
+    }
   },
-
+  "_delivery_forms": [
+    "projectil_simples",
+    "perfurante",
+    "perseguidor",
+    "orbitante",
+    "feixe",
+    "feixe_rasteiro",
+    "barragem_cone",
+    "chuva",
+    "forma_arma",
+    "portador",
+    "onda_sem_dano",
+    "isco"
+  ],
+  "_escape_vectors": [
+    "sair_da_linha",
+    "rolar_para_dentro",
+    "rolar_para_fora",
+    "afastar_se",
+    "aproximar_se",
+    "quebrar_visao",
+    "sair_da_area",
+    "aparar",
+    "bloquear_e_aguentar"
+  ],
+  "_rules": {
+    "move_multiplier_while_casting": 0.4,
+    "interrupt_spends_mana": true,
+    "mana_regen_passive": false,
+    "mana_restored_on_rest": true,
+    "mana_restored_on_death": true,
+    "mana_shared_across_schools": true,
+    "requires_declared_instrument": true,
+    "favorite_limit": 8,
+    "default_favorites": [
+      "dardo",
+      "ruina",
+      "egide"
+    ],
+    "favorites_change_when": [
+      "fora_de_combate",
+      "descanso"
+    ],
+    "meditation": {
+      "seconds": 40,
+      "mana_restored_fraction": 1,
+      "uses_per_rest": 2,
+      "use_consumed_on_start": true,
+      "interrupted_by_any_damage": true,
+      "partial_mana_kept": true,
+      "world_pauses": false
+    }
+  },
   "dardo": {
     "display_name": "Dardo",
-    "verb": "ferir a distancia, barato e fiavel",
+    "school": "feiticaria",
+    "question": "preciso de dano fiável a média distância",
+    "verb": "projéctil recto, barato e fiável",
+    "formula": "1.12 × força_do_instrumento − 18",
+    "mana_cost": 12,
     "cast_time": 0.8,
-    "charge_cost": 1,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "atrás de cobertura ou contra grupos dispersos",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha depois do brilho azul estreitar",
+    "contact_type": "instantaneo",
+    "speed_mps": 20,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "agulha de vidro azul-gelo de 28 cm, núcleo branco, duas aletas de aço frio e rasto azul estreito",
+    "icon_id": "ico_magia_dardo",
+    "icon_path": "art/ui/icons/spells/dardo.png",
+    "fatia_1": true,
     "type": "projectile",
-    "mv": 1.0,
+    "mv": 1,
     "base_damage": 45,
-    "damage_type": "magico",
-    "school": "bem",
-    "speed": 20.0,
-    "max_range": 18.0,
+    "speed": 20,
+    "max_range": 18,
     "movement_locked": false,
-    "weight": "light"
+    "weight": "light",
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 12→11 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
   },
-
   "ruina": {
-    "display_name": "Ruina",
-    "verb": "mudar uma sala inteira",
+    "display_name": "Ruína",
+    "school": "feiticaria",
+    "question": "preciso de mudar a geometria de uma sala",
+    "verb": "massa lenta pousa e abre uma área de 4 m",
+    "formula": "1.35 × força_do_instrumento − 32",
+    "mana_cost": 35,
     "cast_time": 1.6,
-    "charge_cost": 3,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "tectos baixos e alvos que não ficam no mesmo sítio",
+    "escape_vector": "sair_da_area",
+    "escape_method": "sair do disco marcado antes de o portador quebrar",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 12,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "esfera de vidro azul-gelo rachado, aro de aço frio, fissuras ciano e disco hachurado de quatro metros",
+    "icon_id": "ico_magia_ruina",
+    "icon_path": "art/ui/icons/spells/ruina.png",
+    "fatia_1": true,
     "type": "aoe",
-    "mv": 1.0,
+    "mv": 1,
     "base_damage": 70,
-    "damage_type": "magico",
-    "school": "bem",
-    "radius": 4.0,
-    "max_range": 12.0,
+    "radius": 4,
+    "max_range": 12,
     "telegraph_seconds": 0.5,
     "movement_locked": true,
     "weight": "heavy",
-    "_nota": "WP4 diz '1,6 s (parado)' — a Ruina trava o movimento por completo, nao aos 40%. A marca no chao aparece 0,5 s antes e e visivel tambem para o parceiro."
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 35→30 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
   },
-
   "egide": {
-    "display_name": "Egide",
-    "verb": "barreira",
+    "display_name": "Égide",
+    "school": "feiticaria",
+    "question": "preciso de comprar dois segundos para ler",
+    "verb": "placas orbitantes absorvem 120 de dano ou duram 2,5 s",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 25,
     "cast_time": 0.5,
-    "charge_cost": 2,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "contra veneno, queda ou dano que já está dentro da barreira",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper o conjurador antes de as placas fecharem",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "três placas curvas de vidro azul-gelo, rebordo de aço polido, runas brancas e encaixes visíveis",
+    "icon_id": "ico_magia_egide",
+    "icon_path": "art/ui/icons/spells/egide.png",
+    "fatia_1": true,
     "type": "barrier",
-    "mv": 0.0,
+    "mv": 0,
     "base_damage": 0,
-    "school": "bem",
     "duration": 2.5,
     "absorb": 120,
     "movement_locked": false,
     "hyper_armor_while_casting": true,
     "hyper_armor_while_active": true,
-    "_nota": "WP4: absorve 120 de dano OU dura 2,5 s, o que vier primeiro. Hiper-armadura enquanto dura."
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 25→22 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
   },
-
-  "order": ["dardo", "ruina", "egide"]
+  "cacador_azul": {
+    "display_name": "Caçador Azul",
+    "school": "feiticaria",
+    "question": "o alvo foge em linha recta",
+    "verb": "fragmento orientado persegue até perder visão",
+    "formula": "1.40 × força_do_instrumento − 36",
+    "mana_cost": 40,
+    "cast_time": 1.1,
+    "interruptible": true,
+    "delivery_form": "perseguidor",
+    "invalid_where": "salas sem colunas, esquinas ou desníveis",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a visão numa coluna ou esquina",
+    "contact_type": "volume_movel",
+    "speed_mps": 12,
+    "range_m": 24,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta perseguidor completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "ponta de fulgurite azul presa num aro de prata escurecida, cauda de bruma ciano e olho branco central",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 72,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 40→34 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "lamina_astral": {
+    "display_name": "Lâmina Astral",
+    "school": "feiticaria",
+    "question": "o mago ficou encurralado ao perto",
+    "verb": "forma uma lâmina curta de magia para um golpe corpo a corpo",
+    "formula": "1.28 × força_do_instrumento − 25",
+    "mana_cost": 28,
+    "cast_time": 0.7,
+    "interruptible": true,
+    "delivery_form": "forma_arma",
+    "invalid_where": "fora do alcance de 2,8 m e contra aparadores pacientes",
+    "escape_vector": "aparar",
+    "escape_method": "aparar o único golpe ou manter distância",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 2.8,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta forma arma completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "lâmina recta de vidro azul translúcido, 85 cm, guarda de aço frio, gume branco sem cabo físico",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 50,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 28→24 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar a lâmina longa por duas lâminas curtas, sem somar dano"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o arco visível cresce para apanhar grupos, mantendo um contacto por alvo"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar o golpe horizontal por estocada perfurante"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "um acerto aparado devolve metade da mana, permitindo nova tentativa; uma vez por meditação"
+      }
+    ]
+  },
+  "sinal": {
+    "display_name": "Sinal",
+    "school": "feiticaria",
+    "question": "o parceiro perdeu o alvo",
+    "verb": "marca um inimigo para o parceiro através de paredes",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 16,
+    "cast_time": 0.6,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "sem parceiro ou contra alvos atrás de cobertura no lançamento",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes da marca; depois a marca não causa dano",
+    "contact_type": "nenhum",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "medalhão de prata escurecida com lente de vidro ciano, retículo triangular branco e cordão de couro preto",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 16→14 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "farol_gelado": {
+    "display_name": "Farol Gelado",
+    "school": "feiticaria",
+    "question": "não vejo no escuro nem leio o caminho",
+    "verb": "orbita acima do ombro, ilumina e revela contornos no escuro",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 14,
+    "cast_time": 0.5,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "à luz forte do Santuário Branco",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes de o farol subir",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "lanterna esférica de vidro azul-gelo, aro de aço frio, chama ciano sem pavio e corrente de 20 cm",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 14→12 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "veu_mudo": {
+    "display_name": "Véu Mudo",
+    "school": "feiticaria",
+    "question": "preciso de atravessar sem denunciar os passos",
+    "verb": "anel de ar envolve as botas e silencia passos por 20 s",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 18,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "quando o inimigo já te viu ou em água que denuncia passos",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes de o véu fechar",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "duas argolas finas de prata baça em torno de botas de couro, poeira ciano suspensa sem ondas sonoras",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 18→16 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "selo_fragil": {
+    "display_name": "Selo Frágil",
+    "school": "feiticaria",
+    "question": "a defesa do alvo impede o grupo de avançar",
+    "verb": "marca fendas; o próximo tipo de dano que acertar atravessa a defesa correspondente",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 30,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "feixe",
+    "invalid_where": "contra inimigos sem armadura ou fora da linha de visão",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a linha antes de o feixe fechar a marca",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 14,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta feixe completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "losango de vidro rachado preso por quatro grampos de aço, fissura branca central e fio azul recto",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "portador_azul": {
+    "display_name": "Portador Azul",
+    "school": "feiticaria",
+    "question": "preciso de controlar várias distâncias ao mesmo tempo",
+    "verb": "massa lenta larga três dardos laterais ao atravessar a sala",
+    "formula": "1.55 × força_do_instrumento − 50",
+    "mana_cost": 55,
+    "cast_time": 1.6,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "corredores apertados onde a massa embate cedo",
+    "escape_vector": "aproximar_se",
+    "escape_method": "aproximar-se do portador antes de ele largar os fragmentos",
+    "contact_type": "volume_movel",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "vidro fino a vibrar, ataque seco no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "orbe de vidro azul com três cápsulas de aço frio embutidas, 45 cm, fendas ciano e rasto de névoa",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 99,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 55→47 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "lanca_fulgor": {
+    "display_name": "Lança do Fulgor",
+    "school": "milagre",
+    "question": "há uma fila de armaduras metálicas",
+    "verb": "raio traçado perfura a fila e castiga metal",
+    "formula": "1.34 × força_do_instrumento − 31",
+    "mana_cost": 34,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "perfurante",
+    "invalid_where": "contra criaturas de tempestade ou grupos espalhados",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha antes de o sino tocar a segunda vez",
+    "contact_type": "instantaneo",
+    "speed_mps": 30,
+    "range_m": 28,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta perfurante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "haste de fulgurite dourada de 1,6 m, anéis de bronze, ponta branca e pequenas gotas de cera suspensas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 61,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 34→29 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "sutura_clara": {
+    "display_name": "Sutura Clara",
+    "school": "milagre",
+    "question": "preciso de recuperar a própria margem de erro",
+    "verb": "cura o próprio corpo por um feixe curto",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 32,
+    "cast_time": 1.2,
+    "interruptible": true,
+    "delivery_form": "feixe",
+    "invalid_where": "sob pressão corpo a corpo ou com a linha bloqueada",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper o conjurador antes de a sutura fechar",
+    "contact_type": "nenhum",
+    "speed_mps": 0,
+    "range_m": 14,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta feixe completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "fio dourado grosso entre duas agulhas de prata, nó de cera branca e brilho quente concentrado",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 32→28 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "elo_curador": {
+    "display_name": "Elo Curador",
+    "school": "milagre",
+    "question": "o parceiro precisa de cura à distância",
+    "verb": "orbe procura o parceiro visível e entrega cura",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 38,
+    "cast_time": 1.3,
+    "interruptible": true,
+    "delivery_form": "perseguidor",
+    "invalid_where": "quando o parceiro está atrás de cobertura opaca",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "quebrar a linha impede o elo; não há dano a evitar",
+    "contact_type": "nenhum",
+    "speed_mps": 12,
+    "range_m": 24,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta perseguidor completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "esfera de cera branca com aro de ouro baço, fio luminoso de 12 m e duas mãos gravadas no núcleo",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 38→33 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "orvalho_lento": {
+    "display_name": "Orvalho Lento",
+    "school": "milagre",
+    "question": "precisamos de cura enquanto seguramos uma posição",
+    "verb": "chuva dourada cura ao longo de 8 s",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 26,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "chuva",
+    "invalid_where": "debaixo de tecto ou quando o grupo não pode ficar na área",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "sair da área evita a cura; inimigos interrompem o conjurador",
+    "contact_type": "nenhum",
+    "speed_mps": 16,
+    "range_m": 14,
+    "has_drop": true,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta chuva completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "ampola de vidro transparente com tampa de ouro baço, gotas douradas suspensas e círculo branco de quatro metros",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 26→23 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "pele_de_marmore": {
+    "display_name": "Pele de Mármore",
+    "school": "milagre",
+    "question": "preciso de aguentar um golpe sem aumentar dano",
+    "verb": "troca mobilidade por defesa até a primeira esquiva",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 28,
+    "cast_time": 0.9,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "contra veneno e ataques que ignoram defesa física",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes de as placas aderirem",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "placas finas de mármore branco sobre antebraço e peito, juntas de cera, rebordos de ouro baço",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 28→24 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "segundo_folego": {
+    "display_name": "Segundo Fôlego",
+    "school": "milagre",
+    "question": "o grupo gastou stamina e precisa de voltar a agir",
+    "verb": "onda restaura stamina mas não vida nem mana",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 24,
+    "cast_time": 0.7,
+    "interruptible": true,
+    "delivery_form": "onda_sem_dano",
+    "invalid_where": "quando o parceiro está fora da onda ou a stamina já está cheia",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes da onda; não causa dano",
+    "contact_type": "nenhum",
+    "speed_mps": 9,
+    "range_m": 7,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta onda sem dano completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "anel de ar dourado a partir de um sino de bronze, 6 m, pó de mármore levantado sem chama",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 24→21 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "passo_de_centelha": {
+    "display_name": "Passo de Centelha",
+    "school": "milagre",
+    "question": "preciso de velocidade para reposicionar, não de dano",
+    "verb": "aumenta velocidade de marcha e corrida; não altera i-frames",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 30,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "em água profunda ou terreno onde correr não é possível",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes de os aros chegarem aos tornozelos",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "dois aros de fulgurite e bronze em torno dos tornozelos, faíscas violetas curtas e sola de couro seco",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "fio_de_fulgor": {
+    "display_name": "Fio de Fulgor",
+    "school": "milagre",
+    "question": "a arma precisa de raio contra metal",
+    "verb": "reveste a lâmina com raio por 90 s; só um reforço activo",
+    "formula": "1.22 × força_do_instrumento − 20",
+    "mana_cost": 22,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "forma_arma",
+    "invalid_where": "contra criaturas de tempestade ou sem arma equipada",
+    "escape_vector": "bloquear_e_aguentar",
+    "escape_method": "bloquear a arma reforçada ou esperar os 90 s",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 2.8,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta forma arma completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "fio de fulgurite dourada enrolado numa lâmina de aço, anéis de bronze e faíscas violetas contidas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 40,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 22→19 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar a lâmina longa por duas lâminas curtas, sem somar dano"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o arco visível cresce para apanhar grupos, mantendo um contacto por alvo"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar o golpe horizontal por estocada perfurante"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "um acerto aparado devolve metade da mana, permitindo nova tentativa; uma vez por meditação"
+      }
+    ]
+  },
+  "ultimo_veu": {
+    "display_name": "Último Véu",
+    "school": "milagre",
+    "question": "preciso de absorver exactamente um golpe",
+    "verb": "absorve um golpe e desfaz-se, qualquer que seja a força",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 48,
+    "cast_time": 1.6,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "contra dano persistente, veneno ou vários golpes pequenos",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes de o véu fechar",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "sino curto de bronze, harmónico agudo no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "véu quadrado de tecido branco encerado, quatro pesos de ouro baço, runa central preta e uma só dobra",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 48→41 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "pedregulho_brasa": {
+    "display_name": "Pedregulho de Brasa",
+    "school": "piromancia",
+    "question": "preciso de um projéctil pesado que quebre postura",
+    "verb": "pedra incandescente voa em arco curto e explode no alvo",
+    "formula": "1.36 × força_do_instrumento − 32",
+    "mana_cost": 36,
+    "cast_time": 1.2,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "contra alvos rápidos ou resistentes a fogo",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha antes de a obsidiana largar a mão",
+    "contact_type": "instantaneo",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": true,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "pedra de obsidiana irregular de 32 cm, veios laranja, braçadeira de couro curtido e fagulhas pesadas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 65,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 36→31 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "ninho_brasa": {
+    "display_name": "Ninho de Brasa",
+    "school": "piromancia",
+    "question": "preciso de negar chão durante seis segundos",
+    "verb": "carvão pousa e abre uma área de fogo",
+    "formula": "1.42 × força_do_instrumento − 38",
+    "mana_cost": 42,
+    "cast_time": 1.4,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "em água ou contra inimigos que voam",
+    "escape_vector": "sair_da_area",
+    "escape_method": "não entrar no círculo de carvão ou sair antes do segundo pulso",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "cesto baixo de bronze fundido com carvão de obsidiana, 5 m de cinza hachurada e couro chamuscado",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 76,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 42→36 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "circulo_fornalha": {
+    "display_name": "Círculo da Fornalha",
+    "school": "piromancia",
+    "question": "estou cercado pela frente e preciso de abrir um arco",
+    "verb": "leque de brasas varre 120 graus",
+    "formula": "1.46 × força_do_instrumento − 41",
+    "mana_cost": 46,
+    "cast_time": 1.3,
+    "interruptible": true,
+    "delivery_form": "barragem_cone",
+    "invalid_where": "contra um alvo longe ou atrás do conjurador",
+    "escape_vector": "rolar_para_dentro",
+    "escape_method": "rolar para dentro do cone antes de ele abrir por completo",
+    "contact_type": "volume_movel",
+    "speed_mps": 20,
+    "range_m": 10,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta barragem cone completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "cinco lascas de obsidiana em leque, nervuras de bronze fundido, chamas laranja baixas e bordo serrilhado",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 83,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 46→40 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "rasto_carvao": {
+    "display_name": "Rasto de Carvão",
+    "school": "piromancia",
+    "question": "preciso de dividir um corredor",
+    "verb": "linha de carvão corre no chão e fica a arder",
+    "formula": "1.40 × força_do_instrumento − 36",
+    "mana_cost": 40,
+    "cast_time": 1.1,
+    "interruptible": true,
+    "delivery_form": "feixe_rasteiro",
+    "invalid_where": "escadas, degraus, água e terreno partido",
+    "escape_vector": "sair_da_area",
+    "escape_method": "sair do sulco ou subir para terreno que o corta",
+    "contact_type": "volume_persistente",
+    "speed_mps": 10,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta feixe rasteiro completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "sulco negro de 18 m com placas de obsidiana, grampos de bronze e brasas laranja visíveis entre fendas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 72,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 40→34 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "esporos_febris": {
+    "display_name": "Esporos Febris",
+    "school": "piromancia",
+    "question": "preciso de envenenar vivos sem os perseguir",
+    "verb": "bolsa lenta rebenta numa nuvem de veneno",
+    "formula": "1.32 × força_do_instrumento − 29",
+    "mana_cost": 32,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "contra mortos-vivos imunes a veneno ou em vento forte",
+    "escape_vector": "afastar_se",
+    "escape_method": "afastar-se do portador antes de a nuvem abrir",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "bolsa de couro curtido cheia de esporos verde-amarelos, fecho de bronze e três espinhos de quitina",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 58,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 32→28 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "fio_incandescente": {
+    "display_name": "Fio Incandescente",
+    "school": "piromancia",
+    "question": "a arma precisa de fogo contra carne ou madeira",
+    "verb": "reveste a lâmina com fogo por 90 s; só um reforço activo",
+    "formula": "1.22 × força_do_instrumento − 20",
+    "mana_cost": 22,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "forma_arma",
+    "invalid_where": "contra criaturas da Fornalha ou sem arma equipada",
+    "escape_vector": "bloquear_e_aguentar",
+    "escape_method": "bloquear a arma reforçada ou esperar os 90 s",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 2.8,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta forma arma completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "fio de bronze fundido enrolado numa lâmina escura, chama laranja rente ao gume e cabo de couro curtido",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 40,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 22→19 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar a lâmina longa por duas lâminas curtas, sem somar dano"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o arco visível cresce para apanhar grupos, mantendo um contacto por alvo"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar o golpe horizontal por estocada perfurante"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "um acerto aparado devolve metade da mana, permitindo nova tentativa; uma vez por meditação"
+      }
+    ]
+  },
+  "verniz_toxico": {
+    "display_name": "Verniz Tóxico",
+    "school": "piromancia",
+    "question": "a arma precisa de veneno contra vivos",
+    "verb": "reveste a lâmina com veneno por 90 s; só um reforço activo",
+    "formula": "1.20 × força_do_instrumento − 18",
+    "mana_cost": 20,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "forma_arma",
+    "invalid_where": "contra mortos-vivos ou sem arma equipada",
+    "escape_vector": "bloquear_e_aguentar",
+    "escape_method": "bloquear sem deixar encher o medidor ou afastar-se 90 s",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 2.8,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta forma arma completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "frasco de vidro verde com rolha de madeira-cogumelo, verniz viscoso, pincel de seda crua e anel de bronze",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 36,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 20→17 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar a lâmina longa por duas lâminas curtas, sem somar dano"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o arco visível cresce para apanhar grupos, mantendo um contacto por alvo"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar o golpe horizontal por estocada perfurante"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "um acerto aparado devolve metade da mana, permitindo nova tentativa; uma vez por meditação"
+      }
+    ]
+  },
+  "mare_cinzas": {
+    "display_name": "Maré de Cinzas",
+    "school": "piromancia",
+    "question": "preciso de espaço, não de dano",
+    "verb": "onda sem dano derruba leves e interrompe fogo no chão",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 30,
+    "cast_time": 0.9,
+    "interruptible": true,
+    "delivery_form": "onda_sem_dano",
+    "invalid_where": "contra alvos pesados ancorados ou fora dos 7 m",
+    "escape_vector": "rolar_para_dentro",
+    "escape_method": "rolar para dentro antes da onda abrir ou ficar fora do raio",
+    "contact_type": "volume_movel",
+    "speed_mps": 9,
+    "range_m": 7,
+    "has_drop": false,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta onda sem dano completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "semicírculo de cinza cinzenta com fragmentos de obsidiana, 7 m, bordo laranja e marcas de botas expostas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "chuva_escoria": {
+    "display_name": "Chuva de Escória",
+    "school": "piromancia",
+    "question": "o céu aberto está cheio de inimigos",
+    "verb": "fragmentos sobem e caem sobre uma área larga",
+    "formula": "1.58 × força_do_instrumento − 52",
+    "mana_cost": 58,
+    "cast_time": 1.7,
+    "interruptible": true,
+    "delivery_form": "chuva",
+    "invalid_where": "debaixo de tecto, em corredores estreitos ou contra um alvo móvel",
+    "escape_vector": "sair_da_area",
+    "escape_method": "sair do círculo ou entrar debaixo de tecto",
+    "contact_type": "volume_persistente",
+    "speed_mps": 16,
+    "range_m": 14,
+    "has_drop": true,
+    "sound_cue": "sopro de forja e estalo de carvão no compromisso",
+    "visual_cue": "silhueta chuva completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "doze gotas de bronze fundido e obsidiana sobre círculo laranja de 8 m, sombras verticais desde o primeiro frame",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 104,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 58→50 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "lanca_negra": {
+    "display_name": "Lança Negra",
+    "school": "mal",
+    "question": "há uma fila ou um escudo entre mim e o alvo",
+    "verb": "raio recto atravessa três alvos e ignora escudos",
+    "formula": "1.38 × força_do_instrumento − 34",
+    "mana_cost": 38,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "perfurante",
+    "invalid_where": "espaço aberto onde os inimigos se dispersam",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha; atrás do primeiro alvo continua perigoso",
+    "contact_type": "instantaneo",
+    "speed_mps": 30,
+    "range_m": 28,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta perfurante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "lança estreita de osso carbonizado, 1,8 m, ponta de ferro ferrugento e fenda vermelha contínua",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 68,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 38→33 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "agulha": {
+    "display_name": "Agulha",
+    "school": "mal",
+    "question": "preciso de alcance barato e rápido",
+    "verb": "agulha vermelha rápida para um alvo",
+    "formula": "1.10 × força_do_instrumento − 18",
+    "mana_cost": 10,
+    "cast_time": 0.5,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "grupos ou cobertura cerrada",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha no estalo de ferro",
+    "contact_type": "instantaneo",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "agulha de ferro ferrugento de 24 cm, ilhó de osso, gota vermelha na ponta e rasto quase invisível",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 24,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 10→9 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "ruina_perfurante": {
+    "display_name": "Ruína Perfurante",
+    "school": "mal",
+    "question": "preciso de atravessar a fila e negar o chão atrás",
+    "verb": "perfura tudo na linha e deixa rasto a arder",
+    "formula": "1.72 × força_do_instrumento − 65",
+    "mana_cost": 72,
+    "cast_time": 1.7,
+    "interruptible": true,
+    "delivery_form": "feixe_rasteiro",
+    "invalid_where": "escadas, degraus, água e terreno partido",
+    "escape_vector": "sair_da_area",
+    "escape_method": "sair da linha e depois do rasto vermelho",
+    "contact_type": "volume_persistente",
+    "speed_mps": 10,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe rasteiro completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "sulco de ferro derretido e osso partido, 20 m, fendas vermelhas e cinza negra visível",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 130,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 72→62 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "mancha_cinza": {
+    "display_name": "Mancha de Cinza",
+    "school": "mal",
+    "question": "preciso de negar um pedaço de chão",
+    "verb": "poça de cinza dura 6 s e magoa quem entra",
+    "formula": "1.30 × força_do_instrumento − 27",
+    "mana_cost": 30,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "inimigos que voam, água corrente ou chão sem apoio",
+    "escape_vector": "sair_da_area",
+    "escape_method": "não entrar ou sair do círculo de cinza",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "placa circular de cinza cinzenta, 6 m, ossos curtos no bordo, gotas vermelhas e madeira encharcada",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 54,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "nova_escura": {
+    "display_name": "Nova Escura",
+    "school": "mal",
+    "question": "estou cercado e preciso de abrir espaço com dano",
+    "verb": "explosão à volta do conjurador",
+    "formula": "1.48 × força_do_instrumento − 43",
+    "mana_cost": 48,
+    "cast_time": 1.2,
+    "interruptible": true,
+    "delivery_form": "barragem_cone",
+    "invalid_where": "contra um alvo longe",
+    "escape_vector": "rolar_para_fora",
+    "escape_method": "rolar para fora do arco antes de ele fechar",
+    "contact_type": "volume_movel",
+    "speed_mps": 20,
+    "range_m": 10,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta barragem cone completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "coroa baixa de pedra negra e osso a abrir em 360 graus, bruma vermelha, bordo hachurado de 5 m",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 86,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 48→41 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "coroa_brasa": {
+    "display_name": "Coroa de Brasa",
+    "school": "mal",
+    "question": "quero preparar uma resposta para quem se aproxima",
+    "verb": "cinco brasas orbitam e disparam ao alvo próximo",
+    "formula": "1.42 × força_do_instrumento − 38",
+    "mana_cost": 42,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "campo aberto onde ninguém se aproxima",
+    "escape_vector": "afastar_se",
+    "escape_method": "não entrar nos 8 m de disparo",
+    "contact_type": "volume_movel",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "cinco dentes de obsidiana incandescentes em coroa, aro de osso, órbitas vermelhas e altura de 35 cm",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 76,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 42→36 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "chuva_cinzenta": {
+    "display_name": "Chuva Cinzenta",
+    "school": "mal",
+    "question": "um grupo está junto à minha frente",
+    "verb": "leque de projécteis; de perto mais fragmentos acertam",
+    "formula": "1.34 × força_do_instrumento − 31",
+    "mana_cost": 34,
+    "cast_time": 0.9,
+    "interruptible": true,
+    "delivery_form": "barragem_cone",
+    "invalid_where": "um alvo único a longa distância",
+    "escape_vector": "rolar_para_dentro",
+    "escape_method": "rolar para dentro do leque ou sair das laterais",
+    "contact_type": "volume_movel",
+    "speed_mps": 20,
+    "range_m": 10,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta barragem cone completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "leque de nove lascas de osso cinzento, 110 graus, pontas vermelhas e poeira de ferro ferrugento",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 61,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 34→29 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "marca_ardente": {
+    "display_name": "Marca Ardente",
+    "school": "mal",
+    "question": "preciso de queimação num alvo grande e lento",
+    "verb": "acende o alvo; o medidor visível enche e come vida",
+    "formula": "1.28 × força_do_instrumento − 25",
+    "mana_cost": 28,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "alvos que removem queimadura ou não ficam vivos até o medidor encher",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha do selo antes de ele tocar",
+    "contact_type": "instantaneo",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "selo circular de ferro ferrugento, três pregos de osso, runa vermelha e medidor segmentado no bordo",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 50,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 28→24 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "febre": {
+    "display_name": "Febre",
+    "school": "mal",
+    "question": "quero que a queimação salte pelo grupo",
+    "verb": "marca que passa ao vizinho quando o portador morre",
+    "formula": "1.36 × força_do_instrumento − 32",
+    "mana_cost": 36,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "inimigos isolados",
+    "escape_vector": "afastar_se",
+    "escape_method": "separar-se do alvo marcado antes de ele morrer",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "ampola de osso com líquido vermelho, corrente de ferro, três marcas menores e fumo cinzento",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 65,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 36→31 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "chama_faminta": {
+    "display_name": "Chama Faminta",
+    "school": "mal",
+    "question": "preciso de queimar e tirar stamina ao mesmo alvo",
+    "verb": "feixe curto que queima e rouba stamina",
+    "formula": "1.44 × força_do_instrumento − 40",
+    "mana_cost": 44,
+    "cast_time": 1.2,
+    "interruptible": true,
+    "delivery_form": "feixe",
+    "invalid_where": "fora de 12 m, atrás de cobertura ou contra imunes a queimadura",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a linha antes de o feixe fechar",
+    "contact_type": "volume_persistente",
+    "speed_mps": 0,
+    "range_m": 14,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "mandíbula de osso como bocal, língua de fogo vermelho de 12 m e elos de ferro a contrair",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 79,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 44→38 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "levantar": {
+    "display_name": "Levantar",
+    "school": "mal",
+    "question": "há um morto útil no chão",
+    "verb": "levanta o morto com 60% da vida e custo adicional de 5–15% PV",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 45,
+    "cast_time": 2,
+    "interruptible": true,
+    "delivery_form": "feixe_rasteiro",
+    "invalid_where": "sem cadáver à frente ou com vida insuficiente",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes do fio chegar ao cadáver",
+    "contact_type": "nenhum",
+    "speed_mps": 10,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe rasteiro completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "mão de osso sobre círculo de ferro ferrugento, três fios vermelhos presos a um cadáver e cinza húmida",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 45→39 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por levantamento mais rápido de um cadáver pequeno"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o círculo de escolha passa a mostrar dois cadáveres próximos, mas só um se levanta"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar vida do invocado por ordem de ataque mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se o cadáver cair antes de acertar, devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "erguer_guardiao": {
+    "display_name": "Erguer o Guardião",
+    "school": "mal",
+    "question": "quero levar um chefe morto comigo",
+    "verb": "levanta um chefe portátil por 50% da vida máxima",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 85,
+    "cast_time": 2,
+    "interruptible": true,
+    "delivery_form": "feixe_rasteiro",
+    "invalid_where": "sem corpo de chefe gasto no ciclo ou com menos de metade da vida máxima disponível",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes do fio chegar ao guardião",
+    "contact_type": "nenhum",
+    "speed_mps": 10,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe rasteiro completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "coroa de vértebras sobre disco de pedra negra de 4 m, correntes de ferro e quatro pilares de bruma vermelha",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 85→73 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por levantamento mais rápido de um cadáver pequeno"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o círculo de escolha passa a mostrar dois cadáveres próximos, mas só um se levanta"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar vida do invocado por ordem de ataque mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se o cadáver cair antes de acertar, devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "rebentar": {
+    "display_name": "Rebentar",
+    "school": "mal",
+    "question": "um morto meu já não serve e está no sítio certo",
+    "verb": "destrói um invocado numa explosão",
+    "formula": "1.30 × força_do_instrumento − 27",
+    "mana_cost": 30,
+    "cast_time": 0.7,
+    "interruptible": true,
+    "delivery_form": "portador",
+    "invalid_where": "sem invocado próprio ou quando ele está junto do parceiro",
+    "escape_vector": "sair_da_area",
+    "escape_method": "afastar-se do invocado marcado",
+    "contact_type": "volume_persistente",
+    "speed_mps": 8,
+    "range_m": 16,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta portador completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "costelas abertas com núcleo de obsidiana vermelha, círculo de cinza de 4 m e fragmentos de osso voltados para fora",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 54,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "coro": {
+    "display_name": "Coro",
+    "school": "mal",
+    "question": "preciso de puxar atenção para os meus mortos",
+    "verb": "os mortos próprios atraem inimigos por 5 s",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 24,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "isco",
+    "invalid_where": "sem invocados ou contra inimigos que não mudam de alvo",
+    "escape_vector": "afastar_se",
+    "escape_method": "afastar-se do isco ou destruir os invocados",
+    "contact_type": "volume_persistente",
+    "speed_mps": 5,
+    "range_m": 18,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta isco completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "três maxilares de osso em torno de um sino de ferro ferrugento, ondas vermelhas e corrente curta",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 24→21 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "segunda_morte": {
+    "display_name": "Segunda Morte",
+    "school": "mal",
+    "question": "um invocado crucial não pode cair já",
+    "verb": "o morto próprio levanta-se uma vez com metade da vida",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 52,
+    "cast_time": 1.3,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "sem invocado próprio ou sobre guardião já gasto",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes do selo prender o morto",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "segundo coração de osso e couro vermelho preso ao peito do morto, quatro grampos de ferro e uma fissura acesa",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 52→45 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por levantamento mais rápido de um cadáver pequeno"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o círculo de escolha passa a mostrar dois cadáveres próximos, mas só um se levanta"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar vida do invocado por ordem de ataque mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se o cadáver cair antes de acertar, devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "sanguessuga": {
+    "display_name": "Sanguessuga",
+    "school": "mal",
+    "question": "preciso de sair da beira da morte sem encher frascos",
+    "verb": "vida roubada chega como regeneração, tecto 15% da vida máxima",
+    "formula": "1.32 × força_do_instrumento − 29",
+    "mana_cost": 32,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "feixe",
+    "invalid_where": "fora de 10 m, atrás de cobertura ou contra dano indirecto",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a linha antes do feixe fechar",
+    "contact_type": "volume_persistente",
+    "speed_mps": 0,
+    "range_m": 14,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "tubo de couro escuro com duas agulhas de osso, fio vermelho de 10 m e gotas a regressar devagar",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 58,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 32→28 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "folego_roubado": {
+    "display_name": "Fôlego Roubado",
+    "school": "mal",
+    "question": "preciso de tirar ao alvo a capacidade de agir",
+    "verb": "stamina do inimigo passa para o conjurador",
+    "formula": "1.34 × força_do_instrumento − 31",
+    "mana_cost": 34,
+    "cast_time": 1,
+    "interruptible": true,
+    "delivery_form": "feixe",
+    "invalid_where": "fora de alcance, atrás de cobertura ou contra alvo sem stamina",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a linha antes de o feixe fechar",
+    "contact_type": "volume_persistente",
+    "speed_mps": 0,
+    "range_m": 14,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta feixe completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "fole pequeno de couro encharcado, bocal de osso, corrente vermelha e bolsa a encher visivelmente",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 61,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 34→29 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "marca_usurario": {
+    "display_name": "Marca do Usurário",
+    "school": "mal",
+    "question": "quero trocar mana agora por mais almas depois",
+    "verb": "o alvo dá mais almas quando morrer",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 26,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "contra inimigos que não vão morrer antes da marca expirar",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha do selo; depois matar o conjurador não remove a marca",
+    "contact_type": "instantaneo",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "moeda de ferro ferrugento com rosto raspado, prego de osso, fio vermelho e bordo dentado",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 26→23 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "espelho": {
+    "display_name": "Espelho",
+    "school": "mal",
+    "question": "li um golpe e quero devolvê-lo",
+    "verb": "devolve o próximo golpe inteiro; falhar tem recuperação",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 70,
+    "cast_time": 0.4,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "contra veneno, queimadura, área ou queda",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "não atacar durante a janela vermelha de 1,5 s",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "disco de prata escurecida rachado, 45 cm, moldura de osso, uma face vermelha e uma negra",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 70→60 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "peso": {
+    "display_name": "Peso",
+    "school": "mal",
+    "question": "preciso de tornar lento um alvo sem o ferir",
+    "verb": "onda sem dano encurta movimento e esquiva do alvo",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 30,
+    "cast_time": 0.9,
+    "interruptible": true,
+    "delivery_form": "onda_sem_dano",
+    "invalid_where": "contra alvos ancorados ou fora de 7 m",
+    "escape_vector": "rolar_para_dentro",
+    "escape_method": "rolar para dentro antes da onda fechar",
+    "contact_type": "volume_movel",
+    "speed_mps": 9,
+    "range_m": 7,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta onda sem dano completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "onda baixa de pedra negra moída, sete elos de ferro no bordo e pegadas vermelhas comprimidas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 30→26 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "cegueira": {
+    "display_name": "Cegueira",
+    "school": "mal",
+    "question": "preciso de quebrar o engate por três segundos",
+    "verb": "o alvo perde o conjurador de vista",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 20,
+    "cast_time": 0.6,
+    "interruptible": true,
+    "delivery_form": "projectil_simples",
+    "invalid_where": "contra criaturas sem visão ou chefes que não perdem engate",
+    "escape_vector": "sair_da_linha",
+    "escape_method": "sair da linha da agulha escura",
+    "contact_type": "instantaneo",
+    "speed_mps": 24,
+    "range_m": 22,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta projectil simples completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "venda de couro negro com dois pregos de osso, fumo vermelho e olhos pintados riscados",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 20→17 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "voto_sangue": {
+    "display_name": "Voto de Sangue",
+    "school": "mal",
+    "question": "aceito menos vida para trocar o verbo dos feitiços",
+    "verb": "cada camada custa 20% da vida; até três, com as trocas de verbo do spec/53",
+    "formula": "0 dano; efeito declarado não escala em força",
+    "mana_cost": 18,
+    "cast_time": 0.8,
+    "interruptible": true,
+    "delivery_form": "orbitante",
+    "invalid_where": "com vida insuficiente ou quando o risco de 1–3 camadas não compensa",
+    "escape_vector": "nao_aplicavel",
+    "escape_method": "interromper antes do selo fechar; depois só termina ao descansar",
+    "contact_type": "nenhum",
+    "speed_mps": 18,
+    "range_m": 8,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta orbitante completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "três anéis de ferro ferrugento em torno de um coração de cera vermelha, marcas 1–3 claramente separadas",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 0,
+    "base_damage": 0,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 18→16 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar o alvo único por aplicação própria, sem abrir um efeito novo"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "a borda legível inclui o parceiro se estiver a 2 m; o efeito divide-se entre os dois"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar duração por uma aplicação imediata mais curta"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "se afectar também o parceiro, devolve metade da mana; no máximo uma vez por meditação"
+      }
+    ]
+  },
+  "cacador_carmim": {
+    "display_name": "Caçador Carmim",
+    "school": "mal",
+    "question": "o alvo domina a esquiva lateral",
+    "verb": "crânio pequeno persegue até perder visão",
+    "formula": "1.62 × força_do_instrumento − 56",
+    "mana_cost": 62,
+    "cast_time": 1.5,
+    "interruptible": true,
+    "delivery_form": "perseguidor",
+    "invalid_where": "salas sem cobertura, colunas ou esquinas",
+    "escape_vector": "quebrar_visao",
+    "escape_method": "quebrar a visão; rolar de lado não basta",
+    "contact_type": "volume_movel",
+    "speed_mps": 12,
+    "range_m": 24,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta perseguidor completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "crânio de ave polido, 30 cm, mandíbula de ferro ferrugento, olho vermelho único e rasto de cinza",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 112,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 62→53 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "granizo_carmim": {
+    "display_name": "Granizo Carmim",
+    "school": "mal",
+    "question": "o céu aberto está cheio e preciso de negar uma área",
+    "verb": "fragmentos sobem e caem sobre 9 m",
+    "formula": "1.76 × força_do_instrumento − 68",
+    "mana_cost": 76,
+    "cast_time": 1.8,
+    "interruptible": true,
+    "delivery_form": "chuva",
+    "invalid_where": "debaixo de tecto, em corredores baixos ou contra um alvo móvel",
+    "escape_vector": "sair_da_area",
+    "escape_method": "sair do círculo ou entrar debaixo de tecto",
+    "contact_type": "volume_persistente",
+    "speed_mps": 16,
+    "range_m": 14,
+    "has_drop": true,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta chuva completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "vinte lascas de osso e ferro vermelho sobre círculo de cinza de 9 m, sombras verticais visíveis no aviso",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 137,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 76→65 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar alcance por arranque mais curto; escolhe-se uma versão"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "ganha uma opção de área de 2 m no impacto; perde alcance e não acumula dano"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar a forma base por uma entrega sem seguimento e mais rápida"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "acertar depois de usar o vector de fuga próprio da forma devolve metade da mana; uma vez por meditação"
+      }
+    ]
+  },
+  "cutelo_carmim": {
+    "display_name": "Cutelo Carmim",
+    "school": "mal",
+    "question": "o mago vermelho precisa de uma resposta honesta ao perto",
+    "verb": "golpe corpo a corpo de magia; pode reforçar a arma com escuridão por 90 s",
+    "formula": "1.46 × força_do_instrumento − 41",
+    "mana_cost": 46,
+    "cast_time": 0.7,
+    "interruptible": true,
+    "delivery_form": "forma_arma",
+    "invalid_where": "contra armas de maior alcance ou aparadores pacientes",
+    "escape_vector": "aparar",
+    "escape_method": "aparar o golpe único ou manter mais de 3 m",
+    "contact_type": "instantaneo",
+    "speed_mps": 0,
+    "range_m": 2.8,
+    "has_drop": false,
+    "sound_cue": "ferro raspado sobre osso, pulsação grave no compromisso",
+    "visual_cue": "silhueta forma arma completa desde o primeiro frame; fecha no compromisso",
+    "descricao_visual": "cutelo curvo de obsidiana vermelha, 95 cm, espinha de osso, punho de couro curtido e gume de bruma negra",
+    "fatia_1": false,
+    "type": "catalog_only",
+    "mv": 1,
+    "base_damage": 83,
+    "upgrades": [
+      {
+        "level": 0,
+        "axis": "base"
+      },
+      {
+        "level": 1,
+        "axis": "lancamentos",
+        "effect": "custo 46→40 mana; aumenta lançamentos por reserva sem subir força"
+      },
+      {
+        "level": 2,
+        "axis": "forma",
+        "effect": "pode trocar a lâmina longa por duas lâminas curtas, sem somar dano"
+      },
+      {
+        "level": 3,
+        "axis": "area",
+        "effect": "o arco visível cresce para apanhar grupos, mantendo um contacto por alvo"
+      },
+      {
+        "level": 4,
+        "axis": "forma",
+        "effect": "pode trocar o golpe horizontal por estocada perfurante"
+      },
+      {
+        "level": 5,
+        "axis": "lancamentos",
+        "effect": "um acerto aparado devolve metade da mana, permitindo nova tentativa; uma vez por meditação"
+      }
+    ]
+  },
+  "order": [
+    "dardo",
+    "ruina",
+    "egide",
+    "cacador_azul",
+    "lamina_astral",
+    "sinal",
+    "farol_gelado",
+    "veu_mudo",
+    "selo_fragil",
+    "portador_azul",
+    "lanca_fulgor",
+    "sutura_clara",
+    "elo_curador",
+    "orvalho_lento",
+    "pele_de_marmore",
+    "segundo_folego",
+    "passo_de_centelha",
+    "fio_de_fulgor",
+    "ultimo_veu",
+    "pedregulho_brasa",
+    "ninho_brasa",
+    "circulo_fornalha",
+    "rasto_carvao",
+    "esporos_febris",
+    "fio_incandescente",
+    "verniz_toxico",
+    "mare_cinzas",
+    "chuva_escoria",
+    "lanca_negra",
+    "agulha",
+    "ruina_perfurante",
+    "mancha_cinza",
+    "nova_escura",
+    "coroa_brasa",
+    "chuva_cinzenta",
+    "marca_ardente",
+    "febre",
+    "chama_faminta",
+    "levantar",
+    "erguer_guardiao",
+    "rebentar",
+    "coro",
+    "segunda_morte",
+    "sanguessuga",
+    "folego_roubado",
+    "marca_usurario",
+    "espelho",
+    "peso",
+    "cegueira",
+    "voto_sangue",
+    "cacador_carmim",
+    "granizo_carmim",
+    "cutelo_carmim"
+  ]
 }

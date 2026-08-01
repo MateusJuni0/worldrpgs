@@ -6,7 +6,7 @@
 
 - **Lei 3:** a classe define o arranque, nunca o tecto. Qualquer classe pega em qualquer arma; paga nos requisitos e na escala (WP2), não numa proibição.
 - **Habilidade especial** existe por classe `[DECIDIDO]` (08:08); o conteúdo foi adiado por eles (08:31) — as propostas abaixo são `[FABLE]`, debaixo da Lei 2: **verbos novos, não números**.
-- Atributos: todos começam em 8; a classe distribui **+14** (total 62) — WP2.
+- Atributos: todos começam em 8; a classe distribui **+14** (total 70 nos sete atributos) — WP2, alinhado com as escolas no [`66`](66-catalogo-de-magia.md).
 
 > **FECHADO PELO [`64`](64-criacao-de-personagem.md):** “classe” é a **origem/preset de arranque**: atributos, kit, verbo e técnica iniciais. Conserva o traço de origem do [`54`](54-mana-meditacao-e-tracos-de-classe.md), mas nunca fecha armas, armaduras, magia, atributos, espólio, conteúdo ou técnicas encontradas no mundo. As evoluções abaixo acrescentam variantes ao verbo de origem; não criam uma árvore exclusiva que proíba o resto do jogo.
 
@@ -14,18 +14,18 @@
 
 Seis na fatia 1; Batedor e Mago do mal ficam com as condições de entrada escritas.
 
-| Classe | Vida | Sta | Con | For | Des | Sab | Arranque | Papel, numa linha | Fatia 1? |
-|---|---|---|---|---|---|---|---|---|---|
-| **Guerreiro** | 11 | 11 | 10 | 12 | 10 | 8 | espada + escudo | o equilibrado — o metro dos outros | ✅ |
-| **Feiticeiro** | 10 | 10 | 9 | 9 | 10 | 14 | cajado, 3 magias | as cargas e o cajado; frágil ao perto | ✅ |
-| **Tanque** | 12 | 10 | 13 | 11 | 8 | 8 | escudo + espada | absorve, controla espaço, mata devagar | ✅ |
-| **Assassino** | 10 | 12 | 9 | 9 | 14 | 8 | adaga | rápido, costas, o parry de risco | ✅ |
-| **Berserker** | 11 | 12 | 9 | 14 | 8 | 8 | machadão | dano bruto sem escudo, stamina no limite | ✅ |
-| **Paladino** | 11 | 10 | 10 | 11 | 9 | 11 | espada + escudo | o híbrido — ferro e "um pouco de raio" (08:39) | ✅ |
-| Batedor | — | — | — | — | — | — | arco | entra com o arco (fatia 2, regras já no WP1) | ⬜ |
-| Mago do mal | — | — | — | — | — | — | cajado | entra com a mecânica bem/mal (pergunta 8 do [`99-perguntas-abertas.md`](99-perguntas-abertas.md); o WP4 propõe) | ⬜ |
+| Classe | Vida | Sta | Con | Int | Fé | For | Des | Arranque | Papel, numa linha | Fatia 1? |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **Guerreiro** | 11 | 11 | 10 | 8 | 8 | 12 | 10 | espada + escudo | o equilibrado — o metro dos outros | ✅ |
+| **Feiticeiro** | 10 | 10 | 9 | 14 | 8 | 9 | 10 | cajado, 3 magias | precisão azul, controlo e maior reserva inicial | ✅ |
+| **Tanque** | 12 | 10 | 13 | 8 | 8 | 11 | 8 | escudo + espada | absorve, controla espaço, mata devagar | ✅ |
+| **Assassino** | 10 | 12 | 9 | 8 | 8 | 9 | 14 | duas adagas | rápido, costas, o parry de risco | ✅ |
+| **Berserker** | 11 | 12 | 9 | 8 | 8 | 14 | 8 | machadão | dano bruto sem escudo, stamina no limite | ✅ |
+| **Paladino** | 11 | 10 | 10 | 8 | 11 | 11 | 9 | espada + escudo | o híbrido — ferro e "um pouco de raio" (08:39) | ✅ |
+| Batedor | — | — | — | — | — | — | — | arco | entra com o arco (fatia 2, regras já no WP1) | ⬜ |
+| Mago do mal | — | — | — | — | — | — | — | cajado/relicário | entra com a escola vermelha; ser classe própria continua aberto no [`54`](54-mana-meditacao-e-tracos-de-classe.md) | ⬜ |
 
-Verificação contra os requisitos do WP2: o Berserker cumpre o machadão **exactamente** (For 14) — é o único que o usa de fábrica; o Assassino sobra na adaga (Des 14 > 10); o Feiticeiro com Sab 14 arranca com **7 cargas** (4+⌊14/4⌋). Um Guerreiro que pegue no machadão (For 12 < 14) leva ×0,6 sem escala — pode, e sente porquê. Lei 3 em números. ✅
+Verificação contra os requisitos do WP2: o Berserker cumpre o machadão **exactamente** (For 14) — é o único que o usa de fábrica; o Assassino sobra na adaga (Des 14 > 10); o Feiticeiro com Int 14 arranca com **116 de mana** (`60+4×14`). Um Guerreiro que pegue no machadão (For 12 < 14) leva ×0,6 sem escala — pode, e sente porquê. Lei 3 em números. ✅
 
 ## Habilidade especial — uma por classe `[FABLE]`
 
@@ -103,7 +103,7 @@ Até lá, a fatia 1 **não tem evoluções** (patamar 1 para toda a gente), port
 
 | Para | O quê |
 |---|---|
-| **WP4** | o Feiticeiro com Sab 14 / 7 cargas como caso de referência; a Imposição do Paladino a aparar projécteis |
+| **WP4** | o Feiticeiro com Int 14 / 116 de mana como caso de referência; a Imposição do Paladino a aparar projécteis |
 | **WP6/WP7** | Provocação (agro forçado 4 s) e Julgamento (dano de raio) têm de existir nas tabelas de comportamento e resistências |
 | **WP9** | skills e variantes como loot de chefes — a Lei 2 na economia |
 | **Protótipo** | 6 habilidades + 6 técnicas com custos/tempos fixos, prontas a data-driven |

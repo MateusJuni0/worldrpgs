@@ -19,7 +19,7 @@ O [`41`](41-estudo-armas-e-golpes.md) §1 manda cada família declarar os onze. 
 | **A saltar** | o pesado com hiper-armadura nos frames activos | a única hiper-armadura universal |
 | **De cima** (queda) | crítico da tabela dos quatro ([`39`](39-estudo-profundo.md) §5) | já estava |
 | **Empurrão** | universal: 12+4+14 f, dano ~0, **quebra guarda** | [`41`](41-estudo-armas-e-golpes.md) §6 — sem ele o jogo é dois escudos a olhar |
-| **Arte da arma** | 1 mão / 2 mãos, custa energia, **repõe a interrupção a 100%** | [`41`](41-estudo-armas-e-golpes.md) §8 |
+| **Arte da arma** | 1 mão / 2 mãos, custa **mana**, **repõe a interrupção a 100%** | [`41`](41-estudo-armas-e-golpes.md) §8 · [`66`](66-catalogo-de-magia.md) |
 
 ⚠️ **O empurrão precisa da tecla** que o [`34`](34-catalogo-e-comandos.md) §2 já reservou — entra no mapa de fábrica do WP11.
 
@@ -105,7 +105,7 @@ Formato: a ficha do [`41`](41-estudo-armas-e-golpes.md) §9. Frames a 60 fps, an
 | Interrupção · hiper-armadura | **8** · não tem |
 | Contra-ataque · crítico | +30% · normal |
 | Arte | rajada de bruma (empurra, dano ~0) · conjuração firmada (a próxima magia não é interrompível) |
-| Escala | sabedoria (fraco) |
+| Escala | inteligência (fraco) |
 
 ### 2.7 Arcos — a arma que é metade flecha `[FABLE]` sobre o [`48`](48-arcos-bestas-escudos.md) §1 · **fora da fatia** (WP0 `[DECIDIDO]`)
 

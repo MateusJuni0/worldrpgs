@@ -119,12 +119,36 @@ func defense_for(constituicao: int) -> float:
 	return float(_formula("defense").get("per_point", 2.0)) * float(constituicao)
 
 
-## cargas TOTAIS = 4 + floor(Sabedoria / 4)
-func max_charges_for(sabedoria: int) -> int:
-	var f := _formula("charges")
-	var base: int = f.get("base", 4)
-	var per: int = f.get("points_per_charge", 4)
-	return base + int(floor(float(sabedoria) / float(per)))
+## A reserva de mana cresce com o melhor dos dois atributos de conjuracao.
+## A escola vermelha usa o MENOR apenas para a eficacia do feitico, nunca para
+## reduzir a reserva partilhada por todas as escolas (spec/42 + spec/66).
+func max_mana_for(attrs: Dictionary) -> int:
+	var f := _formula("mana")
+	var intelligence := int(attrs.get("inteligencia", 8))
+	var faith := int(attrs.get("fe", 8))
+	var casting_attr := maxi(intelligence, faith)
+	var soft_cap := int(f.get("soft_cap", 35))
+	var first_band := mini(casting_attr, soft_cap)
+	var after_cap := maxi(casting_attr - soft_cap, 0)
+	return int(f.get("base", 60)) \
+		+ first_band * int(f.get("per_point", 4)) \
+		+ after_cap * int(f.get("per_point_after_soft_cap", 1))
+
+
+func casting_attribute_for(school_id: String, attrs: Dictionary) -> float:
+	var schools: Dictionary = spells.get("_schools", {}) as Dictionary
+	var school: Dictionary = schools.get(school_id, {}) as Dictionary
+	var intelligence := float(attrs.get("inteligencia", 8))
+	var faith := float(attrs.get("fe", 8))
+	match String(school.get("scaling", "inteligencia")):
+		"fe":
+			return faith
+		"media_int_fe":
+			return (intelligence + faith) * 0.5
+		"menor_int_fe":
+			return minf(intelligence, faith)
+		_:
+			return intelligence
 
 
 ## escala = 1 + 0,015 x (atributo - 8) x peso_da_escala
@@ -291,11 +315,12 @@ func _validate() -> void:
 	_expect(max_health_for(10), 420.0, "formula de PV com Vida 10")
 	_expect(max_stamina_for(10), 100.0, "formula de STA com Stamina 10")
 	_expect(defense_for(10), 20.0, "formula de DEF com Constituicao 10")
-	# O caso de referencia que o WP4 usa: Feiticeiro com Sab 14 arranca com 7 cargas.
+	# A reserva usa o melhor atributo de conjuracao; a escola vermelha usa o menor
+	# apenas na eficacia dos seus feiticos (spec/42 + spec/66).
 	var sorcerer := class_attributes("sorcerer")
 	if not sorcerer.is_empty():
-		_expect(float(max_charges_for(int(sorcerer.get("sabedoria", 0)))), 7.0,
-			"cargas de arranque do Feiticeiro")
+		_expect(float(max_mana_for(sorcerer)), 116.0,
+			"mana de arranque do Feiticeiro")
 	checks += 1
 
 	# 5. Cada classe distribui exactamente +14 pontos sobre a base 8.
@@ -450,6 +475,68 @@ func _validate() -> void:
 			_fail("[SPEC] classe de carga '%s' em falta (spec/51 §4)" % load_name)
 		elif c.has("iframe_start_frame") or c.has("iframe_end_frame"):
 			_fail("[SPEC] carga '%s' mexe nos i-frames — a Lei 1 nao deixa (spec/51 §4)" % load_name)
+	checks += 1
+
+	# 9. WP4 completo (spec/66): quatro escolas, 12 formas usadas, ficha de
+	# honestidade e seis niveis. Isto corre no arranque normal, nao so no teste.
+	var spell_ids: Array = spells.get("order", []) as Array
+	var spell_schools: Dictionary = spells.get("_schools", {}) as Dictionary
+	var delivery_forms: Array = spells.get("_delivery_forms", []) as Array
+	var escape_vectors: Array = spells.get("_escape_vectors", []) as Array
+	if spell_ids.size() != 53:
+		_fail("[SPEC] %d feiticos (spec/66 diz 53)" % spell_ids.size())
+	if spell_schools.size() != 4:
+		_fail("[SPEC] %d escolas de magia (spec/66 diz 4)" % spell_schools.size())
+	if delivery_forms.size() != 12:
+		_fail("[SPEC] %d formas de entrega (spec/55 diz 12)" % delivery_forms.size())
+	if escape_vectors.size() != 9:
+		_fail("[SPEC] %d vectores de fuga (spec/38 diz 9)" % escape_vectors.size())
+	var used_forms := {}
+	var first_slice_spells: Array[String] = []
+	const SPELL_FIELDS: Array[String] = ["display_name", "school", "question", "formula",
+		"mana_cost", "cast_time", "delivery_form", "invalid_where", "escape_vector",
+		"escape_method", "contact_type", "descricao_visual", "sound_cue", "visual_cue", "fatia_1"]
+	for raw_spell_id: Variant in spell_ids:
+		var spell_id := String(raw_spell_id)
+		var s: Dictionary = spell(spell_id)
+		for field: String in SPELL_FIELDS:
+			if not s.has(field) or str(s.get(field, "")) == "":
+				_fail("[SPEC] feitico '%s' sem '%s' (spec/66)" % [spell_id, field])
+		if String(s.get("school", "")) not in spell_schools.keys():
+			_fail("[SPEC] feitico '%s' aponta a escola inexistente '%s'" % [spell_id, s.get("school", "")])
+		var form := String(s.get("delivery_form", ""))
+		if form not in delivery_forms:
+			_fail("[SPEC] feitico '%s' usa forma inexistente '%s'" % [spell_id, form])
+		used_forms[form] = true
+		var contact := String(s.get("contact_type", ""))
+		if contact not in ["instantaneo", "volume_movel", "volume_persistente", "nenhum"]:
+			_fail("[SPEC] feitico '%s' tem contacto invalido '%s'" % [spell_id, contact])
+		elif contact != "nenhum" and String(s.get("escape_vector", "")) not in escape_vectors:
+			_fail("[SPEC] feitico '%s' foge fora dos 9 vectores do spec/38" % spell_id)
+		var upgrades: Array = s.get("upgrades", []) as Array
+		if upgrades.size() != 6:
+			_fail("[SPEC] feitico '%s' tem %d niveis de melhoria (spec/66 diz 6)" % [spell_id, upgrades.size()])
+		else:
+			for level: int in range(6):
+				if int((upgrades[level] as Dictionary).get("level", -1)) != level:
+					_fail("[SPEC] feitico '%s' tem tabela 0..5 fora de ordem" % spell_id)
+			for level: int in [1, 3, 5]:
+				if String((upgrades[level] as Dictionary).get("axis", "")) not in ["area", "lancamentos"]:
+					_fail("[SPEC] feitico '%s' nivel %d nao abre area/lancamentos" % [spell_id, level])
+		if bool(s.get("fatia_1", false)):
+			first_slice_spells.append(spell_id)
+	for form: Variant in delivery_forms:
+		if not used_forms.has(String(form)):
+			_fail("[SPEC] forma de entrega '%s' sem feitico (spec/66)" % form)
+	if first_slice_spells != ["dardo", "ruina", "egide"]:
+		_fail("[SPEC] Fatia 1 de magia tem %s; devia ter Dardo/Ruina/Egide" % first_slice_spells)
+	var spell_rules: Dictionary = spells.get("_rules", {}) as Dictionary
+	var favorites: Array = spell_rules.get("default_favorites", []) as Array
+	if favorites.size() > int(spell_rules.get("favorite_limit", 0)):
+		_fail("[SPEC] favoritos de fabrica excedem o limite de 8")
+	for favorite: Variant in favorites:
+		if not spell_ids.has(String(favorite)):
+			_fail("[SPEC] favorito '%s' nao existe no catalogo" % favorite)
 	checks += 1
 
 	if load_errors.is_empty():

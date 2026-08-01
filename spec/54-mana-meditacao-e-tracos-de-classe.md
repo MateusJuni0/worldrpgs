@@ -72,6 +72,7 @@ Se a mana voltasse sozinha, a jogada óptima seria **esperar** — e esperar já
 | Recupera | **toda a mana** |
 | ⚠️ **Não recupera** | **frascos** · vida · invocados · o Voto de Sangue |
 | Onde | ⭐ **em qualquer sítio** — não é preciso ponto de descanso |
+| Tentativas | **2 por descanso**, consumidas ao começar; a terceira não inicia ([`66`](66-catalogo-de-magia.md) §3) |
 | ⚠️ Interrompe-se | **com qualquer dano**, e a mana ganha até ali **fica** |
 | ⚠️ O mundo | **não pára.** Os inimigos continuam a andar e podem encontrar-te |
 
@@ -85,7 +86,7 @@ Se a mana voltasse sozinha, a jogada óptima seria **esperar** — e esperar já
 | decisão individual | ⭐ **decisão conjunta: "aguentas 40 segundos?"** |
 | pausa | **uma cena** |
 
-⭐ **Meditar num sítio limpo é seguro e aborrecido. Meditar a meio de uma zona é uma aposta.** E o parceiro de guarda tem um papel — que é exactamente o tipo de coisa que faz um co-op valer a pena.
+⭐ **Meditar num sítio limpo é seguro; já não é infinito.** O [`66`](66-catalogo-de-magia.md) fecha o custo que faltava sem reescrever os 40 s/100% decididos: há **duas tentativas por descanso**, gastas ao sentar. Uma interrupção conserva o que já entrou mas perde o resto daquela tentativa. Meditar a meio da zona continua uma aposta e o parceiro de guarda continua a ter um papel.
 
 ⚠️ **E a regra que impede o abuso é a que já existe:** os frascos **não voltam** a meditar. Só no ponto de descanso — que faz reaparecer os inimigos todos ([`40`](40-decisoes-espolio-magia-inventario.md) §1). **Logo: mana é barata em tempo, vida é cara em progresso.** Continuam a ser duas economias diferentes, como no meu sistema — só que agora com moedas separadas em vez de um bolo.
 
@@ -145,7 +146,7 @@ Se a mana voltasse sozinha, a jogada óptima seria **esperar** — e esperar já
 | | |
 |---|---|
 | **Roda de feitiços** | segurar uma tecla abre uma roda; o rato escolhe; largar lança |
-| **Favoritos** | 8 na roda, mudáveis **a qualquer momento**, não só no descanso |
+| **Favoritos** | 8 na roda, mudáveis **fora de combate ou no descanso**; nunca durante combate ([`66`](66-catalogo-de-magia.md) §3) |
 | **`F` cicla** | dentro dos favoritos, não dentro dos 25 |
 | ⚠️ **A roda abranda o tempo?** | ⚠️ **NÃO.** Abrandar o tempo para escolher é uma pausa disfarçada, e mata o combate |
 | **Cor** | ⭐ vermelho e azul na roda ([`52`](52-mago-do-mal.md) §1) |
@@ -178,8 +179,8 @@ Se a mana voltasse sozinha, a jogada óptima seria **esperar** — e esperar já
 |---|---|
 | **O mago do mal é classe própria ou o feiticeiro com escola vermelha?** | ⏳ donos |
 | Os traços das outras 5 classes — a proposta da §4 serve? | ⏳ donos |
-| Quanto é a mana base, e quanto sobe por ponto | `→WP2` |
-| A roda abre com que tecla, e quantos favoritos | `→WP11` |
+| ~~Quanto é a mana base, e quanto sobe por ponto~~ | ✅ `60 + 4×maior(Int, Fé)` até 35; depois +1/ponto — [`66`](66-catalogo-de-magia.md) §2 |
+| A roda abre com que tecla | `→WP11`; os **8 favoritos** estão fechados e só mudam fora de combate/descanso |
 
 ## Ligações
 

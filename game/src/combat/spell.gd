@@ -6,7 +6,7 @@ extends Node3D
 ##   Ruina  area       1,6 s
 ##   Egide  barreira   0,5 s  (tratada no proprio jogador: absorve antes da vida)
 ##
-## O dano escala com Sabedoria, peso forte (spec/11-formulas.md).
+## A escola declara a escala: Inteligencia, Fe, media das duas ou o MENOR.
 
 var _data: Dictionary = {}
 var _caster: Node3D
@@ -20,9 +20,8 @@ var _mesh: MeshInstance3D
 
 
 static func _damage_for(data: Dictionary, attrs: Dictionary, target_defense: float) -> float:
-	var rules: Dictionary = GameData.spells.get("_rules", {})
-	var attr: float = float(attrs.get(rules.get("scaling_attribute", "sabedoria"), 8))
-	var scale := GameData.attribute_scale(attr, String(rules.get("scale_weight", "forte")))
+	var attr := GameData.casting_attribute_for(String(data.get("school", "feiticaria")), attrs)
+	var scale := GameData.attribute_scale(attr, String(data.get("scale_weight", "forte")))
 	var raw := float(data.get("mv", 1.0)) * float(data.get("base_damage", 0)) * scale
 	return GameData.apply_defense(raw, target_defense)
 

@@ -1,5 +1,7 @@
 # 42 — Estudo: magia, do princípio ao fim
 
+> ⚠️ **LEITURA ACTUAL:** as escolas e a grelha de verbos deste estudo continuam a mandar; a §3 (espaços/energia) e os travões da §8 que dependem de slots ou bolo partilhado foram **revogados** pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md). O catálogo que os substitui é o [`66`](66-catalogo-de-magia.md).
+
 `[DECIDIDO]` (Mateus, 31-07-2026) — *"o mago vai ser o que mais está dado no jogo, o mais apelão. As magias fazem tudo, desde cura a dano e buffs e elementos. Vamos ser bem vastos em magia — vai ser a classe que eu mais gosto."*
 
 > **É o documento mais longo deste lote, de propósito.** A magia é a área onde o Mateus quer mais profundidade, e é também a que estava mais vazia na spec.
@@ -212,16 +214,18 @@ O Mateus quer *"bem vasto"*. Vasto não é muitos feitiços — é **muitos verb
 | Nome · escola | Dardo · feitiçaria |
 | **A pergunta que responde** | *dano fiável a média distância* |
 | Fórmula | `1,16 × força − 42,2` |
-| Custo em energia | 8 |
-| Lançamentos base | 3 |
-| Espaços que ocupa | 1 |
+| Custo em mana | 12 |
 | Tempo de lançamento | 0,8 s |
 | ⚠️ **Interrompível?** | ✅ sempre (regra do [`36`](36-fisica.md)) |
 | Velocidade de voo · alcance | 35 m/s · 40 m |
 | Tem queda? | ❌ (regra do [`36`](36-fisica.md) §3) |
-| **Tabela de 6 níveis** (§6) | força · área · lançamentos |
-| ⚠️ **Como se activa** | atalho `1`–`5` ([`34`](34-catalogo-e-comandos.md) §2) |
-| **Como o inimigo o esquiva** | ⚠️ **obrigatório, e nunca "não dá"** ([`38`](38-ataques-e-honestidade.md)) |
+| **Forma de entrega · contacto** | projéctil simples · instantâneo ([`55`](55-formas-de-feitico.md), [`38`](38-ataques-e-honestidade.md)) |
+| **Onde não serve** | atrás de cobertura ou contra grupos dispersos |
+| **Vector + como o inimigo escapa** | sair da linha · nunca “não dá” |
+| **Tabela de 6 níveis** (§6) | forma · área · lançamentos; +1/+3/+5 abrem área ou lançamentos |
+| ⚠️ **Como se activa** | selecciona num dos 8 favoritos e lança com `C`; ambos remapeáveis ([`34`](34-catalogo-e-comandos.md), [`66`](66-catalogo-de-magia.md)) |
+| **Som + sinal visual equivalente** | assinatura material · silhueta/timing com a mesma informação |
+| **Descrição visual** | material, forma, escala e acabamento específicos — fonte do prompt |
 | **Fatia 1?** | ⬜ |
 
 ⚠️ **A penúltima linha vale para os dois lados.** O contrato de honestidade não é só para o inimigo — **um feitiço do jogador que não tem esquiva é tão injusto quanto um ataque de chefe que não tem.** Vai fazer falta no dia em que se testar co-op competitivo, e faz falta já para os inimigos que também lançam.
@@ -234,7 +238,7 @@ O Mateus quer *"bem vasto"*. Vasto não é muitos feitiços — é **muitos verb
 |---|---|
 | Inimigos que lançam magia usam as mesmas regras? *(proposta: sim, incluindo a interrupção)* | `→WP6` |
 | A cura à distância funciona com que latência? | `→WP10` |
-| Quantos feitiços na fatia 1? *(proposta: 3 — um de dano, um de cura, um de utilidade)* | `→WP4` |
+| ~~Quantos feitiços na fatia 1?~~ **3: Dardo, Ruína e Égide** | ✅ [`66`](66-catalogo-de-magia.md) |
 | O material de melhoria de feitiço é o mesmo das armas, ou outro? | `→WP9` |
 
 ## Ligações

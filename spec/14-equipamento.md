@@ -47,7 +47,7 @@ As 5 da fatia repetem os valores já fixados (WP1/WP2), para o catálogo viver n
 | Arco | arco | 38 | Des 12 | Des · médio | 25 m (queda além de 18 m) | ⬜ fatia 2 |
 | Arco longo | arco | 46 | Des 16 · For 10 | Des · médio | 32 m (queda além de 24 m) | ⬜ |
 
-**Cajados como catalisadores** `[FABLE]`: o dano das magias multiplica pelo *poder arcano* do cajado (o do Aprendiz, da fatia: 100%). É onde "achar um cajado bom" vale — e a objecção do Rico (05:57, "tu pegar um cajado bom, tu vai ser melhor com o mago?") continua respondida pelo sistema: sem Sabedoria não há cargas nem escala; o cajado bom na mão errada é um pau. *Alternativa descartada:* cajados com magias próprias embutidas — mistura duas gavetas (arma e pergaminho) e rouba o loot de verbos ao WP4.
+**Instrumentos como catalisadores** `[FABLE]`: a força do efeito multiplica pelo poder do instrumento (o Cajado do Aprendiz, da fatia: 100%). É onde “achar um instrumento bom” vale — e a objecção do Rico (05:57, “tu pegar um cajado bom, tu vai ser melhor com o mago?”) continua respondida pelo sistema: sem Inteligência/Fé relevantes não há escala; o instrumento bom na mão errada continua utilizável, mas rende pouco. Cajados, sinos, talismãs, chamas e relicários estão fechados por escola no [`66`](66-catalogo-de-magia.md). *Alternativa descartada:* instrumentos com magias próprias embutidas — mistura duas gavetas (arma e pergaminho) e rouba o loot de verbos ao WP4.
 
 **Requisitos verificados contra as fichas do WP3:** cada arma ⬜ tem pelo menos uma classe que a cumpre entre os níveis 5–15 sem build dedicada (ex.: montante For 16 = Berserker +2 pontos; lança Des 10 = qualquer um com 2 pontos). Nenhum requisito acima de 18 — requisito alto demais é bloqueio disfarçado, e a Lei 3 não o quer.
 
@@ -78,7 +78,7 @@ O modelo do WP1: escudo absorve **100% físico / 50% mágico**, custo de stamina
 | **Frasco de Bruma** | 3 cargas na fatia 1; ampliável até 5 (ampliações escondidas, uma por zona — Lei 2: exploração paga em opções permanentes) |
 | Cura por gole | 40% dos PV máximos |
 | Beber | 1,2 s (estado UsoDeItem do WP1), movimento a 50%; **dano interrompe e perde a carga** — beber é decisão, não reflexo |
-| Recarrega | ao descansar no ponto de renascimento (o mesmo que restaura cargas de magia — WP4 — e renasce inimigos) |
+| Recarrega | ao descansar no ponto de renascimento (o mesmo que restaura mana e tentativas de meditação — [`54`](54-mana-meditacao-e-tracos-de-classe.md) — e renasce inimigos) |
 
 *Porquê frasco e não poções compráveis:* poções finitas criam o incentivo exacto que a Lei 1 proíbe — farmar stock antes do chefe; o frasco faz de cada tentativa um recomeço igual e mensurável (o WP15B agradece). *Alternativa descartada:* poções de loja — pedem economia que não existe e pagam-se em grind. **A decisão de tom é deles — pergunta 7 continua no [`99-perguntas-abertas.md`](99-perguntas-abertas.md).**
 

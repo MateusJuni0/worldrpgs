@@ -53,7 +53,7 @@ Para o WP5 ter onde começar, sem repetir:
 
 | Eixo | Exemplos de verbo |
 |---|---|
-| **Recursos** | stamina regenera mais depressa · mais uma carga de magia · frascos curam mais |
+| **Recursos** | stamina regenera mais depressa · mais mana máxima/recuperada · frascos curam mais |
 | **Movimento e física** | rolamento mais longo mas mais caro · menos dano de queda · passos silenciosos |
 | **Combate defensivo** | janela de parry maior mas mais castigo ao falhar · guarda quebra mais tarde |
 | **Combate ofensivo** | mais dano de postura · costas do inimigo dão mais · primeiro golpe do combate |

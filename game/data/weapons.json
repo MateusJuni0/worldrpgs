@@ -13,7 +13,7 @@
     "a_saltar":         { "hyper_armor_nos_activos": true },
     "de_cima":          { "_fonte": "spec/39 §5 — um dos quatro criticos" },
     "empurrao":         { "startup": 12, "active": 4, "recovery": 14, "stamina": 20, "mv": 0.05, "quebra_guarda": true },
-    "arte_da_arma":     { "custo": "energia", "repoe_interrupcao_pct": 100 }
+    "arte_da_arma":     { "custo": "mana", "repoe_interrupcao_pct": 100 }
   },
 
   "familias": {
@@ -153,7 +153,7 @@
     "can_cast": true,
     "base_damage": 30,
     "requirements": {},
-    "scaling_attribute": "sabedoria",
+    "scaling_attribute": "inteligencia",
     "scale_weight": "fraco",
     "light": { "startup": 18, "active": 5, "recovery": 20, "stamina": 15, "mv": 0.7 },
     "heavy": { "startup": 30, "active": 7, "recovery": 28, "stamina": 25, "mv": 1.1 },
