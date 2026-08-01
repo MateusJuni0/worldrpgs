@@ -121,7 +121,8 @@ Relatório completo: [`docs/REVISAO-3.md`](docs/REVISAO-3.md). As linhas `⏳` s
 | ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
 | ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 9531 testes correntes |
 | ✅ | ~~**Resolver os IDs de materiais e consumíveis dos cartões**~~ **RESOLVIDO NA TAREFA 4** — 40 materiais; os 17 tokens antigos eram 15 objectos + Brasa ilegal + grafia acentuada duplicada, ambos corrigidos | [`72`](spec/72-materiais-consumiveis-e-economia.md) §§2–3 |
-| 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
+| 🟠 | **31 fichas fora da Fatia 1 já têm perfil de silhueta distante e assinatura sonora sintetizada, mas ainda reutilizam corpos de protótipo; animação própria e hitbox de cada ataque continuam por produzir.** Os quatro esqueletos e 13 peças KayKit já entram no runtime; modelo final específico só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `game/src/enemies/enemy_visual.gd` · `→WP15B` |
+| 🟠 | **Brumal continua a colocar só lanceiros e brutamontes no nível, apesar de o orçamento do bestiário declarar dois `goblin_mist_scout`.** O perfil visual/sonoro do Batedor está pronto, mas a composição vive em `game/src/main.gd`, fora da árvore do agente de inimigos; o dono do mundo deve colocar o terceiro papel sem empilhar pontos | [`67`](spec/67-catalogo-do-bestiario.md) §6 · `game/src/main.gd` |
 
 ### Volta 7 — chefes
 

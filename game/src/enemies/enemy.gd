@@ -15,6 +15,10 @@ extends CharacterBody3D
 signal died(enemy: Enemy)
 
 const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
+const EnemyVisualRenderer = preload("res://src/enemies/enemy_visual.gd")
+const EnemyAttackAudio = preload("res://src/enemies/enemy_attack_audio.gd")
+const CrowdSteering = preload("res://src/ai/enemy_crowd_steering.gd")
+const AttackCoordinator = preload("res://src/ai/enemy_attack_coordinator.gd")
 
 enum State { IDLE, PATROL, CHASE, ATTACK, STAGGER, BROKEN, DEAD }
 
@@ -49,12 +53,18 @@ var _atk_hit := false
 var _gap_timer := 0.0
 var _no_reach_time := 0.0
 var _phase := 1
+var _spawn_offset := Vector3.ZERO
 
 var _patrol_points: Array[Vector3] = []
 var _patrol_index := 0
 
-var _visual: MonsterVisual
+var _visual: Node3D
+var _attack_audio: Node3D
 var _palette: Dictionary = {}
+var _presentation: Dictionary = {}
+var _visual_profile: Dictionary = {}
+
+static var _presentation_catalogue_validated := false
 
 
 func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed := 0) -> void:
@@ -63,6 +73,9 @@ func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed 
 	data = GameData.enemy(enemy_id)
 	_palette = palette
 	is_boss = bool(data.get("is_boss", false))
+	_presentation = GameData.enemies.get("_presentation", {}) as Dictionary
+	_visual_profile = _profile_for_enemy(enemy_id, data, _presentation)
+	_validate_presentation_catalogue()
 
 	max_health = float(data.get("health", 100.0))
 	if is_boss and coop:
@@ -72,6 +85,7 @@ func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed 
 	max_posture = float(data.get("posture", 40.0))
 	posture = max_posture
 	posture_mult = float(data.get("posture_damage_taken_multiplier", 1.0))
+	body_radius = float(_visual_profile.get("collision_radius_m", 0.0))
 
 	for a: Variant in data.get("attacks", []):
 		var d := a as Dictionary
@@ -80,21 +94,50 @@ func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed 
 			var f := d.get("followup") as Dictionary
 			_attacks[String(f.get("id", ""))] = f
 
+	var requested_home := global_position
 	_build_body()
+	CrowdSteering.resolve_spawn_overlap(self, get_tree().get_nodes_in_group("enemies"),
+		data.get("crowd", {}) as Dictionary)
+	_spawn_offset = global_position - requested_home
+	home = requested_home
 	_make_patrol_route()
 	state = State.PATROL if float(data.get("patrol_speed", 0.0)) > 0.0 else State.IDLE
 
 
+func _profile_for_enemy(id: String, enemy_data: Dictionary,
+		presentation: Dictionary) -> Dictionary:
+	var profiles: Dictionary = presentation.get("visual_profiles", {}) as Dictionary
+	var profile_key := id
+	if not profiles.has(profile_key):
+		profile_key = "%s:%s" % [enemy_data.get("race_id", ""), enemy_data.get("role", "")]
+	var profile := (profiles.get(profile_key, {}) as Dictionary).duplicate(true)
+	profile["animation_blend_s"] = float(presentation.get("animation_blend_s", 0.0))
+	return profile
+
+
+func _validate_presentation_catalogue() -> void:
+	if _presentation_catalogue_validated:
+		return
+	_presentation_catalogue_validated = true
+	var visual_profiles: Dictionary = _presentation.get("visual_profiles", {}) as Dictionary
+	var audio_profiles: Dictionary = _presentation.get("audio_profiles", {}) as Dictionary
+	for id: String in GameData.enemies.keys():
+		if id.begins_with("_"):
+			continue
+		var enemy_data := GameData.enemy(id)
+		var fallback_key := "%s:%s" % [enemy_data.get("race_id", ""), enemy_data.get("role", "")]
+		if not visual_profiles.has(id) and not visual_profiles.has(fallback_key):
+			push_error("[enemy-visual] ficha sem perfil distante: %s" % id)
+		var race_id := String(enemy_data.get("race_id", ""))
+		if not audio_profiles.has(race_id):
+			push_error("[enemy-audio] ficha sem família sonora: %s (%s)" % [id, race_id])
+
+
 func _build_body() -> void:
-	var height := 1.9
-	if enemy_id == "orc_brute":
-		height = 2.3
-		body_radius = 0.62
-	elif is_boss:
-		height = 3.0
-		body_radius = 0.85
-	else:
-		body_radius = 0.45
+	var height := float(_visual_profile.get("collision_height_m", 0.0))
+	if height <= 0.0 or body_radius <= 0.0:
+		push_error("[enemy-visual] colisao sem perfil: %s" % enemy_id)
+		return
 
 	var shape := CapsuleShape3D.new()
 	shape.height = height
@@ -107,12 +150,16 @@ func _build_body() -> void:
 	# A malha e visual; a CapsuleShape3D acima continua a ser a unica colisao.
 	# Os tres papeis usam criaturas CC0 distintas; escala e cor nao voltam a
 	# transformar um corpo humano despido num monstro.
-	_visual = MonsterVisual.new()
+	_visual = EnemyVisualRenderer.new()
 	add_child(_visual)
 	# No preset médio a luz direccional já não desenha sombras, portanto esta
 	# flag não custa um passe. No alto conserva-se o contacto com o chão em vez
 	# de cortar qualidade silenciosamente.
-	_visual.setup(enemy_id, height, Color.WHITE, true)
+	_visual.call("setup", enemy_id, data, _visual_profile, true, int(get_instance_id()))
+
+	_attack_audio = EnemyAttackAudio.new()
+	add_child(_attack_audio)
+	_attack_audio.call("setup", enemy_id, String(data.get("race_id", "")), _presentation)
 
 	collision_layer = 4
 	collision_mask = 1
@@ -120,13 +167,13 @@ func _build_body() -> void:
 
 
 func _make_patrol_route() -> void:
-	home = global_position
 	var speed := float(data.get("patrol_speed", 0.0))
 	if speed <= 0.0:
 		return
+	var route_centre := global_position
 	for i in 3:
 		var a := TAU * float(i) / 3.0
-		_patrol_points.append(home + Vector3(sin(a), 0, cos(a)) * 6.0)
+		_patrol_points.append(route_centre + Vector3(sin(a), 0, cos(a)) * 6.0)
 
 
 # --- Ciclo --------------------------------------------------------------------
@@ -156,6 +203,12 @@ func _physics_process(delta: float) -> void:
 		State.DEAD:
 			velocity.x = 0.0
 			velocity.z = 0.0
+	if state in [State.IDLE, State.PATROL, State.CHASE]:
+		var maximum_speed := maxf(float(data.get("chase_speed", 0.0)),
+			float(data.get("patrol_speed", 0.0)))
+		velocity = CrowdSteering.separate_velocity(self, velocity,
+			get_tree().get_nodes_in_group("enemies"), data.get("crowd", {}) as Dictionary,
+			maximum_speed)
 
 	if not is_on_floor():
 		velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity", 20.0) * delta
@@ -330,19 +383,38 @@ func _start_next_attack() -> void:
 		_change_state(State.CHASE)
 		return
 	var id: String = _queue.pop_front()
-	_atk = _attacks.get(id, {})
-	if _atk.is_empty():
+	var next_attack: Dictionary = _attacks.get(id, {}) as Dictionary
+	if next_attack.is_empty():
 		_start_next_attack()
 		return
+	_begin_attack(next_attack)
+
+
+func _begin_attack(attack: Dictionary) -> void:
+	_cancel_attack_presentation()
+	_atk = attack
 	_atk_frame = 0
 	_atk_hit = false
 	_last_attack_hit_frame = -9999
-	if is_instance_valid(_active_gameplay_cue):
-		_active_gameplay_cue.cancel()
 	_active_gameplay_cue = GameplayCueRenderer.new()
-	_active_gameplay_cue.call("configure", self, _atk)
+	# O GameplayCue externo conserva a geometria, mas o perfil genérico de cinco
+	# sons fica vazio: a assinatura sintetizada abaixo é específica deste golpe.
+	var visual_attack := _atk.duplicate(true)
+	var visual_sound := (visual_attack.get("som_anuncio", {}) as Dictionary).duplicate(true)
+	visual_sound["profile"] = ""
+	visual_attack["som_anuncio"] = visual_sound
+	_active_gameplay_cue.call("configure", self, visual_attack)
 	add_child(_active_gameplay_cue)
+	if is_instance_valid(_attack_audio):
+		_attack_audio.call("announce", _atk)
 	_change_state(State.ATTACK)
+
+
+func _cancel_attack_presentation() -> void:
+	if is_instance_valid(_active_gameplay_cue):
+		_active_gameplay_cue.call("cancel")
+	if is_instance_valid(_attack_audio):
+		_attack_audio.call("cancel")
 
 
 func _tick_attack(delta: float) -> void:
@@ -357,6 +429,16 @@ func _tick_attack(delta: float) -> void:
 		_brake(delta)
 		var phase_1 := int(_atk.get("phase_1_frames", startup - 12))
 		_face_target(delta, 180.0 if _atk_frame <= phase_1 else 30.0)
+		return
+
+	if _atk_frame == startup + 1 and not AttackCoordinator.can_enter_active(target, self, active):
+		# A cunha quebra antes da hitbox: cancelar é honesto; deixar o segundo
+		# golpe entrar durante hit-stun seria stunlock (spec/38 §3).
+		_cancel_attack_presentation()
+		_gap_timer = float((data.get("attack_coordination", {}) as Dictionary).get(
+			"retry_delay_s", 0.0))
+		_atk = {}
+		_change_state(State.CHASE)
 		return
 
 	if _atk_frame <= startup + active:
@@ -377,9 +459,7 @@ func _tick_attack(delta: float) -> void:
 	if _atk_frame >= startup + active + recovery:
 		var follow: Variant = _atk.get("followup", null)
 		if follow != null:
-			_atk = follow as Dictionary
-			_atk_frame = 0
-			_atk_hit = false
+			_begin_attack(follow as Dictionary)
 			return
 		_start_next_attack()
 
@@ -416,6 +496,11 @@ func _try_hit() -> void:
 	info.attack_id = String(_atk.get("id", ""))
 	if target.has_method("take_damage"):
 		target.call("take_damage", info)
+		if target.has_method("state_name") and String(target.call("state_name")) == "hit-stun":
+			var reference_fps := float(GameData.combat.get("reference_fps", 0.0))
+			var hitstun_frames := ceili(info.hitstun_seconds(GameData.section("hitstun")) * reference_fps)
+			AttackCoordinator.record_hitstun(target, hitstun_frames,
+				data.get("attack_coordination", {}) as Dictionary, reference_fps)
 
 
 # --- Levar dano ---------------------------------------------------------------
@@ -426,6 +511,7 @@ func take_damage(info: DamageInfo) -> void:
 
 	health = maxf(0.0, health - info.amount)
 	if health <= 0.0:
+		_cancel_attack_presentation()
 		_change_state(State.DEAD)
 		collision_layer = 0
 		remove_from_group("enemies")
@@ -437,6 +523,7 @@ func take_damage(info: DamageInfo) -> void:
 	posture = maxf(0.0, posture - info.posture_damage * posture_mult)
 	if posture <= 0.0 and state != State.BROKEN:
 		Sfx.play("posture_break", global_position, -2.0)
+		_cancel_attack_presentation()
 		_change_state(State.STAGGER)
 
 
@@ -445,6 +532,7 @@ func on_parried() -> void:
 	if state == State.DEAD:
 		return
 	posture = 0.0
+	_cancel_attack_presentation()
 	_change_state(State.BROKEN)
 
 
@@ -457,6 +545,7 @@ func is_alive() -> bool:
 
 
 func full_reset() -> void:
+	_cancel_attack_presentation()
 	health = max_health
 	posture = max_posture
 	_phase = 1
@@ -464,7 +553,7 @@ func full_reset() -> void:
 	_atk = {}
 	_gap_timer = 0.0
 	_no_reach_time = 0.0
-	global_position = home
+	global_position = home + _spawn_offset
 	velocity = Vector3.ZERO
 	collision_layer = 4
 	if not is_in_group("enemies"):
@@ -497,7 +586,7 @@ func _refresh_colour() -> void:
 				colour = colour.lerp(Color(String(_palette.get("enemy_telegraph", "#e8c33a"))), 0.35 + 0.65 * t)
 			elif _atk_frame <= startup + int(_atk.get("active", 6)):
 				colour = Color(String(_palette.get("enemy_attacking", "#d64545")))
-	_visual.set_tint(colour)
+	_visual.call("set_tint", colour)
 
 
 func _refresh_animation() -> void:
@@ -505,17 +594,17 @@ func _refresh_animation() -> void:
 		return
 	match state:
 		State.DEAD:
-			_visual.play_animation("Death01")
+			_visual.call("play_animation", "Death01")
 		State.ATTACK:
-			_visual.play_animation("Sword_Attack")
+			_visual.call("play_animation", "Sword_Attack")
 		State.STAGGER, State.BROKEN:
-			_visual.play_animation("Hit_Chest")
+			_visual.call("play_animation", "Hit_Chest")
 		State.CHASE:
-			_visual.play_animation("Jog_Fwd")
+			_visual.call("play_animation", "Jog_Fwd")
 		State.PATROL:
-			_visual.play_animation("Walk")
+			_visual.call("play_animation", "Walk")
 		_:
-			_visual.play_animation("Idle")
+			_visual.call("play_animation", "Idle")
 
 
 ## Para o HUD: o golpe em preparacao da-se para aparar?
