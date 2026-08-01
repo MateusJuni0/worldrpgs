@@ -355,3 +355,42 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 # Casca do jogo — decisões de implementação a rever
 
 - `[CODEX]` **Pausa solo/co-op (01-08-2026):** a implementação pausa a árvore do mundo em solo e mantém o mundo a correr em co-op, com o estado escrito no próprio ecrã. Razão: o pedido actual do Mateus distingue explicitamente os dois modos e uma sessão de rede não pode congelar o parceiro. Alternativa descartada: nunca pausar, como recomenda a camada histórica de `spec/20-interface.md`; conserva um único hábito, mas deixa o pedido de pausa sem efeito no único modo onde parar é tecnicamente honesto. Se Mateus e Rico preferirem a regra histórica, mudar `GameShell.pause_world_for_mode()` para devolver sempre `false` é a única fronteira funcional.
+
+---
+
+## 🏟️ Arena do Vorgar — comparação, implementação e coordenação (01-08-2026)
+
+### Protocolo do `31`: eles · nós · diferença
+
+| Foco | Eles — dados observáveis em DS2/DS3 | Nós antes desta árvore | Diferença e nossa resposta |
+|---|---|---|---|
+| **Entrada e fecho** | As portas de nevoeiro de chefe são de sentido único e ficam intransponíveis até à vitória; em co-op delimitam quem pode entrar. [DS2 bosses](https://darksouls2.wikidot.com/bosses/noredirect/true) · [fog gates](https://darksouls.wikidot.com/fog-gate) | Plano aberto, sem limiar, compromisso ou fecho visível | `arena_vorgar.tscn` tem vão real, nevoeiro, colisão coincidente, patamar de 4 m e sinais `threshold_entered/exited`. O controlador co-op chama `set_gate_closed()`; a cena não inventa a sincronização |
+| **Forma segue o alcance** | Uma perseguição circular usa uma pista inteira e alcovas largas para sobreviver à passagem; uma criatura que investe usa um espaço comprido; uma arena pequena com ataques largos torna o bordo o verdadeiro inimigo. [Executioner's Chariot](https://darksouls2.wikidot.com/bosses%3Aexecutioner-s-chariot) · [Old Iron King](https://darksouls2.wikidot.com/bosses%3Aold-iron-king) | O modo `combat` era chão verde sem arquitetura; a Toca antiga reservava apenas o mínimo histórico de 20 × 16 m | `[CODEX]` **24 × 22 m**, alvo normal do `61`, com centro contínuo e 4,75 m livres em cada flanco. Razão: conserva 16 m entre marcas SEPARAR e duas fugas ≥3 m. Alternativa descartada: 20 × 16 m passa o mínimo, mas aperta dois jogadores + chefe + volume persistente |
+| **Cobertura que dá e tira** | A pista circular tem alcovas de largura para dois; outra sala tem exactamente duas balistas que transformam a linha do chefe em oportunidade co-op; colunas defendem de uma família, mas não de tudo. [Executioner's Chariot](https://darksouls2.wikidot.com/bosses%3Aexecutioner-s-chariot) · [The Pursuer](https://darksouls2.wikidot.com/bosses%3Athe-pursuer) · [Dancer arena analysis](https://www.school-xyz.com/blog/kak-ustroen-dizayn-bossa-tancovshchica-holodnoy-doliny-iz-dark-souls-iii) | Nenhum obstáculo funcional no plano verde | Dois pilares KayKit visíveis um do outro criam refúgios temporários. `set_cover_broken(left/right, true)` troca malha por ruína e desliga a colisão; a contagem de choques continua nos dados/agente do Vorgar, nunca neste `.gd` |
+| **Leitura e mudança do chão** | Uma transição de fase pode partir o piso inteiro e levar a uma segunda geometria; o bom contraponto encosta detrito às margens para não prender câmara/pés. [Curse-rotted Greatwood](https://darksouls3.wikidot.com/bosses%3Acurse-rotted-greatwood) · [Dancer arena analysis](https://www.school-xyz.com/blog/kak-ustroen-dizayn-bossa-tancovshchica-holodnoy-doliny-iz-dark-souls-iii) | Verde uniforme até ao horizonte; o fim do chão não se via | Trinta lajes KayKit, oito incrustações partidas nos flancos, anel de pedra embutido para JUNTAR, centro sem detrito, ruína só nas margens, paredes de 4 m e portão norte legível. Não há queda letal nesta arena, como manda a ficha do Vorgar |
+
+**A nossa versão não copia nenhuma planta ou conteúdo:** adopta apenas os padrões “compromisso visível”, “forma ao serviço do alcance”, “refúgio com contra-resposta” e “chão que anuncia a regra”.
+
+### As quatro perguntas do fio solto
+
+1. **Como usa o jogador:** caminha para o patamar; o `Area3D` reconhece corpos do grupo `player` e emite entrada/saída. Quando o controlador confirma os dois carregados, abre o vão com `set_gate_closed(false)`; o fecho atrás usa a mesma fronteira. As marcas do chão dão dois destinos SEPARAR e um centro JUNTAR sem texto nem tecla nova.
+2. **Como se prova:** `godot --headless --audio-driver Dummy --path game/ scenes/arena_vorgar.tscn -- --arena-audit` deu **23/23**; inclui dimensão, limiar, flancos, separação, distância ao chefe, dois refúgios, nevoeiro/colisão, limite, sinais reais do patamar, abertura/fecho e troca independente de pilar/ruína. Seis capturas canónicas foram vistas em `user://arena-vorgar-captures/`.
+3. **Arte e som:** arquitetura usa a selecção runtime CC0 do **KayKit Dungeon 1.1** já presente em `game/assets/models/dungeon/`; nevoeiro e incrustações são sintetizados em GDScript; o vento de pedra da pré-visualização é PCM sintetizado em código. **Nenhum binário novo.** ⚠️ Os 76 Kenney Castle existem em `art/`, mas nenhum está importado no runtime e esta árvore não possui `game/assets/`; copiar um `.glb` violaria a posse desta tarefa. Se for preciso misturar os dois kits, o dono de assets deve importar só as peças escolhidas e registar a proveniência.
+4. **Quanto custa na máquina do Rico:** Iris Xe, 1920×1080, Mobile/Vulkan. Cena final isolada em posição de combate: sem VSync **205,8 fps**, 4,86 ms médios, p95 6,185 ms, p99 8,032 ms, pior 10,09 ms, 19 draws, 8 239 primitivas, 40,8 MiB VRAM e **zero** frames >16,67 ms; com FIFO: **60,0 fps médios/mínimo/1% low**, p95/p99 16,666 ms e também **zero** frames >16,67 ms em 30 s.
+
+### Diagnóstico dos “34 fps” antes de acrescentar
+
+- **Não se reproduziu 34 fps sustentado.** A arena verde deu **182,5 fps médios**, p99 8,033 ms, 19 draws e 11 720 primitivas.
+- O pior caso `vorgar` corrente deu **128,3 fps médios**, mas um pior frame de 34,17 ms (**29,3 fps**) e p99 19,641 ms. Havia sete auto-testes Godot antigos ainda vivos e vários trabalhos de agentes; não foram terminados porque pertencem a outras árvores.
+- A primeira sonda da arena nova mediu erradamente através do nevoeiro em ecrã inteiro: 127,9 fps/p99 25,201 ms. Mover a sonda para dentro e tirar três senos por píxel do nevoeiro subiu para 145,1 fps/p99 17,576 ms sob carga concorrente; a repetição final limpa chegou aos **205,8 fps/p99 8,032 ms** acima. Portanto geometria não era o estrangulamento; apresentação transparente e concorrência explicavam os picos.
+
+### Para o agente `vorgar` e os donos dos ficheiros de integração
+
+| Estado | Trabalho que não pertence a esta árvore | Fronteira pronta |
+|---|---|---|
+| 🔵 | Instanciar `res://scenes/arena_vorgar.tscn` no lugar da arena embutida em `greybox.gd`/`lair.gd` e usar os marcadores para posicionar corpos | `marker_position(entry/partner_entry/boss/separate_left/separate_right/join/refuge_left/refuge_right)` |
+| 🔵 | Ligar prontidão/carregamento co-op e o fecho atrás dos dois; a cena não decide rede | sinais `threshold_entered/exited` · `set_gate_closed(bool)` |
+| 🔵 | Depois de a ficha de ataques declarar SEPARAR/JUNTAR, apontar as sequências aos marcadores; **não há número de ataque nesta arena** | marcas a 16 m · centro comum limpo · duas rotas de 4,75 m |
+| 🔵 | Contar nos dados os choques da investida e partir o pilar no evento anunciado | `set_cover_broken(&"left"/ &"right", bool)`; malhas intacta/ruína pré-feitas, zero rigid bodies |
+| 🔵 | Medir **a cena integrada** com 2 jogadores + Vorgar + 2 orcs depois da ligação; a posse impediu alterar `main.gd`/`greybox.gd` nesta árvore | baseline corrente acima; gate final continua 1080p/60, p99 ≤16,67 ms |
+| 🔵 | `game/src/tests/repro_inicio.gd.uid` apareceu durante `--import`; não pertence à arena e fica intocado/não incluído no commit | dono de `repro_inicio.gd` decide se versiona ou remove o UID gerado |
