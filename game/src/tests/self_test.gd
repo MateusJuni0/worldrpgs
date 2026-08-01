@@ -58,6 +58,9 @@ func _test_exploration_map() -> void:
 		"mapa: pergunta 38 fica [PROTO] por zona, nao decidida pelo runtime")
 	_check(is_equal_approx(float(cfg.get("minimap_range_m", 0.0)), 40.0),
 		"minimapa: alcance de orientacao e 40 m")
+	_check(String(cfg.get("compass_equivalent", "")).begins_with("cardinais_no_aro")
+		and String(cfg.get("minimap_default", "")) == "roda_com_o_jogador",
+		"bússola: o aro dá norte e o mapa roda por defeito como manda a spec/57")
 	_check(InputMap.has_action("open_map")
 		and GameData.ui_text("map.title") != ""
 		and GameData.ui_text("map.close_hint") != "",

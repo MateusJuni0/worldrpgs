@@ -70,7 +70,8 @@
       "save_debounce_s": 4.0,
       "projection_degrees": 40.0,
       "minimap_default": "roda_com_o_jogador",
-      "minimap_can_disable": true
+      "minimap_can_disable": true,
+      "compass_equivalent": "cardinais_no_aro_do_minimapa_rodam_com_o_mundo"
     },
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false

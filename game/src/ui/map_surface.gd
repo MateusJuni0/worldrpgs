@@ -116,12 +116,29 @@ func _draw_minimap() -> void:
 	_draw_partner_relative(player_2d, pixels_per_m, range_m)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
+	_draw_compass_ring(centre, map_rotation)
 	var arrow_heading := heading if north_up else 0.0
 	_draw_player_arrow(centre, arrow_heading, 1.0)
 	draw_rect(panel_rect, Color(0.64, 0.57, 0.43, 0.88), false, 2.0)
 	draw_string(ThemeDB.fallback_font, Vector2(10, 21),
 		String(config.get("zone_label", "BRUMAL")), HORIZONTAL_ALIGNMENT_LEFT,
 		-1.0, 14, Color(0.93, 0.88, 0.74))
+
+
+func _draw_compass_ring(centre: Vector2, map_rotation: float) -> void:
+	var radius := minf(size.x, size.y) * 0.5 - 18.0
+	var cardinals := [
+		["N", Vector2(0, -1)], ["E", Vector2(1, 0)],
+		["S", Vector2(0, 1)], ["O", Vector2(-1, 0)],
+	]
+	for cardinal: Array in cardinals:
+		var direction: Vector2 = cardinal[1]
+		var point := centre + direction.rotated(map_rotation) * radius
+		var colour := Color("#f1c56f") if cardinal[0] == "N" else Color(0.82, 0.80, 0.72, 0.78)
+		draw_circle(point, 10.0 if cardinal[0] == "N" else 8.0,
+			Color(0.025, 0.035, 0.04, 0.86))
+		draw_string(ThemeDB.fallback_font, point + Vector2(-10, 5), String(cardinal[0]),
+			HORIZONTAL_ALIGNMENT_CENTER, 20.0, 13, colour)
 
 
 func _draw_full_map() -> void:
