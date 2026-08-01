@@ -176,7 +176,7 @@ Começam-se com **dois dedos** e ganham-se até dez. Todos são passivos ou cond
 | Pergunta | Resposta |
 |---|---|
 | **Como se usa?** | armas herdam o moveset da família; melhoria escolhe-se no altar; armadura e anéis equipam-se no ecrã WP11; estados entram por ataque e mostram barra/saída; Assassino usa duas adagas e habilidade de classe |
-| **Como se prova?** | `GameData` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e todos os IDs WP6; `self_test.gd` repete a fronteira e os três guardas do Assassino |
+| **Como se prova?** | `GameData` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e os IDs WP6 das categorias arma/armadura/anel; `self_test.gd` repete a fronteira e os três guardas do Assassino. ⚠️ Cinco payloads obrigatórios `acessorio:*` ficaram fora dessas categorias e estão em `LACUNAS` |
 | **De onde vem a arte?** | cada item/estado tem `descricao_visual`; cinco armas reutilizam imagens aprovadas, onze armaduras geram neste bloco e tudo o resto espera `Fatia 1?` |
 | **Quanto custa?** | agora: 11 fontes 1254×1254 com import de UI a 512; futuro: 115 armas + 57 armaduras + 70 anéis, produzidos só quando entrarem numa fatia; runtime dos sete golpes e equipar ficam para M2/WP11 |
 

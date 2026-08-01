@@ -473,7 +473,9 @@ func _test_equipment_catalogue() -> void:
 		effects[effect_key] = true
 	_check(axes.size() == 8, "WP5: os oito eixos dos aneis aparecem")
 
-	# O baralho do WP6 não promete equipamento fantasma.
+	# Resolve as três categorias que o catálogo WP5 realmente possui. A Revisão 1
+	# encontrou cinco `acessorio:*` que este match ignorava; ficam em LACUNAS até
+	# ganharem catálogo ou migração, sem fingir que esta prova já os cobre.
 	for enemy_id: String in GameData.enemies.keys():
 		if enemy_id.begins_with("_") or bool(GameData.enemy(enemy_id).get("is_boss", false)):
 			continue

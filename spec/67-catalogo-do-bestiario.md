@@ -2,7 +2,7 @@
 
 > **Tarefa 3.2 · Codex · WP6** (01-08-2026). Fecha as 30–36 combinações `raça × bioma × camada` pedidas pelo [`50`](50-racas.md), sem reabrir os chefes do WP7. O catálogo executável é [`game/data/enemies.json`](../game/data/enemies.json); este documento explica a conta e torna-a auditável.
 
-`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ⚠️ A Revisão 1 encontrou uma coluna de locomoção incompleta: **18/33 tipos não declaram velocidade de perseguição**, portanto a promessa universal de fuga ainda não é executável (`LACUNAS`, `🔴`).
+`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ⚠️ A Revisão 1 encontrou dois buracos: **18/33 tipos não declaram velocidade de perseguição** e **cinco cartas obrigatórias `acessorio:*` não têm catálogo** (`LACUNAS`, `🔴`).
 
 ---
 
@@ -151,6 +151,8 @@ Cada ficha declara `loot_cards[10]`, `mandatory_loot_count` e os índices obriga
 | Sem-Rosto | alabarda + manto | os oito restantes surgem no relicário, nunca no corpo |
 
 Os **330 cartões exactos** estão no JSON para não haver uma segunda fonte que possa divergir. O auto-teste conta 10 por tipo, confirma compra sem reposição e verifica que todos os índices obrigatórios existem.
+
+⚠️ Isso não prova que cada payload resolve. Armas, armaduras e anéis resolvem; a Revisão 1 encontrou cinco payloads obrigatórios `acessorio:*` sem qualquer ficha: os quatro sinos dos kobolds/zumbi e a lanterna do esqueleto antigo. A garantia visual fica incompleta até esses IDs ganharem catálogo ou serem substituídos por uma categoria já definida.
 
 ---
 
