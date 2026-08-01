@@ -80,7 +80,7 @@ Em termos de inimigos, isto significa:
 
 ~~`[TENSÃO]`~~ **RESOLVIDA** — `[DECIDIDO]` (Mateus + Rico, 31-07-2026): **soft gating.** O mapa está todo aberto; as zonas têm dificuldade **sugerida, não exigida**. Ver [`05-mundo.md`](05-mundo.md).
 
-O que o bestiário (WP6) herda: **nenhum inimigo verifica nível**, os inimigos de zona alta comunicam o perigo **pela leitura** (aspecto, restos no chão, o que fazem antes de atacar), e **fugir tem de funcionar sempre** — a regra do WP1 de que correr é grátis e mais rápido que qualquer inimigo em patrulha é o que torna o mapa aberto justo em vez de cruel.
+O que o bestiário (WP6) herda: **nenhum inimigo verifica nível**, os inimigos de zona alta comunicam o perigo **pela leitura** (aspecto, restos no chão, o que fazem antes de atacar), e a corrida normal tem de superar a perseguição comum. O contrato posterior limita a garantia a carga ≤100% ([`70`](70-fecho-dos-sistemas-de-combate.md) §1.1); a Revisão 1 encontrou 18/33 fichas sem a velocidade que permitiria prová-la ([`67`](67-catalogo-do-bestiario.md) §3; `LACUNAS`).
 
 ## Inimigos e magia
 

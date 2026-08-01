@@ -12,7 +12,7 @@
 2. ⚠️ **Fora do campo de visão há dois canais equivalentes** — acrescentado por [`29-perspectiva.md`](29-perspectiva.md) e fechado pelo [`62`](62-acessibilidade-auditiva.md). O jogador pode estar em **primeira pessoa**, e aí não tem visão periférica: todo o ataque emite som direccional **e** cunha visual no mesmo início/compromisso. Cada ficha declara ambos nas doze colunas do [`38`](38-ataques-e-honestidade.md); preencher só som não fecha a ficha.
 
 3. **Cada ataque traz a marca `aparável` ou `só esquiva`** (WP1). A língua visual é fixa (WP12): `só esquiva` = brilho vermelho curto; aparável = silhueta sem vermelho.
-4. **Velocidade:** patrulha < 5,0 m/s — **fugir a correr é sempre possível e grátis** (WP1). Perseguição ≤ 5,0 m/s sustentada; só o **fecho** (anti-kite dos 4 s, WP1) pode ser mais rápido, e é curto e telegrafado.
+4. **Velocidade:** patrulha e perseguição sustentada **< 5,0 m/s** — fugir a correr é possível e grátis com carga até 100%; só o **fecho** (anti-kite dos 4 s, WP1) pode ser mais rápido, e é curto e telegrafado. ⚠️ O [`67`](67-catalogo-do-bestiario.md) ainda omite esta coluna em 18/33 tipos; a garantia só fecha quando esses valores existirem e o teste os limitar. Sobrecarregar-se é a excepção explícita do [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1.
 5. **Postura 0–100** por inimigo; dano de postura = MV × 10, bash ×2, martelos ×1,5 (WP1/WP5). A zero → **Cambaleio 1,2 s**, ripostável.
 6. **Tecto de cena:** ≤ 5 inimigos animados em combate ao mesmo tempo (orçamento do WP12). Encontros desenham-se dentro disto.
 7. **Nenhum inimigo é desenhado para ser repetido** (Lei 1: sem grind). O XP é o que é; a razão de voltar a uma zona é o mundo, não a mochila.

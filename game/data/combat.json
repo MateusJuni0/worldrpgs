@@ -11,7 +11,7 @@
     "sprint_stamina_per_second": 8.0,
     "strafe_speed": 4.0,
     "cast_move_multiplier": 0.40,
-    "_nota": "Correr e gratis e mais rapido que qualquer inimigo comum em patrulha (tecto 5.0 m/s no WP6). Teste da Lei 1."
+    "_nota": "Ate 100% de carga, correr e gratis e o contrato exige perseguidores comuns abaixo de 5.0 m/s. Sobrecarregado e a excepcao explicita: so marcha a 3.0 m/s ate retirar peso. Falta velocidade em 18/33 fichas futuras; ver LACUNAS."
   },
 
   "dodge": {
@@ -71,7 +71,7 @@
     "regen_delay": 0.8,
     "regen_while_blocking": 10.0,
     "hysteresis": 15.0,
-    "_nota": "A zero: sem accoes ofensivas/defensivas ate recuperar 15. Andar e correr sempre possiveis; sprint nao."
+    "_nota": "A zero: sem accoes ofensivas/defensivas ate recuperar 15. Andar e correr continuam possiveis salvo sobrecarga; sprint nao."
   },
 
   "hitstun": {

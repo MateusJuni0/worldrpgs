@@ -61,13 +61,13 @@ stateDiagram-v2
 
 | Modo | Velocidade | Custo | Notas |
 |---|---|---|---|
-| Andar | 3,0 m/s | 0 | sempre disponível, mesmo exausto |
-| Correr | 5,0 m/s | 0 | o passo por defeito |
-| Sprint | 7,0 m/s | 8 stamina/s | mantém o lock-on |
+| Andar | 3,0 m/s | 0 | sempre disponível, mesmo exausto ou sobrecarregado |
+| Correr | 5,0 m/s | 0 | o passo por defeito; indisponível acima de 100% de carga |
+| Sprint | 7,0 m/s | 8 stamina/s | mantém o lock-on; indisponível acima de 100% de carga |
 | Strafe (com lock-on) | 4,0 m/s | 0 | lateral e para trás |
 | Conjuração | 40% do modo actual | — | ver "Combate à distância" |
 
-*Teste da Lei 1:* correr é grátis e mais rápido do que qualquer inimigo comum em patrulha (WP6 herda isto como tecto de velocidade). **Fugir nunca depende de estatísticas** — um jogador em apuros sai sempre a andar. ✅
+*Contrato da Lei 1:* até 100% de carga, correr é grátis e deve ser mais rápido do que qualquer inimigo comum em perseguição. **Fugir não depende de nível nem de atributos.** A excepção é deliberada e visível: equipar acima de 100% mostra `SOBRECARGA` e troca corrida/esquiva por marcha até se retirar peso, segundo o [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1. ⚠️ A prova só está completa para os 15 tipos que declaram velocidade; 18/33 fichas do [`67`](67-catalogo-do-bestiario.md) ainda não a declaram e estão em `🔴` no [`LACUNAS`](../LACUNAS.md).
 
 ## Esquiva (rolamento)
 
@@ -122,11 +122,11 @@ Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunt
 | Base (nível 1) | **100** — a escala por atributo é do WP2 |
 | Regeneração | **40/s**, após **0,8 s** sem gastar |
 | A bloquear | 10/s |
-| A zero | sem acções ofensivas/defensivas até recuperar **15** (histerese); andar e correr sempre possíveis; sprint não |
+| A zero | sem acções ofensivas/defensivas até recuperar **15** (histerese); andar e correr possíveis, salvo sobrecarga; sprint não |
 
 Custos, todos num sítio: esquiva 25 · parry 10 · sprint 8/s · bloqueio por golpe (tabela acima) · ataques (tabela abaixo). Magia e artes de arma gastam **mana**, não stamina; a mana não regenera passivamente ([`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md)).
 
-*Teste da Lei 1:* a zero, o jogador nunca fica indefeso de facto — anda, corre, cria distância, e 0,8 s + 15 de histerese devolvem-lhe a esquiva em ~1,2 s. Exaustão pune a ganância; não executa ninguém. ✅
+*Teste da Lei 1:* a zero, um jogador que não se sobrecarregou anda, corre, cria distância, e 0,8 s + 15 de histerese devolvem-lhe a esquiva em ~1,2 s. Exaustão pune a ganância; a sobrecarga é uma escolha de equipamento comunicada antes de sair do inventário. ✅
 
 ## Ataques — as armas da fatia
 

@@ -155,7 +155,7 @@ O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida
 
 ## 1o. ⭐ Fecho da Tarefa 4, reaberto pela Revisão 1
 
-**A Tarefa 4 fechou os contratos nucleares, mas a Revisão 1 provou que “implementar sem inventar regras” ainda era forte demais.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) continua a fechar magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, voz e migração. Porém, o [`LACUNAS`](LACUNAS.md) voltou a ter **três linhas `🔴`**: mecanismos de onze feitiços utilitários, melhorias genéricas/numericamente incompatíveis com a Lei 2 e absorção elemental de escudos sem representação executável.
+**A Tarefa 4 fechou os contratos nucleares, mas a Revisão 1 provou que “implementar sem inventar regras” ainda era forte demais.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) continua a fechar magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, voz e migração. Porém, o [`LACUNAS`](LACUNAS.md) voltou a ter **quatro linhas `🔴`**: mecanismos de onze feitiços utilitários, melhorias genéricas/numericamente incompatíveis com a Lei 2, absorção elemental de escudos sem representação executável e 18/33 perseguidores sem velocidade que prove a garantia de fuga.
 
 Também deixou de haver uma incógnita sem número na animação: UAL Standard em Mobile/Vulkan, Iris Xe, 1920×1080, deu **60,0 fps médios com 5 e com 10 esqueletos animados**. O p95 de ~18,5 ms impede triunfalismo: é um spike isolado, não a cena final. Artefacto em [`medicoes/animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json).
 
@@ -169,7 +169,7 @@ Também deixou de haver uma incógnita sem número na animação: UAL Standard e
 | identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
 | políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto, escudos elementais e o salto ~30→68 armaduras | perguntas 24, 28, 29, 32 e 35–44 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
 
-Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura e os escudos elementais precisam das decisões/mecanismos agora isolados, além do catálogo mecânico/narrativo dos doze confrontos finais.
+Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura, os escudos elementais e a velocidade dos perseguidores futuros precisam dos mecanismos agora isolados, além do catálogo mecânico/narrativo dos doze confrontos finais.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
