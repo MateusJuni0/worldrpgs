@@ -10,6 +10,16 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 01-08-2026
 
+### ⭐ Os vendedores vendem **tudo**, e a loja separa-se por slot como no Dark Souls
+**[DECIDIDO] (Mateus, 01-08-2026)** — *"os vendedores vendem tudo do jogo nao so o que eu achei.. faz direitinho separa as coisas por slot igual é do darksouls"*
+
+- ⭐ **Todo o catálogo está à venda desde o início:** todas as magias, todas as armaduras, poções e elixires. Sem desbloqueio, sem "descobre primeiro"
+- ⭐ **Quem trava é o preço, nunca uma porta.** É a Lei 1 aplicada à economia: o que separa o jogador do item é habilidade (juntar almas) e escolha (gastar aqui ou subir de nível), não um cadeado
+- ⚠️ **O que isto obriga:** se tudo está à venda no minuto um, a **curva de preços passa a ser a única coisa que decide a ordem de aquisição**. Deixa de ser um detalhe e passa a ser desenho de progressão — tem de ser justificada com números
+- ⭐ **A loja separa-se por slot** — mão direita, mão esquerda, peças de armadura, anéis, consumíveis rápidos, feitiços — e **usa exactamente a mesma divisão que a mochila**. Duas gramáticas para a mesma coisa é o defeito nº 1 destes menus
+- ⚠️ **SUBSTITUI** a regra que eu tinha escrito no briefing do agente dos vendedores — *"o vendedor só vende o que já descobriste"*. Essa era **minha, não dele**, e foi revogada pelo dono antes de chegar a código. O agente foi parado a meio e relançado com a regra certa
+- **Continua em aberto e é dos donos:** *"os vendedores morrem?"* — `[TENSÃO]`, ninguém decide sozinho
+
 ### Os packs CC0 vivem no repositório → fase 1.2 do [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md)
 **Instrução directa do Rico (01-08-2026), ⏳ falta a confirmação do Mateus** — decidido depois de lhe ser apresentado o custo, e com ele à vista.
 
