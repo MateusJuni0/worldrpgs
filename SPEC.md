@@ -49,7 +49,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 | 11 | [Atributos e fórmulas](spec/11-formulas.md) | Atributos, fórmula de dano, curvas (WP2) | 🟢 curvas canónicas por atributo no [`70`](spec/70-fecho-dos-sistemas-de-combate.md); piso corporal e escudos separados |
 | 12 | [Classes](spec/12-classes.md) | As fichas, habilidades especiais (WP3) | 🟢 seis presets; o [`64`](spec/64-criacao-de-personagem.md) impede que a origem feche o caminho |
 | 13 | [Magia, por dentro](spec/13-magia.md) | Primeira proposta de escolas/catálogo (WP4) | 🔵 substituído pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md) + [`66`](spec/66-catalogo-de-magia.md) |
-| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; catálogo completo no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 14 | [Armas e equipamento](spec/14-equipamento.md) | Catálogo, cura, melhoria (WP5) | 🔵 base antiga alinhada; 120/68/70 enumerados no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), com escudos/acessórios em `🔴` |
 | 15 | [Bestiário — primeira camada](spec/15-inimigos.md) | IA e primeiros encontros (WP6) | 🔵 catálogo substituído pelo [`67`](spec/67-catalogo-do-bestiario.md); a máquina comum e a Fatia 1 continuam herdadas |
 | 16 | [Chefes](spec/16-chefes.md) | Camadas, regras, o Vorgar (WP7) | ⚠️ fichas de ataque pelo [`38`](spec/38-ataques-e-honestidade.md) · arenas pelo [`61`](spec/61-arenas-de-chefe.md) |
 | 17 | [Mundo e mapa](spec/17-mundo.md) | Primeira proposta de rede, dungeons e traçado (WP8) | 🔵 substituído pelo catálogo completo do [`69`](spec/69-catalogo-do-mundo.md) |
@@ -140,9 +140,9 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 ## O que trava
 
-**Nada trava a construção.** O que falta são decisões que se tomam a jogar, não a escrever — estão no [`99`](spec/99-perguntas-abertas.md) e o [`ESTADO.md`](ESTADO.md) diz quais são mesmo urgentes.
+**Cinco lacunas `🔴` travam as famílias afectadas, não toda a construção:** mecanismos de 11 feitiços utilitários, melhorias dos 53 feitiços, afinidade elemental de escudos, velocidade de perseguição em 18 fichas e cinco acessórios obrigatórios sem catálogo. Estão no [`LACUNAS`](LACUNAS.md); as decisões reservadas aos donos estão no [`99`](spec/99-perguntas-abertas.md). Combate da Fatia 1, produção independente e medição podem continuar.
 
-⚠️ **O maior risco continua a ser escopo, não uma lacuna vermelha de spec:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
+⚠️ **Mesmo depois de fechar as cinco lacunas, o maior risco continua a ser escopo:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 
 ## Sessões
 

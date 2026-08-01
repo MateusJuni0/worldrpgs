@@ -205,7 +205,7 @@ As outras 31 fichas têm uma frase gerável com material do bioma, mas ficam ⬜
 
 ### 1. Como é que o jogador usa isto?
 
-Lê pose + geometria + cue, escolhe o vector específico e aprende três perguntas por tipo. Em dez derrotas recompensadas completa tudo o que viu equipado; massa torna empurrão previsível e almas mostram se o risco compensa.
+Lê pose + geometria + cue, escolhe o vector específico e aprende três perguntas por tipo. Em dez derrotas recompensadas completa tudo o que viu equipado **nas categorias que têm catálogo**; os cinco acessórios visíveis continuam a excepção `🔴`, não uma recompensa fingida. Massa torna empurrão previsível e almas mostram se o risco compensa.
 
 ### 2. Como é que se prova que funciona?
 

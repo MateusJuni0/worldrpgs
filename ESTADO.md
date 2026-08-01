@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, Tarefa 4 fechada e lacunas vermelhas varridas.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, Tarefa 4 fechada e Revisão 1 com cinco lacunas vermelhas reabertas.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem **75 documentos** e ~50 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -213,7 +213,8 @@ Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente
         │           O MOTOR DE PRODUÇÃO ESTÁ COMPLETO — cada descrição
         │           é agora uma intersecção de duas fichas que existem
         ▼
-2. ✅ Os CATÁLOGOS  (WP4 magia · WP5 armas e armaduras · WP6 bestiário)
+2. ⚠️ Os CATÁLOGOS  (enumerados; a Revisão 1 reabriu semântica de magia,
+        │              escudos, velocidades de perseguição e 5 acessórios)
         │           cada item = intersecção de uma ficha de bioma
         │           com uma de raça — a descrição sai quase sozinha
         │
@@ -223,8 +224,8 @@ Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente
         └──► desbloqueia O CONTEÚDO ──► o motor é data-driven:
                                         o catálogo É o jogo
         ▼
-3. ✅ O NÚCLEO DOS SISTEMAS (combate/curvas/baralho/economia fechados nos 70/72;
-        │                   faltam clientes de UI, áudio, mundo e produção M2)
+3. ⚠️ O NÚCLEO DOS SISTEMAS (combate/curvas e transacção local executáveis;
+        │                   baralho/magia/escudos têm os `🔴` acima, além dos clientes)
         ▼
 4. ✅ O CATÁLOGO DO MUNDO  (WP8: leitura, 12 biomas, círculos, atalhos e 30 portas)
         │                   faltam cenas, streaming, mapa e prova jogada
@@ -256,7 +257,7 @@ Foi concluído na Tarefa 4 sem apagar o registo: os onze documentos `10`–`20` 
 
 ## 4. O que é dos donos, e só deles
 
-Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nenhuma destas trava o trabalho** — todas têm proposta escrita, e o Fable avança com a proposta enquanto elas não fecham.
+Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nem todas travam a construção inteira, mas algumas travam a família que decidem:** a pergunta 41 bloqueia melhorias de magia, a 43 bloqueia afinidades elementais dos escudos e a 44 bloqueia produção para além das 11 armaduras iniciais. Há trabalho independente que pode continuar; não se implementam essas três por suposição.
 
 **As três que mais mudam o jogo se a resposta for diferente da proposta:**
 

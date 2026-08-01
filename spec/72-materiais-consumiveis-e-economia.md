@@ -1,6 +1,6 @@
 # 72 — Materiais, consumíveis e a transacção de espólio
 
-`[CODEX]` — fecha o conteúdo de WP9 que os 330 cartões do [`67`](67-catalogo-do-bestiario.md) já prometiam e liga derrota, baralho, inventário, almas, recibo e save sem decidir a `[TENSÃO]` de propriedade em co-op.
+`[CODEX]` — fecha materiais, consumíveis e a transacção de WP9 para os 330 cartões do [`67`](67-catalogo-do-bestiario.md), ligando derrota, baralho, inventário, almas, recibo e save sem decidir a `[TENSÃO]` de propriedade em co-op. ⚠️ A Revisão 1 encontrou cinco payloads obrigatórios `acessorio:*` fora deste catálogo; continuam `🔴`, não resolvidos por esta economia.
 
 O catálogo executável é [`game/data/economy.json`](../game/data/economy.json). O fluxo vive em `GameData.reward_enemy_defeat()` e a publicação atómica em `SaveSystem.commit_enemy_defeat()`.
 
@@ -104,6 +104,6 @@ A infraestrutura **não escolhe** de quem é o enviesamento. Recebe `receiver_cl
 
 ## 6. Fronteira honesta
 
-Catálogo, fórmulas e transacção local estão completos. Ficam de propósito para M2/WP10–11: UI do altar/inventário, renderer dos efeitos, apresentação final da carta e política de destinatário em co-op. A última é decisão dos donos; as outras são clientes de um contrato já fechado.
+O catálogo de **materiais/consumíveis**, as fórmulas e a transacção local estão completos. Os cinco acessórios obrigatórios continuam fora do contrato. Ficam ainda de propósito para M2/WP10–11: UI do altar/inventário, renderer dos efeitos, apresentação final da carta e política de destinatário em co-op. A última é decisão dos donos; as outras são clientes dos contratos já fechados.
 
 Este documento não decide nenhuma `[TENSÃO]`.
