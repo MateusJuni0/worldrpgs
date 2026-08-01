@@ -624,3 +624,13 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🔴 | Repetir captura e medição integradas, sem outros Godot/agentes a renderizar, depois de o greybox limpar a floresta pelas novas rotas. As capturas atuais provam silhueta/grade, mas não podem aprovar a leitura do percurso completo | auditoria do módulo: 5 instâncias de malha; atalho: 2; achado: 2; zero luz dinâmica/partículas |
 | 🔵 | Incluir `exploration_self_test.gd` no agregador central se os donos quiserem que as 25 provas corram dentro de `selftest.tscn`; esta árvore não possui o agregador | comando isolado documentado no ficheiro; o gate central de 9 703 não deve regredir |
 | 🔵 | `node tools/check-coerencia.mjs` encontrou dois links já partidos em `MAPA.md`: `design/ideas/2026-07-31_0006__2026-07-30-23-52-46.ideas.md` e o transcript homónimo. Não pertencem à exploração e esta árvore não altera `MAPA.md` | dono do mapa decide restaurar os dois documentos ou retirar as referências; 19 JSON e 2 797 contratos passaram, estes foram os únicos erros |
+
+## 🔴 Do Mateus a jogar — 01-08 fim do dia
+
+| | Lacuna | Prova |
+|---|---|---|
+| 🔴 | ⭐ **A magia é uma esfera azul.** `spell.gd` constrói uma `SphereMesh` com cor e mais nada — sem partículas, sem rasto, sem clarão na ponta do cajado, sem impacto. A pasta `game/src/vfx/` **não existe**. As palavras dele: *"nem temos animação dela saindo do cajado"* | `game/src/combat/spell.gd:55` `_build_visual(radius, colour)` |
+| 🔴 | ⚠️ **A armadura do jogador são caixotes.** Cubos castanhos colados ao torso e às pernas do corpo Quaternius. **É pior do que não ter armadura** | captura `01-spawn-3a-pessoa.png` de 01-08 |
+| 🔴 | ⭐ **O kit inicial existe nos dados e nunca chega ao jogador.** `weapons.json` tem `loadouts` e `armor.json` tem `pieces`; **nenhuma linha de código os concede**. Procurado: `starting_items`, `grant_starting`, `equip_starting` — nada | dono: agente `kit-e-morte` |
+| 🔴 | ⭐ **A 7.ª origem não existe.** O Mago do Mal está `[DECIDIDO]` (Mateus, 01-08) e `attributes.json` tem **seis** classes | dono: agente `mago-do-mal` |
+| 🟠 | ⚠️ **Alvos visuais gerados para a magia** em `art/concept/magia/` — dardo a sair do cajado, impacto, e a escola vermelha. São o alvo, não o asset | `art/concept/README.md` |
