@@ -41,6 +41,7 @@ func _ready() -> void:
 	_test_equipment_catalogue()
 	_test_world_catalogue()
 	_test_game_shell_and_character_creation()
+	_test_opening_context()
 	_test_pause_contract()
 	_test_settings_contract()
 	_test_inventory_and_spell_wheel_contract()
@@ -92,6 +93,23 @@ func _test_game_shell_and_character_creation() -> void:
 		"criacao: nomes e origens repetidos conservam ids distintos")
 	_check(first.character.identity.appearance.body_id == "body_female",
 		"criacao: corpo feminino entra no estado atomico")
+
+
+func _test_opening_context() -> void:
+	var joined := " ".join(GameShell.OPENING_LINES)
+	for required: String in ["Brumal", "bruma", "orcs", "Toca", "Vorgar", "forasteiro"]:
+		_check(joined.contains(required),
+			"abertura: o contexto minimo conserva '%s'" % required)
+	var shell_source := FileAccess.get_file_as_string("res://src/ui/game_shell.gd")
+	_check(shell_source.contains("SaveSystem.new_game") and shell_source.contains("show_opening()"),
+		"abertura: novo jogo passa pelo prologo depois do save atomico")
+	var main_source := FileAccess.get_file_as_string("res://src/main.gd")
+	var player_source := FileAccess.get_file_as_string("res://src/player/player.gd")
+	_check(main_source.contains("REST_SPAWN_OFFSET")
+		and main_source.contains("CLAREIRA DE BRUMAL"),
+		"despertar: o corpo nasce ao lado da fogueira identificada")
+	_check(player_source.contains("Sitting_Idle") and player_source.contains("_waking_up"),
+		"despertar: a personagem acorda sentada antes de receber controlo")
 
 
 func _test_pause_contract() -> void:

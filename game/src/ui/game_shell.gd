@@ -58,6 +58,13 @@ const INSTRUCTION_GROUPS := [
 		"pause_menu", "inventory_menu"]},
 ]
 const LEARNING_TIP_IDS := ["movement", "attack", "dodge", "parry", "flask"]
+const OPENING_LINES := [
+	"Brumal não foi sempre assim.",
+	"A bruma chegou. Com ela, vieram os orcs.",
+	"A Toca é uma passagem antiga que eles tomaram.",
+	"No fundo, Vorgar guarda o portão.",
+	"És um forasteiro. Entras onde ninguém entra.",
+]
 
 var _layer: CanvasLayer
 var _screen: Control
@@ -119,6 +126,11 @@ func _ready() -> void:
 		show_main_menu()
 	elif measured_screen == "ui-creation" or _capture_screen == "creation":
 		show_character_creation()
+	elif measured_screen == "ui-opening" or _capture_screen == "opening":
+		show_opening()
+	elif measured_screen == "ui-awakening" or _capture_screen == "awakening":
+		_start_gameplay()
+		call_deferred("_show_capture_awakening")
 	elif measured_screen == "ui-tip" or _capture_screen == "tip":
 		_start_gameplay()
 		call_deferred("_show_capture_tip")
@@ -140,6 +152,9 @@ func _ready() -> void:
 
 func _unhandled_input(_event: InputEvent) -> void:
 	if is_instance_valid(_inventory_menu):
+		return
+	if is_instance_valid(_gameplay) and _gameplay.has_method("wake_sequence_active") \
+			and bool(_gameplay.call("wake_sequence_active")):
 		return
 	if is_instance_valid(_gameplay) and InputMap.has_action("inventory_menu") \
 			and Input.is_action_just_pressed("inventory_menu") and not _pause_open \
@@ -190,7 +205,7 @@ func _process(delta: float) -> void:
 	# Os controlos criam a lista remapeavel no primeiro frame. Esperar tres
 	# segundos faz a captura mostrar o FPS sustentado, nao o custo unico de montagem.
 	var target_frames := 180 if _capture_screen.begins_with("settings") \
-		or _capture_screen in ["inventory", "spell-wheel"] else 30
+		or _capture_screen in ["inventory", "spell-wheel", "opening", "awakening"] else 30
 	if _capture_frames < target_frames:
 		return
 	var directory := ProjectSettings.globalize_path("res://captures")
@@ -271,6 +286,63 @@ func show_main_menu() -> void:
 	_screen.add_child(version)
 	new_button.grab_focus()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func show_opening() -> void:
+	_close_instructions()
+	_close_pause_layer()
+	_clear_gameplay()
+	_begin_screen()
+	_add_background(Color("030709"), Color("152127"))
+	var mist := Label.new()
+	mist.text = "BRUMAL"
+	mist.position = Vector2(1060, 96)
+	mist.add_theme_font_size_override("font_size", 156)
+	mist.add_theme_color_override("font_color", Color(0.58, 0.65, 0.68, 0.07))
+	_screen.add_child(mist)
+	var chapter := Label.new()
+	chapter.text = "PRÓLOGO"
+	chapter.position = Vector2(224, 166)
+	chapter.add_theme_font_size_override("font_size", 17)
+	chapter.add_theme_color_override("font_color", Color("d4b36f"))
+	_screen.add_child(chapter)
+	var title := Label.new()
+	title.text = "A BRUMA CHEGOU"
+	title.position = Vector2(218, 214)
+	title.add_theme_font_size_override("font_size", 56)
+	title.add_theme_color_override("font_color", Color("eadbb9"))
+	_screen.add_child(title)
+	var rule := ColorRect.new()
+	rule.color = Color("9a743d")
+	rule.position = Vector2(224, 300)
+	rule.size = Vector2(112, 2)
+	_screen.add_child(rule)
+	var story := RichTextLabel.new()
+	story.bbcode_enabled = true
+	story.position = Vector2(224, 354)
+	story.size = Vector2(1000, 410)
+	story.add_theme_font_size_override("normal_font_size", 25)
+	story.add_theme_font_size_override("bold_font_size", 25)
+	story.add_theme_color_override("default_color", Color("aeb7b5"))
+	story.text = "%s\n\n%s\n\n%s\n%s\n\n[color=#eadbb9]%s[/color]" % OPENING_LINES
+	_screen.add_child(story)
+	var enter := Button.new()
+	enter.text = "ENTRAR EM BRUMAL"
+	enter.position = Vector2(224, 820)
+	enter.size = Vector2(420, 68)
+	enter.pressed.connect(_enter_brumal)
+	_screen.add_child(enter)
+	var note := Label.new()
+	note.text = "O resto é contado pelo caminho. Nenhuma leitura é obrigatória."
+	note.position = Vector2(224, 920)
+	note.add_theme_color_override("font_color", Color("687778"))
+	_screen.add_child(note)
+	enter.grab_focus()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _enter_brumal() -> void:
+	_start_gameplay(true)
 
 
 func show_character_creation() -> void:
@@ -579,7 +651,7 @@ func _create_character() -> void:
 	if not SaveSystem.new_game(profile_id, String(_draft.get("class_id", "warrior")), slot, identity):
 		_show_modal("NÃO FOI POSSÍVEL GRAVAR", SaveSystem.last_error)
 		return
-	_start_gameplay()
+	show_opening()
 
 
 func _continue_last_save() -> void:
@@ -594,7 +666,7 @@ func _continue_last_save() -> void:
 	_start_gameplay()
 
 
-func _start_gameplay() -> void:
+func _start_gameplay(wake_on_start := false) -> void:
 	_close_inventory()
 	_close_spell_wheel(false)
 	_close_instructions()
@@ -604,6 +676,8 @@ func _start_gameplay() -> void:
 		_gameplay.queue_free()
 	_gameplay = GAMEPLAY_SCENE.instantiate()
 	add_child(_gameplay)
+	if wake_on_start:
+		_gameplay.call_deferred("begin_wake_sequence")
 
 
 func _show_capture_tip() -> void:
@@ -612,6 +686,11 @@ func _show_capture_tip() -> void:
 	var capture_hud := _gameplay.get("hud") as Hud
 	if capture_hud != null:
 		capture_hud.context_tip(tutorial_tip_text("dodge"), 30.0)
+
+
+func _show_capture_awakening() -> void:
+	if is_instance_valid(_gameplay) and _gameplay.has_method("begin_wake_sequence"):
+		_gameplay.call("begin_wake_sequence", true)
 
 
 func return_to_main_menu() -> void:
@@ -895,7 +974,9 @@ func _close_inventory() -> void:
 
 func _tick_spell_wheel(delta: float) -> void:
 	if not is_instance_valid(_gameplay) or _pause_open or _instructions_open \
-			or is_instance_valid(_settings_layer) or is_instance_valid(_inventory_menu):
+			or is_instance_valid(_settings_layer) or is_instance_valid(_inventory_menu) \
+			or (_gameplay.has_method("wake_sequence_active") \
+			and bool(_gameplay.call("wake_sequence_active"))):
 		_spell_hold_pending = false
 		_spell_hold_seconds = 0.0
 		return

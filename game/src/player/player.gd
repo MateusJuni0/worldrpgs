@@ -92,6 +92,7 @@ var _hitstun_frames := 0
 var _visual: CharacterVisual
 var _palette: Dictionary = {}
 var _frame := 0
+var _waking_up := false
 
 
 # --- Arranque -----------------------------------------------------------------
@@ -805,6 +806,12 @@ func cast_selected_spell() -> bool:
 	return true
 
 
+func set_waking_up(enabled: bool) -> void:
+	_waking_up = enabled
+	input_enabled = not enabled
+	velocity = Vector3.ZERO
+
+
 func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
 	main_weapon = String(equipment.get("main", ""))
 	offhand_weapon = String(equipment.get("offhand", ""))
@@ -1035,6 +1042,9 @@ func _refresh_colour() -> void:
 
 func _refresh_animation() -> void:
 	if _visual == null:
+		return
+	if _waking_up:
+		_visual.play_animation("Sitting_Idle")
 		return
 	match state:
 		State.DEAD:

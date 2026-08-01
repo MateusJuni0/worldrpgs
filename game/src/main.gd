@@ -22,6 +22,9 @@ var _rest_points: Dictionary = {}
 var _nearest_rest_id := ""
 var _learning_points: Dictionary = {}
 var _learning_elapsed := 0.0
+var _wake_layer: CanvasLayer
+
+const REST_SPAWN_OFFSET := Vector3(1.8, 0.6, 0.8)
 
 
 func _ready() -> void:
@@ -122,7 +125,9 @@ func _build_player() -> void:
 	var checkpoint: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
 		"checkpoint", {}) as Dictionary)
 	var rest_id := String(checkpoint.get("rest_point_id", "brumal_clareira"))
-	player.global_position = _rest_points.get(rest_id, world.spawn_point) + Vector3(0, 0.6, 0)
+	# O id guarda a fogueira; o corpo renasce ao lado dela, nunca dentro da chama.
+	player.global_position = (_rest_points.get(rest_id, world.spawn_point) as Vector3) \
+		+ REST_SPAWN_OFFSET
 	_respawn_point = player.global_position
 
 	var cam := PlayerCamera.new()
@@ -366,7 +371,7 @@ func _rest_at(rest_id: String) -> void:
 	if not SaveSystem.commit_checkpoint("brumal", rest_id):
 		hud.toast("Não foi possível guardar este descanso.", 3.0)
 		return
-	_respawn_point = (_rest_points[rest_id] as Vector3) + Vector3(0, 0.6, 0)
+	_respawn_point = (_rest_points[rest_id] as Vector3) + REST_SPAWN_OFFSET
 	player.health = player.max_health
 	player.stamina.current = player.stamina.maximum
 	player.mana = player.max_mana
@@ -385,6 +390,73 @@ func _binding_label(action_name: String) -> String:
 func set_local_input_enabled(enabled: bool) -> void:
 	if is_instance_valid(player):
 		player.input_enabled = enabled
+
+
+func begin_wake_sequence(capture_mode := false) -> void:
+	if not is_instance_valid(player) or is_instance_valid(_wake_layer):
+		return
+	player.set_waking_up(true)
+	if is_instance_valid(hud):
+		hud.visible = false
+	_wake_layer = CanvasLayer.new()
+	_wake_layer.layer = 280
+	_wake_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_wake_layer)
+	var root := Control.new()
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_wake_layer.add_child(root)
+	var veil := ColorRect.new()
+	veil.name = "Veil"
+	veil.color = Color(0.0, 0.0, 0.0, 0.48 if capture_mode else 0.88)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.add_child(veil)
+	var title := Label.new()
+	title.text = "CLAREIRA DE BRUMAL"
+	title.position = Vector2(0, 420)
+	title.size = Vector2(1920, 76)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 38)
+	title.add_theme_color_override("font_color", Color("eadbb9"))
+	root.add_child(title)
+	var rule := ColorRect.new()
+	rule.color = Color("9a743d")
+	rule.position = Vector2(900, 505)
+	rule.size = Vector2(120, 2)
+	root.add_child(rule)
+	var context := Label.new()
+	context.text = "A fogueira ainda arde.  Levanta-te."
+	context.position = Vector2(0, 540)
+	context.size = Vector2(1920, 52)
+	context.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	context.add_theme_font_size_override("font_size", 19)
+	context.add_theme_color_override("font_color", Color("aab4b3"))
+	root.add_child(context)
+	if capture_mode:
+		return
+	await get_tree().create_timer(0.7).timeout
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(veil, "color:a", 0.0, 2.2)
+	tween.tween_property(title, "modulate:a", 0.0, 1.4).set_delay(0.8)
+	tween.tween_property(rule, "modulate:a", 0.0, 1.4).set_delay(0.8)
+	tween.tween_property(context, "modulate:a", 0.0, 1.4).set_delay(0.8)
+	await tween.finished
+	_end_wake_sequence()
+
+
+func wake_sequence_active() -> bool:
+	return is_instance_valid(_wake_layer)
+
+
+func _end_wake_sequence() -> void:
+	if is_instance_valid(_wake_layer):
+		_wake_layer.free()
+	_wake_layer = null
+	if is_instance_valid(player):
+		player.set_waking_up(false)
+	if is_instance_valid(hud):
+		hud.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func refresh_inventory_state() -> void:
@@ -491,6 +563,10 @@ func _process(delta: float) -> void:
 	if not Bench.is_benchmarking():
 		_tick_rest_points()
 		_tick_learning(delta)
+		return
+	# Os benchmarks de UI medem o ecrã no contexto em que ele aparece. O piloto
+	# 3D colocaria artificialmente o jogador no meio dos inimigos durante menus.
+	if Bench.scene_arg.begins_with("ui-"):
 		return
 	if not is_instance_valid(player):
 		return
