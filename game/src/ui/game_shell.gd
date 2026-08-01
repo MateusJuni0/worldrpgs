@@ -41,21 +41,40 @@ var _preview_visual: CharacterVisual
 var _preview_dragging := false
 var _capture_screen := ""
 var _capture_frames := 0
+var _pause_layer: CanvasLayer
+var _pause_open := false
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_theme = _make_theme()
 	_capture_screen = _argument_value("--capture-ui=")
+	if _capture_screen != "":
+		Bench.set_overlay_visible(false)
 	var measured_screen := Bench.scene_arg if Bench.is_benchmarking() else ""
 	if measured_screen == "ui-main" or _capture_screen == "main":
 		show_main_menu()
 	elif measured_screen == "ui-creation" or _capture_screen == "creation":
 		show_character_creation()
+	elif measured_screen == "ui-pause" or _capture_screen == "pause":
+		_start_gameplay()
+		call_deferred("_show_pause_menu")
 	elif Bench.is_benchmarking() or "--photos" in OS.get_cmdline_user_args():
 		_start_gameplay()
 	else:
 		show_main_menu()
 	set_process(_capture_screen != "")
+
+
+func _unhandled_input(_event: InputEvent) -> void:
+	if not is_instance_valid(_gameplay) or not InputMap.has_action("pause_menu"):
+		return
+	if Input.is_action_just_pressed("pause_menu"):
+		if _pause_open:
+			_resume_game()
+		else:
+			_show_pause_menu()
+		get_viewport().set_input_as_handled()
 
 
 func _process(_delta: float) -> void:
@@ -75,6 +94,7 @@ func _process(_delta: float) -> void:
 
 
 func show_main_menu() -> void:
+	_close_pause_layer()
 	_clear_gameplay()
 	_begin_screen()
 	_add_background(Color("071014"), Color("26313a"))
@@ -462,6 +482,7 @@ func _continue_last_save() -> void:
 
 
 func _start_gameplay() -> void:
+	_close_pause_layer()
 	_clear_screen()
 	if is_instance_valid(_gameplay):
 		_gameplay.queue_free()
@@ -473,6 +494,109 @@ func return_to_main_menu() -> void:
 	show_main_menu()
 
 
+func _show_pause_menu() -> void:
+	if _pause_open or not is_instance_valid(_gameplay):
+		return
+	_pause_open = true
+	var coop := _is_coop_session()
+	get_tree().paused = pause_world_for_mode(coop)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_pause_layer = CanvasLayer.new()
+	_pause_layer.layer = 400
+	_pause_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_pause_layer)
+	var shade := ColorRect.new()
+	shade.color = Color(0.005, 0.01, 0.012, 0.86)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	_pause_layer.add_child(shade)
+	var panel := Panel.new()
+	panel.theme = _theme
+	panel.position = Vector2(610, 160)
+	panel.size = Vector2(700, 760)
+	_pause_layer.add_child(panel)
+	var eyebrow := Label.new()
+	eyebrow.text = "CO-OP · O MUNDO CONTINUA" if coop else "SOLO · MUNDO EM PAUSA"
+	eyebrow.position = Vector2(58, 50)
+	eyebrow.add_theme_font_size_override("font_size", 17)
+	eyebrow.add_theme_color_override("font_color", Color("d4b36f"))
+	panel.add_child(eyebrow)
+	var title := Label.new()
+	title.text = "PAUSA"
+	title.position = Vector2(52, 92)
+	title.add_theme_font_size_override("font_size", 54)
+	title.add_theme_color_override("font_color", Color("eadbb9"))
+	panel.add_child(title)
+	var explanation := Label.new()
+	explanation.text = ("O anfitrião não pode congelar o parceiro. Procura abrigo antes de abrir este menu."
+		if coop else "O mundo está parado. Ao jogar a dois, este mesmo menu não interrompe o combate.")
+	explanation.position = Vector2(58, 172)
+	explanation.size = Vector2(584, 86)
+	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	explanation.add_theme_font_size_override("font_size", 18)
+	explanation.add_theme_color_override("font_color", Color("96a3a4"))
+	panel.add_child(explanation)
+	var menu := VBoxContainer.new()
+	menu.position = Vector2(56, 298)
+	menu.size = Vector2(588, 330)
+	menu.add_theme_constant_override("separation", 12)
+	panel.add_child(menu)
+	var resume := _menu_button("RETOMAR", "Voltar ao jogo")
+	resume.custom_minimum_size.x = 588
+	resume.pressed.connect(_resume_game)
+	menu.add_child(resume)
+	var settings := _menu_button("CONFIGURAÇÕES", "Gráficos, controlos e áudio")
+	settings.custom_minimum_size.x = 588
+	settings.pressed.connect(_settings_placeholder)
+	menu.add_child(settings)
+	var leave := _menu_button("SAIR PARA O MENU", "Guarda os eventos confirmados e abandona o mundo")
+	leave.custom_minimum_size.x = 588
+	leave.pressed.connect(_leave_gameplay_to_menu)
+	menu.add_child(leave)
+	var hint := Label.new()
+	hint.text = "%s  RETOMAR" % _binding_label_for_ui("pause_menu")
+	hint.position = Vector2(58, 688)
+	hint.add_theme_font_size_override("font_size", 16)
+	hint.add_theme_color_override("font_color", Color("697879"))
+	panel.add_child(hint)
+	resume.grab_focus()
+
+
+func _resume_game() -> void:
+	_close_pause_layer()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _leave_gameplay_to_menu() -> void:
+	if not GameData.save_state.is_empty():
+		SaveSystem.save_current()
+	show_main_menu()
+
+
+func _close_pause_layer() -> void:
+	get_tree().paused = false
+	_pause_open = false
+	if is_instance_valid(_pause_layer):
+		_pause_layer.free()
+	_pause_layer = null
+
+
+func _is_coop_session() -> bool:
+	return multiplayer.has_multiplayer_peer() \
+		and not multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+
+
+static func pause_world_for_mode(is_coop: bool) -> bool:
+	return not is_coop
+
+
+func _binding_label_for_ui(action_name: String) -> String:
+	var events := InputMap.action_get_events(action_name)
+	if events.is_empty():
+		return "?"
+	return (events[0] as InputEvent).as_text().replace(" (Physical)", "").to_upper()
+
+
 func _settings_placeholder() -> void:
 	_show_modal("CONFIGURAÇÕES", "O menu completo abre neste mesmo ecrã sem perder as escolhas.")
 
@@ -482,7 +606,10 @@ func _show_modal(title: String, message: String) -> void:
 	dialog.title = title
 	dialog.dialog_text = message
 	dialog.min_size = Vector2i(560, 220)
-	_screen.add_child(dialog)
+	var parent: Node = _screen if is_instance_valid(_screen) else _pause_layer
+	if parent == null:
+		return
+	parent.add_child(dialog)
 	dialog.popup_centered()
 
 

@@ -349,9 +349,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if InputMap.has_action("debug_class_next") and Input.is_action_just_pressed("debug_class_next"):
 		_cycle_class()
 		return
-	if InputMap.has_action("quit_game") and Input.is_action_just_pressed("quit_game"):
-		get_tree().quit()
-	elif InputMap.has_action("toggle_mouse") and Input.is_action_just_pressed("toggle_mouse"):
+	if InputMap.has_action("toggle_mouse") and Input.is_action_just_pressed("toggle_mouse"):
 		Input.mouse_mode = (Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 			else Input.MOUSE_MODE_CAPTURED)
 	elif InputMap.has_action("reset_arena") and Input.is_action_just_pressed("reset_arena"):

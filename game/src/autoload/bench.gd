@@ -80,6 +80,11 @@ func is_benchmarking() -> bool:
 	return _bench_active
 
 
+func set_overlay_visible(value: bool) -> void:
+	if is_instance_valid(_layer):
+		_layer.visible = value
+
+
 func _process(delta: float) -> void:
 	if _bench_active:
 		_bench_tick(delta)

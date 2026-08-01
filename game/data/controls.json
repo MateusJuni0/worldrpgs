@@ -50,6 +50,6 @@
     "toggle_help":    [{ "type": "key", "key": "F2" }],
     "toggle_mouse":   [{ "type": "key", "key": "F3" }],
     "reset_arena":    [{ "type": "key", "key": "F5" }],
-    "quit_game":      [{ "type": "key", "key": "Escape" }]
+    "pause_menu":     [{ "type": "key", "key": "Escape" }]
   }
 }

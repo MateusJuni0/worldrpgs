@@ -41,6 +41,7 @@ func _ready() -> void:
 	_test_equipment_catalogue()
 	_test_world_catalogue()
 	_test_game_shell_and_character_creation()
+	_test_pause_contract()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -89,6 +90,19 @@ func _test_game_shell_and_character_creation() -> void:
 		"criacao: nomes e origens repetidos conservam ids distintos")
 	_check(first.character.identity.appearance.body_id == "body_female",
 		"criacao: corpo feminino entra no estado atomico")
+
+
+func _test_pause_contract() -> void:
+	_check(InputMap.has_action("pause_menu"),
+		"pausa: tem accao dedicada e remapeavel")
+	var events := InputMap.action_get_events("pause_menu")
+	_check(not events.is_empty() and events[0] is InputEventKey
+		and (events[0] as InputEventKey).physical_keycode == KEY_ESCAPE,
+		"pausa: Escape e a omissao visivel")
+	_check(GameShell.pause_world_for_mode(false),
+		"pausa: a solo para a arvore do mundo")
+	_check(not GameShell.pause_world_for_mode(true),
+		"pausa: em co-op o mundo continua")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------
