@@ -138,6 +138,33 @@ e `src/tools/animation_benchmark.gd`.
 
 ---
 
+## Conversão visual — orçamento por passo
+
+Medições de 01-08-2026 na mesma Iris Xe, Mobile/Vulkan e 1920×1080. As duas
+primeiras usam 12 s sem vsync para mostrar a folga; a aceitação final usa 30 s
+com vsync, como o jogo real.
+
+| Passo | Média | 1% low | Frames > 16,67 ms | Resultado |
+|---|---:|---:|---:|---|
+| 4.1 luz e névoa por bioma | 183,1 fps | 61,3 | 0,1% | passa |
+| 4.2 contraste, dessaturação, vinheta | 157,3 fps | 60,5 | 0,3% | passa |
+| 4.3 primeira troca integral de cenário | 57,4 fps | 40,3 | 61,8% | **rejeitada** |
+| 4.3 optimizado, critério final | **60,0 fps** | **60,0** | **0,0%** | **passa** |
+
+A primeira versão de 4.3 não foi escondida: 200 árvores Kenney, materiais
+especulares e o passe de sombras elevaram a cena a 134 034 primitivas e
+falharam a Lei 4. O preset médio final usa 100 árvores repartidas por três
+silhuetas, materiais mates no chão e nas copas e deixa o mapa de sombras para o
+preset alto. Continua a 1080p nativos. No critério final, mínimo e 1% low foram
+ambos 60,0, o pior frame foi 16,67 ms, houve 20 draw calls, 68 852 primitivas e
+107,9 MB de memória gráfica.
+
+As capturas do modo fotografia mostram quedas enquanto o motor copia e grava
+cada PNG; esses valores no overlay não são uma medição de jogo. A prova acima
+corre sem capturas durante a amostra.
+
+---
+
 ## Como estes números foram conseguidos
 
 Não foi por sorte. Três decisões deliberadas, todas por causa da Lei 4:

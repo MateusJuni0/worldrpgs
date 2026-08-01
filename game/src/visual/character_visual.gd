@@ -20,7 +20,7 @@ var _base_colours: Array[Color] = []
 var _current_animation := ""
 
 
-func setup(target_height: float, tint := Color.WHITE) -> void:
+func setup(target_height: float, tint := Color.WHITE, casts_shadow := true) -> void:
 	name = "CharacterVisual"
 	var body := BODY_SCENE.instantiate()
 	body.name = "Body"
@@ -29,7 +29,7 @@ func setup(target_height: float, tint := Color.WHITE) -> void:
 	body.rotation.y = PI
 	add_child(body)
 	scale = Vector3.ONE * (target_height / SOURCE_HEIGHT)
-	_collect_materials(body)
+	_collect_materials(body, casts_shadow)
 	_build_animation_player(body)
 	set_tint(tint)
 	play_animation("Idle")
@@ -51,9 +51,14 @@ func play_animation(animation_name: String, speed := 1.0) -> void:
 	_animation_player.play(animation_name, 0.12, speed)
 
 
-func _collect_materials(node: Node) -> void:
+func _collect_materials(node: Node, casts_shadow: bool) -> void:
 	for descendant: Node in node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := descendant as MeshInstance3D
+		if not casts_shadow:
+			# Três inimigos repetiriam toda a pele deformada no passe de sombra.
+			# O jogador conserva a possibilidade de sombra nos presets que a
+			# permitem; a bruma absorve a ausência nos adversários.
+			mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		for surface: int in mesh_instance.mesh.get_surface_count():
 			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
 			if source == null:

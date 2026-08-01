@@ -109,7 +109,7 @@ func _build_body() -> void:
 	# pela escala, cor de estado e silhueta exterior.
 	_visual = CharacterVisual.new()
 	add_child(_visual)
-	_visual.setup(height)
+	_visual.setup(height, Color.WHITE, false)
 
 	if is_boss:
 		_dress_boss(height, body_radius)
