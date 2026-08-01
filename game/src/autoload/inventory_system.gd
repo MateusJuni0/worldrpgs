@@ -6,40 +6,38 @@ signal inventory_changed
 
 const FILTERS := ["todos", "armas", "armadura", "aneis", "magias", "consumiveis", "materiais", "favoritos"]
 const MAX_SPELL_FAVORITES := 8
+const QuickSlotsModelScript = preload("res://src/ui/quick_slots_model.gd")
+const QUICK_SLOT_NAMES := QuickSlotsModelScript.SLOT_NAMES
+const FLASK_ITEM_KEY := QuickSlotsModelScript.FLASK_ITEM_KEY
+const FREE_HAND_KEY := QuickSlotsModelScript.FREE_HAND_KEY
+const QUICK_SLOT_ACTIONS := {
+	"right_hand": "loadout_next",
+	"left_hand": "loadout_prev",
+	"spell": "next_spell",
+	"item": "next_item",
+}
+const QuickSlotsScript = preload("res://src/ui/quick_slots.gd")
+
+var _quick_slots_hud: CanvasLayer
 
 
 func normalise_state(state: Dictionary) -> bool:
 	if state.is_empty():
 		return false
-	var changed := false
+	var defaults: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"default_favorites", []) as Array
+	var changed: bool = QuickSlotsModelScript.normalise_state(
+		state, GameData.weapons, defaults)
 	var character: Dictionary = state.get("character", {}) as Dictionary
 	var progression: Dictionary = character.get("progression", {}) as Dictionary
 	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
 	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
 	var items: Dictionary = inventory.get("items", {}) as Dictionary
-	if not inventory.has("favorite_items"):
-		inventory["favorite_items"] = []
-		changed = true
-	var defaults: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
-		"default_favorites", []) as Array
 	var known: Array = progression.get("known_spells", []) as Array
 	if known.is_empty():
 		known = defaults.duplicate()
 		progression["known_spells"] = known
 		changed = true
-	var spell_favorites: Array = equipment.get("spell_favorites", []) as Array
-	if spell_favorites.is_empty():
-		spell_favorites = defaults.duplicate()
-		equipment["spell_favorites"] = spell_favorites
-		changed = true
-	for slot_name: String in ["main", "offhand"]:
-		var value: Variant = equipment.get(slot_name)
-		if value != null and String(value) != "":
-			changed = _claim(items, "arma:%s" % String(value)) or changed
-	for value: Variant in equipment.get("armor", []):
-		changed = _claim(items, "armadura:%s" % String(value)) or changed
-	for value: Variant in equipment.get("rings", []):
-		changed = _claim(items, "anel:%s" % String(value)) or changed
 	inventory["items"] = items
 	inventory["equipment"] = equipment
 	character["progression"] = progression
@@ -49,11 +47,15 @@ func normalise_state(state: Dictionary) -> bool:
 
 
 func normalise_current(persist := true) -> bool:
+	_ensure_quick_slots_hud()
 	var state := GameData.save_state_snapshot()
 	if not normalise_state(state):
 		return true
 	GameData.replace_save_state(state)
-	return not persist or SaveSystem.save_current()
+	var saved := not persist or SaveSystem.save_current()
+	if saved:
+		inventory_changed.emit()
+	return saved
 
 
 func entries(state := {}) -> Array[Dictionary]:
@@ -105,8 +107,12 @@ func describe_item(item_key: String, count := 1, state := {}) -> Dictionary:
 			data = GameData.material(item_id)
 			name = String(data.get("display_name", name))
 		"consumivel":
-			data = GameData.consumable(item_id)
-			name = String(data.get("display_name", name))
+			if item_key == FLASK_ITEM_KEY:
+				data = GameData.section("flask").duplicate(true)
+				name = "Frasco de Bruma"
+			else:
+				data = GameData.consumable(item_id)
+				name = String(data.get("display_name", name))
 		_:
 			return {}
 	var actual_state: Dictionary = state if not (state as Dictionary).is_empty() \
@@ -127,6 +133,127 @@ func filtered_entries(filter_name: String, state := {}) -> Array[Dictionary]:
 				or String(entry.kind) == String(aliases.get(filter_name, "")):
 			result.append(entry)
 	return result
+
+
+## Descreve as quatro leituras simultaneas da caixa. Equipamento e favoritos
+## continuam a ser as autoridades; a UI nao mantem uma segunda mochila.
+func quick_slot_snapshot(state := {}, runtime_player: Node = null) -> Array[Dictionary]:
+	var working: Dictionary = state if not (state as Dictionary).is_empty() \
+		else GameData.save_state_snapshot()
+	normalise_state(working)
+	var spell_id := ""
+	if is_instance_valid(runtime_player):
+		spell_id = String(runtime_player.get("selected_spell"))
+	var keys: Dictionary = QuickSlotsModelScript.slot_keys(working, spell_id)
+	var slots: Array[Dictionary] = []
+	for slot_name: String in QUICK_SLOT_NAMES:
+		slots.append(_quick_descriptor(slot_name, String(keys.get(slot_name, "")),
+			working, runtime_player))
+	return slots
+
+
+func quick_slot_action(slot_name: String) -> String:
+	var action := String(QUICK_SLOT_ACTIONS.get(slot_name, ""))
+	var actions: Dictionary = GameData.controls.get("actions", {}) as Dictionary
+	return action if action != "" and actions.has(action) else ""
+
+
+## Favoritar na mochila e a operacao que torna uma recolha candidata a caixa.
+## A mao respeita o slot declarado no catalogo; consumiveis entram na lista de
+## atalhos persistida por spec/59.
+func quick_slot_candidates(slot_name: String, state := {}) -> Array[String]:
+	var working: Dictionary = state if not (state as Dictionary).is_empty() \
+		else GameData.save_state_snapshot()
+	normalise_state(working)
+	var character: Dictionary = working.get("character", {}) as Dictionary
+	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
+	var items: Dictionary = inventory.get("items", {}) as Dictionary
+	var favorites: Array = inventory.get("favorite_items", []) as Array
+	var result: Array[String] = []
+	match slot_name:
+		"right_hand", "left_hand":
+			var equipped_key := _weapon_key(equipment.get(
+				"main" if slot_name == "right_hand" else "offhand"))
+			_append_unique(result, equipped_key)
+			for favorite_value: Variant in favorites:
+				var favorite_key := String(favorite_value)
+				if favorite_key.begins_with("arma:") \
+						and _weapon_matches_hand(favorite_key, slot_name, equipped_key):
+					_append_unique(result, favorite_key)
+			if slot_name == "left_hand":
+				_append_unique(result, FREE_HAND_KEY)
+		"spell":
+			for spell_value: Variant in equipment.get("spell_favorites", []):
+				_append_unique(result, "magia:%s" % String(spell_value))
+		"item":
+			for quick_value: Variant in inventory.get("quick_slots", []):
+				var quick_key := String(quick_value)
+				if int(items.get(quick_key, 0)) > 0:
+					_append_unique(result, quick_key)
+			for favorite_value: Variant in favorites:
+				var favorite_key := String(favorite_value)
+				if favorite_key.begins_with("consumivel:") \
+						and int(items.get(favorite_key, 0)) > 0:
+					_append_unique(result, favorite_key)
+	return result
+
+
+## Variante pura para testes e transaccoes compostas. Muda o Dictionary dado,
+## mas nunca escreve no disco nem toca no singleton global.
+func cycle_quick_slot_in_state(state: Dictionary, slot_name: String,
+		direction := 1) -> Dictionary:
+	if slot_name not in QUICK_SLOT_NAMES or state.is_empty():
+		return {"ok": false, "changed": false, "message": "Ranhura invalida."}
+	normalise_state(state)
+	var candidates := quick_slot_candidates(slot_name, state)
+	if candidates.is_empty():
+		return {"ok": false, "changed": false, "message": "Nao ha objectos nessa ranhura."}
+	var current := _current_quick_key(slot_name, state)
+	var current_index := candidates.find(current)
+	var next_index := wrapi(current_index + direction, 0, candidates.size()) \
+		if current_index >= 0 else 0
+	var next_key := candidates[next_index]
+	if next_key == current:
+		return {"ok": true, "changed": false, "slot": slot_name, "key": next_key}
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
+	match slot_name:
+		"right_hand":
+			equipment["main"] = null if next_key == FREE_HAND_KEY \
+				else next_key.trim_prefix("arma:")
+		"left_hand":
+			equipment["offhand"] = null if next_key == FREE_HAND_KEY \
+				else next_key.trim_prefix("arma:")
+		"spell":
+			var favorites: Array = (equipment.get("spell_favorites", []) as Array).duplicate()
+			var next_spell := next_key.trim_prefix("magia:")
+			favorites.erase(next_spell)
+			favorites.push_front(next_spell)
+			equipment["spell_favorites"] = favorites
+		"item":
+			var quick_slots: Array = (inventory.get("quick_slots", []) as Array).duplicate()
+			quick_slots.erase(next_key)
+			quick_slots.push_front(next_key)
+			inventory["quick_slots"] = quick_slots
+	inventory["equipment"] = equipment
+	character["inventory"] = inventory
+	state["character"] = character
+	return {"ok": true, "changed": true, "slot": slot_name, "key": next_key}
+
+
+func cycle_quick_slot(slot_name: String, direction := 1) -> Dictionary:
+	var before := GameData.save_state_snapshot()
+	var working := before.duplicate(true)
+	var result := cycle_quick_slot_in_state(working, slot_name, direction)
+	if not bool(result.get("ok", false)) or not bool(result.get("changed", false)):
+		return result
+	var committed := _commit(before, working, "Acesso rapido actualizado.")
+	committed["slot"] = result.get("slot", slot_name)
+	committed["key"] = result.get("key", "")
+	committed["changed"] = bool(committed.get("ok", false))
+	return committed
 
 
 func is_equipped(item_key: String, state: Dictionary) -> bool:
@@ -237,9 +364,17 @@ func toggle_favorite(item_key: String, can_change_spells := true) -> Dictionary:
 		inventory["equipment"] = equipment
 	else:
 		var favorites: Array = (inventory.get("favorite_items", []) as Array).duplicate()
-		if favorites.has(item_key): favorites.erase(item_key)
-		else: favorites.append(item_key)
+		var quick_slots: Array = (inventory.get("quick_slots", []) as Array).duplicate()
+		if favorites.has(item_key):
+			favorites.erase(item_key)
+			if item_key != FLASK_ITEM_KEY:
+				quick_slots.erase(item_key)
+		else:
+			favorites.append(item_key)
+			if item_key.begins_with("consumivel:") and not quick_slots.has(item_key):
+				quick_slots.append(item_key)
 		inventory["favorite_items"] = favorites
+		inventory["quick_slots"] = quick_slots
 	character["inventory"] = inventory
 	working["character"] = character
 	return _commit(before, working, "Favorito actualizado.")
@@ -255,8 +390,15 @@ func load_profile(state := {}) -> Dictionary:
 	for weapon_slot: String in ["main", "offhand"]:
 		var weapon_id := String(equipment.get(weapon_slot, ""))
 		var weapon := GameData.weapon(weapon_id)
-		var shield_family := String(weapon.get("familia_escudo", ""))
-		if shield_family != "":
+		var runtime_weapons: Dictionary = (GameData.weapons.get(
+			"_catalogo_runtime", {}) as Dictionary).get("weapons", {}) as Dictionary
+		var runtime_weapon: Dictionary = runtime_weapons.get(weapon_id, {}) as Dictionary
+		if not runtime_weapon.is_empty():
+			weight += float(runtime_weapon.get("peso", 0.0))
+		else:
+			var shield_family := String(weapon.get("familia_escudo", ""))
+			if shield_family == "":
+				continue
 			weight += float(((GameData.weapons.get("familias_escudo", {}) as Dictionary).get(
 				shield_family, {}) as Dictionary).get("peso", 0.0))
 	var character: Dictionary = working.get("character", {}) as Dictionary
@@ -280,11 +422,83 @@ func load_profile(state := {}) -> Dictionary:
 		"max_speed": float(rule.get("velocidade_maxima_m_s", 999.0))}
 
 
-func _claim(items: Dictionary, key: String) -> bool:
-	if int(items.get(key, 0)) > 0:
+func _quick_descriptor(slot_name: String, item_key: String, state: Dictionary,
+		runtime_player: Node) -> Dictionary:
+	var entry := describe_item(item_key, 1, state)
+	if item_key == FREE_HAND_KEY:
+		entry = {"key": FREE_HAND_KEY, "id": "mao_livre", "kind": "estado",
+			"name": "Mao livre", "count": 0, "data": {}}
+	elif item_key == "estado:sem_feitico":
+		entry = {"key": item_key, "id": "sem_feitico", "kind": "estado",
+			"name": "Sem feitico", "count": 0, "data": {}}
+	if entry.is_empty():
+		entry = {"key": item_key, "id": item_key.get_slice(":", 1),
+			"kind": item_key.get_slice(":", 0),
+			"name": item_key.replace("_", " ").capitalize(), "count": 0, "data": {}}
+	entry["slot"] = slot_name
+	entry["cycle_action"] = quick_slot_action(slot_name)
+	entry["show_count"] = false
+	if item_key == FLASK_ITEM_KEY and is_instance_valid(runtime_player):
+		entry["count"] = int(runtime_player.get("flask_uses"))
+		entry["show_count"] = true
+	elif String(entry.get("kind", "")) == "consumivel":
+		entry["show_count"] = true
+	elif String(entry.get("kind", "")) == "arma":
+		var ammo_key := String((entry.get("data", {}) as Dictionary).get("ammo_item_key", ""))
+		if ammo_key != "":
+			var character: Dictionary = state.get("character", {}) as Dictionary
+			var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+			entry["count"] = int((inventory.get("items", {}) as Dictionary).get(ammo_key, 0))
+			entry["show_count"] = true
+	return entry
+
+
+func _weapon_key(value: Variant) -> String:
+	return FREE_HAND_KEY if value == null or String(value) == "" \
+		else "arma:%s" % String(value)
+
+
+func _weapon_matches_hand(item_key: String, slot_name: String,
+		current_key: String) -> bool:
+	if item_key == current_key:
+		return true
+	var weapon := GameData.weapon(item_key.trim_prefix("arma:"))
+	if weapon.is_empty():
 		return false
-	items[key] = 1
-	return true
+	var declared_slot := String(weapon.get("slot", "main"))
+	return declared_slot != "offhand" if slot_name == "right_hand" \
+		else declared_slot == "offhand"
+
+
+func _append_unique(values: Array[String], value: String) -> void:
+	if value != "" and not values.has(value):
+		values.append(value)
+
+
+func _current_quick_key(slot_name: String, state: Dictionary) -> String:
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
+	match slot_name:
+		"right_hand": return _weapon_key(equipment.get("main"))
+		"left_hand": return _weapon_key(equipment.get("offhand"))
+		"spell":
+			var favorites: Array = equipment.get("spell_favorites", []) as Array
+			return "magia:%s" % String(favorites[0]) if not favorites.is_empty() \
+				else "estado:sem_feitico"
+		"item":
+			var quick_slots: Array = inventory.get("quick_slots", []) as Array
+			return String(quick_slots[0]) if not quick_slots.is_empty() else FLASK_ITEM_KEY
+	return ""
+
+
+func _ensure_quick_slots_hud() -> void:
+	if is_instance_valid(_quick_slots_hud) or not is_inside_tree():
+		return
+	_quick_slots_hud = QuickSlotsScript.new()
+	_quick_slots_hud.name = "QuickSlots"
+	add_child(_quick_slots_hud)
+	_quick_slots_hud.call("setup", self)
 
 
 func _equipment(state: Dictionary) -> Dictionary:
