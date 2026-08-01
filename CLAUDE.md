@@ -69,7 +69,9 @@ Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus
 |---|---|
 | ⭐ [`LACUNAS.md`](LACUNAS.md) | **O que falta e ninguém está a fazer** — agrupado por volta. Encontraste um buraco? Escreve lá no mesmo acto |
 | ⭐ [`ESTADO.md`](ESTADO.md) | **Lê primeiro.** O que é verdade hoje, o que falta e por que ordem |
-| [`prompts/BRIEFING-FABLE-2.md`](prompts/BRIEFING-FABLE-2.md) | O briefing actual do Fable — cobre tudo |
+| ⭐ [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md) | **O prompt actual** — fechar a spec, em 4 fases |
+| [`LACUNAS.md`](LACUNAS.md) | O que falta e ninguém está a fazer. Encontraste um buraco? Escreve lá no mesmo acto |
+| [`prompts/BRIEFING-FABLE-2.md`](prompts/BRIEFING-FABLE-2.md) | O briefing das voltas 1–3 (feitas) |
 | [`SPEC.md`](SPEC.md) | Índice, e o estado de cada área |
 | [`spec/00-visao.md`](spec/00-visao.md) | Os pilares. O documento mais importante. |
 | [`spec/99-perguntas-abertas.md`](spec/99-perguntas-abertas.md) | O que falta decidir |

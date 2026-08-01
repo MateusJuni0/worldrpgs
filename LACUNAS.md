@@ -131,6 +131,39 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 
 ---
 
+---
+
+## 🕳️ Buracos de sistema — coisas que NUNCA foram escritas
+
+**Varrimento de 01-08.** Não são detalhes por afinar: são sistemas inteiros que a spec assume e nunca definiu. Ordenados por quanto custa descobri-los tarde.
+
+| | Buraco | Porque dói tarde |
+|---|---|---|
+| 🔴 | ⭐ **Sistema de saves** — onde vive o progresso, e como funciona a dois | **três clientes já dependem dele**: progresso, inventário e o mapa. É fundação, e fundações metem-se primeiro |
+| 🔴 | ⭐ **Texturas, modelos 3D e som: ZERO** | os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados. **É o que separa o greybox do jogo**, e nenhuma volta cobre |
+| 🟠 | ⭐ **Desenho de arena de chefe** | 13 chefes precisam de 13 arenas. Sem regras, saem 13 círculos vazios |
+| 🟠 | ⭐ **O fim do jogo** | mata-se o Ultra e depois? **Nunca foi escrito.** Sem isto não há razão para o nível 100 nem para o segundo percurso |
+| 🟠 | ⭐ **Ciclo novo (NG+)** | o [`40`](spec/40-decisoes-espolio-magia-inventario.md) §1 diz *"até ao próximo ciclo"* — e o ciclo **não existe em lado nenhum** |
+| 🟠 | **Criação de personagem** | escolhe-se classe, e mais? Aspecto, nome, o primeiro ecrã do jogo |
+| 🟠 | ⭐ **Quem afina os 226 números** | há centenas de valores `[FABLE]`/`[CLAUDE]` marcados *"validam-se a jogar"*. **Ninguém escreveu como** |
+| 🟠 | ⚠️ **Desligar a meio de um chefe** | o [`19`](spec/19-rede.md) trata quedas, mas não **o que fica** — o chefe recupera vida? O progresso conta? |
+| 🟠 | **Música e ambiente** | o [`21`](spec/21-arte-render.md) propõe; existem **12 sons sintetizados** e mais nada |
+| 🟠 | ⭐ **Acessibilidade auditiva** | ⚠️ o [`38`](spec/38-ataques-e-honestidade.md) §3 **obriga** a que cada ataque se anuncie por som, e a 1.ª pessoa depende disso. **Quem não ouve bem fica trancado** — precisa de indicador visual equivalente |
+| 🔵 | **Onde vivem os textos** | português decidido; falta dizer se as strings estão em ficheiro ou no código |
+| 🔵 | **Comando / gamepad** | [`45`](spec/45-controlos-configuraveis.md) §5 propõe nascer agnóstico da fonte; por confirmar |
+| 🔵 | **Os vendedores morrem?** | na referência alguns morrem e perde-se o stock. ⏳ donos |
+| 🔵 | **Voz: Godot faz nativamente?** | [`56`](spec/56-voz-e-vendedores.md) — a validar no `→WP14` |
+
+### ⚠️ E três que são de coerência, não de conteúdo
+
+| | Buraco | |
+|---|---|---|
+| 🟠 | ⭐ **A fatia 1 ([`10`](spec/10-fatia-1.md)) foi aprovada antes de ~40 decisões** | fala de cargas de magia que já não existem, de 6 zonas, de espólio sem baralho. **Precisa de uma passagem** |
+| 🟠 | **Os ~36 "nomeados"** que substituíram os chefes de campo ([`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §1) | ninguém os desenhou ainda — são 36 fichas curtas |
+| 🟠 | **O Assassino** — furtividade, velocidade, sangramento | marcado no [`12`](spec/12-classes.md) pelo Fable, com os 3 guardas escritos. **Por desenhar** |
+
+---
+
 ## ✅ Fechadas
 
 | Lacuna | Fechada em |
