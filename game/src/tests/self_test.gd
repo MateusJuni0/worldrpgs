@@ -12,6 +12,7 @@ var _passed := 0
 var _failed := 0
 
 const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
+const ExplorationMapScript = preload("res://src/world/exploration_map.gd")
 
 
 func _ready() -> void:
@@ -40,11 +41,35 @@ func _ready() -> void:
 	_test_families_and_kits()
 	_test_equipment_catalogue()
 	_test_world_catalogue()
+	_test_exploration_map()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
 	_test_save_migration()
 	_report()
+
+
+# --- spec/57: mapa como memoria, nunca GPS -----------------------------------
+
+func _test_exploration_map() -> void:
+	var cfg: Dictionary = ((GameData.world.get("map_reading", {}) as Dictionary).get(
+		"runtime", {}) as Dictionary)
+	_check(String(cfg.get("prototype_scope", "")).begins_with("[PROTO] por_zona"),
+		"mapa: pergunta 38 fica [PROTO] por zona, nao decidida pelo runtime")
+	_check(is_equal_approx(float(cfg.get("minimap_range_m", 0.0)), 40.0),
+		"minimapa: alcance de orientacao e 40 m")
+	var explored: RefCounted = ExplorationMapScript.new()
+	explored.call("configure", "brumal", Rect2(-110, -110, 220, 220), 4.0)
+	_check(int(explored.get("width")) == 55 and int(explored.get("height")) == 55,
+		"mapa: Brumal usa grelha compacta 55x55, nao uma segunda camara")
+	_check(explored.call("reveal", Vector3(0, 0, 95), 7.0),
+		"mapa: pisar terreno revela celulas")
+	_check(explored.call("is_world_revealed", Vector3(0, 0, 95))
+		and not explored.call("is_world_revealed", Vector3(0, 0, -70)),
+		"mapa: mostra onde esteve e nao le a Toca a frente")
+	_check(explored.call("discover_landmark", "descanso_1_brumal")
+		and not explored.call("discover_landmark", "descanso_1_brumal"),
+		"mapa: um marco descoberto entra uma vez")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

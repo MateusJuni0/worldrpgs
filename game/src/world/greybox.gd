@@ -40,6 +40,9 @@ var spawn_point := Vector3.ZERO
 var arena_center := Vector3.ZERO
 var lair_entrance := Vector3.ZERO
 var path_points: Array[Vector3] = []
+## Pontos que o mapa pode registar. A posicao existe no runtime; nome/tipo so
+## aparecem depois de o jogador chegar perto, segundo a regra do spec/57.
+var map_landmarks: Array[Dictionary] = []
 
 
 func build(p_preset: Dictionary, p_palette: Dictionary, layout: String, biome_id: String = "brumal") -> void:
@@ -384,6 +387,24 @@ func _build_brumal() -> void:
 	spawn_point = path_points[0] + Vector3(0, 0.1, 0)
 	lair_entrance = path_points[path_points.size() - 1]
 	arena_center = lair_entrance + Vector3(0, 0, -26)
+	map_landmarks = [
+		{
+			"id": "descanso_1_brumal", "name": "Descanso de Brumal", "type": "rest",
+			"position": path_points[3], "discover_radius_m": 14.0,
+		},
+		{
+			"id": "entrada_toca", "name": "A Toca", "type": "lair",
+			"position": lair_entrance, "discover_radius_m": 18.0,
+		},
+		{
+			"id": "descanso_toca", "name": "Descanso da Toca", "type": "rest",
+			"position": lair_entrance + Vector3(0, 0, -18), "discover_radius_m": 12.0,
+		},
+		{
+			"id": "arena_vorgar", "name": "Arena de Vorgar", "type": "arena",
+			"position": arena_center, "discover_radius_m": 22.0,
+		},
+	]
 
 	_build_path_visual()
 	_scatter_forest()

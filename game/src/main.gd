@@ -7,10 +7,14 @@ extends Node3D
 ##   combat  arena limpa: lanceiro + brutamontes, para afinar o combate
 ##   zone    a fatia: Brumal -> Toca -> Vorgar   (defeito)
 
+const NAVIGATION_HUD_SCRIPT = preload("res://src/ui/navigation_hud.gd")
+
 var world: Greybox
 var player: Player
+var partner: Player
 var hud: Hud
 var boss: Enemy
+var navigation: CanvasLayer
 
 var _preset: Dictionary = {}
 var _palette: Dictionary = {}
@@ -31,6 +35,7 @@ func _ready() -> void:
 	_build_player()
 	_build_hud()
 	_populate()
+	_build_navigation()
 
 	if "--photos" in OS.get_cmdline_user_args():
 		var tour: Node = load("res://src/tools/photo_tour.gd").new()
@@ -100,6 +105,15 @@ func _build_hud() -> void:
 		hud.toast(GameData.ui_text("toast.start") % _preset.get("_name", "?"), 6.0)
 
 
+func _build_navigation() -> void:
+	if _scene_kind == "combat":
+		return
+	navigation = NAVIGATION_HUD_SCRIPT.new()
+	navigation.name = "Orientacao"
+	add_child(navigation)
+	navigation.call("initialize", player, partner, world, "brumal")
+
+
 # --- Povoamento ---------------------------------------------------------------
 
 func _spawn(enemy_id: String, at: Vector3) -> Enemy:
@@ -128,7 +142,7 @@ func _populate() -> void:
 			_spawn("orc_spearman", c + Vector3(6, 0.5, 2))
 			_spawn("orc_spearman", c + Vector3(-4, 0.5, 6))
 			_spawn("orc_brute", c + Vector3(2, 0.5, -6))
-			var partner := Player.new()
+			partner = Player.new()
 			partner.name = "Parceiro"
 			add_child(partner)
 			partner.setup("sorcerer", _palette)
@@ -290,6 +304,11 @@ func _cycle_class() -> void:
 	cam.target = player
 	player.died.connect(_on_player_died)
 	hud.player = player
+	if is_instance_valid(navigation):
+		navigation.set("player", player)
+		var surface: Control = navigation.get("_minimap_surface")
+		if surface != null:
+			surface.set("player", player)
 	for node in get_children():
 		var e := node as Enemy
 		if e != null:
