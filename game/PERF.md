@@ -25,15 +25,107 @@ O nome do adaptador vem lido do próprio Godot em cada medição (`Intel(R) Iris
 
 ## A resposta curta
 
-**O greybox aguenta-se com muita folga; o jogo vestido ainda não está aprovado.**
+**A arena final real tem margem de render: 150,9 fps médios e p99 12,673 ms
+numa prova de 60 s.** Esta prova tem dois jogadores, Vorgar e dois orcs, na arena
+vestida, a 1080p/Mobile. Houve dois frames >20 ms (pior 29,98 ms) sob carga do
+host; o benchmark antigo de 47 fps / 21 ms não descreve o custo sustentado
+corrente, mas também não se apagam estes dois picos.
 
-No cenário que a spec define como critério de aceitação — **2 jogadores + 3
-inimigos no ecrã, a 1920×1080** — o jogo com cinco corpos Quaternius animados
-corre a **60,0 fps travados, com 1% low de 60,0, pior frame de 16,67 ms e zero
-frames fora do orçamento** durante 30 segundos. O número antigo de 377 fps sem
-vsync pertence ao greybox; a medição actual sem vsync é registada abaixo.
+A zona completa e densa também cabe no orçamento numa amostra não contaminada:
+162,5 fps médios e p99 15,338 ms. A máquina estava em uso por outros processos;
+uma repetição com os mesmos 26 draw calls e 91 316 primitivas apanhou p99 17,396
+ms. Esses picos externos não são escondidos nem atribuídos ao renderer sem
+evidência. O gate renderizado passa; “nenhum pico em qualquer estado do Windows”
+não está demonstrado.
 
-Ao fim de **20 minutos quente**, a média do greybox é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável nesse cenário.** O spike posterior com cinco esqueletos UAL manteve 60,0 fps médios, mas deu **p99 19,910 ms e pior frame 21,993 ms**: amarelo pelo critério global e acima do tecto de pico de arena. Portanto a média já não pode ser usada como prova de 60 fps estáveis do conteúdo final.
+| Prova final de 60 s — arena `vorgar` | Média | p95 | p99 | 1% low | >20 ms | Pior |
+|---|---:|---:|---:|---:|---:|---:|
+| Sem vsync — tempo real de render | **150,9 fps** | 9,923 ms | **12,673 ms** | 68,5 | 2 | 29,98 ms |
+| Vsync 60 Hz — pacing do jogo | **59,9 fps** | 17,132 ms | **18,402 ms** | 45,5 | 12 | 33,33 ms |
+
+Durante a segunda prova, três leituras do Windows deram **76%, 67% e 100% de
+CPU total**, com vários processos `claude` da outra worktree/agentes activos.
+Sem vsync, o motor fica 4,0 ms abaixo do orçamento no p99; com vsync perdeu um
+vblank e não passa o gate de “zero quedas”. Conclusão honesta: **a carga do jogo
+passa, a estabilidade absoluta nesta sessão saturada não está certificada**.
+Não se mataram processos alheios nem se escolheu só a amostra bonita. Uma
+amostra anterior de 30 s sem saturação deu 154,9 fps, p99 9,608 ms, pior 10,64
+ms e zero frames fora do orçamento.
+
+---
+
+## Auditoria de qualidade de 01-08-2026
+
+Todas as amostras abaixo são Mobile/Vulkan, 1920×1080, preset `medio`, sem
+vsync, com 6–8 s de aquecimento. O benchmark passou a guardar p95, p99 e contagem
+de frames acima de 20/33 ms; o teste isolado deixou de herdar vsync por engano.
+
+### Causa corrigida — materiais reescritos a cada frame
+
+`Enemy._refresh_colour()` chamava `set_tint()` em cada physics frame, mesmo
+quando a cor não mudava. Cada chamada reescrevia o `albedo_color` de todas as
+superfícies de cinco personagens. A cor e a animação já tinham estado; faltava
+impedir o upload redundante do material.
+
+| `lei4` — 2 jogadores + 3 inimigos | Média | p95 | p99 | 1% low | >16,67 ms | Draws |
+|---|---:|---:|---:|---:|---:|---:|
+| Antes, corpos humanos | 167,8 fps | 8,433 ms | **17,091 ms** | 50,5 | 1,5% | 16 |
+| Cache de tinta, mesma cena | **188,1 fps** | 6,860 ms | **10,011 ms** | 70,0 | 0,1% | 16 |
+
+Ganho reproduzido: **+12,1% de média e −7,080 ms no p99**, sem mudar um pixel.
+
+### Investigação das hipóteses
+
+| Hipótese | Prova | Decisão |
+|---|---|---|
+| Compilação de shaders em runtime | 8 s de aquecimento removem o arranque/import; amostras quentes não mostram degradação progressiva | não era a causa sustentada; manter aquecimento explícito |
+| Fill-rate/resolução | arena `medio`: p99 10,459 ms; `baixo` a 85%: 10,068 ms, sem ganho coerente de média | não baixar resolução para esconder CPU |
+| Sombras | o preset médio já tinha `shadows:false`; portanto não podiam explicar a regressão | não houve corte novo; no alto os monstros conservam `cast_shadow` |
+| Draw calls/materiais sem instancing | antes da vegetação, 16–20 draw calls; o custo caiu sem alterar draws quando se cacheou tinta | uploads de material eram a causa; cenário estático já usava MultiMesh |
+| Importação/animação | os recursos são importados antes da amostra; cinco UAL isolados, agora sem vsync, deram p99 8,996 ms | animação custa, mas não justifica 19,9 ms corrente |
+| Culling | nevoeiro + `far=70 m`; famílias MultiMesh são cortadas como grupo. Detritos fora do frustum não mudaram draws/primitivas | não fragmentar em dezenas de chunks: aumentaria draw calls sem benefício medido |
+
+O teste antigo de cinco esqueletos dava p99 **19,910 ms** e pico **21,993 ms**,
+mas estava travado a 60 sem o declarar. Repetido com a ferramenta corrigida,
+cinco UAL deram **297,4 fps**, p95 **6,659 ms**, p99 **8,996 ms**. Houve um
+pico isolado de 55,095 ms enquanto a máquina tinha carga concorrente; por isso
+o p99, não o pico único, governa a regressão do motor.
+
+### Custo visual dos monstros CC0
+
+| `lei4` | Média | p95 | p99 | >16,67 ms | Draws | Primitivas | VRAM |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Humanos, depois do cache | 188,1 | 6,860 ms | 10,011 ms | 0,1% | 16 | 43 132 | 106,9 MB |
+| Orcs Small/Big reais, 45 s | 155,6 | 9,772 ms | 14,344 ms | 0,5% | 18 | 47 724 | 120,5 MB |
+
+Trocar os “homens despidos” por três criaturas distintas custa **−17,3% de
+média, +4,333 ms de p99, +2 draws, +4 592 primitivas e +13,6 MB VRAM**. É um
+custo visual assumido, não escondido; continua abaixo dos 16,67 ms. Forçar os
+AnimationPlayers a callback de física de 60 Hz foi tentado e rejeitado: p99
+subiu de 15,961 para 16,793 ms numa amostra curta.
+
+### Custo do mundo preenchido
+
+| Zona completa | Média | p95 | p99 | Draws | Primitivas | VRAM |
+|---|---:|---:|---:|---:|---:|---:|
+| Orcs, sem detalhe de chão | 169,5 | 10,817 ms | 15,081 ms | 20 | 45 444 | 120,7 MB |
+| 1 204 detalhes / 6 MultiMeshes | 165,8 | 11,284 ms | 14,641 ms | 26 | 67 936 | 120,8 MB |
+| 1 962 detalhes + 35 árvores + 13 rochas | **162,5** | 10,321 ms | **15,338 ms** | 26 | 91 316 | 120,8 MB |
+
+A primeira camada custou **−2,2% de média**, +6 draws e +0,1 MB; densificar e
+concentrar as margens do caminho custou mais **−2,0%**, sem novos draws. A arena
+final medida no novo cenário `vorgar` passou de 156,5 / p99 9,445 ms sem
+detritos para 154,9 / p99 9,608 ms com detritos: **−1,0% e +0,163 ms**, zero
+frames fora do orçamento nos dois casos.
+
+Não se cortou conteúdo para obter estes números. O preset médio já desligava
+sombras, SSAO, SSIL, SDFGI, glow, nevoeiro volumétrico e MSAA antes desta tarefa;
+isso continua a ser o preço visual conhecido do alvo Iris Xe. Os monstros
+mantêm a capacidade de projectar sombra no preset alto.
+
+> As secções seguintes conservam as medições históricas do greybox e da primeira
+> conversão visual. Quando divergem, a auditoria acima é o estado corrente e
+> identifica explicitamente a versão defeituosa do benchmark de animação.
 
 ---
 
@@ -206,16 +298,19 @@ razão cada camada visual tem de voltar a ser medida.
 
 ```bash
 # comparar renderers a frio
-godot --path . --rendering-method mobile -- --bench --scene=perf --seconds=30 --label=mobile-frio
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=perf --seconds=30 --label=mobile-frio
 
 # o critério 5 da fatia, travado a 60
-godot --path . --rendering-method mobile -- --bench --scene=lei4 --seconds=60 --vsync=on --label=criterio-5
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=lei4 --seconds=60 --vsync=on --label=criterio-5
+
+# arena final real, sem vsync para medir a folga e o p99
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=vorgar --seconds=60 --vsync=off --label=arena-vorgar
 
 # quente (20 min)
-godot --path . --rendering-method mobile -- --bench --scene=perf --seconds=1200 --label=quente
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=perf --seconds=1200 --label=quente
 
 # custo isolado de 5 e 10 esqueletos UAL reais
-godot --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=12 --warmup=3 --width=1920 --height=1080
+godot --audio-driver Dummy --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=24 --warmup=6 --width=1920 --height=1080 --vsync=off
 ```
 
 Os JSON crus ficam em `perf-raw/` (fora do git). Se algum número aqui e no JSON divergirem, **manda o JSON**.
