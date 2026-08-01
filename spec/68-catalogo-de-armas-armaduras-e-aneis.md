@@ -35,7 +35,7 @@ Os onze são: leve · pesado · cadeia · leve→pesado · corrida · rolar · s
 
 Constantes universais que preservam a gramática: leve→pesado corta 25% do arranque · rolar corta 4 frames e usa MV ×0,85 · saltar só tem hiper-armadura nos activos · empurrão é 12+4+14 f, 20 stamina, MV 0,05 e quebra guarda. A diferença vem da pergunta e da geometria da família, nunca de “esta dá mais dano”.
 
-⚠️ O protótipo da Fatia 1 ainda executa leve, pesado, cadeia e bash. Corrida, saída de rolamento, salto, queda, empurrão universal, troca uma/duas mãos e artes entram no M2. O catálogo deixou de ser ambíguo; a animação/runtime ainda é trabalho real e fica em [`LACUNAS.md`](../LACUNAS.md).
+⚠️ O protótipo da Fatia 1 ainda executa leve, pesado, cadeia, bash e troca uma/duas mãos. Corrida, saída de rolamento, salto, queda, empurrão universal e artes entram no M2. O catálogo deixou de ser ambíguo; a animação/runtime ainda é trabalho real e fica em [`LACUNAS.md`](../LACUNAS.md).
 
 ## 3. Melhoria — seis níveis sem comprar força
 

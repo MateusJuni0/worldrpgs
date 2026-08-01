@@ -499,7 +499,7 @@
   },
   "weapon_improvement": {
     "rule": "cada nível abre uma decisão reversível no altar; nenhum aumenta dano base, defesa ou velocidade",
-    "materials": "materiais do bioma de origem somam 1/2/3 pontos por refinamento; os seis votos custam 1/2/3/5/8/12; o baralho finito impede farm repetível",
+    "materials": "Limalha abre +1…+3; Limalha Nobre abre +4…+6; exploração fixa, nunca farm repetível",
     "levels": [
       {
         "level": 0,
@@ -655,6 +655,60 @@
       "fatia_1": false
     },
     "espada_recta_brumal_espada_de_vigilia": {
+      "nome": "Espada de vigília",
+      "familia": "espada_recta",
+      "maos": 1,
+      "alcance_m": 2,
+      "requisitos": {
+        "forca": 10
+      },
+      "escala": "forca",
+      "peso_escala": "medio",
+      "origem": "brumal",
+      "material": "ferro rude e couro de javali",
+      "pergunta": "manter a cadência sem uma especialidade",
+      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
+      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família espada recta",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "espada_recta_selva_funda_lamina_de_romeiro": {
+      "nome": "Lâmina de romeiro",
+      "familia": "espada_recta",
+      "maos": 1,
+      "alcance_m": 2,
+      "requisitos": {
+        "forca": 10
+      },
+      "escala": "forca",
+      "peso_escala": "medio",
+      "origem": "selva_funda",
+      "material": "bambu negro, seda crua e seiva-peçonha",
+      "pergunta": "trocar alcance por recuperação",
+      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
+      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família espada recta",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "espada_recta_campas_cinzentas_espada_de_muralha": {
+      "nome": "Espada de muralha",
+      "familia": "espada_recta",
+      "maos": 1,
+      "alcance_m": 2,
+      "requisitos": {
+        "forca": 10
+      },
+      "escala": "forca",
+      "peso_escala": "medio",
+      "origem": "campas_cinzentas",
+      "material": "osso seco, linho tumular e ferro ferrugento",
+      "pergunta": "ler quando abandonar a cadeia",
+      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
+      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família espada recta",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "espada_recta_fojo_ferro_de_juramento": {
       "nome": "Ferro de juramento",
       "familia": "espada_recta",
       "maos": 1,
@@ -672,7 +726,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_selva_funda_lamina_de_romeiro": {
+    "espada_recta_costa_quebrada_lamina_de_ponte": {
       "nome": "Lâmina de ponte",
       "familia": "espada_recta",
       "maos": 1,
@@ -690,7 +744,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_campas_cinzentas_espada_de_muralha": {
+    "espada_recta_cimeira_espada_do_sineiro": {
       "nome": "Espada do sineiro",
       "familia": "espada_recta",
       "maos": 1,
@@ -708,7 +762,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_fojo_ferro_de_juramento": {
+    "espada_recta_fornalha_guarda_de_peregrino": {
       "nome": "Guarda de peregrino",
       "familia": "espada_recta",
       "maos": 1,
@@ -726,7 +780,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_costa_quebrada_lamina_de_ponte": {
+    "espada_recta_fulgor_lamina_de_fronteira": {
       "nome": "Lâmina de fronteira",
       "familia": "espada_recta",
       "maos": 1,
@@ -744,7 +798,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_cimeira_espada_do_sineiro": {
+    "espada_recta_raizama_espada_de_procissao": {
       "nome": "Espada de procissão",
       "familia": "espada_recta",
       "maos": 1,
@@ -762,7 +816,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_fornalha_guarda_de_peregrino": {
+    "espada_recta_cidade_afogada_ferro_de_sentinela": {
       "nome": "Ferro de sentinela",
       "familia": "espada_recta",
       "maos": 1,
@@ -780,7 +834,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "espada_recta_fulgor_lamina_de_fronteira": {
+    "espada_recta_santuario_branco_espada_de_cripta": {
       "nome": "Espada de cripta",
       "familia": "espada_recta",
       "maos": 1,
@@ -795,60 +849,6 @@
       "pergunta": "trocar alcance por recuperação",
       "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em mármore branco, cera benta e ouro baço; marcas e ligaduras pertencem a Santuário Branco",
       "onde_se_encontra": "desvio explorável de Santuário Branco, atrás de uma leitura da família espada recta",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "espada_recta_raizama_espada_de_procissao": {
-      "nome": "Lâmina de maré",
-      "familia": "espada_recta",
-      "maos": 1,
-      "alcance_m": 2,
-      "requisitos": {
-        "forca": 10
-      },
-      "escala": "forca",
-      "peso_escala": "medio",
-      "origem": "raiz",
-      "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "ler quando abandonar a cadeia",
-      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
-      "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família espada recta",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "espada_recta_cidade_afogada_ferro_de_sentinela": {
-      "nome": "Espada de cinza",
-      "familia": "espada_recta",
-      "maos": 1,
-      "alcance_m": 2,
-      "requisitos": {
-        "forca": 10
-      },
-      "escala": "forca",
-      "peso_escala": "medio",
-      "origem": "brumal",
-      "material": "ferro rude e couro de javali",
-      "pergunta": "manter a cadência sem uma especialidade",
-      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
-      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família espada recta",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "espada_recta_santuario_branco_espada_de_cripta": {
-      "nome": "Ferro do último portão",
-      "familia": "espada_recta",
-      "maos": 1,
-      "alcance_m": 2,
-      "requisitos": {
-        "forca": 10
-      },
-      "escala": "forca",
-      "peso_escala": "medio",
-      "origem": "selva_funda",
-      "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "trocar alcance por recuperação",
-      "descricao_visual": "lâmina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
-      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família espada recta",
       "asset_path": "",
       "fatia_1": false
     },
@@ -925,6 +925,78 @@
       "fatia_1": false
     },
     "adaga_brumal_punhal_de_nevoeiro": {
+      "nome": "Punhal de nevoeiro",
+      "familia": "adaga",
+      "maos": 1,
+      "alcance_m": 1.4,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "brumal",
+      "material": "ferro rude e couro de javali",
+      "pergunta": "arriscar ficar dentro da guarda",
+      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
+      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família adaga",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "adaga_selva_funda_dente_de_vigia": {
+      "nome": "Dente de vigia",
+      "familia": "adaga",
+      "maos": 1,
+      "alcance_m": 1.4,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "selva_funda",
+      "material": "bambu negro, seda crua e seiva-peçonha",
+      "pergunta": "sair antes da resposta pesada",
+      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
+      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família adaga",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "adaga_campas_cinzentas_faca_de_ritual": {
+      "nome": "Faca de ritual",
+      "familia": "adaga",
+      "maos": 1,
+      "alcance_m": 1.4,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "campas_cinzentas",
+      "material": "osso seco, linho tumular e ferro ferrugento",
+      "pergunta": "conquistar as costas",
+      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
+      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família adaga",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "adaga_fojo_agulha_de_sal": {
+      "nome": "Agulha de sal",
+      "familia": "adaga",
+      "maos": 1,
+      "alcance_m": 1.4,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "fojo",
+      "material": "ferro em bruto marcado por picareta",
+      "pergunta": "arriscar ficar dentro da guarda",
+      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em ferro em bruto marcado por picareta; marcas e ligaduras pertencem a Fojo",
+      "onde_se_encontra": "desvio explorável de Fojo, atrás de uma leitura da família adaga",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "adaga_costa_quebrada_punhal_de_copa": {
       "nome": "Punhal de copa",
       "familia": "adaga",
       "maos": 1,
@@ -936,13 +1008,13 @@
       "peso_escala": "forte",
       "origem": "costa_quebrada",
       "material": "bronze-do-mar, corda salgada e madeira de naufrágio",
-      "pergunta": "arriscar ficar dentro da guarda",
+      "pergunta": "sair antes da resposta pesada",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em bronze-do-mar, corda salgada e madeira de naufrágio; marcas e ligaduras pertencem a Costa Quebrada",
       "onde_se_encontra": "desvio explorável de Costa Quebrada, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_selva_funda_dente_de_vigia": {
+    "adaga_cimeira_dente_de_ossario": {
       "nome": "Dente de ossário",
       "familia": "adaga",
       "maos": 1,
@@ -954,13 +1026,13 @@
       "peso_escala": "forte",
       "origem": "cimeira",
       "material": "aço frio, couro branco e flor-de-gelo",
-      "pergunta": "sair antes da resposta pesada",
+      "pergunta": "conquistar as costas",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em aço frio, couro branco e flor-de-gelo; marcas e ligaduras pertencem a Cimeira",
       "onde_se_encontra": "desvio explorável de Cimeira, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_campas_cinzentas_faca_de_ritual": {
+    "adaga_fornalha_faca_de_fundidor": {
       "nome": "Faca de fundidor",
       "familia": "adaga",
       "maos": 1,
@@ -972,13 +1044,13 @@
       "peso_escala": "forte",
       "origem": "fornalha",
       "material": "obsidiana, bronze fundido e couro chamuscado",
-      "pergunta": "conquistar as costas",
+      "pergunta": "arriscar ficar dentro da guarda",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em obsidiana, bronze fundido e couro chamuscado; marcas e ligaduras pertencem a Fornalha",
       "onde_se_encontra": "desvio explorável de Fornalha, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_fojo_agulha_de_sal": {
+    "adaga_fulgor_agulha_de_trovao": {
       "nome": "Agulha de trovão",
       "familia": "adaga",
       "maos": 1,
@@ -990,13 +1062,13 @@
       "peso_escala": "forte",
       "origem": "fulgor",
       "material": "fulgurite, prata baça e couro isolante",
-      "pergunta": "arriscar ficar dentro da guarda",
+      "pergunta": "sair antes da resposta pesada",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em fulgurite, prata baça e couro isolante; marcas e ligaduras pertencem a Fulgor",
       "onde_se_encontra": "desvio explorável de Fulgor, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_costa_quebrada_punhal_de_copa": {
+    "adaga_raizama_punhal_de_esporo": {
       "nome": "Punhal de esporo",
       "familia": "adaga",
       "maos": 1,
@@ -1008,13 +1080,13 @@
       "peso_escala": "forte",
       "origem": "raizama",
       "material": "raiz petrificada, quitina e esporo-lúmen",
-      "pergunta": "sair antes da resposta pesada",
+      "pergunta": "conquistar as costas",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em raiz petrificada, quitina e esporo-lúmen; marcas e ligaduras pertencem a Raizama",
       "onde_se_encontra": "desvio explorável de Raizama, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_cimeira_dente_de_ossario": {
+    "adaga_cidade_afogada_dente_afogado": {
       "nome": "Dente afogado",
       "familia": "adaga",
       "maos": 1,
@@ -1026,13 +1098,13 @@
       "peso_escala": "forte",
       "origem": "cidade_afogada",
       "material": "prata afogada, vidro verde e mármore molhado",
-      "pergunta": "conquistar as costas",
+      "pergunta": "arriscar ficar dentro da guarda",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em prata afogada, vidro verde e mármore molhado; marcas e ligaduras pertencem a Cidade Afogada",
       "onde_se_encontra": "desvio explorável de Cidade Afogada, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
-    "adaga_fornalha_faca_de_fundidor": {
+    "adaga_santuario_branco_faca_penitente": {
       "nome": "Faca penitente",
       "familia": "adaga",
       "maos": 1,
@@ -1044,81 +1116,9 @@
       "peso_escala": "forte",
       "origem": "santuario_branco",
       "material": "mármore branco, cera benta e ouro baço",
-      "pergunta": "arriscar ficar dentro da guarda",
+      "pergunta": "sair antes da resposta pesada",
       "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em mármore branco, cera benta e ouro baço; marcas e ligaduras pertencem a Santuário Branco",
       "onde_se_encontra": "desvio explorável de Santuário Branco, atrás de uma leitura da família adaga",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "adaga_fulgor_agulha_de_trovao": {
-      "nome": "Agulha da raiz",
-      "familia": "adaga",
-      "maos": 1,
-      "alcance_m": 1.4,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "raiz",
-      "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "sair antes da resposta pesada",
-      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
-      "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família adaga",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "adaga_raizama_punhal_de_esporo": {
-      "nome": "Punhal de caçador",
-      "familia": "adaga",
-      "maos": 1,
-      "alcance_m": 1.4,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "brumal",
-      "material": "ferro rude e couro de javali",
-      "pergunta": "conquistar as costas",
-      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
-      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família adaga",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "adaga_cidade_afogada_dente_afogado": {
-      "nome": "Dente de vidro",
-      "familia": "adaga",
-      "maos": 1,
-      "alcance_m": 1.4,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "selva_funda",
-      "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "arriscar ficar dentro da guarda",
-      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
-      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família adaga",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "adaga_santuario_branco_faca_penitente": {
-      "nome": "Faca sem reflexo",
-      "familia": "adaga",
-      "maos": 1,
-      "alcance_m": 1.4,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "campas_cinzentas",
-      "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "sair antes da resposta pesada",
-      "descricao_visual": "lâmina estreita de um gume com 38 cm, ponta reforçada, guarda mínima e punho enfaixado, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
-      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família adaga",
       "asset_path": "",
       "fatia_1": false
     },
@@ -1321,25 +1321,7 @@
       "fatia_1": false
     },
     "pesada_corte_brumal_machado_de_quebra": {
-      "nome": "Martelo de fulgor",
-      "familia": "pesada_corte",
-      "maos": 2,
-      "alcance_m": 2.3,
-      "requisitos": {
-        "forca": 14
-      },
-      "escala": "forca",
-      "peso_escala": "forte",
-      "origem": "raiz",
-      "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "aceitar a recuperação se falhar",
-      "descricao_visual": "cabeça assimétrica de corte com 42 cm presa a haste de 125 cm, cunha grossa e contrapeso de ferro, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
-      "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família pesada de corte",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "pesada_corte_selva_funda_malho_de_pedreira": {
-      "nome": "Picareta de raiz",
+      "nome": "Machado de quebra",
       "familia": "pesada_corte",
       "maos": 2,
       "alcance_m": 2.3,
@@ -1350,14 +1332,14 @@
       "peso_escala": "forte",
       "origem": "brumal",
       "material": "ferro rude e couro de javali",
-      "pergunta": "comprometer o arco inteiro",
+      "pergunta": "aceitar a recuperação se falhar",
       "descricao_visual": "cabeça assimétrica de corte com 42 cm presa a haste de 125 cm, cunha grossa e contrapeso de ferro, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
       "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família pesada de corte",
       "asset_path": "",
       "fatia_1": false
     },
-    "pesada_corte_campas_cinzentas_cutelo_de_forja": {
-      "nome": "Clava de mármore",
+    "pesada_corte_selva_funda_malho_de_pedreira": {
+      "nome": "Malho de pedreira",
       "familia": "pesada_corte",
       "maos": 2,
       "alcance_m": 2.3,
@@ -1368,14 +1350,14 @@
       "peso_escala": "forte",
       "origem": "selva_funda",
       "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "trocar durante o golpe inimigo",
+      "pergunta": "comprometer o arco inteiro",
       "descricao_visual": "cabeça assimétrica de corte com 42 cm presa a haste de 125 cm, cunha grossa e contrapeso de ferro, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
       "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família pesada de corte",
       "asset_path": "",
       "fatia_1": false
     },
-    "pesada_corte_fojo_machado_de_carrasco": {
-      "nome": "Machado do fundo",
+    "pesada_corte_campas_cinzentas_cutelo_de_forja": {
+      "nome": "Cutelo de forja",
       "familia": "pesada_corte",
       "maos": 2,
       "alcance_m": 2.3,
@@ -1386,9 +1368,27 @@
       "peso_escala": "forte",
       "origem": "campas_cinzentas",
       "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "aceitar a recuperação se falhar",
+      "pergunta": "trocar durante o golpe inimigo",
       "descricao_visual": "cabeça assimétrica de corte com 42 cm presa a haste de 125 cm, cunha grossa e contrapeso de ferro, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
       "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família pesada de corte",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "pesada_corte_fojo_machado_de_carrasco": {
+      "nome": "Machado de carrasco",
+      "familia": "pesada_corte",
+      "maos": 2,
+      "alcance_m": 2.3,
+      "requisitos": {
+        "forca": 14
+      },
+      "escala": "forca",
+      "peso_escala": "forte",
+      "origem": "fojo",
+      "material": "ferro em bruto marcado por picareta",
+      "pergunta": "aceitar a recuperação se falhar",
+      "descricao_visual": "cabeça assimétrica de corte com 42 cm presa a haste de 125 cm, cunha grossa e contrapeso de ferro, construída em ferro em bruto marcado por picareta; marcas e ligaduras pertencem a Fojo",
+      "onde_se_encontra": "desvio explorável de Fojo, atrás de uma leitura da família pesada de corte",
       "asset_path": "",
       "fatia_1": false
     },
@@ -1429,6 +1429,42 @@
       "fatia_1": false
     },
     "katana_brumal_lua_de_nevoeiro": {
+      "nome": "Lua de nevoeiro",
+      "familia": "katana",
+      "maos": 1,
+      "alcance_m": 2.1,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "brumal",
+      "material": "ferro rude e couro de javali",
+      "pergunta": "perder valor se o contra-ataque não existir",
+      "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
+      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família katana",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "katana_selva_funda_corte_de_bambu": {
+      "nome": "Corte de bambu",
+      "familia": "katana",
+      "maos": 1,
+      "alcance_m": 2.1,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "forte",
+      "origem": "selva_funda",
+      "material": "bambu negro, seda crua e seiva-peçonha",
+      "pergunta": "bater durante o ataque inimigo",
+      "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
+      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família katana",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "katana_campas_cinzentas_sabre_tumular": {
       "nome": "Sabre tumular",
       "familia": "katana",
       "maos": 1,
@@ -1440,13 +1476,13 @@
       "peso_escala": "forte",
       "origem": "campas_cinzentas",
       "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "perder valor se o contra-ataque não existir",
+      "pergunta": "guardar o iai até ao compromisso",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
       "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_selva_funda_corte_de_bambu": {
+    "katana_fojo_lamina_de_escoria": {
       "nome": "Lâmina de escória",
       "familia": "katana",
       "maos": 1,
@@ -1458,13 +1494,13 @@
       "peso_escala": "forte",
       "origem": "fojo",
       "material": "ferro em bruto marcado por picareta",
-      "pergunta": "bater durante o ataque inimigo",
+      "pergunta": "perder valor se o contra-ataque não existir",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em ferro em bruto marcado por picareta; marcas e ligaduras pertencem a Fojo",
       "onde_se_encontra": "desvio explorável de Fojo, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_campas_cinzentas_sabre_tumular": {
+    "katana_costa_quebrada_curva_de_mare": {
       "nome": "Curva de maré",
       "familia": "katana",
       "maos": 1,
@@ -1476,13 +1512,13 @@
       "peso_escala": "forte",
       "origem": "costa_quebrada",
       "material": "bronze-do-mar, corda salgada e madeira de naufrágio",
-      "pergunta": "guardar o iai até ao compromisso",
+      "pergunta": "bater durante o ataque inimigo",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em bronze-do-mar, corda salgada e madeira de naufrágio; marcas e ligaduras pertencem a Costa Quebrada",
       "onde_se_encontra": "desvio explorável de Costa Quebrada, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_fojo_lamina_de_escoria": {
+    "katana_cimeira_lua_de_gelo": {
       "nome": "Lua de gelo",
       "familia": "katana",
       "maos": 1,
@@ -1494,13 +1530,13 @@
       "peso_escala": "forte",
       "origem": "cimeira",
       "material": "aço frio, couro branco e flor-de-gelo",
-      "pergunta": "perder valor se o contra-ataque não existir",
+      "pergunta": "guardar o iai até ao compromisso",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em aço frio, couro branco e flor-de-gelo; marcas e ligaduras pertencem a Cimeira",
       "onde_se_encontra": "desvio explorável de Cimeira, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_costa_quebrada_curva_de_mare": {
+    "katana_fornalha_corte_de_obsidiana": {
       "nome": "Corte de obsidiana",
       "familia": "katana",
       "maos": 1,
@@ -1512,13 +1548,13 @@
       "peso_escala": "forte",
       "origem": "fornalha",
       "material": "obsidiana, bronze fundido e couro chamuscado",
-      "pergunta": "bater durante o ataque inimigo",
+      "pergunta": "perder valor se o contra-ataque não existir",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em obsidiana, bronze fundido e couro chamuscado; marcas e ligaduras pertencem a Fornalha",
       "onde_se_encontra": "desvio explorável de Fornalha, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_cimeira_lua_de_gelo": {
+    "katana_fulgor_sabre_de_raio": {
       "nome": "Sabre de raio",
       "familia": "katana",
       "maos": 1,
@@ -1530,13 +1566,13 @@
       "peso_escala": "forte",
       "origem": "fulgor",
       "material": "fulgurite, prata baça e couro isolante",
-      "pergunta": "guardar o iai até ao compromisso",
+      "pergunta": "bater durante o ataque inimigo",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em fulgurite, prata baça e couro isolante; marcas e ligaduras pertencem a Fulgor",
       "onde_se_encontra": "desvio explorável de Fulgor, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_fornalha_corte_de_obsidiana": {
+    "katana_raizama_lamina_de_micelio": {
       "nome": "Lâmina de micélio",
       "familia": "katana",
       "maos": 1,
@@ -1548,13 +1584,13 @@
       "peso_escala": "forte",
       "origem": "raizama",
       "material": "raiz petrificada, quitina e esporo-lúmen",
-      "pergunta": "perder valor se o contra-ataque não existir",
+      "pergunta": "guardar o iai até ao compromisso",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em raiz petrificada, quitina e esporo-lúmen; marcas e ligaduras pertencem a Raizama",
       "onde_se_encontra": "desvio explorável de Raizama, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_fulgor_sabre_de_raio": {
+    "katana_cidade_afogada_curva_afogada": {
       "nome": "Curva afogada",
       "familia": "katana",
       "maos": 1,
@@ -1566,13 +1602,13 @@
       "peso_escala": "forte",
       "origem": "cidade_afogada",
       "material": "prata afogada, vidro verde e mármore molhado",
-      "pergunta": "bater durante o ataque inimigo",
+      "pergunta": "perder valor se o contra-ataque não existir",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em prata afogada, vidro verde e mármore molhado; marcas e ligaduras pertencem a Cidade Afogada",
       "onde_se_encontra": "desvio explorável de Cidade Afogada, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_raizama_lamina_de_micelio": {
+    "katana_santuario_branco_lua_penitente": {
       "nome": "Lua penitente",
       "familia": "katana",
       "maos": 1,
@@ -1584,13 +1620,13 @@
       "peso_escala": "forte",
       "origem": "santuario_branco",
       "material": "mármore branco, cera benta e ouro baço",
-      "pergunta": "guardar o iai até ao compromisso",
+      "pergunta": "bater durante o ataque inimigo",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em mármore branco, cera benta e ouro baço; marcas e ligaduras pertencem a Santuário Branco",
       "onde_se_encontra": "desvio explorável de Santuário Branco, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_cidade_afogada_curva_afogada": {
+    "katana_raiz_corte_da_raiz": {
       "nome": "Corte da raiz",
       "familia": "katana",
       "maos": 1,
@@ -1602,13 +1638,13 @@
       "peso_escala": "forte",
       "origem": "raiz",
       "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "perder valor se o contra-ataque não existir",
+      "pergunta": "guardar o iai até ao compromisso",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
       "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
-    "katana_santuario_branco_lua_penitente": {
+    "katana_brumal_sabre_de_vigilia": {
       "nome": "Sabre de vigília",
       "familia": "katana",
       "maos": 1,
@@ -1620,45 +1656,9 @@
       "peso_escala": "forte",
       "origem": "brumal",
       "material": "ferro rude e couro de javali",
-      "pergunta": "bater durante o ataque inimigo",
+      "pergunta": "perder valor se o contra-ataque não existir",
       "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
       "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família katana",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "katana_raiz_corte_da_raiz": {
-      "nome": "Lâmina sem bainha",
-      "familia": "katana",
-      "maos": 1,
-      "alcance_m": 2.1,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "selva_funda",
-      "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "guardar o iai até ao compromisso",
-      "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
-      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família katana",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "katana_brumal_sabre_de_vigilia": {
-      "nome": "Curva do último duelo",
-      "familia": "katana",
-      "maos": 1,
-      "alcance_m": 2.1,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "forte",
-      "origem": "campas_cinzentas",
-      "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "perder valor se o contra-ataque não existir",
-      "descricao_visual": "lâmina curva estreita de um gume com 90 cm, aço polido, guarda oval baixa e punho enfaixado, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
-      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família katana",
       "asset_path": "",
       "fatia_1": false
     },
@@ -1807,79 +1807,7 @@
       "fatia_1": false
     },
     "haste_brumal_lanca_de_vigia": {
-      "nome": "Tridente afogado",
-      "familia": "haste",
-      "maos": 1,
-      "alcance_m": 2.8,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "raizama",
-      "material": "raiz petrificada, quitina e esporo-lúmen",
-      "pergunta": "recuar antes de ficar colado",
-      "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em raiz petrificada, quitina e esporo-lúmen; marcas e ligaduras pertencem a Raizama",
-      "onde_se_encontra": "desvio explorável de Raizama, atrás de uma leitura da família haste",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "haste_selva_funda_pique_de_copa": {
-      "nome": "Pique penitente",
-      "familia": "haste",
-      "maos": 1,
-      "alcance_m": 2.8,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "cidade_afogada",
-      "material": "prata afogada, vidro verde e mármore molhado",
-      "pergunta": "manter o alvo fora do alcance mínimo",
-      "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em prata afogada, vidro verde e mármore molhado; marcas e ligaduras pertencem a Cidade Afogada",
-      "onde_se_encontra": "desvio explorável de Cidade Afogada, atrás de uma leitura da família haste",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "haste_campas_cinzentas_alabarda_tumular": {
-      "nome": "Alabarda da raiz",
-      "familia": "haste",
-      "maos": 1,
-      "alcance_m": 2.8,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "santuario_branco",
-      "material": "mármore branco, cera benta e ouro baço",
-      "pergunta": "estocar atrás da guarda",
-      "descricao_visual": "alabarda de raiz petrificada com haste de 225 cm, lâmina lateral de 42 cm, gancho traseiro e talão de osso, construída em mármore branco, cera benta e ouro baço; marcas e ligaduras pertencem a Santuário Branco",
-      "onde_se_encontra": "desvio explorável de Santuário Branco, atrás de uma leitura da família haste",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "haste_fojo_arpao_de_falesia": {
-      "nome": "Lança serrada",
-      "familia": "haste",
-      "maos": 1,
-      "alcance_m": 2.8,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "raiz",
-      "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "recuar antes de ficar colado",
-      "descricao_visual": "arpão de bronze-do-mar com ponta farpada de 38 cm, haste salgada de 205 cm e argola de corda no talão, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
-      "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família haste",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "haste_costa_quebrada_lanca_de_gelo": {
-      "nome": "Arpão de naufrágio",
+      "nome": "Lança de vigia",
       "familia": "haste",
       "maos": 1,
       "alcance_m": 2.8,
@@ -1890,14 +1818,14 @@
       "peso_escala": "medio",
       "origem": "brumal",
       "material": "ferro rude e couro de javali",
-      "pergunta": "manter o alvo fora do alcance mínimo",
+      "pergunta": "recuar antes de ficar colado",
       "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
       "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família haste",
       "asset_path": "",
       "fatia_1": false
     },
-    "haste_cimeira_pique_de_escoria": {
-      "nome": "Pique sem rosto",
+    "haste_selva_funda_pique_de_copa": {
+      "nome": "Pique de copa",
       "familia": "haste",
       "maos": 1,
       "alcance_m": 2.8,
@@ -1908,14 +1836,14 @@
       "peso_escala": "medio",
       "origem": "selva_funda",
       "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "estocar atrás da guarda",
+      "pergunta": "manter o alvo fora do alcance mínimo",
       "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
       "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família haste",
       "asset_path": "",
       "fatia_1": false
     },
-    "haste_fornalha_alabarda_de_fulgor": {
-      "nome": "Tridente de prata",
+    "haste_campas_cinzentas_alabarda_tumular": {
+      "nome": "Alabarda tumular",
       "familia": "haste",
       "maos": 1,
       "alcance_m": 2.8,
@@ -1926,9 +1854,81 @@
       "peso_escala": "medio",
       "origem": "campas_cinzentas",
       "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "recuar antes de ficar colado",
+      "pergunta": "estocar atrás da guarda",
       "descricao_visual": "alabarda de raiz petrificada com haste de 225 cm, lâmina lateral de 42 cm, gancho traseiro e talão de osso, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
       "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família haste",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "haste_fojo_arpao_de_falesia": {
+      "nome": "Arpão de falésia",
+      "familia": "haste",
+      "maos": 1,
+      "alcance_m": 2.8,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "fojo",
+      "material": "ferro em bruto marcado por picareta",
+      "pergunta": "recuar antes de ficar colado",
+      "descricao_visual": "arpão de bronze-do-mar com ponta farpada de 38 cm, haste salgada de 205 cm e argola de corda no talão, construída em ferro em bruto marcado por picareta; marcas e ligaduras pertencem a Fojo",
+      "onde_se_encontra": "desvio explorável de Fojo, atrás de uma leitura da família haste",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "haste_costa_quebrada_lanca_de_gelo": {
+      "nome": "Lança de gelo",
+      "familia": "haste",
+      "maos": 1,
+      "alcance_m": 2.8,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "costa_quebrada",
+      "material": "bronze-do-mar, corda salgada e madeira de naufrágio",
+      "pergunta": "manter o alvo fora do alcance mínimo",
+      "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em bronze-do-mar, corda salgada e madeira de naufrágio; marcas e ligaduras pertencem a Costa Quebrada",
+      "onde_se_encontra": "desvio explorável de Costa Quebrada, atrás de uma leitura da família haste",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "haste_cimeira_pique_de_escoria": {
+      "nome": "Pique de escória",
+      "familia": "haste",
+      "maos": 1,
+      "alcance_m": 2.8,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "cimeira",
+      "material": "aço frio, couro branco e flor-de-gelo",
+      "pergunta": "estocar atrás da guarda",
+      "descricao_visual": "haste rígida de 220 cm com ponta de 34 cm, talão metálico e pega central envolta em couro, construída em aço frio, couro branco e flor-de-gelo; marcas e ligaduras pertencem a Cimeira",
+      "onde_se_encontra": "desvio explorável de Cimeira, atrás de uma leitura da família haste",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "haste_fornalha_alabarda_de_fulgor": {
+      "nome": "Alabarda de fulgor",
+      "familia": "haste",
+      "maos": 1,
+      "alcance_m": 2.8,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "fornalha",
+      "material": "obsidiana, bronze fundido e couro chamuscado",
+      "pergunta": "recuar antes de ficar colado",
+      "descricao_visual": "alabarda de raiz petrificada com haste de 225 cm, lâmina lateral de 42 cm, gancho traseiro e talão de osso, construída em obsidiana, bronze fundido e couro chamuscado; marcas e ligaduras pertencem a Fornalha",
+      "onde_se_encontra": "desvio explorável de Fornalha, atrás de uma leitura da família haste",
       "asset_path": "",
       "fatia_1": false
     },
@@ -2023,6 +2023,96 @@
       "fatia_1": false
     },
     "cajado_brumal_cajado_de_bruma": {
+      "nome": "Cajado de bruma",
+      "familia": "cajado",
+      "maos": 2,
+      "alcance_m": 1.8,
+      "requisitos": {
+        "inteligencia": 10
+      },
+      "escala": "inteligencia",
+      "peso_escala": "fraco",
+      "origem": "brumal",
+      "material": "ferro rude e couro de javali",
+      "pergunta": "firmar a próxima conjuração",
+      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
+      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família cajado",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "cajado_selva_funda_fuso_de_seda": {
+      "nome": "Fuso de seda",
+      "familia": "cajado",
+      "maos": 2,
+      "alcance_m": 1.8,
+      "requisitos": {
+        "inteligencia": 10
+      },
+      "escala": "inteligencia",
+      "peso_escala": "fraco",
+      "origem": "selva_funda",
+      "material": "bambu negro, seda crua e seiva-peçonha",
+      "pergunta": "conjurar ou defender o espaço curto",
+      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
+      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família cajado",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "cajado_campas_cinzentas_vara_de_ossario": {
+      "nome": "Vara de ossário",
+      "familia": "cajado",
+      "maos": 2,
+      "alcance_m": 1.8,
+      "requisitos": {
+        "inteligencia": 10
+      },
+      "escala": "inteligencia",
+      "peso_escala": "fraco",
+      "origem": "campas_cinzentas",
+      "material": "osso seco, linho tumular e ferro ferrugento",
+      "pergunta": "gastar mana na arte ou guardar para magia",
+      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
+      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família cajado",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "cajado_fojo_diapasao_de_mina": {
+      "nome": "Diapasão de mina",
+      "familia": "cajado",
+      "maos": 2,
+      "alcance_m": 1.8,
+      "requisitos": {
+        "inteligencia": 10
+      },
+      "escala": "inteligencia",
+      "peso_escala": "fraco",
+      "origem": "fojo",
+      "material": "ferro em bruto marcado por picareta",
+      "pergunta": "firmar a próxima conjuração",
+      "descricao_visual": "diapasão ritual de prata baça com 175 cm, duas hastes paralelas de 38 cm e empunhadura envolta em cera, construída em ferro em bruto marcado por picareta; marcas e ligaduras pertencem a Fojo",
+      "onde_se_encontra": "desvio explorável de Fojo, atrás de uma leitura da família cajado",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "cajado_costa_quebrada_bordao_de_mare": {
+      "nome": "Bordão de maré",
+      "familia": "cajado",
+      "maos": 2,
+      "alcance_m": 1.8,
+      "requisitos": {
+        "inteligencia": 10
+      },
+      "escala": "inteligencia",
+      "peso_escala": "fraco",
+      "origem": "costa_quebrada",
+      "material": "bronze-do-mar, corda salgada e madeira de naufrágio",
+      "pergunta": "conjurar ou defender o espaço curto",
+      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em bronze-do-mar, corda salgada e madeira de naufrágio; marcas e ligaduras pertencem a Costa Quebrada",
+      "onde_se_encontra": "desvio explorável de Costa Quebrada, atrás de uma leitura da família cajado",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "cajado_cimeira_cajado_de_gelo": {
       "nome": "Cajado de gelo",
       "familia": "cajado",
       "maos": 2,
@@ -2034,13 +2124,13 @@
       "peso_escala": "fraco",
       "origem": "cimeira",
       "material": "aço frio, couro branco e flor-de-gelo",
-      "pergunta": "firmar a próxima conjuração",
+      "pergunta": "gastar mana na arte ou guardar para magia",
       "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em aço frio, couro branco e flor-de-gelo; marcas e ligaduras pertencem a Cimeira",
       "onde_se_encontra": "desvio explorável de Cimeira, atrás de uma leitura da família cajado",
       "asset_path": "",
       "fatia_1": false
     },
-    "cajado_selva_funda_fuso_de_seda": {
+    "cajado_fornalha_vara_de_cinza": {
       "nome": "Vara de cinza",
       "familia": "cajado",
       "maos": 2,
@@ -2052,13 +2142,13 @@
       "peso_escala": "fraco",
       "origem": "fornalha",
       "material": "obsidiana, bronze fundido e couro chamuscado",
-      "pergunta": "conjurar ou defender o espaço curto",
+      "pergunta": "firmar a próxima conjuração",
       "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em obsidiana, bronze fundido e couro chamuscado; marcas e ligaduras pertencem a Fornalha",
       "onde_se_encontra": "desvio explorável de Fornalha, atrás de uma leitura da família cajado",
       "asset_path": "",
       "fatia_1": false
     },
-    "cajado_campas_cinzentas_vara_de_ossario": {
+    "cajado_fulgor_diapasao_de_fulgor": {
       "nome": "Diapasão de fulgor",
       "familia": "cajado",
       "maos": 2,
@@ -2070,13 +2160,13 @@
       "peso_escala": "fraco",
       "origem": "fulgor",
       "material": "fulgurite, prata baça e couro isolante",
-      "pergunta": "gastar mana na arte ou guardar para magia",
-      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em fulgurite, prata baça e couro isolante; marcas e ligaduras pertencem a Fulgor",
+      "pergunta": "conjurar ou defender o espaço curto",
+      "descricao_visual": "diapasão ritual de prata baça com 175 cm, duas hastes paralelas de 38 cm e empunhadura envolta em cera, construída em fulgurite, prata baça e couro isolante; marcas e ligaduras pertencem a Fulgor",
       "onde_se_encontra": "desvio explorável de Fulgor, atrás de uma leitura da família cajado",
       "asset_path": "",
       "fatia_1": false
     },
-    "cajado_fojo_diapasao_de_mina": {
+    "cajado_raizama_fuso_de_esporo": {
       "nome": "Fuso de esporo",
       "familia": "cajado",
       "maos": 2,
@@ -2088,13 +2178,13 @@
       "peso_escala": "fraco",
       "origem": "raizama",
       "material": "raiz petrificada, quitina e esporo-lúmen",
-      "pergunta": "firmar a próxima conjuração",
-      "descricao_visual": "diapasão ritual de prata baça com 175 cm, duas hastes paralelas de 38 cm e empunhadura envolta em cera, construída em raiz petrificada, quitina e esporo-lúmen; marcas e ligaduras pertencem a Raizama",
+      "pergunta": "gastar mana na arte ou guardar para magia",
+      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em raiz petrificada, quitina e esporo-lúmen; marcas e ligaduras pertencem a Raizama",
       "onde_se_encontra": "desvio explorável de Raizama, atrás de uma leitura da família cajado",
       "asset_path": "",
       "fatia_1": false
     },
-    "cajado_costa_quebrada_bordao_de_mare": {
+    "cajado_cidade_afogada_bordao_afogado": {
       "nome": "Bordão afogado",
       "familia": "cajado",
       "maos": 2,
@@ -2106,99 +2196,9 @@
       "peso_escala": "fraco",
       "origem": "cidade_afogada",
       "material": "prata afogada, vidro verde e mármore molhado",
-      "pergunta": "conjurar ou defender o espaço curto",
+      "pergunta": "firmar a próxima conjuração",
       "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em prata afogada, vidro verde e mármore molhado; marcas e ligaduras pertencem a Cidade Afogada",
       "onde_se_encontra": "desvio explorável de Cidade Afogada, atrás de uma leitura da família cajado",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "cajado_cimeira_cajado_de_gelo": {
-      "nome": "Turíbulo branco",
-      "familia": "cajado",
-      "maos": 2,
-      "alcance_m": 1.8,
-      "requisitos": {
-        "inteligencia": 10
-      },
-      "escala": "inteligencia",
-      "peso_escala": "fraco",
-      "origem": "santuario_branco",
-      "material": "mármore branco, cera benta e ouro baço",
-      "pergunta": "gastar mana na arte ou guardar para magia",
-      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em mármore branco, cera benta e ouro baço; marcas e ligaduras pertencem a Santuário Branco",
-      "onde_se_encontra": "desvio explorável de Santuário Branco, atrás de uma leitura da família cajado",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "cajado_fornalha_vara_de_cinza": {
-      "nome": "Cajado da raiz",
-      "familia": "cajado",
-      "maos": 2,
-      "alcance_m": 1.8,
-      "requisitos": {
-        "inteligencia": 10
-      },
-      "escala": "inteligencia",
-      "peso_escala": "fraco",
-      "origem": "raiz",
-      "material": "madeira negra, lágrima de bruma e osso antigo",
-      "pergunta": "firmar a próxima conjuração",
-      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
-      "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família cajado",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "cajado_fulgor_diapasao_de_fulgor": {
-      "nome": "Vara de peregrino",
-      "familia": "cajado",
-      "maos": 2,
-      "alcance_m": 1.8,
-      "requisitos": {
-        "inteligencia": 10
-      },
-      "escala": "inteligencia",
-      "peso_escala": "fraco",
-      "origem": "brumal",
-      "material": "ferro rude e couro de javali",
-      "pergunta": "conjurar ou defender o espaço curto",
-      "descricao_visual": "diapasão ritual de prata baça com 175 cm, duas hastes paralelas de 38 cm e empunhadura envolta em cera, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
-      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família cajado",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "cajado_raizama_fuso_de_esporo": {
-      "nome": "Fuso de vidro",
-      "familia": "cajado",
-      "maos": 2,
-      "alcance_m": 1.8,
-      "requisitos": {
-        "inteligencia": 10
-      },
-      "escala": "inteligencia",
-      "peso_escala": "fraco",
-      "origem": "selva_funda",
-      "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "gastar mana na arte ou guardar para magia",
-      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
-      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família cajado",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "cajado_cidade_afogada_bordao_afogado": {
-      "nome": "Bordão de luto",
-      "familia": "cajado",
-      "maos": 2,
-      "alcance_m": 1.8,
-      "requisitos": {
-        "inteligencia": 10
-      },
-      "escala": "inteligencia",
-      "peso_escala": "fraco",
-      "origem": "campas_cinzentas",
-      "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "firmar a próxima conjuração",
-      "descricao_visual": "conduto de 180 cm, veio de madeira escura com aro mineral na ponta e empunhadura de couro gasto, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
-      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família cajado",
       "asset_path": "",
       "fatia_1": false
     },
@@ -2257,6 +2257,60 @@
       "fatia_1": false
     },
     "arco_brumal_arco_de_batedor": {
+      "nome": "Arco de batedor",
+      "familia": "arco",
+      "maos": 2,
+      "alcance_m": 18,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "brumal",
+      "material": "ferro rude e couro de javali",
+      "pergunta": "gastar munição para abrir combate",
+      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
+      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família arco",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "arco_selva_funda_funda_de_copa": {
+      "nome": "Funda de copa",
+      "familia": "arco",
+      "maos": 2,
+      "alcance_m": 18,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "selva_funda",
+      "material": "bambu negro, seda crua e seiva-peçonha",
+      "pergunta": "marcar para o parceiro",
+      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
+      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família arco",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "arco_campas_cinzentas_arco_tumular": {
+      "nome": "Arco tumular",
+      "familia": "arco",
+      "maos": 2,
+      "alcance_m": 18,
+      "requisitos": {
+        "destreza": 10
+      },
+      "escala": "destreza",
+      "peso_escala": "medio",
+      "origem": "campas_cinzentas",
+      "material": "osso seco, linho tumular e ferro ferrugento",
+      "pergunta": "abandonar a mira quando o alvo fecha",
+      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
+      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família arco",
+      "asset_path": "",
+      "fatia_1": false
+    },
+    "arco_fojo_arco_de_mineiro": {
       "nome": "Arco de mineiro",
       "familia": "arco",
       "maos": 2,
@@ -2274,7 +2328,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_selva_funda_funda_de_copa": {
+    "arco_costa_quebrada_funda_de_mare": {
       "nome": "Funda de maré",
       "familia": "arco",
       "maos": 2,
@@ -2292,7 +2346,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_campas_cinzentas_arco_tumular": {
+    "arco_cimeira_arco_de_gelo": {
       "nome": "Arco de gelo",
       "familia": "arco",
       "maos": 2,
@@ -2310,7 +2364,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_fojo_arco_de_mineiro": {
+    "arco_fornalha_arco_de_carvao": {
       "nome": "Arco de carvão",
       "familia": "arco",
       "maos": 2,
@@ -2328,7 +2382,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_costa_quebrada_funda_de_mare": {
+    "arco_fulgor_funda_de_fulgor": {
       "nome": "Funda de fulgor",
       "familia": "arco",
       "maos": 2,
@@ -2346,7 +2400,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_cimeira_arco_de_gelo": {
+    "arco_raizama_arco_de_esporo": {
       "nome": "Arco de esporo",
       "familia": "arco",
       "maos": 2,
@@ -2364,7 +2418,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_fornalha_arco_de_carvao": {
+    "arco_cidade_afogada_arco_afogado": {
       "nome": "Arco afogado",
       "familia": "arco",
       "maos": 2,
@@ -2382,7 +2436,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_fulgor_funda_de_fulgor": {
+    "arco_santuario_branco_funda_penitente": {
       "nome": "Funda penitente",
       "familia": "arco",
       "maos": 2,
@@ -2400,7 +2454,7 @@
       "asset_path": "",
       "fatia_1": false
     },
-    "arco_raizama_arco_de_esporo": {
+    "arco_raiz_arco_da_raiz": {
       "nome": "Arco da raiz",
       "familia": "arco",
       "maos": 2,
@@ -2415,60 +2469,6 @@
       "pergunta": "abandonar a mira quando o alvo fecha",
       "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em madeira negra, lágrima de bruma e osso antigo; marcas e ligaduras pertencem a A Raiz",
       "onde_se_encontra": "desvio explorável de A Raiz, atrás de uma leitura da família arco",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "arco_cidade_afogada_arco_afogado": {
-      "nome": "Arco de vigília",
-      "familia": "arco",
-      "maos": 2,
-      "alcance_m": 18,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "brumal",
-      "material": "ferro rude e couro de javali",
-      "pergunta": "gastar munição para abrir combate",
-      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em ferro rude e couro de javali; marcas e ligaduras pertencem a Brumal",
-      "onde_se_encontra": "desvio explorável de Brumal, atrás de uma leitura da família arco",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "arco_santuario_branco_funda_penitente": {
-      "nome": "Funda de vidro",
-      "familia": "arco",
-      "maos": 2,
-      "alcance_m": 18,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "selva_funda",
-      "material": "bambu negro, seda crua e seiva-peçonha",
-      "pergunta": "marcar para o parceiro",
-      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em bambu negro, seda crua e seiva-peçonha; marcas e ligaduras pertencem a Selva Funda",
-      "onde_se_encontra": "desvio explorável de Selva Funda, atrás de uma leitura da família arco",
-      "asset_path": "",
-      "fatia_1": false
-    },
-    "arco_raiz_arco_da_raiz": {
-      "nome": "Arco do horizonte",
-      "familia": "arco",
-      "maos": 2,
-      "alcance_m": 18,
-      "requisitos": {
-        "destreza": 10
-      },
-      "escala": "destreza",
-      "peso_escala": "medio",
-      "origem": "campas_cinzentas",
-      "material": "osso seco, linho tumular e ferro ferrugento",
-      "pergunta": "abandonar a mira quando o alvo fecha",
-      "descricao_visual": "arco recurvo de 145 cm, lâminas finas de madeira laminada, corda entrançada e punho de couro, construída em osso seco, linho tumular e ferro ferrugento; marcas e ligaduras pertencem a Campas Cinzentas",
-      "onde_se_encontra": "desvio explorável de Campas Cinzentas, atrás de uma leitura da família arco",
       "asset_path": "",
       "fatia_1": false
     },

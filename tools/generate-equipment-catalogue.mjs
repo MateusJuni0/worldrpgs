@@ -160,24 +160,28 @@ const specificWeaponSilhouette = (id, fallback) => {
 const weaponCatalogue = {};
 for (const [familyId, profile] of Object.entries(familyProfiles)) {
   const target = familyId === "espada_recta" ? 14 : 15;
-  const ids = [...profile.known];
+  const entries = profile.known.map((id) => ({ id }));
+  const ids = new Set(profile.known);
   let cursor = 0;
-  while (ids.length < target) {
-    const [biomeId, biomeName] = biomeRows[cursor % biomeRows.length];
+  while (entries.length < target) {
+    const [biomeId] = biomeRows[cursor % biomeRows.length];
     const form = profile.forms[cursor % profile.forms.length];
     const id = `${familyId}_${biomeId}_${slug(form)}`;
-    if (!ids.includes(id)) ids.push(id);
+    if (!ids.has(id)) {
+      entries.push({ id, biomeId, form });
+      ids.add(id);
+    }
     cursor += 1;
   }
-  ids.forEach((id, index) => {
+  entries.forEach(({ id, biomeId: generatedBiomeId, form: generatedForm }, index) => {
     const fallbackBiome = biomeRows[index % biomeRows.length];
-    const biomeId = lootOrigin.arma[id] ?? fallbackBiome[0];
+    const biomeId = lootOrigin.arma[id] ?? generatedBiomeId ?? fallbackBiome[0];
     const biome = biomeById[biomeId];
     const biomeName = biome.nome;
     const material = biome.material;
     const displayName = id === "longsword" ? "Espada longa" : id === "dagger" ? "Adaga" :
       id === "greataxe" ? "Machadão" : id === "staff" ? "Cajado" :
-      lootByKind.arma.has(id) ? title(id) : profile.forms[index % profile.forms.length];
+      lootByKind.arma.has(id) ? title(id) : generatedForm ?? profile.forms[index % profile.forms.length];
     const isFirstSlice = ["longsword", "dagger", "greataxe", "staff"].includes(id);
     weaponCatalogue[id] = {
       nome: displayName,
@@ -512,7 +516,7 @@ ${familyTable}
 
 Constantes universais que preservam a gramática: leve→pesado corta 25% do arranque · rolar corta 4 frames e usa MV ×0,85 · saltar só tem hiper-armadura nos activos · empurrão é 12+4+14 f, 20 stamina, MV 0,05 e quebra guarda. A diferença vem da pergunta e da geometria da família, nunca de “esta dá mais dano”.
 
-⚠️ O protótipo da Fatia 1 ainda executa leve, pesado, cadeia e bash. Corrida, saída de rolamento, salto, queda, empurrão universal, troca uma/duas mãos e artes entram no M2. O catálogo deixou de ser ambíguo; a animação/runtime ainda é trabalho real e fica em [\`LACUNAS.md\`](../LACUNAS.md).
+⚠️ O protótipo da Fatia 1 ainda executa leve, pesado, cadeia, bash e troca uma/duas mãos. Corrida, saída de rolamento, salto, queda, empurrão universal e artes entram no M2. O catálogo deixou de ser ambíguo; a animação/runtime ainda é trabalho real e fica em [\`LACUNAS.md\`](../LACUNAS.md).
 
 ## 3. Melhoria — seis níveis sem comprar força
 
@@ -568,17 +572,16 @@ ${ringTable}
 | Pergunta | Resposta |
 |---|---|
 | **Como se usa?** | armas herdam o moveset da família; melhoria escolhe-se no altar; armadura e anéis equipam-se no ecrã WP11; estados entram por ataque e mostram barra/saída; Assassino usa duas adagas e habilidade de classe |
-| **Como se prova?** | \`GameData\` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e todos os IDs WP6; \`self_test.gd\` repete a fronteira e os três guardas do Assassino |
+| **Como se prova?** | \`GameData\` valida contagens, 88 golpes, seis níveis sem força, estados simétricos, oito eixos e os IDs WP6 das categorias arma/armadura/anel; \`self_test.gd\` repete a fronteira e os três guardas do Assassino. ⚠️ Cinco payloads obrigatórios \`acessorio:*\` ficaram fora dessas categorias e estão em \`LACUNAS\` |
 | **De onde vem a arte?** | cada item/estado tem \`descricao_visual\`; cinco armas reutilizam imagens aprovadas, onze armaduras geram neste bloco e tudo o resto espera \`Fatia 1?\` |
 | **Quanto custa?** | agora: 11 fontes 1254×1254 com import de UI a 512; futuro: 115 armas + 57 armaduras + 70 anéis, produzidos só quando entrarem numa fatia; runtime dos sete golpes e equipar ficam para M2/WP11 |
 
 ## 9. O que continua aberto
 
 - ⏳ Mateus confirmar ou alterar a proposta do Assassino; este catálogo não transforma a instrução do Rico em consenso.
-- 🔴 Implementar no M2 os sete golpes novos, troca uma/duas mãos, artes e estados; os dados já fixam o contrato.
-- 🟠 O WP9 ainda resolve os 40 materiais e 17 consumíveis usados pelos baralhos do bestiário.
+- 🔴 Implementar no M2 os sete golpes novos, artes e estados; a troca uma/duas mãos já executa em 12 frames e os dados fixam o restante contrato.
 - 🟠 O ecrã de equipamento/anéis, ganho dos oito dedos adicionais e persistência dos votos pertencem ao WP11/save v2.
-- 🟠 Contra-ataque universal vs só perfuração, piso de escudo e uma/duas mãos continuam nas perguntas já existentes; nenhuma tensão foi decidida.
+- ✅ O [\`70\`](70-fecho-dos-sistemas-de-combate.md) fechou contra-ataque só em perfuração, piso corporal fora do bloqueio e empunhadura; a tensão elemental dos escudos é agora a pergunta 43.
 
 ## Ligações
 

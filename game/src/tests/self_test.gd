@@ -86,6 +86,11 @@ func _test_economy_and_loot_transaction() -> void:
 		== "material:couro_javali", "bias: carta marcial resolve por zona")
 	_check(GameData.resolve_loot_card("orc_spearman", "bias:classe", "sorcerer")
 		== "material:limalha_ferro", "bias: carta arcana resolve por zona")
+	var bias_profiles: Dictionary = ((GameData.economy.get("class_bias", {}) as Dictionary).get(
+		"profiles", {}) as Dictionary)
+	for class_id: String in ["warrior", "sorcerer", "tank", "assassin", "berserker", "paladin"]:
+		_check(bias_profiles.has(class_id),
+			"bias: classe jogavel '%s' declara o perfil sem fallback" % class_id)
 
 	var state := SaveSystem.create_save("loot-transaction", "warrior")
 	var seed_value := 7204
@@ -1299,6 +1304,9 @@ func _test_bestiary_catalogue() -> void:
 		"sair_da_area", "aparar", "bloquear_e_aguentar"]
 	const VISUAL_CUE_FIELDS: Array[String] = ["ancora", "forma", "inicio",
 		"compromisso", "fim", "fora_ecra"]
+	var raw_enemies_value: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/enemies.json"))
+	var raw_enemies: Dictionary = raw_enemies_value as Dictionary
 
 	var common_ids: Array[String] = []
 	var represented_races := {}
@@ -1314,6 +1322,19 @@ func _test_bestiary_catalogue() -> void:
 		if bool(e.get("is_boss", false)):
 			continue
 		common_ids.append(id)
+		var raw_enemy: Dictionary = raw_enemies.get(id, {}) as Dictionary
+		var declares_chase := raw_enemy.has("chase_speed")
+		var declares_amphibious_chase := raw_enemy.has("land_chase_speed") \
+			and raw_enemy.has("swim_chase_speed")
+		_check(declares_chase or declares_amphibious_chase,
+			"%s: ficha crua declara velocidade de perseguicao" % id)
+		if declares_amphibious_chase:
+			_check(float(raw_enemy.get("land_chase_speed", 99.0)) < 5.0
+				and float(raw_enemy.get("swim_chase_speed", 99.0)) < 5.0,
+				"%s: perseguicao terrestre e aquatica ficam abaixo do correr" % id)
+		else:
+			_check(float(raw_enemy.get("chase_speed", 99.0)) < 5.0,
+				"%s: perseguicao fica abaixo dos 5,0 m/s do correr" % id)
 		represented_races[String(e.get("race_id", ""))] = true
 		if bool(e.get("fatia_1", false)):
 			slice_ids.append(id)

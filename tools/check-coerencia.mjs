@@ -147,8 +147,20 @@ if (base) {
 
 // ----------------------------------------------------------------- relatório ---
 
+let relatorioDados = '';
+try {
+  relatorioDados = execFileSync(process.execPath, [join(ROOT, 'tools', 'check-data-references.mjs')], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  }).trim();
+} catch (error) {
+  const detalhe = String(error?.stdout || error?.stderr || error?.message || error).trim();
+  erro('game/data', `a verificação cruzada dos 17 JSON falhou${detalhe ? `:\n${detalhe}` : ''}`);
+}
+
 console.log('Guarda de coerência da spec\n');
 console.log(`Ficheiros markdown analisados: ${ficheiros.length}`);
+if (relatorioDados) console.log(`\n${relatorioDados}`);
 
 if (decididosNovos.length) {
   console.log(`
