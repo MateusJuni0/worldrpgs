@@ -3,6 +3,12 @@
   "_fonte_dano": "spec/11-formulas.md (WP2), tabela 'As armas da fatia' — dano base, requisito, escala, peso.",
   "_verificacao_frames": "adaga 12+4+14=30f=0,50s | espada 16+6+18=40f=0,67s | machadao 24+8+26=58f=0,97s | cajado 18+5+20=43f=0,72s | escudo 14+4+16=34f=0,57s",
   "_fonte_familias": "spec/51-familias.md §1-§3 (volta 3) — a camada 1. Cada familia tem de trazer 'onde e ma'; sem essa frase esta listada, nao desenhada.",
+  "_codex_starting_stances": {
+    "tag": "[CODEX]",
+    "status": "proposal_for_animation_owner",
+    "reason": "a postura torna cada kit inicial reconhecivel antes de comparar dano e fecha o contrato pedido pelo Mateus",
+    "discarded_alternative": "reutilizar uma pose generica; deixava IDs e frames diferentes com a mesma leitura visual"
+  },
 
   "golpes_universais": {
     "_fonte": "spec/51 §1 + spec/68 §2 — constantes universais; equipment.json materializa os 11 golpes nas 8 familias.",
@@ -101,7 +107,19 @@
     "scale_weight": "forte",
     "light": { "startup": 12, "active": 4, "recovery": 14, "stamina": 12, "mv": 0.55 },
     "heavy": { "startup": 20, "active": 5, "recovery": 20, "stamina": 20, "mv": 0.85 },
-    "combo": { "max": 4, "final_mv": 0.7 }
+    "combo": { "max": 4, "final_mv": 0.7 },
+    "presentation": {
+      "visual_description": "lamina curta de um gume com 38 cm, ponta estreita, guarda minima e punho de couro escuro",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "lamina_recolhida",
+      "guard": "baixa junto ao flanco, segunda adaga pronta para alternar",
+      "attack_plane": "linha curta de estocada e corte de retorno",
+      "spatial_weakness": "de frente contra armadura pesada"
+    }
   },
 
   "longsword": {
@@ -119,7 +137,19 @@
     "scale_weight": "medio",
     "light": { "startup": 16, "active": 6, "recovery": 18, "stamina": 18, "mv": 1.0 },
     "heavy": { "startup": 28, "active": 8, "recovery": 26, "stamina": 30, "mv": 1.6 },
-    "combo": { "max": 3, "final_mv": 1.2 }
+    "combo": { "max": 3, "final_mv": 1.2 },
+    "presentation": {
+      "visual_description": "espada de lamina recta de dois gumes em ferro polido, 90 cm, guarda cruciforme curta e punho de couro castanho",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "guarda_media_aberta",
+      "guard": "lamina centrada e escudo livre para resposta",
+      "attack_plane": "alternancia equilibrada entre corte e estocada",
+      "spatial_weakness": "nao domina nenhuma distancia lida"
+    }
   },
 
   "greataxe": {
@@ -144,7 +174,19 @@
       "hyper_armor_start_frame": 30,
       "hyper_armor_end_frame": 48
     },
-    "combo": { "max": 2, "final_mv": null }
+    "combo": { "max": 2, "final_mv": null },
+    "presentation": {
+      "visual_description": "machadao de lamina crescente em ferro martelado, cabeca de 42 cm e haste de freixo com 125 cm",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "ombro_alto_comprometido",
+      "guard": "duas maos altas e peso atras do ombro",
+      "attack_plane": "arco largo descendente que varre grupo",
+      "spatial_weakness": "recuperacao aberta quando o alvo nao troca"
+    }
   },
 
   "staff": {
@@ -164,7 +206,136 @@
     "light": { "startup": 18, "active": 5, "recovery": 20, "stamina": 15, "mv": 0.7 },
     "heavy": { "startup": 30, "active": 7, "recovery": 28, "stamina": 25, "mv": 1.1 },
     "combo": { "max": 2, "final_mv": null },
+    "presentation": {
+      "visual_description": "cajado de madeira negra com 180 cm, veio recto, aro simples de ferro e cristal azul preso por couro",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "diagonal_de_conjuracao",
+      "guard": "cajado cruzado diante do peito, foco acima da mao guia",
+      "attack_plane": "varrimento baixo que abre espaco para conjurar",
+      "spatial_weakness": "pressionado contra a parede sem mana"
+    },
     "_nota": "Plano B do mago: pancada sem custo de mana (custa stamina). A Lei 1 nunca fica refem do reservatorio de mana."
+  },
+
+  "espada_recta_brumal_espada_de_vigilia": {
+    "display_name": "Espada de vigilia",
+    "catalogue_id": "espada_recta_brumal_espada_de_vigilia",
+    "familia": "espada_recta",
+    "slot": "main",
+    "hands": 1,
+    "range": 1.9,
+    "can_parry": false,
+    "can_block": true,
+    "block_type": "onehand",
+    "base_damage": 40,
+    "requirements": { "forca": 10 },
+    "scaling_attribute": "forca",
+    "scale_weight": "medio",
+    "light": { "startup": 20, "active": 6, "recovery": 22, "stamina": 20, "mv": 1.10 },
+    "heavy": { "startup": 32, "active": 8, "recovery": 30, "stamina": 35, "mv": 1.75 },
+    "combo": { "max": 2, "final_mv": 1.35 },
+    "weapon_art": {
+      "one_hand": { "name": "guarda ancorada", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" },
+      "two_hands": { "name": "ruptura de muralha", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" }
+    },
+    "presentation": {
+      "visual_description": "lamina recta de dois gumes com 90 cm, guarda cruciforme curta e pomo circular, em ferro rude e couro de javali de Brumal",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "guarda_ancorada",
+      "guard": "escudo avancado e lamina curta junto ao corpo",
+      "attack_plane": "corte pesado de pouca cadeia para conservar a linha",
+      "spatial_weakness": "flanco oposto ao escudo durante o compromisso"
+    },
+    "_codex_starting_profile": {
+      "tag": "[CODEX]",
+      "reason": "o Tanque precisa de sentir peso e postura sem repetir a cadencia equilibrada do Guerreiro; MV alimenta postura no runtime",
+      "discarded_alternative": "repetir longsword; tornava a escolha de origem invisivel na mao"
+    }
+  },
+
+  "espada_prata_santuario": {
+    "display_name": "Espada de prata do Santuario",
+    "catalogue_id": "espada_prata_santuario",
+    "familia": "espada_recta",
+    "slot": "main",
+    "hands": 1,
+    "range": 2.1,
+    "can_parry": false,
+    "can_block": true,
+    "block_type": "onehand",
+    "base_damage": 40,
+    "requirements": { "forca": 10 },
+    "scaling_attribute": "forca",
+    "scale_weight": "medio",
+    "light": { "startup": 15, "active": 6, "recovery": 19, "stamina": 17, "mv": 0.95 },
+    "heavy": { "startup": 26, "active": 7, "recovery": 25, "stamina": 28, "mv": 1.50 },
+    "combo": { "max": 3, "final_mv": 1.15 },
+    "weapon_art": {
+      "one_hand": { "name": "estocada votiva", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" },
+      "two_hands": { "name": "arco de julgamento", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" }
+    },
+    "presentation": {
+      "visual_description": "espada recta de prata baca com lamina de dois gumes de 88 cm, guarda branca e pomo de ouro gasto do Santuario Branco",
+      "model_asset": null,
+      "model_status": "missing_exact_hand_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "guarda_votiva",
+      "guard": "lamina alta diante do rosto e escudo junto ao peito",
+      "attack_plane": "estocada longa seguida de arco de julgamento",
+      "spatial_weakness": "lado da espada aberto depois da estocada"
+    },
+    "_codex_starting_profile": {
+      "tag": "[CODEX]",
+      "reason": "o Paladino conserva espada e escudo, mas ganha leitura votiva e cadencia propria em vez de copiar o Guerreiro",
+      "discarded_alternative": "dar a katana ao Paladino; resolvia unicidade, mas contrariava a identidade de destreza do Espadachim dita pelo Mateus"
+    }
+  },
+
+  "katana_brumal_sabre_de_vigilia": {
+    "display_name": "Sabre de vigilia",
+    "catalogue_id": "katana_brumal_sabre_de_vigilia",
+    "familia": "katana",
+    "slot": "main",
+    "hands": 1,
+    "range": 2.1,
+    "can_parry": false,
+    "can_block": true,
+    "block_type": "onehand",
+    "base_damage": 40,
+    "requirements": { "destreza": 10 },
+    "scaling_attribute": "destreza",
+    "scale_weight": "forte",
+    "light": { "startup": 14, "active": 5, "recovery": 16, "stamina": 16, "mv": 0.90 },
+    "heavy": { "startup": 26, "active": 7, "recovery": 24, "stamina": 26, "mv": 1.44 },
+    "combo": { "max": 3, "final_mv": 1.05 },
+    "weapon_art": {
+      "one_hand": { "name": "iai", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" },
+      "two_hands": { "name": "corte duplo", "input_action": "weapon_art", "runtime_state": "blocked_missing_input_action" }
+    },
+    "presentation": {
+      "visual_description": "lamina curva estreita de um gume com 90 cm, aco polido, guarda oval baixa e punho enfaixado em couro de Brumal",
+      "model_asset": null,
+      "model_status": "missing_exact_katana_model",
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+    },
+    "combat_stance": {
+      "id": "bainha_baixa_para_iai",
+      "guard": "bainha baixa e mao da lamina pronta para o saque",
+      "attack_plane": "saque de contra-ataque seguido de corte de retorno",
+      "spatial_weakness": "perde a vantagem quando o inimigo nao compromete o golpe"
+    },
+    "_starting_assignment": "unassigned_owner_decision",
+    "_source_profile": "spec/51 familia katana + equipment.json/katana_brumal_sabre_de_vigilia; stamina/base_damage sao baseline runtime [CODEX] ate afinacao do agente armas-e-melhorias"
   },
 
   "shield": {
@@ -185,15 +356,22 @@
   },
 
   "loadouts": {
-    "_fonte": "spec/51-familias.md §5 — os kits iniciais (instrucao do Rico, 31-07). Lei 3: qualquer classe pega em qualquer arma; isto e so o arranque.",
+    "_fonte": "Queixa directa do Mateus (01-08): cada origem com arma inicial propria; spec/51-familias.md §5 continua a fonte das pecas. Lei 3: qualquer classe pega em qualquer arma; isto e so o arranque.",
     "_pecas": "os ids de 'pecas' vivem em armor.json. Todos os kits em carga leve, excepto o tanque (medio — a identidade dele e sentir o peso).",
+    "_pending_mago_do_mal": {
+      "status": "blocked_missing_relicario_catalogue",
+      "decision": "[DECIDIDO] Mateus 01-08: setima origem propria",
+      "known_direction": "cajado negro + relicario, postura entre os mortos",
+      "missing_before_activation": ["relicario no catalogo", "atributos da origem", "arte/postura runtime", "teste de sete origens"],
+      "reason_not_invented": "o catalogo executavel so cobre cajado; preencher main/offhand agora fingia que o relicario existe"
+    },
     "warrior":   { "main": "longsword", "offhand": "shield",  "pecas": ["couro_peitoral", "couro_botas"],        "carga": "leve" },
     "sorcerer":  { "main": "staff",     "offhand": null,      "pecas": ["la_capa", "couro_cinto"],               "carga": "leve" },
-    "tank":      { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_elmo", "ferro_peitoral"],         "carga": "medio" },
+    "tank":      { "main": "espada_recta_brumal_espada_de_vigilia", "offhand": "shield", "pecas": ["ferro_elmo", "ferro_peitoral"], "carga": "medio" },
     "assassin":  { "main": "dagger",    "offhand": "dagger",  "pecas": ["pano_mascara", "pano_botas"],           "carga": "leve",
       "_duas_adagas": "instrucao do Rico (31-07): o assassino comeca com DUAS adagas. O Corte Alternado esta declarado no spec/68; o runtime do offhand continua para o M2." },
     "berserker": { "main": "greataxe",  "offhand": null,      "pecas": ["couro_ombreiras"],                      "carga": "leve" },
-    "paladin":   { "main": "longsword", "offhand": "shield",  "pecas": ["ferro_peitoral_polido", "la_capa_clara"], "carga": "leve" }
+    "paladin":   { "main": "espada_prata_santuario", "offhand": "shield", "pecas": ["ferro_peitoral_polido", "la_capa_clara"], "carga": "leve" }
   },
 
   "test_loadouts": {
@@ -204,6 +382,9 @@
       { "main": "dagger",    "offhand": null },
       { "main": "greataxe",  "offhand": null },
       { "main": "staff",     "offhand": null },
+      { "main": "espada_recta_brumal_espada_de_vigilia", "offhand": "shield" },
+      { "main": "espada_prata_santuario", "offhand": "shield" },
+      { "main": "katana_brumal_sabre_de_vigilia", "offhand": null },
       { "main": "longsword", "offhand": null }
     ]
   }
