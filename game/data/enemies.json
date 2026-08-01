@@ -15,6 +15,16 @@
       "fairness_rule": "uma magia inimiga é uma ficha de ataque do bestiário e passa exactamente as mesmas guardas de honestidade"
     }
   },
+  "_ai_benchmark": {
+    "active_enemies": 8,
+    "enemy_id": "orc_spearman",
+    "warmup_seconds": 4.0,
+    "sample_seconds": 12.0,
+    "viewport_width_px": 1920,
+    "viewport_height_px": 1080,
+    "spawn_height_m": 0.5,
+    "camera_position": [0.0, 6.0, 12.0]
+  },
   "_enemy_defaults": {
     "is_boss": false,
     "posture_damage_taken_multiplier": 1.0,
@@ -34,8 +44,27 @@
       "spawn_ring_slots": 8
     },
     "attack_coordination": {
+      "_decision": "[CODEX] Duas intenções de ataque e uma abertura angular mínima conservam pressão sem formar uma fila nem fechar a fuga. Razão: o limite antigo sozinho não media se o jogador ainda tinha saída. Alternativa descartada: todos atacarem por cooldown independente, porque permite stunlock e cercos sem culpa.",
       "retry_delay_s": 0.25,
-      "post_action_gap_s": 0.20
+      "post_action_gap_s": 0.20,
+      "maximum_attack_intents": 2,
+      "minimum_escape_arc_deg": 100.0
+    },
+    "combat_behavior": {
+      "_decision": "[CODEX] A IA reage apenas a estados visíveis e alterna aproximação, órbita, espera e recuo. Razão: o jogador consegue atribuir cada decisão à distância, animação ou vaga de ataque. Alternativa descartada: pesos aleatórios por frame, porque parecem leitura de input e são difíceis de provar.",
+      "visible_item_state": "USING_ITEM",
+      "commitment_states": ["ATTACK", "CASTING", "MEDITATING", "PARRY", "GRIP_SWITCH"],
+      "visible_state_aliases": {
+        "livre": "FREE", "ataque": "ATTACK", "conjuracao": "CASTING",
+        "a meditar": "MEDITATING", "parry": "PARRY",
+        "troca de empunhadura": "GRIP_SWITCH", "a beber": "USING_ITEM",
+        "hit-stun": "HITSTUN", "guarda quebrada": "GUARD_BREAK", "morto": "DEAD"
+      },
+      "readable_cues": {
+        "approach": "weapon_forward", "orbit": "side_on_steps",
+        "withdraw": "guarded_backstep", "wait": "guarded_hold",
+        "request_attack": "attack_telegraph"
+      }
     },
     "perception": {
       "vision_cone_deg": 90.0, "vision_range_m": 15.0,
@@ -45,7 +74,12 @@
       "desist_after_s": 6.0, "desist_home_distance_m": 30.0,
       "return_speed_policy": "same_as_chase", "return_arrival_radius_m": 1.2,
       "return_heal_pulse_s": 1.0, "return_heal_fraction": 1.0,
-      "damage_reacquires": true
+      "damage_reacquires": true,
+      "readable_cues": {
+        "alert": "alert_posture", "calling": "call_shout", "combat": "weapon_ready",
+        "searching": "search_turn", "returning": "weapon_lowered_return",
+        "healing": "home_heal_pulse", "reacquired": "hurt_turn"
+      }
     }
   },
   "_presentation": {

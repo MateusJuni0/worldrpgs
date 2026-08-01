@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ai/enemy_ai_benchmark.gd" id="1_ai"]
+
+[node name="EnemyAiBenchmarkRunner" type="Node3D"]
+script = ExtResource("1_ai")
