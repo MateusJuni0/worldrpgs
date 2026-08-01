@@ -43,6 +43,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Volta 3 | `spec/51-familias.md` + `game/data/weapons.json`/`armor.json` | Fable | 31-07 | ✅ entregue — 8 famílias, 3 escudos, 9 slots, 6 kits, espólio do Rico |
 | Tarefa 4 | `spec/70`–`73` + alinhamento dos documentos antigos | Codex | 01-08 | ✅ entregue (`e57ffb7`; mapa `24d78a6`) — contratos, integração e lacunas vermelhas fechados |
 | Tarefa 5 | `spec/74` + contratos de execução + estabilidade de frame | Codex | 01-08 | ✅ concluída localmente — contratos/referências/perseguições fechados; p99 continua vermelho; sem push |
+| Rede | `game/src/net/` (pasta vazia, sem dono) | Fable | 01-08 | 🔨 em curso — co-op a dois, `spec/19` já fechado |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 
@@ -107,6 +108,7 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 72 | Codex | catálogo de materiais, consumíveis e economia (tarefa 4.4) |
 | 73 | Codex | fecho dos buracos de integração e fronteira spec→produção (tarefa 4.4) |
 | 74 | Codex | fecho dos bloqueios da Revisão 2 (tarefa 5) |
+| — | Fable | **a camada de rede** — `game/src/net/` (briefing `PARA-O-OPUS-DO-RICO.md`) |
 | **75+** | **livre** | |
 
 ⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
