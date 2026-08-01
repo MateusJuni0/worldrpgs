@@ -42,6 +42,7 @@ não está demonstrado.
 |---|---:|---:|---:|---:|---:|---:|
 | Sem vsync — tempo real de render | **150,9 fps** | 9,923 ms | **12,673 ms** | 68,5 | 2 | 29,98 ms |
 | Vsync 60 Hz — pacing do jogo | **59,9 fps** | 17,132 ms | **18,402 ms** | 45,5 | 12 | 33,33 ms |
+| Vsync 60 Hz — repetição | **59,6 fps** | 17,086 ms | **18,730 ms** | 35,6 | 25 | 50,00 ms |
 
 Durante a segunda prova, três leituras do Windows deram **76%, 67% e 100% de
 CPU total**, com vários processos `claude` da outra worktree/agentes activos.
@@ -51,6 +52,13 @@ passa, a estabilidade absoluta nesta sessão saturada não está certificada**.
 Não se mataram processos alheios nem se escolheu só a amostra bonita. Uma
 amostra anterior de 30 s sem saturação deu 154,9 fps, p99 9,608 ms, pior 10,64
 ms e zero frames fora do orçamento.
+
+Repetir FIFO quando a leitura instantânea de CPU tinha descido para 14–57% não
+resolveu o pacing, como mostra a terceira linha. Também se ensaiou mailbox com
+limite de 120 fps: o driver escreveu que **Mailbox não está disponível** e caiu
+para `Enabled`; o resultado piorou para 85,3 fps, p99 19,076 ms e quatro frames
+>33 ms. A alteração foi rejeitada e revertida. Não se muda o jogo para um modo
+que este adaptador não suporta.
 
 ---
 
