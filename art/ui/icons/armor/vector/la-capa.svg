@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Capa de lã encerada">
+  <defs>
+    <linearGradient id="cloak" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#4d5b5d"/><stop offset="1" stop-color="#20272b"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#111a1e" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path fill="url(#cloak)" d="M85 70q5-52 43-52t43 52l27 31 26 125-63-15-33 28-33-28-63 15 26-125Z"/>
+    <path fill="#172025" d="M91 70q7-38 37-38t37 38l-37 26Z"/>
+    <path fill="#354347" d="m128 96 33 115-33 28-33-28z"/>
+    <path fill="none" stroke="#789a97" stroke-width="6" d="M74 105 54 207M182 105l20 102M128 102v125" opacity=".65"/>
+    <circle fill="#b08a57" cx="128" cy="100" r="10"/>
+  </g>
+</svg>

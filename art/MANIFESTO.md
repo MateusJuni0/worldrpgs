@@ -58,21 +58,21 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 
 ## Ícones — entram no jogo
 
-| ID | Asset | Caminho | Dim. | Prompt | Estado |
-|---|---|---|---|---|---|
-| `ico_arma_espada_longa` | Espada longa | `art/ui/icons/items/espada-longa.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_escudo_madeira` | Escudo de madeira | `art/ui/icons/items/escudo-madeira.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_cajado` | Cajado | `art/ui/icons/items/cajado.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_adaga` | Adaga | `art/ui/icons/items/adaga.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_machadao` | Machadão | `art/ui/icons/items/machadao.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_katana` | Katana — família | `art/ui/icons/items/katana.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_haste` | Haste — família | `art/ui/icons/items/haste.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_arco` | Arco — família | `art/ui/icons/items/arco.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_arma_besta` | Besta — família | `art/ui/icons/items/besta.png` | 2048×2048 | [04](prompts/04-icones-armas.md) | ✅ |
-| `ico_item_pocao_vida` | Poção de vida | `art/ui/icons/items/pocao-vida.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_dardo` | Dardo (projéctil directo) | `art/ui/icons/spells/dardo.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_ruina` | Ruína (dano de área) | `art/ui/icons/spells/ruina.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
-| `ico_magia_egide` | Égide (protecção) | `art/ui/icons/spells/egide.png` | 2048×2048 | [05](prompts/05-icones-magias.md) | ✅ |
+| ID | Asset | Caminho | Dim. | Runtime | Prompt | Estado |
+|---|---|---|---|---|---|---|
+| `ico_arma_espada_longa` | Espada longa | `art/ui/icons/items/espada-longa.png` | 2048×2048 | `game/assets/ui/icons/families/espada-recta.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_escudo_madeira` | Escudo de madeira | `art/ui/icons/items/escudo-madeira.png` | 2048×2048 | — | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_cajado` | Cajado | `art/ui/icons/items/cajado.png` | 2048×2048 | `game/assets/ui/icons/families/cajado.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_adaga` | Adaga | `art/ui/icons/items/adaga.png` | 2048×2048 | `game/assets/ui/icons/families/adaga.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_machadao` | Machadão | `art/ui/icons/items/machadao.png` | 2048×2048 | `game/assets/ui/icons/families/pesada-corte.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_katana` | Katana — família | `art/ui/icons/items/katana.png` | 2048×2048 | `game/assets/ui/icons/families/katana.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_haste` | Haste — família | `art/ui/icons/items/haste.png` | 2048×2048 | `game/assets/ui/icons/families/haste.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_arco` | Arco — família | `art/ui/icons/items/arco.png` | 2048×2048 | `game/assets/ui/icons/families/arco.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_arma_besta` | Besta — família | `art/ui/icons/items/besta.png` | 2048×2048 | `game/assets/ui/icons/families/besta.svg` · 32² | [04](prompts/04-icones-armas.md) | ✅ |
+| `ico_item_pocao_vida` | Poção de vida | `art/ui/icons/items/pocao-vida.png` | 2048×2048 | — | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_dardo` | Dardo (projéctil directo) | `art/ui/icons/spells/dardo.png` | 2048×2048 | — | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_ruina` | Ruína (dano de área) | `art/ui/icons/spells/ruina.png` | 2048×2048 | — | [05](prompts/05-icones-magias.md) | ✅ |
+| `ico_magia_egide` | Égide (protecção) | `art/ui/icons/spells/egide.png` | 2048×2048 | — | [05](prompts/05-icones-magias.md) | ✅ |
 
 ## Interface e céu
 
@@ -96,21 +96,21 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 
 ## Ícones de armadura — volta 3, **fatia 1** ([`../spec/51-familias.md`](../spec/51-familias.md) §5)
 
-> ⭐ **São as primeiras armaduras do jogo** — as 11 peças dos kits iniciais das 6 classes. Todas `Fatia 1 ✅`, todas com `descrição visual` em `game/data/armor.json`. Geradas uma a uma pelo [prompt 07](prompts/07-icones-armaduras.md), com chroma key removido para alfa real.
+> ⭐ **São as primeiras armaduras do jogo** — as 11 peças dos kits iniciais das 6 classes. Todas `Fatia 1 ✅`, todas com `descrição visual` em `game/data/armor.json`. Os PNG de arquivo foram gerados um a um pelo [prompt 07](prompts/07-icones-armaduras.md), com chroma key removido para alfa real; o runtime usa uma derivação vetorial simples para se manter legível a 32 px.
 
-| ID | Asset | Caminho | Dim. | Classe(s) | Estado |
-|---|---|---|---|---|---|
-| `ico_arm_couro_peitoral` | Peitoral de couro fervido | `art/ui/icons/armor/couro-peitoral.png` | 1254×1254 | Guerreiro | ✅ |
-| `ico_arm_couro_botas` | Botas de couro | `art/ui/icons/armor/couro-botas.png` | 1254×1254 | Guerreiro | ✅ |
-| `ico_arm_ferro_elmo` | Elmo de ferro rude | `art/ui/icons/armor/ferro-elmo.png` | 1254×1254 | Tanque | ✅ |
-| `ico_arm_ferro_peitoral` | Peitoral de ferro rude | `art/ui/icons/armor/ferro-peitoral.png` | 1254×1254 | Tanque | ✅ |
-| `ico_arm_ferro_peitoral_polido` | Peitoral de ferro polido | `art/ui/icons/armor/ferro-peitoral-polido.png` | 1254×1254 | Paladino | ✅ |
-| `ico_arm_pano_mascara` | Máscara de pano escuro | `art/ui/icons/armor/pano-mascara.png` | 1254×1254 | Assassino | ✅ |
-| `ico_arm_pano_botas` | Botas de pano | `art/ui/icons/armor/pano-botas.png` | 1254×1254 | Assassino | ✅ |
-| `ico_arm_couro_ombreiras` | Ombreiras de couro com pelo | `art/ui/icons/armor/couro-ombreiras.png` | 1254×1254 | Berserker | ✅ |
-| `ico_arm_la_capa` | Capa de lã encerada | `art/ui/icons/armor/la-capa.png` | 1254×1254 | Feiticeiro | ✅ |
-| `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` | 1254×1254 | Paladino | ✅ |
-| `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` | 1254×1254 | Feiticeiro | ✅ |
+| ID | Asset | Arquivo | Fonte vetorial | Runtime | Classe(s) | Estado |
+|---|---|---|---|---|---|---|
+| `ico_arm_couro_peitoral` | Peitoral de couro fervido | `art/ui/icons/armor/couro-peitoral.png` · 1254² | `art/ui/icons/armor/vector/couro-peitoral.svg` | `game/assets/ui/icons/armor/couro-peitoral.png` · 128² | Guerreiro | ✅ |
+| `ico_arm_couro_botas` | Botas de couro | `art/ui/icons/armor/couro-botas.png` · 1254² | `art/ui/icons/armor/vector/couro-botas.svg` | `game/assets/ui/icons/armor/couro-botas.png` · 128² | Guerreiro | ✅ |
+| `ico_arm_ferro_elmo` | Elmo de ferro rude | `art/ui/icons/armor/ferro-elmo.png` · 1254² | `art/ui/icons/armor/vector/ferro-elmo.svg` | `game/assets/ui/icons/armor/ferro-elmo.png` · 128² | Tanque | ✅ |
+| `ico_arm_ferro_peitoral` | Peitoral de ferro rude | `art/ui/icons/armor/ferro-peitoral.png` · 1254² | `art/ui/icons/armor/vector/ferro-peitoral.svg` | `game/assets/ui/icons/armor/ferro-peitoral.png` · 128² | Tanque | ✅ |
+| `ico_arm_ferro_peitoral_polido` | Peitoral de ferro polido | `art/ui/icons/armor/ferro-peitoral-polido.png` · 1254² | `art/ui/icons/armor/vector/ferro-peitoral-polido.svg` | `game/assets/ui/icons/armor/ferro-peitoral-polido.png` · 128² | Paladino | ✅ |
+| `ico_arm_pano_mascara` | Máscara de pano escuro | `art/ui/icons/armor/pano-mascara.png` · 1254² | `art/ui/icons/armor/vector/pano-mascara.svg` | `game/assets/ui/icons/armor/pano-mascara.png` · 128² | Assassino | ✅ |
+| `ico_arm_pano_botas` | Botas de pano | `art/ui/icons/armor/pano-botas.png` · 1254² | `art/ui/icons/armor/vector/pano-botas.svg` | `game/assets/ui/icons/armor/pano-botas.png` · 128² | Assassino | ✅ |
+| `ico_arm_couro_ombreiras` | Ombreiras de couro com pelo | `art/ui/icons/armor/couro-ombreiras.png` · 1254² | `art/ui/icons/armor/vector/couro-ombreiras.svg` | `game/assets/ui/icons/armor/couro-ombreiras.png` · 128² | Berserker | ✅ |
+| `ico_arm_la_capa` | Capa de lã encerada | `art/ui/icons/armor/la-capa.png` · 1254² | `art/ui/icons/armor/vector/la-capa.svg` | `game/assets/ui/icons/armor/la-capa.png` · 128² | Feiticeiro | ✅ |
+| `ico_arm_la_capa_clara` | Capa de lã clara | `art/ui/icons/armor/la-capa-clara.png` · 1254² | `art/ui/icons/armor/vector/la-capa-clara.svg` | `game/assets/ui/icons/armor/la-capa-clara.png` · 128² | Paladino | ✅ |
+| `ico_arm_couro_cinto` | Cinto de bolsas | `art/ui/icons/armor/couro-cinto.png` · 1254² | `art/ui/icons/armor/vector/couro-cinto.svg` | `game/assets/ui/icons/armor/couro-cinto.png` · 128² | Feiticeiro | ✅ |
 
 **Total: 58 assets arquivados** — 32 conceitos · 24 ícones · fundo de menu · céu. Estados: ⬜ por gerar · 🔄 gerado, por avaliar · ✅ arquivado no caminho.
 
@@ -120,12 +120,20 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 >
 > **Ícones:** os históricos e as quatro novas famílias vivem a 2048²; as 11 armaduras vivem a 1254². As armaduras foram geradas sobre chroma key e passadas pelo helper `remove_chroma_key.py`; as quatro famílias novas passaram pelo removedor Higgsfield. As 15 imagens são RGBA, alfa 0–255 e têm os quatro cantos a alfa 0. Ao importar no runtime, o limite continua **512²**; o manifesto regista a dimensão real da fonte.
 >
+> `[CODEX]` **Derivação vetorial de runtime (01-08-2026):** os 11 PNG de arquivo mantêm-se intactos; as fontes SVG e os PNG de runtime foram desenhados com a mesma gramática plana dos oito ícones de famílias de arma. **Razão:** a silhueta fica inequívoca a 32 px e os 11 PNG 128² ocupam 120 856 bytes no repositório / 720 896 bytes em RGBA sem mipmaps. **Alternativa descartada:** importar as fontes raster a 512²; preservava detalhe invisível na mochila e custava 16 vezes mais memória de textura. As 11 saídas runtime são RGBA, têm alfa 0–255 e os quatro cantos a alfa 0.
+>
 > **Auditoria do executor de qualidade, 01-08-2026:** os 16 ícones da Fatia 1
 > (`espada_recta`, `adaga`, `pesada_corte`, `cajado`, `escudo_medio` e as 11
 > peças) já existiam e não foram duplicados. A instrução posterior de fechar as
 > **oito famílias de arma** acrescentou `katana`, `haste`, `arco` e `besta`,
 > mesmo marcadas `fatia_1: false`. As 20 imagens auditadas passaram a validação
 > técnica de PNG RGBA, alfa 0–255 e quatro cantos a alfa 0.
+>
+> **Reauditoria visual das oito famílias, 01-08-2026:** os oito SVG 32² foram
+> renderizados juntos sobre grelha de transparência. Espada recta, adaga,
+> pesada de corte, katana, haste, cajado, arco e besta mantêm silhuetas distintas
+> à escala nativa, usam a mesma paleta/contorno e não contêm fundo. **Prestam e
+> não foram refeitos.**
 
 
 ## Bestiário — as 7 raças do WP6 (fatia 2+)
