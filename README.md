@@ -8,10 +8,10 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-o
 
 | | |
 |---|---|
-| Fase | **Construção** — spec completa, 20/20 pacotes |
+| Fase | **Construção** — 20/20 pacotes escritos; a Revisão 1 reabriu **5 lacunas vermelhas** em [`LACUNAS.md`](LACUNAS.md) |
 | Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada |
 | Código | **Em [`game/`](game/)** — protótipo jogável em Godot 4.7.1; abre com `game/JOGAR.bat` |
-| Engine | Por decidir |
+| Engine | **Godot 4.7.1**, renderer Mobile |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 
 ## Como isto funciona

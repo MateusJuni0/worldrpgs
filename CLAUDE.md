@@ -71,7 +71,7 @@ Dois agentes escrevem aqui — o Fable (lado do Rico) e o Claude (lado do Mateus
 | ⭐ [`MAPA.md`](MAPA.md) | A estrutura e **as fundações** — quem cita quem. Gerado por `node tools/mapa.mjs`, não se edita à mão |
 | [`prompts/CODEX-CONTEXTO.md`](prompts/CODEX-CONTEXTO.md) | **O contexto permanente do executor** — lê-se no início de cada tarefa |
 | ⭐ [`ESTADO.md`](ESTADO.md) | **Lê primeiro.** O que é verdade hoje, o que falta e por que ordem |
-| ⭐ [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md) | **O prompt actual** — fechar a spec, em 4 fases |
+| [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md) | **Prompt histórico concluído** — preserva as 4 tarefas que fecharam a primeira versão da spec; não é estado corrente |
 | [`LACUNAS.md`](LACUNAS.md) | O que falta e ninguém está a fazer. Encontraste um buraco? Escreve lá no mesmo acto |
 | [`prompts/BRIEFING-FABLE-2.md`](prompts/BRIEFING-FABLE-2.md) | O briefing das voltas 1–3 (feitas) |
 | [`SPEC.md`](SPEC.md) | Índice, e o estado de cada área |
