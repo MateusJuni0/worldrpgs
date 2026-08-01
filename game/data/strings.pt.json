@@ -1,5 +1,5 @@
 {
-  "_fonte": "spec/73-fecho-dos-buracos-de-integracao.md",
+  "_fonte": "spec/73-fecho-dos-buracos-de-integracao.md §4 + spec/26-narrativa.md §§1.1–1.2",
   "locale": "pt",
   "fallback_locale": "pt",
   "rule": "texto apresentado ao jogador vive aqui; IDs, diagnósticos de desenvolvimento e dados numéricos continuam nas respectivas fontes",
@@ -15,6 +15,17 @@
     "toast.respawn": "Regressaste ao ponto de descanso.",
     "toast.boss_defeated": "Vorgar caiu. A fatia 1 está zerada.",
     "toast.arena_reset": "Arena reiniciada.",
-    "toast.class_changed": "Classe: %s (F6 troca)"
+    "toast.class_changed": "Classe: %s (F6 troca)",
+    "intro.location.context": "A fogueira ainda arde.",
+    "intro.tip.movement": "%s / %s / %s / %s — mover · rato — câmara",
+    "intro.tip.attack": "%s — ataque leve",
+    "intro.tip.dodge": "%s — esquiva; uma estocada falhada deixa as costas abertas",
+    "intro.tip.parry": "%s — aparar; toca durante a preparação do golpe",
+    "intro.tip.flask": "%s — Frasco de Bruma",
+    "item.weapon.dagger.description": "Lâmina curta, afiada tantas vezes que perdeu a largura original. A bainha guarda terra escura nas costuras.",
+    "item.weapon.longsword.description": "Espada de guarda simples, marcada por uso paciente. No pomo, alguém apagou um brasão a golpes de lima.",
+    "item.weapon.greataxe.description": "Machadão de ferro rude, remendado onde o cabo cedeu. As marcas na lâmina são mais largas do que a mão que agora o segura.",
+    "item.weapon.staff.description": "Cajado escurecido pela humidade, com um foco azul preso por arame. A madeira permanece seca quando a bruma se aproxima.",
+    "item.weapon.shield.description": "Escudo de madeira reforçado com ferro desigual. Três cortes foram tapados; o quarto ficou aberto."
   }
 }
