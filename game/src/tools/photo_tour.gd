@@ -10,6 +10,7 @@ var _main: Node3D
 
 func run(main: Node3D) -> void:
 	_main = main
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_cam = Camera3D.new()
 	_cam.fov = 65.0
 	add_child(_cam)
@@ -58,7 +59,17 @@ func _shoot_all() -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(dir + String(s[0]) + ".png")
 		print("[photo] ", s[0])
-	print("[photo] done: ", shots.size(), " captures")
+	var capture_count := shots.size()
+	if Bench.scene_arg != "combat" and is_instance_valid(_main.navigation):
+		_main.navigation.call("reveal_route_for_capture")
+		_main.navigation.call("show_full_map")
+		await _wait(10)
+		var map_image := get_viewport().get_texture().get_image()
+		map_image.save_png(dir + "07-mapa-grande.png")
+		print("[photo] 07-mapa-grande")
+		_main.navigation.call("hide_full_map")
+		capture_count += 1
+	print("[photo] done: ", capture_count, " captures")
 	get_tree().quit()
 
 

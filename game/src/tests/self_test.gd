@@ -58,6 +58,17 @@ func _test_exploration_map() -> void:
 		"mapa: pergunta 38 fica [PROTO] por zona, nao decidida pelo runtime")
 	_check(is_equal_approx(float(cfg.get("minimap_range_m", 0.0)), 40.0),
 		"minimapa: alcance de orientacao e 40 m")
+	_check(InputMap.has_action("open_map")
+		and GameData.ui_text("map.title") != ""
+		and GameData.ui_text("map.close_hint") != "",
+		"mapa grande: abre por acção configurável e usa texto catalogado")
+	var map_has_key := false
+	var map_has_pad := false
+	for map_event: InputEvent in InputMap.action_get_events("open_map"):
+		map_has_key = map_has_key or map_event is InputEventKey
+		map_has_pad = map_has_pad or map_event is InputEventJoypadButton
+	_check(map_has_key and map_has_pad,
+		"mapa grande: default cobre teclado e comando sem tecla escrita na UI")
 	var explored: RefCounted = ExplorationMapScript.new()
 	explored.call("configure", "brumal", Rect2(-110, -110, 220, 220), 4.0)
 	_check(int(explored.get("width")) == 55 and int(explored.get("height")) == 55,

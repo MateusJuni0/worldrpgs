@@ -15,6 +15,9 @@
     "toast.respawn": "Regressaste ao ponto de descanso.",
     "toast.boss_defeated": "Vorgar caiu. A fatia 1 está zerada.",
     "toast.arena_reset": "Arena reiniciada.",
-    "toast.class_changed": "Classe: %s (F6 troca)"
+    "toast.class_changed": "Classe: %s (F6 troca)",
+    "map.title": "MAPA DE %s",
+    "map.close_hint": "%s — fechar mapa",
+    "map.explored": "Percorrido: %.1f%%"
   }
 }

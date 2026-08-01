@@ -14,8 +14,15 @@ var north_up := false
 var _exploration: RefCounted
 var _minimap_panel: Control
 var _minimap_surface: Control
+var _full_overlay: Control
+var _full_surface: Control
+var _full_title: Label
+var _full_hint: Label
+var _full_progress: Label
 var _config: Dictionary = {}
 var _update_clock := 0.0
+var _map_open := false
+var _paused_before_map := false
 
 
 func _ready() -> void:
@@ -43,13 +50,14 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 	_exploration.call("reveal", player.global_position, float(_config.get("reveal_radius_m", 7.0)))
 	_discover_nearby_landmarks()
 	_build_minimap(bounds)
+	_build_full_map(bounds)
 	set_minimap_enabled(minimap_enabled)
 
 
 func set_minimap_enabled(enabled: bool) -> void:
 	minimap_enabled = enabled
 	if _minimap_panel != null:
-		_minimap_panel.visible = enabled
+		_minimap_panel.visible = enabled and not _map_open
 
 
 func set_north_up(enabled: bool) -> void:
@@ -61,6 +69,54 @@ func set_north_up(enabled: bool) -> void:
 
 func exploration_state() -> RefCounted:
 	return _exploration
+
+
+func is_full_map_open() -> bool:
+	return _map_open
+
+
+func show_full_map() -> void:
+	if _map_open or _full_overlay == null:
+		return
+	_map_open = true
+	_paused_before_map = get_tree().paused
+	get_tree().paused = true
+	_full_overlay.visible = true
+	_minimap_panel.visible = false
+	_refresh_full_map_labels()
+	_full_surface.call("rebuild_texture")
+	_full_surface.queue_redraw()
+
+
+func hide_full_map() -> void:
+	if not _map_open:
+		return
+	_map_open = false
+	_full_overlay.visible = false
+	_minimap_panel.visible = minimap_enabled
+	get_tree().paused = _paused_before_map
+
+
+## So e usado pelo tour fotografico: simula um percurso ja feito para a captura
+## provar o nevoeiro, sem oferecer esse conhecimento numa sessao normal.
+func reveal_route_for_capture() -> void:
+	if _exploration == null or not is_instance_valid(world):
+		return
+	var points: Array[Vector3] = world.get("path_points")
+	for index: int in points.size() - 1:
+		var from := points[index]
+		var to := points[index + 1]
+		var steps := maxi(1, ceili(from.distance_to(to) / 2.0))
+		for step: int in steps + 1:
+			var at := from.lerp(to, float(step) / float(steps))
+			_exploration.call("reveal", at, float(_config.get("reveal_radius_m", 7.0)))
+	for landmark: Dictionary in world.get("map_landmarks"):
+		var landmark_position: Vector3 = landmark.get("position", Vector3.ZERO)
+		for point: Vector3 in points:
+			if point.distance_to(landmark_position) <= float(landmark.get("discover_radius_m", 12.0)):
+				_exploration.call("discover_landmark", String(landmark.get("id", "")))
+				break
+	_refresh_surfaces(true, true)
 
 
 func _build_minimap(bounds: Rect2) -> void:
@@ -88,8 +144,84 @@ func _build_minimap(bounds: Rect2) -> void:
 	_minimap_surface.set("north_up", north_up)
 
 
+func _build_full_map(bounds: Rect2) -> void:
+	_full_overlay = Control.new()
+	_full_overlay.name = "MapaGrande"
+	_full_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_full_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_full_overlay.visible = false
+	add_child(_full_overlay)
+
+	_full_surface = MapSurfaceScript.new()
+	_full_surface.name = "Superficie"
+	_full_surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_full_surface.call("set_mode", 1)
+	_full_overlay.add_child(_full_surface)
+	_full_surface.call("set_context", _exploration, player, partner, bounds,
+		world.get("path_points"), world.get("map_landmarks"), _config)
+
+	_full_title = _map_label(28, HORIZONTAL_ALIGNMENT_CENTER)
+	_full_title.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_full_title.offset_top = 34.0
+	_full_title.offset_bottom = 78.0
+	_full_overlay.add_child(_full_title)
+
+	_full_progress = _map_label(17, HORIZONTAL_ALIGNMENT_RIGHT)
+	_full_progress.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_full_progress.offset_left = -300.0
+	_full_progress.offset_top = 34.0
+	_full_progress.offset_right = -34.0
+	_full_progress.offset_bottom = 70.0
+	_full_overlay.add_child(_full_progress)
+
+	_full_hint = _map_label(17, HORIZONTAL_ALIGNMENT_CENTER)
+	_full_hint.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_full_hint.offset_top = -58.0
+	_full_hint.offset_bottom = -24.0
+	_full_overlay.add_child(_full_hint)
+
+
+func _map_label(font_size: int, alignment: HorizontalAlignment) -> Label:
+	var label := Label.new()
+	label.horizontal_alignment = alignment
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", Color(0.94, 0.91, 0.83))
+	label.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.02, 0.95))
+	label.add_theme_constant_override("outline_size", 4)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return label
+
+
+func _refresh_full_map_labels() -> void:
+	var zone_name := String(GameData.world_zone(zone_id).get("nome", zone_id)).to_upper()
+	_full_title.text = GameData.ui_text("map.title", "MAPA DE %s") % zone_name
+	_full_hint.text = GameData.ui_text("map.close_hint", "%s — fechar mapa") % \
+		_action_label("open_map")
+	_full_progress.text = GameData.ui_text("map.explored", "Percorrido: %.1f%%") % \
+		(float(_exploration.call("revealed_fraction")) * 100.0)
+
+
+func _action_label(action_name: String) -> String:
+	for event: InputEvent in InputMap.action_get_events(action_name):
+		if event is InputEventKey:
+			var key := event as InputEventKey
+			var code := key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
+			return OS.get_keycode_string(code)
+		return event.as_text()
+	return action_name
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if InputMap.has_action("open_map") and event.is_action_pressed("open_map"):
+		if _map_open:
+			hide_full_map()
+		else:
+			show_full_map()
+		get_viewport().set_input_as_handled()
+
+
 func _process(delta: float) -> void:
-	if _exploration == null or not is_instance_valid(player) or not minimap_enabled:
+	if _exploration == null or not is_instance_valid(player) or _map_open:
 		return
 	_update_clock += delta
 	var interval := 1.0 / maxf(float(_config.get("update_hz", 10.0)), 1.0)
@@ -99,11 +231,20 @@ func _process(delta: float) -> void:
 	var terrain_changed: bool = _exploration.call("reveal", player.global_position,
 		float(_config.get("reveal_radius_m", 7.0)))
 	var changed := _discover_nearby_landmarks() or terrain_changed
-	if changed and _minimap_surface != null:
-		if terrain_changed:
-			_minimap_surface.call("update_revealed_cells",
+	if changed:
+		_refresh_surfaces(terrain_changed)
+
+
+func _refresh_surfaces(terrain_changed: bool, full_rebuild := false) -> void:
+	for surface: Control in [_minimap_surface, _full_surface]:
+		if surface == null:
+			continue
+		if full_rebuild:
+			surface.call("rebuild_texture")
+		elif terrain_changed:
+			surface.call("update_revealed_cells",
 				_exploration.get("last_revealed_cells"))
-		_minimap_surface.queue_redraw()
+		surface.queue_redraw()
 
 
 func _discover_nearby_landmarks() -> bool:
