@@ -160,3 +160,97 @@ Duas auditorias independentes ([`../docs/`](../docs/)) estimaram o que honestame
 ⚠️ **Não cortar:** co-op · esquiva/parry/stamina · as 8 famílias · a identidade dos 12 biomas.
 
 **Não é para cortares nada por tua conta.** Está aqui para usares a coluna **`Fatia 1?`** em tudo o que escreveres — é ela que separa *"o jogo completo"* de *"o que se constrói primeiro"*.
+
+---
+
+## 12. ⭐ As imagens são tua responsabilidade
+
+`[DECIDIDO]` (Mateus, 01-08-2026) — **tu geras as imagens que faltam.** Não pedes a ninguém; resolves.
+
+### O que falta
+
+Os **modelos 3D, texturas e sons** já vêm dos packs CC0 em `art/`. **O que falta são ÍCONES** — as imagens pequenas da mochila e da barra, que nenhum pack traz porque são específicas deste jogo:
+
+| O que | Quantos |
+|---|---|
+| Famílias de arma | **8** — já definidas, geráveis agora |
+| Peças de armadura | 9 (só 3 definidas) |
+| Feitiços | por definir na volta da magia |
+| Anéis | ~70 |
+| Consumíveis | frascos, brasa, tomos |
+| Retratos das 6 raças novas | 6 |
+
+### As rotas, por ordem de preferência
+
+**1. Higgsfield CLI** — é a que já usámos, e tem crédito:
+
+```bash
+higgsfield account status                      # ver saldo
+higgsfield generate create nano_banana_pro --prompt "<prompt>" --aspect-ratio 1:1
+higgsfield generate wait <job-id>              # devolve o URL
+curl -fsSL "<url>" -o art/ui/icons/<nome>.png
+```
+
+⚠️ **Máximo 4 trabalhos em paralelo.** `nano_banana_pro` custa **2 créditos**; `image_background_remover` custa **1**.
+
+**2. Se a CLI falhar** — o browser, ou qualquer outra via que consigas. **Contorna.** O que importa é a imagem ficar no caminho certo e registada.
+
+**3. Se nada funcionar** — escreve o prompt em `art/prompts/` e regista no `LACUNAS.md` como *"por gerar"*. **Nunca inventes que geraste.**
+
+### ⚠️ As regras que não se quebram
+
+| | |
+|---|---|
+| **Um só modelo** | `nano_banana_pro`. **Não misturar** — as 43 imagens existentes são todas dele, e misturar parte o alinhamento visual |
+| ⭐ **A frase de estilo é literal** | está em [`../art/prompts/00-estilo.md`](../art/prompts/00-estilo.md) e vai **no início de cada prompt**, sem alterar uma palavra. É ela que faz 100 imagens parecerem do mesmo jogo |
+| **Ícones com fundo transparente** | pede `isolated on transparent background`, e passa pelo `image_background_remover`. Verifica que sai **RGBA** |
+| **Prompt em inglês** | os geradores respondem melhor |
+| **Uma imagem por prompt** | nada de folhas com 6 variações |
+| **Sem texto dentro da imagem** | |
+| ⭐ **Regista no [`../art/MANIFESTO.md`](../art/MANIFESTO.md)** | ID, caminho canónico, estado. **Uma imagem que não está no manifesto não existe** |
+| ⚠️ **Orçamento** | ~121 créditos ≈ **60 imagens**. Não chega para tudo — **a coluna `Fatia 1?` decide o que se gera primeiro** |
+| ⚠️ **Nunca** | imagens extraídas de jogos comerciais |
+
+### A descrição visual
+
+Cada item do catálogo traz uma coluna `descrição visual`, e é dela que sai o prompt. **Uma frase, mas específica:**
+
+> ❌ *"Katana"* — o modelo inventa
+> ✅ *"Lâmina curva estreita, aço polido, punho enfaixado a tecido escuro, 90 cm"*
+
+⚠️ **E usa o material do bioma** ([`../spec/46-coerencia-bioma-raca-item.md`](../spec/46-coerencia-bioma-raca-item.md)): um machado orc da Fornalha é de **obsidiana**, não de aço. **Escreve-se — não se deixa ao acaso do gerador.**
+
+---
+
+## 13. ⭐ Podes ver o jogo com os teus olhos
+
+`[DECIDIDO]` (Mateus) — **tens permissão para correr o jogo e olhar para ele.**
+
+**A forma mais barata já existe** — o modo fotografia que o Fable construiu:
+
+```bash
+<godot> --path game/ --rendering-method mobile -- --scene=zone --photos
+# escreve 6 PNG em game/captures/ e sai
+```
+
+⭐ **Usa isto sempre que mexeres em alguma coisa visual.** Gera, **olha para a imagem**, e diz o que vês — não o que esperavas ver.
+
+**E o critério que o [`../spec/47-do-greybox-ao-visual.md`](../spec/47-do-greybox-ao-visual.md) §5 fixa:**
+
+> **Nenhum marco fecha sem capturas.** A pergunta é uma só: *isto está mais perto da barra do [`30-qualidade-visual.md`](../spec/30-qualidade-visual.md) do que estava antes?*
+
+Se precisares de ver o jogo a correr de verdade — janela aberta, a jogar — **tens permissão para isso também.** Instala o que precisares.
+
+---
+
+## 14. ⚠️ Sobre o teu próprio esforço de raciocínio
+
+**Usa o máximo por defeito.** É o que o Mateus quer, e é o que dá melhor trabalho.
+
+⚠️ **Mas se sentires que estás a ficar sem contexto ou a demorar demais numa tarefa:**
+
+1. **Pára**
+2. **Commita o que tens**, mesmo a meio
+3. **Escreve exactamente onde ficaste e o que falta**
+
+⭐ **Um trabalho parado é retomável. Um trabalho alucinado tem de ser deitado fora.** Parar cedo não é falhar — é a única coisa que garante que nada se perde.
