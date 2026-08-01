@@ -10,6 +10,15 @@ Ordem inversa: **o mais recente primeiro.**
 
 ## 01-08-2026
 
+### 🔴 ⭐ Os jogáveis são **humanos com proporções reais**, nunca bonecos
+**[DECIDIDO] (Mateus, 01-08-2026)** — *"cadê o personagem humano a sério? os personagens jogáveis são humanos sempre, não pequeninhos assim, igual o Dark Souls faz"*
+
+- ⭐ **Proporções humanas adultas.** Cabeça normal, corpo normal. Nada de cabeças grandes, nada de estilo *chibi*
+- ⚠️ **O que estava errado, e a culpa é do briefing que eu escrevi:** mandei *"vestir as classes"* e o agente usou o **KayKit Adventurers**, que é um pack **cartoon de propósito**. Trocámos um corpo com proporções certas por um bonequinho de chapéu. Os corpos **Quaternius Universal Base Characters** — os que já lá estavam, os do boneco nu — **são os certos**, e continuavam carregados sem serem usados
+- ⭐ **A saída não é voltar ao boneco nu.** É **vestir o corpo realista**: a armadura vai por cima do corpo certo, não se troca o corpo por um fato inteiro
+- ⚠️ **O KayKit continua a servir para o resto** — masmorra, cenário, adereços, e talvez inimigos não-humanos. **Só não serve para os jogáveis**, que são a coisa que o jogador olha 100% do tempo
+- **Referência:** Dark Souls. E a linha do [`31`](spec/31-referencias.md) continua: estuda-se, não se copia
+
 ### ⭐ O Mago do Mal é uma **origem própria** — a 7.ª classe · fecha a pergunta 36
 **[DECIDIDO] (Mateus, 01-08-2026)** — respondeu à pergunta 36 do [`99`](spec/99-perguntas-abertas.md) depois de lhe serem apresentadas as três saídas.
 
