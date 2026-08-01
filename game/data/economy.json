@@ -11,6 +11,118 @@
     "loot_transaction": "a derrota recompensada soma almas, tira uma carta sem reposicao e grava um recibo atomico; repetir o event_id nao paga duas vezes",
     "ember_is_not_a_consumable_drop": true
   },
+  "loot_biomes": {
+    "_decisao": "[CODEX] A origem declarada no proprio item filtra cada baralho antes da compra. Razao: torna a regra anti-mistura verificavel sem duplicar 330 cartas numa segunda pool. Alternativa descartada: inferir o bioma pelo nome do ID, que aceitaria erros silenciosos.",
+    "common_deck_size": 10,
+    "display_to_id": {
+      "Brumal": "brumal",
+      "Selva Funda": "selva_funda",
+      "Campas Cinzentas": "campas_cinzentas",
+      "Fojo": "fojo",
+      "Costa Quebrada": "costa_quebrada",
+      "Cimeira": "cimeira",
+      "Fornalha": "fornalha",
+      "Fulgor": "fulgor",
+      "Raizama": "raizama",
+      "Cidade Afogada": "cidade_afogada",
+      "Santuário Branco": "santuario_branco",
+      "A Raiz": "raiz"
+    },
+    "item_zone_overrides": {
+      "consumivel:agua_lustral": ["campas_cinzentas"],
+      "consumivel:antidoto_selva": ["selva_funda"],
+      "consumivel:bomba_bruma": ["brumal"],
+      "consumivel:lanterna_raiz": ["raiz"],
+      "consumivel:musgo_seco": ["campas_cinzentas"],
+      "consumivel:oleo_condutor": ["cidade_afogada"],
+      "consumivel:oleo_salino": ["costa_quebrada"],
+      "consumivel:pedra_raio": ["fojo"],
+      "consumivel:po_terra": ["fulgor"],
+      "consumivel:resina_bruma": ["brumal"],
+      "consumivel:sal_gelo": ["cimeira", "fornalha"],
+      "consumivel:sal_seco": ["costa_quebrada", "cidade_afogada"],
+      "consumivel:solvente_teia": ["selva_funda"],
+      "consumivel:tocha_esporo": ["raizama"],
+      "consumivel:veu_sombra": ["santuario_branco"]
+    }
+  },
+  "chest_rules": {
+    "_decisao": "[CODEX] Cada bau entrega um conjunto fixo com pelo menos duas utilidades. Razao: um desvio tem de abrir opcoes mesmo quando uma arma ja pertence ao kit inicial. Alternativa descartada: sortear uma recompensa valiosa, porque voltaria a esconder conteudo atras de sorte.",
+    "opened_state_key": "opened_chests",
+    "random_rewards": false,
+    "backpack_capacity_check": false,
+    "interaction_action": "interact"
+  },
+  "loot_presentation": {
+    "_decisao": "[CODEX] A recolha usa forma, texto comparativo e sino curto; o bau usa silhueta propria sem luz dinamica. Razao: continua legivel com audio a zero e custa draw calls previsiveis na Iris Xe. Alternativa descartada: particulas emissivas e uma OmniLight por bau, que aumentariam overdraw e luzes sem acrescentar informacao.",
+    "interaction_action": "interact",
+    "interaction_radius_m": 2.6,
+    "feedback_seconds": 3.0,
+    "feedback_rise_m": 1.1,
+    "feedback_spacing_m": 0.38,
+    "feedback_mesh_size_m": 0.18,
+    "chest_size_m": [1.55, 0.62, 0.92],
+    "chest_lid_height_m": 0.18,
+    "chest_open_degrees": 105.0,
+    "chest_open_seconds": 0.42,
+    "wood_colour": "#34271f",
+    "metal_colour": "#9b8757",
+    "pickup_colour": "#e6cf79",
+    "cost_contract": {
+      "chest_mesh_instances": 2,
+      "chest_lights": 0,
+      "feedback_mesh_instances": 1,
+      "feedback_labels": 1,
+      "feedback_audio_voices": 1
+    }
+  },
+  "chests": {
+    "brumal_arco_partido": {
+      "display_name": "Bau do Arco Partido",
+      "biome_id": "brumal",
+      "position": [-15.0, 0.55, 16.0],
+      "detour_reason": "visivel para la do pilar tombado; pede sair do caminho depois do brutamontes",
+      "rewards": [
+        {"item": "arma:dagger", "count": 1},
+        {"item": "arma:staff", "count": 1},
+        {"item": "material:limalha_ferro", "count": 3}
+      ],
+      "visual": "arca baixa de carvalho-negro, cintas de ferro rude e fecho em forma de arco partido",
+      "art_source": "dois BoxMesh e materiais sintetizados em game/src/world/chest.gd",
+      "sound_source": "madeira, fecho e recolha sintetizados em game/src/loot/loot_audio.gd",
+      "fatia_1": true
+    },
+    "brumal_bivaque": {
+      "display_name": "Bau do Bivaque",
+      "biome_id": "brumal",
+      "position": [27.0, 0.55, -38.0],
+      "detour_reason": "a fogueira e os orcs deixam ver a arca antes de entrar no acampamento",
+      "rewards": [
+        {"item": "arma:greataxe", "count": 1},
+        {"item": "arma:shield", "count": 1},
+        {"item": "material:couro_javali", "count": 3}
+      ],
+      "visual": "arca larga de carvalho-negro, dobradicas de ferro rude e marcas de maos orcs no tampo",
+      "art_source": "dois BoxMesh e materiais sintetizados em game/src/world/chest.gd",
+      "sound_source": "madeira, fecho e recolha sintetizados em game/src/loot/loot_audio.gd",
+      "fatia_1": true
+    },
+    "brumal_raiz_da_toca": {
+      "display_name": "Bau da Raiz da Toca",
+      "biome_id": "brumal",
+      "position": [-30.0, 0.55, -65.0],
+      "detour_reason": "a cinta de ferro reflecte a luz junto da raiz, fora da linha directa para a entrada",
+      "rewards": [
+        {"item": "arma:longsword", "count": 1},
+        {"item": "consumivel:resina_bruma", "count": 2},
+        {"item": "material:limalha_ferro", "count": 4}
+      ],
+      "visual": "arca estreita encaixada numa raiz negra, carvalho encerado e fecho de ferro azulado",
+      "art_source": "dois BoxMesh e materiais sintetizados em game/src/world/chest.gd",
+      "sound_source": "madeira, fecho e recolha sintetizados em game/src/loot/loot_audio.gd",
+      "fatia_1": true
+    }
+  },
   "class_bias": {
     "profiles": {"warrior":"martial","tank":"martial","assassin":"martial","sorcerer":"arcane","berserker":"martial","paladin":"martial"},
     "recipient_policy_coop": "PERGUNTA_DOS_DONOS_99; a transaccao recebe explicitamente o perfil do destinatario e nao escolhe quem fica com a carta",
