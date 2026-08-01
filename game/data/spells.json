@@ -1,6 +1,7 @@
 {
-  "_fonte": "spec/66-catalogo-de-magia.md; herda spec/52 sem reescrever a escola vermelha e aplica spec/54-55",
-  "_lei_2": "Cada melhoria abre forma, area ou lancamentos; nenhuma linha e apenas forca.",
+  "_fonte": "spec/66-catalogo-de-magia.md + spec/52 §10 + DECISOES.md 01-08. A escola vermelha executa as quatro decisoes directas do Mateus.",
+  "_lei_2": "Cada melhoria abre forma, area ou lancamentos. [TENSÃO] Voto de Sangue e a excepcao decidida pelo Mateus: +30/+60/+90% continua aberto contra a Lei 2, sem ser silenciosamente trocado por verbos.",
+  "_tensao_voto_sangue": "[TENSÃO] spec/53 §§4-5 propoe trocas de verbo; DECISOES.md preserva o +30/+60/+90% escolhido pelo Mateus. Estes dados executam a decisao dele sem fechar a tensao.",
   "_instrument_scope": "[CODEX] o M2 executa apenas cajado, baseline 1,0; sino/talisma/chama/relicario/hibrido saem das fichas ate os donos responderem a 56.",
   "_schools": {
     "feiticaria": {
@@ -33,7 +34,17 @@
       "instrumentos": [
         "cajado"
       ],
-      "cor": "vermelho"
+      "cor": "vermelho",
+      "access_policy": "sem_bloqueio_de_origem",
+      "resource_costs": ["mana", "cadaver", "vida_maxima_visivel"],
+      "instrument_choice": {
+        "policy": "livre",
+        "roles": ["dano_dedicado", "necromancia_dedicada", "hibrido"],
+        "runtime_instrument_ids": ["cajado"],
+        "missing_catalogue_ids": ["relicario", "hibrido"],
+        "tradeoff": "dois dedicados ocupam as duas maos; um hibrido deixa uma mao livre e perde eficacia nas duas funcoes",
+        "source": "[DECIDIDO] Mateus, spec/52 §10"
+      }
     }
   },
   "_delivery_forms": [
@@ -108,6 +119,23 @@
       "interrupted_by_any_damage": true,
       "partial_mana_kept": true,
       "world_pauses": false
+    },
+    "dark_mage_health_budget": {
+      "resource": "vida_maxima_visivel",
+      "total_fraction": 1.0,
+      "must_remain_alive": true,
+      "payment_policy": "reserve_while_effect_active",
+      "release_does_not_heal": true,
+      "shared_by": ["raise_dead", "raise_boss", "blood_oath"],
+      "player_feedback": "a barra mostra imediatamente a vida maxima disponivel",
+      "source": "[DECIDIDO] spec/52 §10: chefe, Voto e invocacoes competem no mesmo orcamento"
+    },
+    "dark_mage_summons": {
+      "design_limit": "none",
+      "render_limit_by_preset": {"alto": 8, "medio": 5, "baixo": 3},
+      "render_limit_kind": "hardware_not_design",
+      "player_message_required": true,
+      "source": "spec/52 §10, Lei 4; medir na Iris Xe antes de promover os valores"
     }
   },
   "dardo": {
@@ -2322,6 +2350,22 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "raise_dead",
+    "effect": {
+      "requires_corpse": true,
+      "corpse_must_have_died_in_presence": true,
+      "corpse_reusable": false,
+      "health_cost_fraction_by_size": {"pequeno": 0.05, "medio": 0.10, "grande": 0.15},
+      "raised_health_fraction": 0.60,
+      "can_regenerate": false,
+      "can_be_healed": false,
+      "design_limit": "none",
+      "uses_shared_health_budget": true,
+      "ends_on": ["summon_death", "leave_zone", "rest"],
+      "ally_collision": "partner_passes_through",
+      "ally_colour": "vermelho"
+    },
+    "tuning_state": "[DECIDIDO] custos, 60% PV, sem cura, sem reutilizar e sem tecto de desenho vêm da spec/52 §10",
     "upgrades": [
       {
         "level": 0,
@@ -2378,6 +2422,24 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "raise_boss",
+    "effect": {
+      "requires_boss_corpse": true,
+      "corpse_reusable": false,
+      "health_cost_fraction": 0.50,
+      "raised_health_fraction": 0.60,
+      "can_regenerate": false,
+      "can_be_healed": false,
+      "active_policy": "single_boss",
+      "portable": true,
+      "uses_shared_health_budget": true,
+      "ends_on": ["summon_death", "rest"],
+      "preserve_full_ai": true,
+      "preserve_telegraphs": true,
+      "ally_collision": "partner_passes_through",
+      "ally_colour": "vermelho"
+    },
+    "tuning_state": "[DECIDIDO] chefe unico, portatil, IA completa e 60% PV; o custo de 50% compete no mesmo orcamento da spec/52 §10",
     "upgrades": [
       {
         "level": 0,
@@ -2928,9 +2990,9 @@
   "voto_sangue": {
     "display_name": "Voto de Sangue",
     "school": "mal",
-    "question": "aceito menos vida para trocar o verbo dos feitiços",
-    "verb": "cada camada custa 20% da vida; até três, com as trocas de verbo do spec/53",
-    "formula": "0 dano; efeito declarado não escala em força",
+    "question": "aceito menos vida maxima visivel para aumentar o dano ate descansar",
+    "verb": "cada camada reserva 20% da vida maxima e soma +30% de dano; empilha tres vezes",
+    "formula": "camadas: 1 = -20% PV/+30% dano; 2 = -40%/+60%; 3 = -60%/+90%",
     "mana_cost": 18,
     "cast_time": 0.8,
     "interruptible": true,
@@ -2949,6 +3011,19 @@
     "type": "catalog_only",
     "mv": 0,
     "base_damage": 0,
+    "effect_type": "blood_oath",
+    "effect": {
+      "layers": [
+        {"layer": 1, "health_cost_fraction_total": 0.20, "damage_bonus_fraction_total": 0.30},
+        {"layer": 2, "health_cost_fraction_total": 0.40, "damage_bonus_fraction_total": 0.60},
+        {"layer": 3, "health_cost_fraction_total": 0.60, "damage_bonus_fraction_total": 0.90}
+      ],
+      "stack_policy": "advance_to_next_layer",
+      "uses_shared_health_budget": true,
+      "visible_max_health_reduction": true,
+      "ends_on": ["rest"]
+    },
+    "tuning_state": "[DECIDIDO] Mateus: +30/+60/+90% por 20/40/60% PV. [TENSÃO] spec/53 propoe trocas de verbo; nao decidida, alternativa preservada no topo do ficheiro.",
     "upgrades": [
       {
         "level": 0,
