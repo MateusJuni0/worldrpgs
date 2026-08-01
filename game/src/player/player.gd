@@ -15,6 +15,7 @@ const WorldBoundsWarningScene = preload("res://src/world/bounds_warning.gd")
 
 signal died
 signal state_changed(state: int)
+signal casting_fallback(reason: String)
 
 enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING, GRIP_SWITCH }
 
@@ -67,6 +68,7 @@ var _atk_hit: Array = []
 var _charging := false
 var _charge_frames := 0
 var _combo_index := 0
+var _attack_feedback := ""
 
 # --- Esquiva ------------------------------------------------------------------
 var _dodge_dir := Vector3.FORWARD
@@ -79,6 +81,7 @@ var _load_max_speed := 999.0
 
 # --- Magia --------------------------------------------------------------------
 var _cast_spell: Dictionary = {}
+var _cast_instrument: Dictionary = {}
 var _cast_frames_total := 0
 var _egide_shield := 0.0
 var _egide_time := 0.0
@@ -96,6 +99,7 @@ var _visual: CharacterVisual
 var _palette: Dictionary = {}
 var _frame := 0
 var _waking_up := false
+static var _casting_attack_self_test_ran := false
 
 # --- Queda --------------------------------------------------------------------
 var _fall_tracker: WorldBounds = WorldBoundsTracker.new()
@@ -107,6 +111,13 @@ var _has_supported_position := false
 
 
 # --- Arranque -----------------------------------------------------------------
+
+func _ready() -> void:
+	if "--casting-attack-self-test" in OS.get_cmdline_user_args() \
+			and not _casting_attack_self_test_ran:
+		_casting_attack_self_test_ran = true
+		_run_casting_attack_self_test()
+
 
 func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> void:
 	class_id = p_class_id
@@ -384,7 +395,7 @@ func _tick_free(delta: float) -> void:
 		return
 
 	match _take_buffered():
-		"light":  _start_attack("light")
+		"light":  use_primary_attack()
 		"heavy":  _start_attack("heavy")
 		"dodge":  _start_dodge()
 		"parry":  _start_parry()
@@ -406,7 +417,7 @@ func _tick_block(delta: float) -> void:
 			if offhand_weapon == "shield" and not is_two_handed:
 				_start_attack("bash")
 			else:
-				_start_attack("light")
+				use_primary_attack()
 		"heavy": _start_attack("heavy")
 		"dodge": _start_dodge()
 		"parry": _start_parry()
@@ -639,9 +650,10 @@ func _can_block() -> bool:
 
 # --- Ataques ------------------------------------------------------------------
 
-func _start_attack(kind: String) -> void:
+func _start_attack(kind: String, feedback := "") -> void:
 	if not stamina.can_act():
 		return
+	_attack_feedback = feedback
 
 	# Um leve sobre um inimigo de postura quebrada vira riposte (spec: MV 2,5, com i-frames).
 	if kind == "light":
@@ -724,7 +736,7 @@ func _tick_attack(delta: float) -> void:
 		if combo_open and _atk_kind == "light" and _combo_index < int(combo.get("max", 1)):
 			if _peek_buffer() == "light":
 				_take_buffered()
-				_start_attack("light")
+				use_primary_attack()
 				return
 
 		# So o LEVE se cancela. O pesado e compromisso total (spec).
@@ -891,22 +903,153 @@ func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> v
 	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
 
 
-func _start_cast() -> void:
+## O ataque primario usa o instrumento activo, como uma arma usa o seu golpe leve.
+## A pancada continua acessivel pelo pesado/duas maos e torna-se fallback sem mana.
+## O retorno e deliberadamente observavel: o teste e a UI nao precisam de conhecer
+## buffers nem a maquina de estados para explicar o que aconteceu ao jogador.
+func use_primary_attack() -> String:
+	var broken := _broken_posture_target()
+	if broken != null:
+		_start_riposte(broken)
+		return "riposte"
+
 	var s := GameData.spell(selected_spell)
-	if s.is_empty():
-		return
-	# Na Fatia 1, o unico instrumento implementado e o cajado. O catalogo completo
-	# declara os restantes por escola; nenhum feitico pode ignorar esse contrato.
-	if bool(GameData.spells.get("_rules", {}).get("requires_declared_instrument", true)) \
-			and not bool(GameData.weapon(main_weapon).get("can_cast", false)):
-		return
-	var cost := int(s.get("mana_cost", 1))
+	var instrument := _secondary_instrument_for(s)
+	if s.is_empty() or instrument.is_empty():
+		_start_attack("light")
+		return "melee"
+
+	var cost := int(s.get("mana_cost"))
 	if mana < cost:
-		return   # sem mana: o plano B e a pancada do cajado (Lei 1 nao fica refem)
+		casting_fallback.emit("mana_insuficiente")
+		_start_attack("light", "pancada: mana insuficiente")
+		return "melee_no_mana"
+
+	_start_cast(s, instrument)
+	return "cast"
+
+
+## O instrumento da mao secundaria e o catalisador. O cajado principal fornece
+## o ataque fisico; nao empresta escala ao feitico. Procurar pelo weapon_id deixa
+## o Player independente do nome concreto que o catalogo de equipamento adoptar.
+func _secondary_instrument_for(spell: Dictionary) -> Dictionary:
+	if offhand_weapon == "" or is_two_handed or spell.is_empty():
+		return {}
+	var instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
+	var school := String(spell.get("school", ""))
+	for instrument_id: String in instruments:
+		var instrument: Dictionary = instruments.get(instrument_id, {}) as Dictionary
+		var weapon_id := String(instrument.get("weapon_id", instrument_id))
+		if offhand_weapon != weapon_id and offhand_weapon != instrument_id:
+			continue
+		if not (instrument.get("school_tags", []) as Array).has(school):
+			continue
+		var equipped := instrument.duplicate()
+		equipped["_instrument_id"] = instrument_id
+		return equipped
+	return {}
+
+
+func casting_instrument_id() -> String:
+	return String(_cast_instrument.get("_instrument_id", ""))
+
+
+## Prova opt-in no ficheiro que esta arvore pode editar. Exercita a mesma API que
+## a entrada usa e imprime um marcador unico para o comando falhar se ele faltar.
+func _run_casting_attack_self_test() -> void:
+	var s := GameData.spell(selected_spell)
+	var instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
+	var test_instrument_id := ""
+	var test_weapon_id := ""
+	for instrument_id: String in instruments:
+		var candidate: Dictionary = instruments.get(instrument_id, {}) as Dictionary
+		if (candidate.get("school_tags", []) as Array).has(String(s.get("school", ""))):
+			test_instrument_id = instrument_id
+			test_weapon_id = String(candidate.get("weapon_id", instrument_id))
+			break
+	if s.is_empty() or test_instrument_id == "" or test_weapon_id == "":
+		push_error("[casting-attack-test] catalogo sem feitico/instrumento compativel")
+		return
+
+	var original := {
+		"state": state,
+		"state_frame": state_frame,
+		"mana": mana,
+		"main_weapon": main_weapon,
+		"offhand_weapon": offhand_weapon,
+		"is_two_handed": is_two_handed,
+		"stamina": stamina.current,
+		"atk": _atk,
+		"atk_kind": _atk_kind,
+		"atk_weapon": _atk_weapon,
+		"attack_feedback": _attack_feedback,
+		"cast_spell": _cast_spell,
+		"cast_instrument": _cast_instrument,
+		"cast_frames_total": _cast_frames_total,
+	}
+	var staff: Dictionary = instruments.get("cajado", {}) as Dictionary
+	main_weapon = String(staff.get("weapon_id", main_weapon))
+	offhand_weapon = test_weapon_id
+	is_two_handed = false
+	state = State.FREE
+	mana = int(s.get("mana_cost"))
+	var cast_result := use_primary_attack()
+	var cast_ok := cast_result == "cast" and state == State.CASTING and mana == 0 \
+		and casting_instrument_id() == test_instrument_id
+
+	state = State.FREE
+	mana = 0
+	stamina.current = stamina.maximum
+	var fallback_result := use_primary_attack()
+	var fallback_ok := fallback_result == "melee_no_mana" and state == State.ATTACK \
+		and state_name() == "pancada: mana insuficiente"
+
+	state = int(original.state)
+	state_frame = int(original.state_frame)
+	mana = int(original.mana)
+	main_weapon = String(original.main_weapon)
+	offhand_weapon = String(original.offhand_weapon)
+	is_two_handed = bool(original.is_two_handed)
+	stamina.current = float(original.stamina)
+	_atk = original.atk as Dictionary
+	_atk_kind = String(original.atk_kind)
+	_atk_weapon = String(original.atk_weapon)
+	_attack_feedback = String(original.attack_feedback)
+	_cast_spell = original.cast_spell as Dictionary
+	_cast_instrument = original.cast_instrument as Dictionary
+	_cast_frames_total = int(original.cast_frames_total)
+
+	if cast_ok and fallback_ok:
+		print("[casting-attack-test] 2 passaram, 0 falharam")
+	else:
+		push_error("[casting-attack-test] esperado cast + fallback fisico legivel")
+
+
+func _start_cast(spell: Dictionary = {}, instrument: Dictionary = {}) -> bool:
+	var s: Dictionary = spell if not spell.is_empty() else GameData.spell(selected_spell)
+	if s.is_empty():
+		return false
+	var active_instrument: Dictionary = instrument if not instrument.is_empty() \
+		else _secondary_instrument_for(s)
+	# [CODEX] O instrumento secundario e a fonte de escala: assim a escolha do
+	# instrumento muda a magia e paga o custo decidido de abdicar do escudo.
+	# Alternativa descartada: escalar pelo cajado principal, que tornava o
+	# instrumento secundario irrelevante. A formula numerica continua dos donos.
+	if active_instrument.is_empty():
+		return false
+	var cost := int(s.get("mana_cost"))
+	if mana < cost:
+		return false
 	mana -= cost
-	_cast_spell = s
-	_cast_frames_total = int(float(s.get("cast_time", 0.8)) * 60.0)
+	_cast_instrument = active_instrument
+	_cast_spell = s.duplicate()
+	_cast_spell["_instrument_id"] = casting_instrument_id()
+	_cast_spell["_instrument_weapon_id"] = String(active_instrument.get("weapon_id", ""))
+	_cast_spell["_instrument_spell_power"] = active_instrument.get("spell_power")
+	_cast_frames_total = int(float(s.get("cast_time")) * 60.0)
+	_attack_feedback = ""
 	_change_state(State.CASTING)
+	return true
 
 
 func _tick_casting(delta: float) -> void:
@@ -1156,7 +1299,8 @@ func _refresh_animation() -> void:
 func state_name() -> String:
 	match state:
 		State.FREE: return "livre"
-		State.ATTACK: return "ataque"
+		State.ATTACK:
+			return _attack_feedback if _attack_feedback != "" else "ataque"
 		State.DODGE: return "esquiva"
 		State.BLOCK: return "bloqueio"
 		State.GRIP_SWITCH: return "troca de empunhadura"

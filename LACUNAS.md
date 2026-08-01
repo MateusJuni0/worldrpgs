@@ -709,4 +709,33 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | 🟠 | **A guarda encontra uma `[TENSÃO]` sem registo no índice de perguntas.** Esta árvore não possui a spec e não decide a tensão. | O dono de `spec/75-artes-de-arma-e-movesets.md` deve referir a tensão em `spec/99-perguntas-abertas.md`, preservando proposta, razão e alternativa até decisão do Mateus. |
 | 🟠 | **As cenas que instanciam `Gameplay` deixam instâncias Godot no fecho headless.** A cena anterior `repro-inicio.tscn` termina verde com `10 ObjectDB instances were leaked`; a nova reduz para 6 depois de esperar a libertação do mundo/áudio, mas não elimina a dívida. Não altera o resultado dos testes. | O dono do ciclo de vida de `main.gd`/visuais/áudio deve localizar as seis instâncias com uma sonda dedicada; não esconder o aviso nem libertar nós de jogo a partir do teste. |
 
-| ⏳ | ⭐ **O instrumento do Mago do Mal fica em aberto.** O [`52`](spec/52-mago-do-mal.md) §10 diz que a **escolha de instrumento é livre**, mas hoje só o `cajado` tem ficha 1,0 — os outros cinco estão declarados e não existem. O kit inicial dele arranca com cajado por ser o único jogável. **Um instrumento próprio (osso, talismã) é decisão do Mateus** | `game/data/weapons.json` `loadouts.evil_mage` |
+| ✅ | ~~⭐ **O instrumento do Mago do Mal fica em aberto**~~ **RESOLVIDO 01-08** — Mateus decidiu talismã na mão secundária, com cajado na principal. A execução do catálogo continua com o agente `instrumentos`, indicada abaixo; esta linha deixa de fingir que a escolha ainda espera decisão | `DECISOES.md` 01-08 · `game/data/weapons.json` `loadouts.evil_mage` |
+
+---
+
+## 🪄 Ataque que conjura — comparação, prova e ligações alheias (01-08-2026)
+
+### Protocolo do [`31`](spec/31-referencias.md): eles · nós · diferença
+
+| Foco | Eles — mecanismo observado | Nós antes desta árvore | Diferença e nossa versão |
+|---|---|---|---|
+| **Acção** | O manual oficial exige um catalisador numa das mãos; depois de seleccionar a magia, usa-se o botão da mão que segura o catalisador. [Manual web oficial da FromSoftware](https://www.fromsoftware.jp/manual/darksouls3/ps4/action2.html) | `attack` dava sempre pancada e `cast`, de fábrica em C/X, conjurava por um caminho separado | `attack` passa a chamar a acção primária contextual: instrumento secundário activo + mana lança o feitiço; `heavy_mod` ou duas mãos dá a pancada. Copia-se a relação **instrumento → ataque da mão**, não botões, nomes, valores ou animações |
+| **Sem recurso** | O mesmo manual declara que magia exige FP e não pode ser usada sem ele | `_start_cast()` recusava silenciosamente; a pancada só existia porque o jogador tinha de conhecer outro botão | Diferença intencional pela Lei 1: no próprio `attack`, mana insuficiente inicia a pancada e `state_name()` expõe **“pancada: mana insuficiente”** ao HUD; a barra de magia já mostra `MANA INSUFICIENTE` |
+| **Fonte de escala** | O dano combina o `Spell Buff` do catalisador usado com o valor de movimento do feitiço. [Investigação comunitária verificável](https://darksouls3.wikidot.com/spell-buff) | `spell.gd::_damage_for()` usa só atributos + `spells.json`; o cajado/instrumento não chega à fórmula runtime | `[CODEX]` a fonte passa a ser o instrumento secundário, porque é a peça decidida que custa o escudo e deve mudar a opção. Alternativa descartada: cajado principal, que tornaria o instrumento secundário irrelevante. `Player` já transporta ID/`spell_power`; a fórmula numérica continua dos donos e do cliente de magia |
+| **Mãos** | O catalisador pode viver à esquerda ou à direita e cada mão conserva a sua acção | Só o cajado principal tinha `can_cast`; não havia instrumento secundário executável | A assimetria é intencional e `[DECIDIDO]` (Mateus, 01-08): cajado principal + instrumento secundário; ao passar a duas mãos, a secundária deixa de estar activa e o mesmo `attack` volta à pancada |
+
+### As quatro perguntas do fio solto
+
+1. **Como usa o jogador:** selecciona o feitiço por `next_spell` e usa a acção remapeável `attack`; `heavy_mod`/duas mãos escolhe pancada, e mana insuficiente faz a pancada de recurso. `cast` em C/X fica apenas como alternativa transitória enquanto a ajuda antiga ainda existe.
+2. **Como se prova:** contrato headless isolado, pela fronteira pública `use_primary_attack()`: **2/2** — instrumento secundário + mana → `CASTING`; zero mana → `ATTACK` com a razão exposta. No mesmo processo, o auto-teste central manteve **9703/9703**.
+3. **De onde vêm arte e som:** nenhum asset novo. A conjuração conserva a apresentação do agente `magia-e-vfx`; a pancada reutiliza animação de ataque e `swing_light`, sintetizado por `Sfx` em código. A razão aparece no HUD textual existente.
+4. **Quanto custa na máquina do Rico:** **0 nós, 0 malhas, 0 materiais, 0 luzes, 0 partículas e 0 chamadas por frame novos**. Há uma procura no pequeno catálogo de instrumentos apenas quando `attack` é consumido; não houve alteração de render, portanto não se inventa delta de FPS.
+
+### Ligações que pertencem a outros donos
+
+| Estado | Trabalho fora desta árvore | Fronteira pronta |
+|---|---|---|
+| 🔴 | **O ecrã de instruções ainda diz `Ataque leve` e `C/X Conjurar`; o `SpellHud` também imprime a dica antiga.** O dono de `game_shell.gd`/`spell_hud.gd` deve passar a anunciar “atacar / conjurar com instrumento” e a pancada alternativa, sempre lendo o binding actual como manda a regra 5 do [`45`](spec/45-controlos-configuraveis.md) | `controls.json::_nota_cast` fixa a semântica; `Player.use_primary_attack()` é a única fronteira de execução |
+| 🔴 | **A fórmula runtime ainda ignora o instrumento.** O dono de `game/src/combat/spell.gd` deve consumir `_instrument_id`/`_instrument_spell_power` ou a fronteira equivalente depois de os donos fecharem se a fórmula do instrumento substitui o `base_damage`. Não decidir essa pergunta por um multiplicador improvisado | `_cast_spell` transporta a identidade e a força declarada do instrumento; nenhum número foi hardcoded |
+| 🔴 | **O catálogo recebido ainda só tem `cajado` em `magic_instruments`, com `slot:main_hand`; não existe talismã secundário executável nesta árvore.** O agente `instrumentos` deve fornecer o `weapon_id`, `school_tags` e `slot:off_hand` decididos | `_secondary_instrument_for()` aceita a chave do instrumento ou o seu `weapon_id`, sem depender de um nome concreto |
+| 🔵 | **O dono de `game/src/tests/self_test.gd` deve tornar os dois resultados parte do gate central:** `attack` com instrumento+mana lança; o mesmo `attack` sem mana bate e explica a razão. O teste isolado 2/2 não é substituto de uma regressão obrigatória | fronteira pública `use_primary_attack()`; sem mock de colaboradores internos |
