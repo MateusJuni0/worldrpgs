@@ -2,7 +2,7 @@
 
 > **Tarefa 3.2 · Codex · WP6** (01-08-2026). Fecha as 30–36 combinações `raça × bioma × camada` pedidas pelo [`50`](50-racas.md), sem reabrir os chefes do WP7. O catálogo executável é [`game/data/enemies.json`](../game/data/enemies.json); este documento explica a conta e torna-a auditável.
 
-`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ⚠️ A Revisão 1 encontrou dois buracos: **18/33 tipos não declaram velocidade de perseguição** e **cinco cartas obrigatórias `acessorio:*` não têm catálogo** (`LACUNAS`, `🔴`).
+`[CODEX]` **Resultado:** **33 tipos comuns**, **100 ataques comuns** e os 5 ataques de Vorgar migrados. As 12 raças verdadeiras aparecem; o mímico continua `praga`. Cada comum tem massa, almas, `descricao_visual`, `fatia_1`, 3–5 perguntas de combate e um baralho explícito de 10. Cada ataque declara o tipo de contacto novo, 1–2 dos nove vectores de fuga, som e equivalente visual completos. ✅ A Revisão 2 preencheu e passou a testar a velocidade de perseguição das 33 fichas. ⚠️ Continuam sem catálogo cinco cartas obrigatórias `acessorio:*` (`LACUNAS`, `🔴`).
 
 ---
 

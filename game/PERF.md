@@ -25,11 +25,11 @@ O nome do adaptador vem lido do próprio Godot em cada medição (`Intel(R) Iris
 
 ## A resposta curta
 
-**Aguenta-se, com muita folga.**
+**O greybox aguenta-se com muita folga; o jogo vestido ainda não está aprovado.**
 
 No cenário que a spec define como critério de aceitação — **2 jogadores + 3 inimigos no ecrã, a 1920×1080** — o jogo corre a **60,0 fps travados, com o pior frame em 16,67 ms e zero frames fora do orçamento**. Sem vsync, o mesmo cenário dá **377 fps médios**.
 
-Ao fim de **20 minutos quente**, a média é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável.**
+Ao fim de **20 minutos quente**, a média do greybox é **416 fps** contra 412 a frio. **Não há degradação térmica mensurável nesse cenário.** O spike posterior com cinco esqueletos UAL manteve 60,0 fps médios, mas deu **p99 19,910 ms e pior frame 21,993 ms**: amarelo pelo critério global e acima do tecto de pico de arena. Portanto a média já não pode ser usada como prova de 60 fps estáveis do conteúdo final.
 
 ---
 
@@ -117,7 +117,7 @@ Malhas de baixa contagem: troncos com 6 lados, copas com 7, cápsulas com 8 segm
 
 Sou obrigado a ser honesto sobre isto, senão o dado engana.
 
-**Isto é um greybox.** Não há animação de esqueleto, nem texturas, nem partículas, nem som, nem interface a sério. Um souls-like vive de animação — e a animação de esqueleto é *a* grande incógnita que falta medir, porque é cara de CPU e o combate inteiro depende dela.
+**Isto é um greybox.** Não há texturas finais, partículas, som, interface a sério nem IA completa no mesmo teste. A animação de esqueleto já foi medida isoladamente ([`medicoes/animacao-esqueleto-2026-08-01.json`](../medicoes/animacao-esqueleto-2026-08-01.json)): cinco e dez actores deram 60,0 fps médios, mas p95 ≈18,5 ms, p99 ≈19,9 ms e picos de 22,0–22,5 ms. Isso fecha “consegue animar?”, mas **não** fecha o gate p99 ≤16,7 ms nem “aguenta o combate completo”.
 
 **A folga é o orçamento para o conteúdo, não uma garantia.** 377 fps no critério 5 quer dizer que há cerca de **6× de orçamento de frame** para gastar em arte, animação e efeitos antes de tocar nos 60. É muito. Não é infinito.
 
@@ -127,7 +127,7 @@ Sou obrigado a ser honesto sobre isto, senão o dado engana.
 
 ### O que medir a seguir, por ordem
 
-1. **Animação de esqueleto** com 4–5 personagens animados ao mesmo tempo. É a incógnita que resta.
+1. **Oito personagens animadas dentro do nível completo**, com IA, colisões, VFX, cues, HUD e rede simulada, quente durante 20 min; o gate é p99 ≤16,7 ms e nenhum pico >20 ms em arena.
 2. A fuga de memória dos 14,5 MB / 20 min.
 3. A zona inteira percorrida a pé, em vez da câmara em órbita.
 4. A máquina do Mateus, para confirmar que o chão é mesmo o chão.

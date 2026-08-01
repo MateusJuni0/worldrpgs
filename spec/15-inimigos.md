@@ -12,7 +12,7 @@
 2. ⚠️ **Fora do campo de visão há dois canais equivalentes** — acrescentado por [`29-perspectiva.md`](29-perspectiva.md) e fechado pelo [`62`](62-acessibilidade-auditiva.md). O jogador pode estar em **primeira pessoa**, e aí não tem visão periférica: todo o ataque emite som direccional **e** cunha visual no mesmo início/compromisso. Cada ficha declara ambos nas doze colunas do [`38`](38-ataques-e-honestidade.md); preencher só som não fecha a ficha.
 
 3. **Cada ataque traz a marca `aparável` ou `só esquiva`** (WP1). A língua visual é fixa (WP12): `só esquiva` = brilho vermelho curto; aparável = silhueta sem vermelho.
-4. **Velocidade:** patrulha e perseguição sustentada **< 5,0 m/s** — fugir a correr é possível e grátis com carga até 100%; só o **fecho** (anti-kite dos 4 s, WP1) pode ser mais rápido, e é curto e telegrafado. ⚠️ O [`67`](67-catalogo-do-bestiario.md) ainda omite esta coluna em 18/33 tipos; a garantia só fecha quando esses valores existirem e o teste os limitar. Sobrecarregar-se é a excepção explícita do [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1.
+4. **Velocidade:** patrulha e perseguição sustentada **< 5,0 m/s** — fugir a correr é possível e grátis com carga até 100%; só o **fecho** (anti-kite dos 4 s, WP1) pode ser mais rápido, e é curto e telegrafado. ✅ A Revisão 2 materializou a coluna nas 33 fichas e o auto-teste limita-a a `<5,0`; sobrecarregar-se continua a excepção explícita do [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1.
 5. **Postura 0–100** por inimigo; dano de postura = MV × 10, bash ×2, martelos ×1,5 (WP1/WP5). A zero → **Cambaleio 1,2 s**, ripostável.
 6. **Tecto de cena:** ≤ 5 inimigos animados em combate ao mesmo tempo (orçamento do WP12). Encontros desenham-se dentro disto.
 7. **Nenhum inimigo é desenhado para ser repetido** (Lei 1: sem grind). O XP é o que é; a razão de voltar a uma zona é o mundo, não a mochila.
@@ -23,12 +23,14 @@ Todos os inimigos correm a mesma máquina; cada ficha muda os números, nunca as
 
 | Estado | Comportamento | Números por omissão |
 |---|---|---|
-| **Patrulha** | rota fixa curta ou posto parado; 2,0 m/s | — |
-| **Alerta** | viu/ouviu qualquer coisa: vira-se, avança 2 passos, espreita 2 s | visão: cone 90°, 15 m · audição: passos a correr 8 m, combate 20 m |
+| **Patrulha** | rota fixa curta ou posto parado | 1,6 m/s por omissão; a ficha pode substituir |
+| **Alerta** | viu/ouviu qualquer coisa: vira-se, avança e espreita 2 s | visão: cone 90°, 15 m · audição: passos a correr 8 m, combate 20 m · distância do avanço na pergunta 53 |
 | **Chamada** | ao confirmar o alvo, grita — **o grito é o aviso ao jogador** (WP12: é mecânica) e acorda aliados num raio de 10 m | 0,8 s vulnerável durante o grito |
-| **Combate** | aproxima, orbita, ataca pela ficha própria | perseguição 4,5–5,0 m/s |
+| **Combate** | aproxima, orbita, ataca pela ficha própria | perseguição exacta por ficha, 2,2–4,9 m/s; órbita 1,8 m/s por omissão |
 | **Fecho** | 4 s sem alcançar o alvo (WP1): investida/salto/projéctil próprio, telegrafado | por ficha |
-| **Desistência** | 6 s sem ver o alvo, ou a 30 m do posto: regressa, e **cura ao chegar** | evita luta de atrito à distância |
+| **Desistência** | 6 s sem ver o alvo, ou a 30 m do posto: regressa, e **cura ao chegar** | velocidade de regresso e cura/reaquisição na pergunta 53 |
+
+⚠️ **Revisão 2:** a tabela antiga media “dois passos”, fixava toda a perseguição em 4,5–5,0 m/s e não dizia quanto/como se curava. Os valores já canónicos foram corrigidos acima; o resto não se inventa e está em `[TENSÃO]` na pergunta 53.
 
 **Regra de grupo — o círculo de agressão:** por muito grande que o grupo seja, **no máximo 2 atacam ao mesmo tempo**; os outros orbitam a 3–5 m, visíveis, à espera de vaga. *Porquê:* 5 golpes simultâneos não se lêem — a leitura é a Lei 1; o grupo pressiona pelo cerco, não pela chuva. *Alternativa descartada:* todos atacam à vontade — é como os jogos maus fazem multidões, e é injusto exactamente da maneira que este jogo recusa.
 

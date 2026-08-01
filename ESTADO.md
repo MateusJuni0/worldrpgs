@@ -1,6 +1,6 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, Tarefa 4 fechada e Revisão 1 com cinco lacunas vermelhas reabertas.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 01-08-2026, Revisão 2 concluída.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem **75 documentos** e ~50 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 5–23 inclusivos, **317 ms**, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8435 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**; 5 e 10 esqueletos UAL animados deram ambos 60,0 fps médios a 1080p. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 5–23 inclusivos, **317 ms**, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, 3/6 habilidades de classe no runtime e 17 sons sintetizados. **8559 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, greybox a **416 fps na máquina do Rico**; o spike de 5 esqueletos UAL deu 60,0 fps médios mas p99 19,910 ms/pior 21,993 ms, portanto a cena final ainda não passa o gate de estabilidade. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md) e [`game/PERF.md`](game/PERF.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -35,25 +35,25 @@ O código está em [`game/`](game/) desde 31-07 (PR #13), com os 8 commits origi
 
 ```
 $ godot --headless --path game/ scenes/selftest.tscn
-=== 8435 passaram, 0 falharam ===
+=== 8559 passaram, 0 falharam ===
 ```
 
 ## 1b. ⭐ O que temos, em números
 
-**Esta tabela é o retrato do projecto.** O que falta não é arquitectura — é **conteúdo**.
+**Esta tabela é o retrato do projecto.** Falta conteúdo, mas a Revisão 2 provou que também faltam **interfaces executáveis entre catálogos e sistemas**.
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
 | Documentos de spec | **75** em `spec/` | — | — |
 | Código e dados | **18** ficheiros `.gd` · **17** catálogos JSON | — | — |
-| Testes | **8435, todos a passar** | — | — |
+| Testes | **8559, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
 | **Armaduras** | **68 peças** · 9 slots · 4 estados de carga · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
 | **Anéis** | **70 fichas únicas** · 8 eixos · 2→10 dedos ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 70 | UI/save e imagens futuras |
 | **Feitiços** | **53 fichas · 3 executáveis/Fatia 1** ([`66`](spec/66-catalogo-de-magia.md)) | catálogo largo | 50 renderers/comportamentos e roda |
 | **Inimigos** | **33 tipos comuns · 100 ataques comuns · Vorgar migrado** ([`67`](spec/67-catalogo-do-bestiario.md)) | 12 raças + 61 chefes | modelos/animações dos 31 fora da Fatia 1 · chefes WP7 |
-| Habilidades de classe | 6 | 6 | ✅ |
+| Habilidades de classe | 6 fichas; 3 no runtime | 6 | Eco, Entre Sombras e Julgamento + contrato de compromisso |
 | **Mundo / biomas** | **12 fichas · 21 ligações · 24 círculos · 12 atalhos · 30 portas** ([`69`](spec/69-catalogo-do-mundo.md) + `game/data/world.json`) | 12 | só Brumal é Fatia 1; mapa/streaming e 11 zonas não estão no runtime |
 | **Raças** | **12 fichas + mímico** ([`50`](spec/50-racas.md) + `game/data/races.json`) | 10–15 | ✅ volta 2 |
 
@@ -87,7 +87,7 @@ O [`63`](spec/63-como-se-afinam-os-numeros.md) completa o [`28`](spec/28-testes.
 
 **Um valor só fica confirmado** depois de três sessões comparáveis, protocolo do `28`, ausência de regressão e preferência dos dois donos. “Morro sempre no mesmo ataque” olha primeiro para leitura, tracking/hitbox, rota e controlo; dano é o último suspeito, nunca se oferece mais i-frames por reflexo.
 
-⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8435 auto-testes provam coerência, não feel.
+⚠️ A verificação do código encontrou o buraco operacional: CSV sempre ligado, `tp arena_vorgar`, comandos, overlays e latência artificial estão escritos no `23`/`28`, mas **não existem**. A afinação reproduzível espera pelo `TuningRecorder`; os 8559 auto-testes provam coerência, não feel.
 
 ## 1g. ✅ A primeira escolha já não fecha o resto do jogo
 
@@ -143,7 +143,7 @@ O [`70`](spec/70-fecho-dos-sistemas-de-combate.md) passa a ser a autoridade das 
 
 `T` ou `Y/triângulo` muda a empunhadura em 12 frames interrompíveis. `hook_pull` atravessa 40% do escudo e `slam` custa ×2,5 stamina de guarda no runtime. O bestiário liga ainda duas largadas, ramo de combo, falsa recuperação, castigo de cura, fingir morte e corpo duro a fichas concretas. Estes ramos avançados estão especificados e testados como dados; animação/IA completa e ressalto geométrico continuam construção M2 conhecida.
 
-Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8435/8435** testes passam no fecho corrente.
+Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8559/8559** testes passam no fecho corrente.
 
 ## 1n. ✅ Os vazios entre comuns, chefes e recompensa estão fechados
 
@@ -153,11 +153,13 @@ O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida
 
 ⚠️ A política de destinatário em co-op continua a pergunta 29 do [`99`](spec/99-perguntas-abertas.md). A infraestrutura recebe um destinatário explícito e, por isso, não decidiu à socapa se cai uma ou duas cartas.
 
-## 1o. ⭐ Fecho da Tarefa 4, reaberto pela Revisão 1
+## 1o. ⭐ Revisão 2 — os dados ligam; o jogo inteiro ainda não se constrói sem perguntas
 
-**A Tarefa 4 fechou os contratos nucleares, mas a Revisão 1 provou que “implementar sem inventar regras” ainda era forte demais.** O [`73`](spec/73-fecho-dos-buracos-de-integracao.md) continua a fechar magia inimiga, cura remota/latência, travessia, persistência de subchefes, textos, comando, voz e migração. Porém, o [`LACUNAS`](LACUNAS.md) voltou a ter **cinco linhas `🔴`**: mecanismos de doze feitiços, melhorias genéricas/numericamente incompatíveis com a Lei 2, absorção elemental de escudos sem representação executável, 18/33 perseguidores sem velocidade que prove a garantia de fuga e cinco acessórios obrigatórios sem catálogo.
+O cruzamento automático carrega os **17 JSON** e verifica **2380 referências/contratos**. Não encontrou IDs partidos novos; conserva como avisos explícitos os cinco acessórios sem catálogo e os onze slots de guardião sem ficha. A velocidade de perseguição está agora materializada nas 33 fichas comuns e provada abaixo de 5,0 m/s. O gerador de equipamento deixou de trocar nome/origem/bioma entre os 120 IDs.
 
-Também deixou de haver uma incógnita sem número na animação: UAL Standard em Mobile/Vulkan, Iris Xe, 1920×1080, deu **60,0 fps médios com 5 e com 10 esqueletos animados**. O p95 de ~18,5 ms impede triunfalismo: é um spike isolado, não a cena final. Artefacto em [`medicoes/animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json).
+Isso não torna a spec fechada. Os bloqueios mais graves são agora visíveis: física de projécteis e das 12 formas, mecanismos/melhorias dos feitiços, compromisso das habilidades/Eco, instrumentos mágicos, afinidade e clientes dos anéis, habilidades-placeholder de armadura, cinco acessórios, máquina de percepção dos inimigos, 18 parâmetros ambientais, onze guardiões + doze subchefes, e decisões de streaming/actores. Todos os pontos que exigem donos estão nas perguntas 41–56 do [`99`](spec/99-perguntas-abertas.md); riscos de Lei 4 e estimativas estão no [`LACUNAS`](LACUNAS.md).
+
+A medição de animação é também um aviso, não aprovação: 5 actores UAL deram **p99 19,910 ms e pior 21,993 ms**, acima dos gates de 16,7/20 ms antes de IA, VFX, HUD e rede. Artefacto em [`medicoes/animacao-esqueleto-2026-08-01.json`](medicoes/animacao-esqueleto-2026-08-01.json).
 
 **O que ficou por fazer de propósito — e porquê:**
 
@@ -165,11 +167,11 @@ Também deixou de haver uma incógnita sem número na animação: UAL Standard e
 |---|---|
 | runtime dos sete golpes/estados/artes; 50 feitiços; favoritos; criador/save v2; directores/áudio; mundo/streaming/mapa | é produção M2/WP8/WP11/WP12/15, já com autoridade e prova de saída no `73`; construir tudo seria outra fase, não “fechar spec” |
 | retarget KayKit/Quaternius dentro do nível completo | o spike mediu o custo do esqueleto, mas não prova encaixe, IA, efeitos e duas perspectivas juntos |
-| `TuningRecorder` e três sessões de feel | 8435 testes provam coerência; não provam prazer nem confirmam os baselines |
+| `TuningRecorder` e três sessões de feel | 8559 testes provam coerência; não provam prazer nem confirmam os baselines |
 | identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
-| políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto, escudos elementais e o salto ~30→68 armaduras | perguntas 24, 28, 29, 32 e 35–44 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
+| políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto, escudos elementais, projécteis, acessórios, instrumentos, streaming e os efeitos de armaduras/anéis | perguntas 24, 28, 29, 32 e 35–56 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
 
-Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura, os escudos elementais, a velocidade dos perseguidores futuros e os cinco acessórios prometidos precisam dos mecanismos agora isolados, além do catálogo mecânico/narrativo dos doze confrontos finais.
+Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura, escudos elementais, acessórios, ameaças, bosses/subchefes e orçamentos de streaming/actores precisam dos mecanismos agora isolados.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 
@@ -200,52 +202,27 @@ Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente
 
 ## 3. ⭐ A ordem, e por que é esta
 
-⚠️ **Actualizada a 31-07 pelo [`46`](spec/46-coerencia-bioma-raca-item.md):** as **24 fichas** (12 de bioma + 12 de raça) vêm **antes** dos catálogos. São 8 linhas cada, meio dia de trabalho, e é delas que saem as descrições de tudo — com coerência de graça. Ao contrário, cada descrição é inventada de novo e a regra anti-mistura é impossível de aplicar porque não há biomas definidos para comparar.
-
-
-
-**Não é uma lista de desejos — é uma cadeia de dependências.** Cada passo desbloqueia o seguinte.
+As fichas de bioma/raça, os catálogos e o alinhamento histórico estão feitos. A cadeia real a partir de amanhã é outra:
 
 ```
-0. ✅ O código veio para o repositório               (feito, PR #13)
+0. DECISÕES/GATES ─ projécteis/formas · Eco · acessórios · Brumal · orçamento 8 actores
         ▼
-1. ✅ AS 24 FICHAS ── 12 de bioma (spec/49) + 12 de raça (spec/50)
-        │           O MOTOR DE PRODUÇÃO ESTÁ COMPLETO — cada descrição
-        │           é agora uma intersecção de duas fichas que existem
+1. COMBATE SOLO ─ sete golpes/estados/offhand · 6 habilidades · 3 magias da fatia
         ▼
-2. ⚠️ Os CATÁLOGOS  (enumerados; a Revisão 1 reabriu semântica de magia,
-        │              escudos, velocidades de perseguição e 5 acessórios)
-        │           cada item = intersecção de uma ficha de bioma
-        │           com uma de raça — a descrição sai quase sozinha
-        │
-        ├──► desbloqueia AS IMAGENS ──► não se desenham 120 armas
-        │                               sem saber quais são
-        │
-        └──► desbloqueia O CONTEÚDO ──► o motor é data-driven:
-                                        o catálogo É o jogo
+2. EQUIPAR + SAVE + UI ─ kits da fatia · loot garantido · criador · remap/perspectiva
         ▼
-3. ⚠️ O NÚCLEO DOS SISTEMAS (combate/curvas e transacção local executáveis;
-        │                   baralho/magia/escudos têm os `🔴` acima, além dos clientes)
+3. REDE DA FATIA ─ autoridade · recompensa/save · ressurreição · latência
         ▼
-4. ✅ O CATÁLOGO DO MUNDO  (WP8: leitura, 12 biomas, círculos, atalhos e 30 portas)
-        │                   faltam cenas, streaming, mapa e prova jogada
+4. BRUMAL COMPLETO ─ rota/atalhos/ameaça · Vorgar · arte/áudio integrados
         ▼
-5. ✅ O ALINHAMENTO dos documentos antigos contra o DECISOES.md
+5. GATE INTEGRADO ─ 2+5, duas perspectivas, áudio zero, p99/memória quentes
+        ▼
+6. PIPELINES FUTUROS ─ formas/instrumentos · arena/bolsa · streaming por transição
+        ▼
+7. UMA ZONA DE CADA VEZ ─ ficha + conteúdo + guardião/subchefe + prova; só depois a seguinte
 ```
 
-### Porque é que as fichas vêm antes do catálogo
-
-⭐ **Porque são o motor de produção.** 12 fichas de bioma + 12 de raça = **24 fichas de 8 linhas**, e cada uma das ~300 descrições do jogo é **uma intersecção de duas delas**. Se a ficha do bioma diz *"obsidiana"* e a da raça diz *"usam os ossos dos inimigos"*, o machado escreve-se sozinho.
-
-⚠️ **Ao contrário, cada descrição é inventada de novo, nenhuma combina com as outras, e a regra anti-mistura do [`46`](spec/46-coerencia-bioma-raca-item.md) §4 é impossível de aplicar** — não há biomas definidos contra os quais comparar.
-
-### E porque é que o catálogo vem antes dos sistemas
-
-As imagens seguem a mesma ordem: os ícones de armas, dos três feitiços e das **11 armaduras** da Fatia 1 já existem; os itens fora da fatia esperam pela sua coluna. O motor é data-driven por desenho ([`44`](spec/44-prototipo.md) §2): *“nenhum número de combate vive em código”*. **Escrever o catálogo é, literalmente, produzir conteúdo jogável.**
-
-### E o alinhamento vem por último de propósito
-
-Foi concluído na Tarefa 4 sem apagar o registo: os onze documentos `10`–`20` abrem agora com um aviso histórico e apontam para as fontes que mandam hoje. A Fatia 1 deixa, assim, de poder reintroduzir cargas, seis zonas, loot sem baralho ou mochila limitada numa implementação nova.
+O relatório [`docs/REVISAO-2.md`](docs/REVISAO-2.md) explica as dependências e os ciclos. A regra operacional é: **não produzir 50 feitiços, 11 zonas ou 23 confrontos sobre uma interface ainda implícita**. Fecha-se uma interface com um exemplar jogável, prova-se na máquina do Rico e só então se multiplica o conteúdo.
 
 ---
 
@@ -257,7 +234,7 @@ Foi concluído na Tarefa 4 sem apagar o registo: os onze documentos `10`–`20` 
 
 ## 4. O que é dos donos, e só deles
 
-Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nem todas travam a construção inteira, mas algumas travam a família que decidem:** a pergunta 41 bloqueia melhorias de magia, a 43 bloqueia afinidades elementais dos escudos e a 44 bloqueia produção para além das 11 armaduras iniciais. Há trabalho independente que pode continuar; não se implementam essas três por suposição.
+Está tudo no [`99-perguntas-abertas.md`](spec/99-perguntas-abertas.md). **Nem todas travam a construção inteira, mas algumas travam a família que decidem:** 41–46 bloqueiam melhorias/escudos/habilidades/projécteis; 47–49 bloqueiam acessórios/anéis/ameaças; 50–53 bloqueiam streaming, invocações, conteúdo das zonas e IA de percepção; 54–56 bloqueiam a produção de armaduras/anéis e instrumentos futuros. Há trabalho independente que pode continuar; não se implementam essas famílias por suposição.
 
 **As três que mais mudam o jogo se a resposta for diferente da proposta:**
 

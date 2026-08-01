@@ -67,7 +67,7 @@ stateDiagram-v2
 | Strafe (com lock-on) | 4,0 m/s | 0 | lateral e para trás |
 | Conjuração | 40% do modo actual | — | ver "Combate à distância" |
 
-*Contrato da Lei 1:* até 100% de carga, correr é grátis e deve ser mais rápido do que qualquer inimigo comum em perseguição. **Fugir não depende de nível nem de atributos.** A excepção é deliberada e visível: equipar acima de 100% mostra `SOBRECARGA` e troca corrida/esquiva por marcha até se retirar peso, segundo o [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1. ⚠️ A prova só está completa para os 15 tipos que declaram velocidade; 18/33 fichas do [`67`](67-catalogo-do-bestiario.md) ainda não a declaram e estão em `🔴` no [`LACUNAS`](../LACUNAS.md).
+*Contrato da Lei 1:* até 100% de carga, correr é grátis e deve ser mais rápido do que qualquer inimigo comum em perseguição. **Fugir não depende de nível nem de atributos.** A excepção é deliberada e visível: equipar acima de 100% mostra `SOBRECARGA` e troca corrida/esquiva por marcha até se retirar peso, segundo o [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1. ✅ **Revisão 2:** as 33 fichas comuns declaram agora `chase_speed` ou o par água/terra; o auto-teste exige todos os valores abaixo de 5,0 m/s.
 
 ## Esquiva (rolamento)
 

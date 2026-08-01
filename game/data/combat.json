@@ -11,7 +11,7 @@
     "sprint_stamina_per_second": 8.0,
     "strafe_speed": 4.0,
     "cast_move_multiplier": 0.40,
-    "_nota": "Ate 100% de carga, correr e gratis e o contrato exige perseguidores comuns abaixo de 5.0 m/s. Sobrecarregado e a excepcao explicita: so marcha a 3.0 m/s ate retirar peso. Falta velocidade em 18/33 fichas futuras; ver LACUNAS."
+    "_nota": "Ate 100% de carga, correr e gratis e o contrato exige perseguidores comuns abaixo de 5.0 m/s. Sobrecarregado e a excepcao explicita: so marcha a 3.0 m/s ate retirar peso. As 33 fichas comuns declaram e validam a velocidade desde a Revisao 2."
   },
 
   "dodge": {

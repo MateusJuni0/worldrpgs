@@ -31,7 +31,7 @@ O máximo por atributo passa de 50 para **70**. O nível máximo continua 100 e 
 
 Os i-frames continuam 5–23 quando existe esquiva. Peso nunca compra nem remove frames dentro de uma esquiva; acima de 100% remove a acção inteira e comunica `SOBRECARGA` antes de o jogador sair do inventário.
 
-A garantia “fugir funciona sempre” aplica-se ao jogador com carga até 100%: cada comum tem de perseguir abaixo dos 5,0 m/s da corrida. **Sobrecarregar é a única excepção**, escolhida no equipamento e comunicada antes de voltar ao mundo; não depende de nível ou atributo e termina ao retirar peso. O catálogo ainda não prova a primeira metade para todos: 18/33 fichas não declaram velocidade de perseguição (`LACUNAS`, `🔴`).
+A garantia “fugir funciona sempre” aplica-se ao jogador com carga até 100%: cada comum tem de perseguir abaixo dos 5,0 m/s da corrida. **Sobrecarregar é a única excepção**, escolhida no equipamento e comunicada antes de voltar ao mundo; não depende de nível ou atributo e termina ao retirar peso. ✅ A Revisão 2 fechou a prova de catálogo: as 33 fichas declaram velocidade de perseguição e o auto-teste exige `<5,0 m/s`.
 
 ## 2. Empunhadura: uma mão e duas mãos deixam de ser conteúdo morto
 

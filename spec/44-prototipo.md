@@ -35,7 +35,7 @@ O caminho A está escolhido com dados. O risco “esqueleto nunca medido” fech
 
 ## 2. O que já se joga
 
-Construído inicialmente com 130 verificações; o fecho corrente passa **8435 auto-testes** contra a spec:
+Construído inicialmente com 130 verificações; o fecho corrente passa **8559 auto-testes** contra a spec:
 
 | Sistema | Estado | Fonte |
 |---|---|---|
