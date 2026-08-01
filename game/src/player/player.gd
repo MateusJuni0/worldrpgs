@@ -68,6 +68,11 @@ var _combo_index := 0
 # --- Esquiva ------------------------------------------------------------------
 var _dodge_dir := Vector3.FORWARD
 var _dodge_travelled := 0.0
+var _dodge_recovery_extra := 0
+var _load_can_dodge := true
+var _load_can_run := true
+var _load_can_sprint := true
+var _load_max_speed := 999.0
 
 # --- Magia --------------------------------------------------------------------
 var _cast_spell: Dictionary = {}
@@ -230,8 +235,6 @@ func _read_input() -> void:
 		_buffer("toggle_grip")
 	if Input.is_action_just_pressed("lock_on"):
 		lock_on.toggle()
-	if Input.is_action_just_pressed("next_spell"):
-		_cycle_spell()
 	if Input.is_action_just_pressed("loadout_next"):
 		_cycle_loadout(1)
 	if Input.is_action_just_pressed("loadout_prev"):
@@ -240,7 +243,7 @@ func _read_input() -> void:
 	# Space: toque = esquiva, segurar = sprint (spec/01-combate.md, tabela de comandos).
 	if Input.is_action_pressed("dodge_sprint"):
 		_space_held_frames += 1
-		if _space_held_frames > 9 and _move_input().length() > 0.1:
+		if _space_held_frames > 9 and _move_input().length() > 0.1 and _load_can_sprint:
 			_sprinting = true
 	else:
 		if _space_held_frames > 0 and _space_held_frames <= 9:
@@ -358,14 +361,15 @@ func _tick_locked(delta: float, total_frames: int) -> void:
 
 func _speed_for_mode() -> float:
 	var m := GameData.section("movement")
-	if _sprinting and stamina.can_act():
-		return m.get("sprint_speed", 7.0)
+	if _sprinting and stamina.can_act() and _load_can_sprint:
+		return minf(float(m.get("sprint_speed", 7.0)), _load_max_speed)
 	if is_instance_valid(lock_on.target):
 		var input := _move_input()
 		# Andar de lado ou para tras com alvo engatado e mais lento — e o strafe da spec.
 		if absf(input.x) > 0.3 or input.y > 0.3:
-			return m.get("strafe_speed", 4.0)
-	return m.get("run_speed", 5.0)
+			return minf(float(m.get("strafe_speed", 4.0)), _load_max_speed)
+	var free_speed: float = m.get("run_speed", 5.0) if _load_can_run else m.get("walk_speed", 3.0)
+	return minf(free_speed, _load_max_speed)
 
 
 var _step_accum := 0.0
@@ -416,7 +420,7 @@ func _facing() -> Vector3:
 # --- Esquiva ------------------------------------------------------------------
 
 func _start_dodge() -> void:
-	if not stamina.can_act():
+	if not stamina.can_act() or not _load_can_dodge:
 		return
 	var cfg := GameData.section("dodge")
 	if _fury_time > 0.0:
@@ -449,8 +453,12 @@ func _tick_dodge(delta: float) -> void:
 	velocity.x = _dodge_dir.x * (step / delta)
 	velocity.z = _dodge_dir.z * (step / delta)
 
-	if state_frame >= total:
+	if state_frame >= total + _dodge_recovery_extra:
 		_change_state(State.FREE)
+		return
+	if state_frame >= total:
+		velocity.x = move_toward(velocity.x, 0.0, delta * 40.0)
+		velocity.z = move_toward(velocity.z, 0.0, delta * 40.0)
 		return
 
 	# Cancelavel a partir de 0,45 s, em ataque leve / bloqueio / nova esquiva.
@@ -771,11 +779,47 @@ func _tick_meditating(delta: float) -> void:
 		mana = max_mana
 		_change_state(State.FREE)
 
-func _cycle_spell() -> void:
+func cycle_spell() -> void:
 	if favorite_spells.is_empty():
 		return
 	var i := favorite_spells.find(selected_spell)
 	selected_spell = favorite_spells[(i + 1) % favorite_spells.size()]
+
+
+# Compatibilidade com os testes de combate que exercitam a maquina por dentro.
+func _cycle_spell() -> void:
+	cycle_spell()
+
+
+func select_spell(spell_id: String) -> bool:
+	if not favorite_spells.has(spell_id):
+		return false
+	selected_spell = spell_id
+	return true
+
+
+func cast_selected_spell() -> bool:
+	if state != State.FREE:
+		return false
+	_buffer("cast")
+	return true
+
+
+func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
+	main_weapon = String(equipment.get("main", ""))
+	offhand_weapon = String(equipment.get("offhand", ""))
+	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	favorite_spells.clear()
+	for spell_value: Variant in equipment.get("spell_favorites", []):
+		favorite_spells.append(String(spell_value))
+	if not favorite_spells.has(selected_spell):
+		selected_spell = favorite_spells[0] if not favorite_spells.is_empty() else ""
+	_dodge_recovery_extra = int(load_profile.get("recovery_frames", 0))
+	_load_can_dodge = bool(load_profile.get("can_dodge", true))
+	_load_can_run = bool(load_profile.get("can_run", true))
+	_load_can_sprint = bool(load_profile.get("can_sprint", true))
+	_load_max_speed = float(load_profile.get("max_speed", 999.0))
+	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
 
 
 func _start_cast() -> void:

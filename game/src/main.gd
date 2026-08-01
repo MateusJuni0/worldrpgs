@@ -26,6 +26,7 @@ var _learning_elapsed := 0.0
 
 func _ready() -> void:
 	_ensure_runtime_save()
+	InventorySystem.normalise_current()
 	_graphics = _load_graphics()
 	_palette = _graphics.get("palette", {})
 	_preset = _pick_preset()
@@ -117,6 +118,7 @@ func _build_player() -> void:
 	player.name = "Player"
 	add_child(player)
 	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")))
+	refresh_inventory_state()
 	var checkpoint: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
 		"checkpoint", {}) as Dictionary)
 	var rest_id := String(checkpoint.get("rest_point_id", "brumal_clareira"))
@@ -383,6 +385,38 @@ func _binding_label(action_name: String) -> String:
 func set_local_input_enabled(enabled: bool) -> void:
 	if is_instance_valid(player):
 		player.input_enabled = enabled
+
+
+func refresh_inventory_state() -> void:
+	if not is_instance_valid(player):
+		return
+	var state := GameData.save_state_snapshot()
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+	player.apply_inventory_state(inventory.get("equipment", {}) as Dictionary,
+		InventorySystem.load_profile(state))
+
+
+func can_change_spell_favorites() -> bool:
+	return not _combat_is_active()
+
+
+func spell_favorites() -> Array[String]:
+	return player.favorite_spells.duplicate() if is_instance_valid(player) else []
+
+
+func selected_spell_id() -> String:
+	return player.selected_spell if is_instance_valid(player) else ""
+
+
+func cycle_spell() -> void:
+	if is_instance_valid(player):
+		player.cycle_spell()
+
+
+func select_and_cast_spell(spell_id: String) -> bool:
+	return is_instance_valid(player) and player.select_spell(spell_id) \
+		and player.cast_selected_spell()
 
 
 # --- Aprendizagem contextual -------------------------------------------------

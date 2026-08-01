@@ -35,6 +35,7 @@
     "ability":        [{ "type": "key", "key": "V" }, { "type": "joypad_button", "button": 6, "label": "Start/Options" }],
     "toggle_grip":    [{ "type": "key", "key": "T" }, { "type": "joypad_button", "button": 3, "label": "Y/triangulo" }],
     "interact":       [{ "type": "key", "key": "E" }, { "type": "joypad_button", "button": 2, "label": "X/quadrado contextual" }],
+    "inventory_menu": [{ "type": "key", "key": "I" }, { "type": "joypad_button", "button": 4, "label": "Select/View" }],
     "debug_class_next": [{ "type": "key", "key": "F6" }],
 
     "hotbar_1":       [{ "type": "key", "key": "1" }],

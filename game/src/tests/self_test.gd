@@ -43,6 +43,7 @@ func _ready() -> void:
 	_test_game_shell_and_character_creation()
 	_test_pause_contract()
 	_test_settings_contract()
+	_test_inventory_and_spell_wheel_contract()
 	_test_save_round_trip()
 	_test_atomic_save()
 	_test_corrupt_save_recovery()
@@ -153,6 +154,45 @@ func _test_settings_contract() -> void:
 	InputMap.action_erase_events("parry")
 	for original_event: InputEvent in original_parry_events:
 		InputMap.action_add_event("parry", original_event)
+
+
+func _test_inventory_and_spell_wheel_contract() -> void:
+	_check(InputMap.has_action("inventory_menu"),
+		"mochila: tem accao dedicada e remapeavel")
+	var state := SaveSystem.create_save("inventory-test", "warrior")
+	var inventory: Dictionary = (state.character as Dictionary).inventory as Dictionary
+	var items: Dictionary = inventory.items as Dictionary
+	_check(int(items.get("arma:longsword", 0)) == 1
+		and int(items.get("arma:shield", 0)) == 1,
+		"mochila: o kit inicial existe como posse, nao apenas como loadout")
+	_check(int(items.get("armadura:couro_peitoral", 0)) == 1,
+		"mochila: armadura inicial entra no inventario sem limite")
+	var defaults: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"default_favorites", []) as Array
+	_check(state.character.progression.known_spells == defaults
+		and state.character.inventory.equipment.spell_favorites == defaults,
+		"roda: novo jogo conhece e equipa os tres favoritos da Fatia 1")
+	for index: int in 240:
+		items["material:prova_%03d" % index] = 999
+	inventory["items"] = items
+	state.character["inventory"] = inventory
+	InventorySystem.normalise_state(state)
+	_check((state.character.inventory.items as Dictionary).size() >= 244,
+		"mochila: 240 pilhas extra nao encontram limite de peso nem slots")
+	var before_load := InventorySystem.load_profile(state)
+	state.character.inventory.items["armadura:ferro_peitoral"] = 999
+	var after_load := InventorySystem.load_profile(state)
+	_check(is_equal_approx(float(before_load.weight), float(after_load.weight)),
+		"carga: objectos na mochila nao pesam; so o equipado conta")
+	_check(String(before_load["class"]) == "leve"
+		and int(before_load["recovery_frames"]) == 0,
+		"carga: kit declarado leve conserva recuperacao de esquiva")
+	_check(InventorySystem.MAX_SPELL_FAVORITES == 8,
+		"roda: capacidade fechada em oito favoritos")
+	var wheel_source := FileAccess.get_file_as_string("res://src/ui/spell_wheel.gd")
+	_check(not wheel_source.contains("Engine.time_scale =")
+		and not wheel_source.contains("get_tree().paused ="),
+		"roda: a interface nao abranda nem pausa o mundo")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

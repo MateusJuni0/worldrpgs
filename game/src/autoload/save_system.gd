@@ -31,6 +31,17 @@ func create_save(profile_id: String, class_id: String, identity_overrides := {})
 	for key: Variant in identity_overrides.keys():
 		if key != "class_id":
 			identity[key] = identity_overrides[key]
+	var starting_items := {}
+	for weapon_key: String in ["main", "offhand"]:
+		var weapon_value: Variant = loadout.get(weapon_key)
+		if weapon_value != null and String(weapon_value) != "":
+			var item_key := "arma:%s" % String(weapon_value)
+			starting_items[item_key] = int(starting_items.get(item_key, 0)) + 1
+	for armor_value: Variant in loadout.get("pecas", []):
+		var item_key := "armadura:%s" % String(armor_value)
+		starting_items[item_key] = int(starting_items.get(item_key, 0)) + 1
+	var default_spells: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"default_favorites", []) as Array
 	return {
 		"format_version": CURRENT_FORMAT_VERSION,
 		"content_revision": String(ProjectSettings.get_setting("application/config/version", "prototype")),
@@ -43,7 +54,7 @@ func create_save(profile_id: String, class_id: String, identity_overrides := {})
 				"souls_held": 0,
 				"attributes": attributes,
 				"unlocked_skills": [],
-				"known_spells": [],
+				"known_spells": default_spells.duplicate(),
 				"scrolls": [],
 				"flask_upgrades": {},
 				"verbs": [],
@@ -52,13 +63,14 @@ func create_save(profile_id: String, class_id: String, identity_overrides := {})
 				"applied_event_ids": [],
 			},
 			"inventory": {
-				"items": {},
+				"items": starting_items,
+				"favorite_items": [],
 				"equipment": {
 					"main": loadout.get("main", null),
 					"offhand": loadout.get("offhand", null),
 					"armor": loadout.get("pecas", []),
 					"rings": [],
-					"spell_favorites": [],
+					"spell_favorites": default_spells.duplicate(),
 				},
 				"quick_slots": [],
 				"weapon_upgrades": {},

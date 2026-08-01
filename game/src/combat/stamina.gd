@@ -20,6 +20,7 @@ var _regen_delay := 0.8
 var _block_regen := 10.0
 var _hysteresis := 15.0
 var _since_spend := 999.0
+var _regen_multiplier := 1.0
 
 
 func configure(cfg: Dictionary, max_value: float) -> void:
@@ -31,6 +32,11 @@ func configure(cfg: Dictionary, max_value: float) -> void:
 	_hysteresis = cfg.get("hysteresis", 15.0)
 	locked_out = false
 	_since_spend = 999.0
+	_regen_multiplier = 1.0
+
+
+func set_regen_multiplier(value: float) -> void:
+	_regen_multiplier = maxf(value, 0.0)
 
 
 ## Ha stamina para agir? A spec so tranca a ZERO, nao por custo — gastar
@@ -49,13 +55,13 @@ func spend(amount: float) -> void:
 func tick(delta: float, blocking: bool) -> void:
 	_since_spend += delta
 	if blocking:
-		current = minf(maximum, current + _block_regen * delta)
+		current = minf(maximum, current + _block_regen * _regen_multiplier * delta)
 	elif _since_spend >= _regen_delay:
 		# So conta o tempo decorrido DEPOIS dos 0,8 s. No frame em que o atraso
 		# acaba, regenera-se a fatia certa em vez do delta inteiro — senao a
 		# histerese devolvia stamina a mais no primeiro frame de regeneracao.
 		var effective := minf(delta, _since_spend - _regen_delay)
-		current = minf(maximum, current + _regen_rate * effective)
+		current = minf(maximum, current + _regen_rate * _regen_multiplier * effective)
 
 	if locked_out and current >= _hysteresis:
 		locked_out = false

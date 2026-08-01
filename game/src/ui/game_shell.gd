@@ -40,6 +40,7 @@ const ACTION_LABELS := {
 	"toggle_perf": "Mostrar FPS", "toggle_help": "Instruções", "toggle_mouse": "Libertar rato",
 	"reset_arena": "Reiniciar arena", "debug_class_next": "Classe de teste seguinte",
 	"pause_menu": "Pausa",
+	"inventory_menu": "Mochila / inventário",
 }
 const INSTRUCTION_GROUPS := [
 	{"title": "MOVIMENTO E CÂMARA", "actions": [
@@ -54,7 +55,7 @@ const INSTRUCTION_GROUPS := [
 	{"title": "MUNDO E SISTEMA", "actions": [
 		"interact", "loadout_next", "loadout_prev", "toggle_perf",
 		"toggle_help", "toggle_mouse", "reset_arena", "debug_class_next",
-		"pause_menu"]},
+		"pause_menu", "inventory_menu"]},
 ]
 const LEARNING_TIP_IDS := ["movement", "attack", "dodge", "parry", "flask"]
 
@@ -93,6 +94,11 @@ var _selected_control_action := ""
 var _instructions_layer: CanvasLayer
 var _instructions_open := false
 var _instructions_paused_here := false
+var _inventory_menu: InventoryMenu
+var _spell_wheel: SpellWheel
+var _spell_hold_seconds := 0.0
+var _spell_hold_pending := false
+const SPELL_WHEEL_HOLD_SECONDS := 0.28
 
 
 func _ready() -> void:
@@ -116,6 +122,12 @@ func _ready() -> void:
 	elif measured_screen == "ui-tip" or _capture_screen == "tip":
 		_start_gameplay()
 		call_deferred("_show_capture_tip")
+	elif measured_screen == "ui-inventory" or _capture_screen == "inventory":
+		_start_gameplay()
+		call_deferred("_show_inventory")
+	elif measured_screen == "ui-spell-wheel" or _capture_screen == "spell-wheel":
+		_start_gameplay()
+		call_deferred("_show_spell_wheel", true)
 	elif measured_screen == "ui-pause" or _capture_screen == "pause":
 		_start_gameplay()
 		call_deferred("_show_pause_menu")
@@ -123,10 +135,18 @@ func _ready() -> void:
 		_start_gameplay()
 	else:
 		show_main_menu()
-	set_process(_capture_screen != "")
+	set_process(true)
 
 
 func _unhandled_input(_event: InputEvent) -> void:
+	if is_instance_valid(_inventory_menu):
+		return
+	if is_instance_valid(_gameplay) and InputMap.has_action("inventory_menu") \
+			and Input.is_action_just_pressed("inventory_menu") and not _pause_open \
+			and not _instructions_open and not is_instance_valid(_settings_layer):
+		_show_inventory()
+		get_viewport().set_input_as_handled()
+		return
 	if InputMap.has_action("toggle_help") and Input.is_action_just_pressed("toggle_help"):
 		_toggle_instructions()
 		get_viewport().set_input_as_handled()
@@ -162,13 +182,15 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_tick_spell_wheel(delta)
 	if _capture_screen == "":
 		return
 	_capture_frames += 1
 	# Os controlos criam a lista remapeavel no primeiro frame. Esperar tres
 	# segundos faz a captura mostrar o FPS sustentado, nao o custo unico de montagem.
-	var target_frames := 180 if _capture_screen.begins_with("settings") else 30
+	var target_frames := 180 if _capture_screen.begins_with("settings") \
+		or _capture_screen in ["inventory", "spell-wheel"] else 30
 	if _capture_frames < target_frames:
 		return
 	var directory := ProjectSettings.globalize_path("res://captures")
@@ -182,6 +204,8 @@ func _process(_delta: float) -> void:
 
 
 func show_main_menu() -> void:
+	_close_inventory()
+	_close_spell_wheel(false)
 	_close_instructions()
 	_close_pause_layer()
 	_clear_gameplay()
@@ -571,6 +595,8 @@ func _continue_last_save() -> void:
 
 
 func _start_gameplay() -> void:
+	_close_inventory()
+	_close_spell_wheel(false)
 	_close_instructions()
 	_close_pause_layer()
 	_clear_screen()
@@ -593,7 +619,7 @@ func return_to_main_menu() -> void:
 
 
 func _show_pause_menu() -> void:
-	if _pause_open or not is_instance_valid(_gameplay):
+	if _pause_open or not is_instance_valid(_gameplay) or is_instance_valid(_spell_wheel):
 		return
 	_pause_open = true
 	var coop := _is_coop_session()
@@ -843,6 +869,76 @@ func _close_instructions() -> void:
 func _set_gameplay_input(enabled: bool) -> void:
 	if is_instance_valid(_gameplay) and _gameplay.has_method("set_local_input_enabled"):
 		_gameplay.call("set_local_input_enabled", enabled)
+
+
+func _show_inventory() -> void:
+	if is_instance_valid(_inventory_menu) or not is_instance_valid(_gameplay):
+		return
+	# Nem solo nem co-op pausam aqui: gerir a mochila e uma escolha vulneravel.
+	_set_gameplay_input(false)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_inventory_menu = InventoryMenu.new()
+	add_child(_inventory_menu)
+	_inventory_menu.closed.connect(_close_inventory)
+	_inventory_menu.open(_theme, _gameplay)
+
+
+func _close_inventory() -> void:
+	if is_instance_valid(_inventory_menu):
+		_inventory_menu.free()
+	_inventory_menu = null
+	if is_instance_valid(_gameplay) and not _pause_open and not _instructions_open \
+			and not is_instance_valid(_settings_layer):
+		_set_gameplay_input(true)
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _tick_spell_wheel(delta: float) -> void:
+	if not is_instance_valid(_gameplay) or _pause_open or _instructions_open \
+			or is_instance_valid(_settings_layer) or is_instance_valid(_inventory_menu):
+		_spell_hold_pending = false
+		_spell_hold_seconds = 0.0
+		return
+	if Input.is_action_just_pressed("next_spell"):
+		_spell_hold_pending = true
+		_spell_hold_seconds = 0.0
+	if _spell_hold_pending and Input.is_action_pressed("next_spell"):
+		_spell_hold_seconds += delta
+		if _spell_hold_seconds >= SPELL_WHEEL_HOLD_SECONDS and not is_instance_valid(_spell_wheel):
+			_show_spell_wheel(false)
+	if _spell_hold_pending and Input.is_action_just_released("next_spell"):
+		if is_instance_valid(_spell_wheel):
+			_close_spell_wheel(true)
+		elif _gameplay.has_method("cycle_spell"):
+			_gameplay.call("cycle_spell")
+		_spell_hold_pending = false
+		_spell_hold_seconds = 0.0
+
+
+func _show_spell_wheel(capture_mode := false) -> void:
+	if is_instance_valid(_spell_wheel) or not is_instance_valid(_gameplay):
+		return
+	var favorites: Array[String] = []
+	for spell_value: Variant in _gameplay.call("spell_favorites"):
+		favorites.append(String(spell_value))
+	_set_gameplay_input(false)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_spell_wheel = SpellWheel.new()
+	add_child(_spell_wheel)
+	_spell_wheel.open(_theme, favorites, String(_gameplay.call("selected_spell_id")), capture_mode)
+
+
+func _close_spell_wheel(cast_selection: bool) -> void:
+	if not is_instance_valid(_spell_wheel):
+		return
+	var selected := _spell_wheel.selected_spell_id
+	_spell_wheel.free()
+	_spell_wheel = null
+	if is_instance_valid(_gameplay):
+		_set_gameplay_input(true)
+		if cast_selection and selected != "" and _gameplay.has_method("select_and_cast_spell"):
+			_gameplay.call("select_and_cast_spell", selected)
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _show_settings(origin: String) -> void:
