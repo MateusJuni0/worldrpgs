@@ -1,6 +1,6 @@
 class_name Greybox
 extends Node3D
-## Constroi a zona em caixas e cilindros. Sem arte, sem texturas, sem ficheiros binarios.
+## Constroi a zona navegavel e veste-a com a seleccao CC0 da Fatia 1.
 ##
 ## Tecnica de desempenho central (Lei 4): as arvores e as pedras vao num
 ## MultiMeshInstance3D cada — centenas de objectos, UM draw call. Numa Iris Xe
@@ -10,6 +10,22 @@ extends Node3D
 ## cortar a distancia de visao sem se ver o corte.
 
 const SEED := 20260731  # fixo: duas medicoes de desempenho tem de ver o mesmo mundo
+
+const TREE_OAK: PackedScene = preload("res://assets/models/environment/brumal/tree_oak_dark.glb")
+const TREE_TALL: PackedScene = preload("res://assets/models/environment/brumal/tree_tall_dark.glb")
+const TREE_THIN: PackedScene = preload("res://assets/models/environment/brumal/tree_thin_dark.glb")
+const ROCK_LARGE_A: PackedScene = preload("res://assets/models/environment/brumal/rock_largeA.glb")
+const ROCK_LARGE_C: PackedScene = preload("res://assets/models/environment/brumal/rock_largeC.glb")
+const ROCK_SMALL_A: PackedScene = preload("res://assets/models/environment/brumal/rock_smallA.glb")
+const GROUND_GRASS: PackedScene = preload("res://assets/models/environment/brumal/ground_grass.glb")
+const GROUND_PATH: PackedScene = preload("res://assets/models/environment/brumal/ground_pathStraight.glb")
+const DUNGEON_WALL: PackedScene = preload("res://assets/models/environment/toca/wall.gltf")
+const DUNGEON_WALL_BROKEN: PackedScene = preload("res://assets/models/environment/toca/wall_broken.gltf")
+const DUNGEON_DOORWAY: PackedScene = preload("res://assets/models/environment/toca/wall_doorway.gltf")
+const DUNGEON_FLOOR: PackedScene = preload("res://assets/models/environment/toca/floor_tile_large.gltf")
+const DUNGEON_PILLAR: PackedScene = preload("res://assets/models/environment/toca/pillar.gltf")
+const DUNGEON_RUBBLE: PackedScene = preload("res://assets/models/environment/toca/rubble_large.gltf")
+const DUNGEON_TORCH: PackedScene = preload("res://assets/models/environment/toca/torch_mounted.gltf")
 
 var preset: Dictionary = {}
 var palette: Dictionary = {}
@@ -33,6 +49,7 @@ func build(p_preset: Dictionary, p_palette: Dictionary, layout: String, biome_id
 	_rng.seed = SEED
 	_build_environment()
 	_build_light()
+	_build_vignette()
 	match layout:
 		"arena":
 			_build_arena()
@@ -76,6 +93,14 @@ func _build_environment() -> void:
 	env.fog_aerial_perspective = 0.72
 	env.fog_sky_affect = 0.18
 
+	# Gradacao barata do Environment: comprime a gama lavada da nevoa sem
+	# acrescentar um passe 3D. Os valores pertencem ao preset para a Lei 4
+	# poder reduzi-los sem bifurcar o mundo.
+	env.adjustment_enabled = true
+	env.adjustment_brightness = float(preset.get("grade_brightness", 0.95))
+	env.adjustment_contrast = float(preset.get("grade_contrast", 1.14))
+	env.adjustment_saturation = float(preset.get("grade_saturation", 0.82))
+
 	# Tudo o que e caro fica desligado, explicitamente.
 	env.ssao_enabled = false
 	env.ssil_enabled = false
@@ -87,6 +112,39 @@ func _build_environment() -> void:
 	world_env.name = "WorldEnvironment"
 	world_env.environment = env
 	add_child(world_env)
+
+
+## Vinheta subtil num CanvasLayer abaixo do HUD. E um unico quad sem textura;
+## escurece apenas os extremos e conserva o centro onde se le o combate.
+func _build_vignette() -> void:
+	var strength := float(preset.get("vignette_strength", 0.12))
+	if strength <= 0.0:
+		return
+	var layer := CanvasLayer.new()
+	layer.name = "ScreenGrade"
+	layer.layer = 10
+	var rect := ColorRect.new()
+	rect.name = "Vignette"
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var shader := Shader.new()
+	shader.code = """
+shader_type canvas_item;
+render_mode unshaded;
+uniform float strength : hint_range(0.0, 0.3) = 0.12;
+void fragment() {
+	vec2 p = UV * 2.0 - 1.0;
+	p.x *= 0.72;
+	float edge = smoothstep(0.34, 1.08, dot(p, p));
+	COLOR = vec4(0.015, 0.018, 0.022, edge * strength);
+}
+"""
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("strength", strength)
+	rect.material = material
+	layer.add_child(rect)
+	add_child(layer)
 
 
 func _build_light() -> void:
@@ -119,10 +177,55 @@ func _biome_colour(key: String, fallback: Color) -> Color:
 func _material(key: String) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = _colour(key)
-	m.roughness = 1.0
+	var roughness_by_surface := {
+		"ground": 0.94,
+		"trunk": 0.86,
+		"canopy": 0.90,
+		"rock": 0.72,
+	}
+	m.roughness = float(roughness_by_surface.get(key, 0.82))
 	m.metallic = 0.0
-	m.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	return m
+
+
+## Extrai uma malha do modulo importado e duplica apenas os materiais. Assim
+## cada familia tem uma rugosidade fisica propria sem alterar o pack CC0 nem
+## criar um material por instancia.
+func _asset_mesh(scene: PackedScene, roughness: float, tint := Color.WHITE,
+	specular_enabled := true) -> Mesh:
+	var root_node := scene.instantiate()
+	var source := _find_mesh_instance(root_node)
+	if source == null:
+		root_node.free()
+		return null
+	var mesh := source.mesh.duplicate() as Mesh
+	for surface: int in mesh.get_surface_count():
+		var source_material := mesh.surface_get_material(surface)
+		var material: Material
+		if source_material != null:
+			material = source_material.duplicate() as Material
+		else:
+			material = StandardMaterial3D.new()
+		if material is StandardMaterial3D:
+			var standard := material as StandardMaterial3D
+			standard.roughness = roughness
+			standard.metallic = 0.0
+			standard.albedo_color *= tint
+			if not specular_enabled:
+				standard.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+		mesh.surface_set_material(surface, material)
+	root_node.free()
+	return mesh
+
+
+func _find_mesh_instance(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node as MeshInstance3D
+	for child: Node in node.get_children():
+		var found := _find_mesh_instance(child)
+		if found != null:
+			return found
+	return null
 
 
 # --- Pecas --------------------------------------------------------------------
@@ -135,8 +238,19 @@ func _add_ground(size: Vector2, centre: Vector3) -> void:
 	mi.mesh = mesh
 	mi.material_override = _material("ground")
 	mi.position = centre + Vector3(0, -0.5, 0)
+	# O cubo fica apenas como fundo sem fendas. A lamina Kenney por cima traz
+	# um material rugoso coerente e continua a custar uma unica instancia.
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
+	var grass_mesh := _asset_mesh(GROUND_GRASS, 0.94, Color("#56604c"), false)
+	if grass_mesh != null:
+		var grass := MeshInstance3D.new()
+		grass.name = "KenneyGround"
+		grass.mesh = grass_mesh
+		grass.scale = Vector3(size.x, 1.0, size.y)
+		grass.position = centre + Vector3(0, 0.012, 0)
+		grass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(grass)
 
 	var body := StaticBody3D.new()
 	var shape := CollisionShape3D.new()
@@ -149,13 +263,14 @@ func _add_ground(size: Vector2, centre: Vector3) -> void:
 
 
 ## Parede/bloco solido, com colisao. A base do greybox.
-func _add_block(centre: Vector3, size: Vector3, colour_key: String, shadows := true) -> void:
+func _add_block(centre: Vector3, size: Vector3, colour_key: String, shadows := true, visible := true) -> void:
 	var mesh := BoxMesh.new()
 	mesh.size = size
 	var mi := MeshInstance3D.new()
 	mi.mesh = mesh
 	mi.material_override = _material(colour_key)
 	mi.position = centre
+	mi.visible = visible
 	if not shadows:
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
@@ -202,6 +317,43 @@ func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], colour_key: Stri
 	add_child(mmi)
 
 
+## MultiMesh que conserva os materiais importados; usado para Kenney/KayKit.
+func _add_asset_multimesh(mesh: Mesh, transforms: Array, shadows: bool, node_name: String) -> void:
+	if mesh == null or transforms.is_empty():
+		return
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = transforms.size()
+	for index: int in transforms.size():
+		mm.set_instance_transform(index, transforms[index])
+	var instances := MultiMeshInstance3D.new()
+	instances.name = node_name
+	instances.multimesh = mm
+	instances.cast_shadow = (GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadows
+		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	add_child(instances)
+
+
+func _build_path_visual() -> void:
+	var path_mesh := _asset_mesh(GROUND_PATH, 0.90, Color("#76644f"), false)
+	if path_mesh == null:
+		return
+	var tiles: Array[Transform3D] = []
+	var tile_size := 3.5
+	for index: int in path_points.size() - 1:
+		var start := path_points[index]
+		var finish := path_points[index + 1]
+		var delta := finish - start
+		var yaw := atan2(delta.x, delta.z)
+		var count := maxi(1, ceili(delta.length() / tile_size))
+		for tile: int in count:
+			var t := (float(tile) + 0.5) / float(count)
+			var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * tile_size)
+			tiles.append(Transform3D(basis, start.lerp(finish, t) + Vector3(0, 0.025, 0)))
+	_add_asset_multimesh(path_mesh, tiles, false, "KenneyPath")
+
+
 # --- Layouts ------------------------------------------------------------------
 
 ## Arena limpa, para afinar combate sem o mundo a atrapalhar.
@@ -233,6 +385,7 @@ func _build_brumal() -> void:
 	lair_entrance = path_points[path_points.size() - 1]
 	arena_center = lair_entrance + Vector3(0, 0, -26)
 
+	_build_path_visual()
 	_scatter_forest()
 	_build_lair()
 
@@ -251,32 +404,25 @@ func _distance_to_segment(p: Vector3, a: Vector3, b: Vector3) -> float:
 
 
 func _scatter_forest() -> void:
-	var trunk_mesh := CylinderMesh.new()
-	trunk_mesh.top_radius = 0.22
-	trunk_mesh.bottom_radius = 0.32
-	trunk_mesh.height = 4.2
-	trunk_mesh.radial_segments = 6   # baixo poligonal de proposito
-	trunk_mesh.rings = 1
-
-	var canopy_mesh := CylinderMesh.new()
-	canopy_mesh.top_radius = 0.0
-	canopy_mesh.bottom_radius = 2.1
-	canopy_mesh.height = 5.0
-	canopy_mesh.radial_segments = 7
-	canopy_mesh.rings = 1
-
-	var rock_mesh := BoxMesh.new()
-	rock_mesh.size = Vector3(1.4, 1.0, 1.2)
-
-	var trunks: Array[Transform3D] = []
-	var canopies: Array[Transform3D] = []
-	var rocks: Array[Transform3D] = []
+	var tree_meshes: Array[Mesh] = [
+		_asset_mesh(TREE_OAK, 0.88, Color("#52614a"), false),
+		_asset_mesh(TREE_TALL, 0.88, Color("#52614a"), false),
+		_asset_mesh(TREE_THIN, 0.88, Color("#52614a"), false),
+	]
+	var rock_meshes: Array[Mesh] = [
+		_asset_mesh(ROCK_LARGE_A, 0.70, Color("#6a6f70")),
+		_asset_mesh(ROCK_LARGE_C, 0.70, Color("#6a6f70")),
+		_asset_mesh(ROCK_SMALL_A, 0.74, Color("#727777")),
+	]
+	var trees: Array[Array] = [[], [], []]
+	var rocks: Array[Array] = [[], [], []]
 	var trunk_bodies := StaticBody3D.new()
 	trunk_bodies.name = "TreeCollision"
 
 	var wanted: int = int(preset.get("tree_count", 200))
 	var tries := 0
-	while trunks.size() < wanted and tries < wanted * 12:
+	var tree_count := 0
+	while tree_count < wanted and tries < wanted * 12:
 		tries += 1
 		var p := Vector3(_rng.randf_range(-105, 105), 0, _rng.randf_range(-105, 105))
 		# O caminho tem de ficar livre — a floresta e fechada, o caminho nao.
@@ -286,13 +432,14 @@ func _scatter_forest() -> void:
 			continue
 		var scale := _rng.randf_range(0.8, 1.35)
 		var yaw := _rng.randf_range(0, TAU)
+		var family := tree_count % tree_meshes.size()
+		var visual_scale := scale * 4.2
+		trees[family].append(Transform3D(
+			Basis(Vector3.UP, yaw).scaled(Vector3.ONE * visual_scale), p))
+		tree_count += 1
 
-		var t := Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale)),
-			p + Vector3(0, 2.1 * scale, 0))
-		trunks.append(t)
-		canopies.append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale)),
-			p + Vector3(0, (4.2 + 2.0) * scale, 0)))
-
+		# A colisao conserva exactamente a largura e posicao do greybox anterior;
+		# a malha importada e apenas a pele da arvore.
 		var col := CollisionShape3D.new()
 		var cyl := CylinderShape3D.new()
 		cyl.radius = 0.32 * scale
@@ -302,39 +449,73 @@ func _scatter_forest() -> void:
 		trunk_bodies.add_child(col)
 
 	var rocks_wanted: int = int(preset.get("rock_count", 60))
-	for i in rocks_wanted:
+	var rock_count := 0
+	for _i in rocks_wanted:
 		var p := Vector3(_rng.randf_range(-100, 100), 0, _rng.randf_range(-100, 100))
 		if _distance_to_path(p) < 3.0:
 			continue
 		var s := _rng.randf_range(0.6, 1.8)
-		rocks.append(Transform3D(
-			Basis(Vector3.UP, _rng.randf_range(0, TAU)).scaled(Vector3(s, s * 0.7, s)),
-			p + Vector3(0, s * 0.35, 0)))
+		var family := rock_count % rock_meshes.size()
+		var visual_scale := s * 1.8
+		rocks[family].append(Transform3D(
+			Basis(Vector3.UP, _rng.randf_range(0, TAU)).scaled(
+				Vector3(visual_scale, visual_scale * 0.82, visual_scale)),
+			p + Vector3(0, 0.025, 0)))
+		rock_count += 1
 
 	add_child(trunk_bodies)
-	# As copas nao lancam sombra: e a maior poupanca da cena e quase nao se nota com nevoa.
-	_add_multimesh(trunk_mesh, trunks, "trunk", bool(preset.get("shadows", true)), 0.14)
-	_add_multimesh(canopy_mesh, canopies, "canopy", false, 0.22)
-	_add_multimesh(rock_mesh, rocks, "rock", false, 0.12)
+	for family: int in tree_meshes.size():
+		_add_asset_multimesh(tree_meshes[family], trees[family], false,
+			"KenneyTrees%d" % family)
+	for family: int in rock_meshes.size():
+		_add_asset_multimesh(rock_meshes[family], rocks[family], false,
+			"KenneyRocks%d" % family)
 
 
-## A Toca: entrada escondida + 3 salas + arena, tudo em blocos.
+## A Toca: a geometria de colisao continua simples e invisivel; os modulos
+## KayKit fazem a leitura visual da entrada, salas e arena.
 func _build_lair() -> void:
 	var e := lair_entrance
+	var dungeon_tint := Color("#aaa69c")
+	var wall_mesh := _asset_mesh(DUNGEON_WALL, 0.74, dungeon_tint)
+	var broken_mesh := _asset_mesh(DUNGEON_WALL_BROKEN, 0.78, dungeon_tint)
+	var doorway_mesh := _asset_mesh(DUNGEON_DOORWAY, 0.76, dungeon_tint)
+	var floor_mesh := _asset_mesh(DUNGEON_FLOOR, 0.88, dungeon_tint)
+	var pillar_mesh := _asset_mesh(DUNGEON_PILLAR, 0.70, dungeon_tint)
+	var rubble_mesh := _asset_mesh(DUNGEON_RUBBLE, 0.82, dungeon_tint)
+	var walls: Array[Transform3D] = []
+	var broken_walls: Array[Transform3D] = []
+	var doorways: Array[Transform3D] = []
+	var floors: Array[Transform3D] = []
+	var pillars: Array[Transform3D] = []
+	var rubble: Array[Transform3D] = []
 
 	# A arvore morta que marca a fenda — o unico ponto de referencia.
-	_add_block(e + Vector3(2.4, 3.0, 1.2), Vector3(0.5, 6.0, 0.5), "trunk")
+	_add_block(e + Vector3(2.4, 3.0, 1.2), Vector3(0.5, 6.0, 0.5), "trunk", true, false)
+	_add_asset_multimesh(_asset_mesh(TREE_THIN, 0.92, Color("#5a5045")), [Transform3D(
+		Basis(Vector3.UP, -0.45).scaled(Vector3.ONE * 4.5),
+		e + Vector3(2.4, 0.0, 1.2))], false, "DeadTreeLandmark")
 
 	# Fenda na rocha: duas paredes com uma abertura no meio.
-	_add_block(e + Vector3(-4.5, 2.0, 0), Vector3(6, 4, 1.5), "rock")
-	_add_block(e + Vector3(4.5, 2.0, 0), Vector3(6, 4, 1.5), "rock")
+	_add_block(e + Vector3(-4.5, 2.0, 0), Vector3(6, 4, 1.5), "rock", true, false)
+	_add_block(e + Vector3(4.5, 2.0, 0), Vector3(6, 4, 1.5), "rock", true, false)
+	broken_walls.append(Transform3D(Basis.IDENTITY.scaled(Vector3(1.5, 1.0, 1.5)),
+		e + Vector3(-4.5, 0, 0)))
+	walls.append(Transform3D(Basis.IDENTITY.scaled(Vector3(1.5, 1.0, 1.5)),
+		e + Vector3(4.5, 0, 0)))
+	doorways.append(Transform3D(Basis.IDENTITY.scaled(Vector3(1.0, 1.0, 1.5)), e))
 
 	# Corredor + 3 salas, a descer para a arena.
 	var z := e.z - 6.0
 	for room in 3:
 		var w := 9.0 + float(room) * 2.0
-		_add_block(Vector3(-w * 0.5, 2.0, z - 5.0), Vector3(1.5, 4, 12), "rock")
-		_add_block(Vector3(w * 0.5, 2.0, z - 5.0), Vector3(1.5, 4, 12), "rock")
+		var left := Vector3(-w * 0.5, 0.0, z - 5.0)
+		var right := Vector3(w * 0.5, 0.0, z - 5.0)
+		_add_block(left + Vector3.UP * 2.0, Vector3(1.5, 4, 12), "rock", true, false)
+		_add_block(right + Vector3.UP * 2.0, Vector3(1.5, 4, 12), "rock", true, false)
+		var side_basis := Basis(Vector3.UP, PI * 0.5).scaled(Vector3(3.0, 1.0, 1.5))
+		walls.append(Transform3D(side_basis, left))
+		walls.append(Transform3D(side_basis, right))
 		z -= 11.0
 
 	# Arena do Vorgar: circular em blocos.
@@ -342,8 +523,39 @@ func _build_lair() -> void:
 	var radius := 15.0
 	for i in 20:
 		var a := TAU * float(i) / 20.0
-		_add_block(c + Vector3(sin(a) * radius, 2.5, cos(a) * radius),
-			Vector3(5.5, 5, 2.0).rotated(Vector3.UP, -a).abs(), "rock")
+		var at := c + Vector3(sin(a) * radius, 0.0, cos(a) * radius)
+		_add_block(at + Vector3.UP * 2.5,
+			Vector3(5.5, 5, 2.0).rotated(Vector3.UP, -a).abs(), "rock", true, false)
+		walls.append(Transform3D(
+			Basis(Vector3.UP, a).scaled(Vector3(1.375, 1.25, 2.0)), at))
+
+	# Pedra sob os pes: uma grelha pequena, instanciada num unico MultiMesh.
+	for zi in 8:
+		for xi in 3:
+			floors.append(Transform3D(Basis.IDENTITY,
+				e + Vector3((float(xi) - 1.0) * 4.0, 0.08, -2.0 - float(zi) * 4.0)))
+	for x in range(-12, 13, 4):
+		for zz in range(-12, 13, 4):
+			if Vector2(float(x), float(zz)).length() <= 13.0:
+				floors.append(Transform3D(Basis.IDENTITY, c + Vector3(x, 0.08, zz)))
+	for a in [0.25 * PI, 0.75 * PI, 1.25 * PI, 1.75 * PI]:
+		pillars.append(Transform3D(Basis(Vector3.UP, a).scaled(Vector3(0.9, 1.25, 0.9)),
+			c + Vector3(sin(a) * 11.0, 0.0, cos(a) * 11.0)))
+	for at in [
+		e + Vector3(-2.8, 0.02, -7.0),
+		e + Vector3(3.1, 0.02, -17.0),
+		c + Vector3(-6.0, 0.02, 5.0),
+		c + Vector3(7.0, 0.02, -4.0),
+	]:
+		rubble.append(Transform3D(
+			Basis(Vector3.UP, _rng.randf_range(0, TAU)).scaled(Vector3.ONE * 0.34), at))
+
+	_add_asset_multimesh(wall_mesh, walls, bool(preset.get("shadows", true)), "KayKitWalls")
+	_add_asset_multimesh(broken_mesh, broken_walls, bool(preset.get("shadows", true)), "KayKitBrokenWalls")
+	_add_asset_multimesh(doorway_mesh, doorways, bool(preset.get("shadows", true)), "KayKitDoorways")
+	_add_asset_multimesh(floor_mesh, floors, false, "KayKitFloors")
+	_add_asset_multimesh(pillar_mesh, pillars, bool(preset.get("shadows", true)), "KayKitPillars")
+	_add_asset_multimesh(rubble_mesh, rubble, false, "KayKitRubble")
 
 	# Tochas: 4 na arena + 1 na fenda de entrada. Luz quente pontual contra a
 	# nevoa fria — mood de souls por 5 luzes omni sem sombra (barato em Iris Xe).
@@ -353,22 +565,21 @@ func _build_lair() -> void:
 		c + Vector3(9, 0, -9), c + Vector3(-9, 0, -9),
 		e + Vector3(-1.2, 0, 0.8),
 	]
+	var torch_visuals: Array[Transform3D] = []
 	for spot in torch_spots:
+		var yaw := atan2((c - spot).x, (c - spot).z)
+		torch_visuals.append(Transform3D(
+			Basis(Vector3.UP, yaw).scaled(Vector3.ONE * 1.25),
+			spot + Vector3(0, 2.15, 0)))
 		_add_torch(spot)
+	_add_asset_multimesh(_asset_mesh(DUNGEON_TORCH, 0.58), torch_visuals, false,
+		"KayKitTorches")
 
 
 func _add_torch(at: Vector3) -> void:
-	var post := MeshInstance3D.new()
-	var pm := BoxMesh.new()
-	pm.size = Vector3(0.16, 2.2, 0.16)
-	post.mesh = pm
-	post.position = at + Vector3(0, 1.1, 0)
-	post.material_override = _material("trunk")
-	add_child(post)
-
 	var flame := MeshInstance3D.new()
 	var fm := BoxMesh.new()
-	fm.size = Vector3(0.30, 0.42, 0.30)
+	fm.size = Vector3(0.22, 0.30, 0.22)
 	flame.mesh = fm
 	# A chama e a luz da tocha sao o ACENTO do bioma (spec/49 §2, cor 3) —
 	# em Brumal, o ambar das tochas e a assinatura da zona.
@@ -379,7 +590,7 @@ func _add_torch(at: Vector3) -> void:
 	fmat.emission_energy_multiplier = 2.6
 	fmat.albedo_color = accent.lightened(0.20)
 	flame.material_override = fmat
-	flame.position = at + Vector3(0, 2.4, 0)
+	flame.position = at + Vector3(0, 2.52, 0)
 	add_child(flame)
 
 	var light := OmniLight3D.new()
@@ -387,5 +598,5 @@ func _add_torch(at: Vector3) -> void:
 	light.light_energy = 2.4
 	light.omni_range = 11.0
 	light.shadow_enabled = false  # sombras de omni sao caras; a luz chega
-	light.position = at + Vector3(0, 2.5, 0)
+	light.position = at + Vector3(0, 2.48, 0)
 	add_child(light)

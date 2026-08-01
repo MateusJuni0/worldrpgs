@@ -115,6 +115,14 @@ Um por bioma, a partir da coluna `descricao_visual` do [`../spec/49-biomas.md`](
 > **Proveniência:** os 43 assets históricos saíram do pipeline Nano Banana/Higgsfield registado nesta versão do manifesto. Os 11 ícones de armadura foram gerados pelo pipeline integrado `imagegen`, mantendo literalmente a mesma frase de estilo e um objecto por prompt; o prompt 07 conserva a reprodução exacta.
 >
 > **Ícones:** os históricos vivem a 2048²; as 11 armaduras vivem a 1254². As armaduras foram geradas sobre chroma key e passadas pelo helper `remove_chroma_key.py`: todas RGBA, alfa 0–255 e fundo realmente transparente. Ao importar no runtime, o limite continua **512²**; o manifesto regista a dimensão real da fonte.
+>
+> **Auditoria do executor de arte, 01-08-2026:** o catálogo da Fatia 1 pede
+> `espada_recta`, `adaga`, `pesada_corte`, `cajado`, `escudo_medio` e as 11
+> peças acima. Os **16 ícones já existiam**, portanto não foram gerados
+> duplicados nem gastos créditos. Todos passaram a validação técnica: PNG RGBA,
+> alfa 0–255, quatro cantos a alfa 0 e silhueta inequívoca num contacto a
+> 64×64 px. `katana`, `haste`, `arco` e `besta` ficaram deliberadamente sem
+> ícone nesta passagem porque o catálogo marca `fatia_1: false`.
 
 
 ## Bestiário — as 7 raças do WP6 (fatia 2+)

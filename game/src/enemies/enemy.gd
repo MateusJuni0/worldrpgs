@@ -53,8 +53,7 @@ var _phase := 1
 var _patrol_points: Array[Vector3] = []
 var _patrol_index := 0
 
-var _mesh: MeshInstance3D
-var _material: StandardMaterial3D
+var _visual: CharacterVisual
 var _palette: Dictionary = {}
 
 
@@ -105,27 +104,12 @@ func _build_body() -> void:
 	col.position = Vector3(0, height * 0.5, 0)
 	add_child(col)
 
-	var mesh := CapsuleMesh.new()
-	mesh.height = height
-	mesh.radius = body_radius
-	mesh.radial_segments = 8
-	mesh.rings = 3
-	_mesh = MeshInstance3D.new()
-	_mesh.mesh = mesh
-	_mesh.position = Vector3(0, height * 0.5, 0)
-	_material = StandardMaterial3D.new()
-	_material.roughness = 1.0
-	_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
-	_mesh.material_override = _material
-	add_child(_mesh)
-
-	var nose := MeshInstance3D.new()
-	var nm := BoxMesh.new()
-	nm.size = Vector3(0.18, 0.18, 0.5)
-	nose.mesh = nm
-	nose.position = Vector3(0, height * 0.75, -body_radius - 0.2)
-	nose.material_override = _material
-	add_child(nose)
+	# A malha e visual; a CapsuleShape3D acima continua a ser a unica colisao.
+	# Os tres inimigos reutilizam o mesmo esqueleto Quaternius e distinguem-se
+	# pela escala, cor de estado e silhueta exterior.
+	_visual = CharacterVisual.new()
+	add_child(_visual)
+	_visual.setup(height, Color.WHITE, false)
 
 	if is_boss:
 		_dress_boss(height, body_radius)
@@ -224,6 +208,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = minf(velocity.y, 0.0)
 	move_and_slide()
 	_refresh_colour()
+	_refresh_animation()
 
 
 func _change_state(next: int) -> void:
@@ -535,7 +520,7 @@ func full_reset() -> void:
 # --- Leitura visual -----------------------------------------------------------
 
 func _refresh_colour() -> void:
-	if _material == null:
+	if _visual == null:
 		return
 	var key: String = "enemy_idle_default"
 	var custom := String(data.get("color_idle", ""))
@@ -556,7 +541,25 @@ func _refresh_colour() -> void:
 				colour = colour.lerp(Color(String(_palette.get("enemy_telegraph", "#e8c33a"))), 0.35 + 0.65 * t)
 			elif _atk_frame <= startup + int(_atk.get("active", 6)):
 				colour = Color(String(_palette.get("enemy_attacking", "#d64545")))
-	_material.albedo_color = colour
+	_visual.set_tint(colour)
+
+
+func _refresh_animation() -> void:
+	if _visual == null:
+		return
+	match state:
+		State.DEAD:
+			_visual.play_animation("Death01")
+		State.ATTACK:
+			_visual.play_animation("Sword_Attack")
+		State.STAGGER, State.BROKEN:
+			_visual.play_animation("Hit_Chest")
+		State.CHASE:
+			_visual.play_animation("Jog_Fwd")
+		State.PATROL:
+			_visual.play_animation("Walk")
+		_:
+			_visual.play_animation("Idle")
 
 
 ## Para o HUD: o golpe em preparacao da-se para aparar?
