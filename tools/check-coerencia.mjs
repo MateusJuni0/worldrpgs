@@ -155,7 +155,7 @@ try {
   }).trim();
 } catch (error) {
   const detalhe = String(error?.stdout || error?.stderr || error?.message || error).trim();
-  erro('game/data', `a verificação cruzada dos 17 JSON falhou${detalhe ? `:\n${detalhe}` : ''}`);
+  erro('game/data', `a verificação cruzada dos 18 JSON falhou${detalhe ? `:\n${detalhe}` : ''}`);
 }
 
 console.log('Guarda de coerência da spec\n');

@@ -34,7 +34,10 @@ const ref = (collection, id, label) => check(
 const slug = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
   .replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 
-check(files.length === 17, `game/data devia conter 17 JSON; contém ${files.length}`);
+// 01-08: subiu de 17 para 18 — a casca do jogo trouxe game/data/settings.json.
+// Este numero e proposital: obriga a que um JSON novo em game/data seja um acto
+// deliberado, nao um ficheiro que alguem largou la sem ninguem reparar.
+check(files.length === 18, `game/data devia conter 18 JSON; contém ${files.length}`);
 
 const abilities = data.abilities;
 const attributes = data.attributes;
