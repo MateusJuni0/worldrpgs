@@ -1,0 +1,40 @@
+# O Windows converte LF→CRLF ao gravar. Num ficheiro de texto isso e inofensivo;
+# num binario CORROMPE-O. Estas linhas dizem ao git para nunca lhes tocar.
+#
+# Escrito a 01-08-2026, ao trazer os packs CC0 (fase 1.2). O git deteta binarios
+# sozinho na maior parte dos casos — isto e o cinto por cima dos suspensorios,
+# e custa uma linha por extensao.
+
+# Modelos 3D
+*.glb    binary
+*.gltf   text eol=lf
+*.bin    binary
+*.fbx    binary
+*.obj    text eol=lf
+*.mtl    text eol=lf
+*.dae    text eol=lf
+*.stl    binary
+*.blend  binary
+
+# Imagens
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.tga    binary
+*.webp   binary
+*.ico    binary
+
+# Audio
+*.ogg    binary
+*.wav    binary
+*.mp3    binary
+
+# Godot
+*.import text eol=lf
+*.tscn   text eol=lf
+*.tres   text eol=lf
+*.gd     text eol=lf
+
+# Spec e dados — LF, para o diff ser legivel em qualquer maquina
+*.md     text eol=lf
+*.json   text eol=lf

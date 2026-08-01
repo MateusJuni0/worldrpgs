@@ -135,6 +135,26 @@ E as **7 perguntas de narrativa** ([`26`](spec/26-narrativa.md) §3), que precis
 
 ---
 
+## 📦 Os packs CC0 — o que entrou e o que ficou de fora
+
+**01-08.** Os dez packs entraram no repositório (PR #19), com uma limpeza feita no merge.
+
+| | |
+|---|---|
+| Descarregado pelo Fable | **571 MB** · 6511 ficheiros |
+| ⭐ **Removido no merge** | **~120 MB** · 3213 ficheiros — os formatos `.fbx` `.obj` `.mtl` `.stl` `.dae` que **o Godot não lê** |
+| **Ficou** | **~460 MB** · 3298 ficheiros |
+| ⚠️ **Preservados de propósito** | **5** ficheiros `.obj` do pack de masmorra que **não têm equivalente** em `.gltf` — peças soltas (tampa de baú, porta) |
+
+⭐ **Porque é que não se perdeu nada:** o `.glb`/`.gltf` é o **mais completo** dos formatos — carrega malha, materiais, esqueleto e animações. O `.obj` não tem esqueleto nem animação; o `.stl` só tem a malha. **Os apagados eram versões com menos informação do que a que ficou.**
+
+| | Lacuna | |
+|---|---|---|
+| 🔵 | ⚠️ **411 MB dos 460 são texturas PNG** — algumas acima do orçamento de 1024–2048 do [`30`](spec/30-qualidade-visual.md). **Reduzi-las é a próxima poupança grande**, e ao contrário dos formatos duplicados **isto mexe na qualidade** — decisão dos donos | [`30`](spec/30-qualidade-visual.md) |
+| 🔵 | **Se algum dia se reescrever o histórico por outra razão**, aproveitar para tirar o resto | — |
+
+---
+
 ## 🔬 Da auditoria de comparação com DS2/DS3 (01-08)
 
 [`docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md`](docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md). ⚠️ **A primeira é um erro de conta meu, já corrigido.**
@@ -186,6 +206,11 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 |---|---|---|
 | 🔴 | ⭐ **Sistema de saves** — onde vive o progresso, e como funciona a dois | **três clientes já dependem dele**: progresso, inventário e o mapa. É fundação, e fundações metem-se primeiro |
 | 🔴 | ⭐ **Texturas, modelos 3D e som: ZERO** | os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados. **É o que separa o greybox do jogo**, e nenhuma volta cobre |
+| 🔴 | ⚠️ **O `.gitignore` NÃO trava os binários, ao contrário do que o [`game/CLAUDE.md`](game/CLAUDE.md) afirma.** Ele diz *"Binários: modelos, texturas, áudio, builds — `.gitignore` já os trava"*. **É falso:** o `game/.gitignore` trava `*.zip`, `*.exe`, `*.pck` e mais nada — `.glb`, `.gltf`, `.fbx`, `.obj`, `.png` e `.ogg` passam. O `.gitignore` da raiz só trava `art/models/_local/` e `art/audio/_local/`. **Consequência:** um pack CC0 largado em `art/models/` entra no repositório **público e para sempre** (o git guarda o histórico). Precisa de decisão antes da fase 1.2 — ver abaixo | encontrado 01-08 ao preparar a fase 1.2 |
+| 🟠 | ⭐ **Os packs entraram, mas NENHUM MODELO ESTÁ NO JOGO.** A fase 1.2 tinha três partes: descarregar ✅ · importar em `game/` ⬜ · substituir as cápsulas ⬜. **Só a primeira está feita.** As cápsulas continuam lá, e o jogo continua greybox | fase 1.2, 01-08 |
+| 🔴 | ⭐ **A animação de esqueleto CONTINUA POR MEDIR** — é o único risco técnico real, aberto desde o [`44`](spec/44-prototipo.md) (*"cápsulas não são personagens animados"*). ⭐ **A ferramenta chegou:** a *Universal Animation Library* (CC0, esqueleto partilhado) está em `art/models/`. Falta pôr N personagens animados em cena e medir na Iris Xe. **Sem esse número, a folga de 6× do M1 é orçamento, não garantia** | fase 1.2, 01-08 |
+| 🔵 | **120 MB dos 410 são formatos que o Godot não usa** — `.fbx`, `.obj`, `.mtl`, `.stl`, `.dae`, duplicados do `.glb` que já lá está. Entraram porque a decisão foi *"tudo no repositório"*, e limpar depois obriga a reescrever a história. *Se algum dia se reescrever o histórico por outra razão, aproveita-se* | fase 1.2, 01-08 |
+| ⏳ | ~~⭐ **Onde vivem os modelos CC0: no repositório ou em `_local/`?**~~ ✅ **DECIDIDO 01-08 pelo Rico** — no repositório, com o custo à vista. Custo real medido: **410 MB** empacotados, 6451 ficheiros. *(registo do que era:)* O [`22`](spec/22-assets.md) diz que CC0 *pode* entrar, mas ninguém pesou o tamanho nem o facto de o git nunca esquecer. **É decisão dos donos** porque é praticamente irreversível: 1 pack Kenney ≈ 2–10 MB, mas o conjunto de personagens+animações+natureza+dungeon anda pelas **centenas de MB**, e um `git clone` passa a custar isso a toda a gente, para sempre. *Proposta: `art/models/` no repo só para o que o jogo carrega mesmo (poucos MB, optimizado), e os packs crus em `_local/`* | encontrado 01-08 |
 | 🟠 | ⭐ **Desenho de arena de chefe** | 13 chefes precisam de 13 arenas. Sem regras, saem 13 círculos vazios |
 | ✅ | ~~O fim do jogo~~ **ESCRITO 01-08** — escolha final que **os dois têm de concordar**; estrutura fixada, conteúdo depende das 7 perguntas de narrativa | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |
 | ✅ | ~~Ciclo novo (NG+)~~ **ESCRITO 01-08** — +40% no NG+, +8% por ciclo, ⚠️ **tecto no NG+7**. E a **Brasa** sobe UMA zona sem recomeçar o jogo | [`58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md) |

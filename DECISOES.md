@@ -8,6 +8,18 @@ Ordem inversa: **o mais recente primeiro.**
 
 ---
 
+## 01-08-2026
+
+### Os packs CC0 vivem no repositório → fase 1.2 do [`prompts/TERMINAR-A-SPEC.md`](prompts/TERMINAR-A-SPEC.md)
+**Instrução directa do Rico (01-08-2026), ⏳ falta a confirmação do Mateus** — decidido depois de lhe ser apresentado o custo, e com ele à vista.
+
+- ⭐ **Os packs CC0 entram em `art/models/`, `art/textures/` e `art/audio/`, e vão para o GitHub.** Quem clonar tem tudo à mão, sem passo extra
+- ⚠️ **O custo, aceite de olhos abertos:** o git **nunca esquece**. Centenas de MB ficam no histórico para sempre, e cada `git clone` passa a puxá-los. Tirá-los depois obriga a reescrever a história do repositório
+- ⚠️ **Isto contradiz o [`game/CLAUDE.md`](game/CLAUDE.md)**, que diz *"Binários: modelos, texturas, áudio, builds — `.gitignore` já os trava"*. Era **falso** mesmo antes desta decisão (o `game/.gitignore` só trava `*.zip`, `*.exe` e `*.pck`); agora fica também **desactualizado**. Corrige-se no PR da fase 1.2
+- **Continua a valer:** o que é royalty-free **sem redistribuição** (Mixamo, Sonniss, lojas) **nunca** entra — vive em `_local/`, que continua gitignored. Esta decisão é só sobre **CC0** ([`spec/22-assets.md`](spec/22-assets.md))
+- **Todo o pack que entra leva linha no [`CREDITS.md`](CREDITS.md) no mesmo PR** — CC0 também, que é decência e não obrigação
+- **Alternativa descartada** (era a minha recomendação): packs crus em `art/models/_local/` e no repositório só o que o jogo carrega mesmo, optimizado. *Perdia:* o Mateus tinha de correr um passo de download para ver o jogo com arte. O Rico escolheu a conveniência dos dois donos acima do peso do clone — e é uma escolha defensável num projecto de duas pessoas
+
 ## 31-07-2026 · noite
 
 ### Cinco instruções do Rico sobre equipamento e espólio → volta 3 (WP5) e volta 5 (WP6)
