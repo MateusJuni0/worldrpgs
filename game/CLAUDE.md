@@ -64,7 +64,7 @@ Valem aqui tanto como na spec. **Nada entra sem responder às quatro:**
 
 | | |
 |---|---|
-| **Binários** | modelos, texturas, áudio, builds. `.gitignore` já os trava |
+| **Builds e binários gerados** | `.exe`, `.pck`, `.zip`, `.godot/` — o `.gitignore` trava-os. ⚠️ **Modelos, texturas e áudio NÃO são travados por nada** (`.glb`, `.png`, `.ogg` passam): os assets CC0 vivem de propósito em [`../art/`](../art/) e vêm para cá **um a um, deliberadamente** ([`../CREDITS.md`](../CREDITS.md)). Nunca largues um pack inteiro aqui dentro — o Godot importa tudo o que encontrar em `game/`, e o arranque do editor paga por cada ficheiro |
 | **Números de combate em `.gd`** | pertencem a `data/*.json` |
 | **Caminhos absolutos** | nada de `C:\Users\...` — o repositório é público |
 | **Segredos** | o repositório é público |
