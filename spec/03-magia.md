@@ -1,6 +1,6 @@
 # 03 — Magia e encantamentos
 
-> Este é o registo da sessão 1. O documento de execução — mecânica bem/mal proposta, catálogo com números, cargas, aprendizagem — é o [`13-magia.md`](13-magia.md) (WP4).
+> ⚠️ **REGISTO HISTÓRICO DA SESSÃO 1.** As cargas e perguntas abertas abaixo foram superadas. A execução actual usa mana/meditação no [`54`](54-mana-meditacao-e-tracos-de-classe.md) e o catálogo de 53 feitiços no [`66`](66-catalogo-de-magia.md); o [`13`](13-magia.md) conserva apenas a primeira proposta de WP4.
 
 ## Duas escolas: bem e mal
 

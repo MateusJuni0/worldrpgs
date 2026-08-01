@@ -123,7 +123,7 @@ Foram nomeadas 8. Como só jogam dois, a maior parte nunca vai ser jogada — ma
 *(a pergunta original, para registo:)*
 Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, volta-se para onde, os inimigos voltam?
 
-*Entretanto, a fatia 1 joga com renascimento na entrada, nada perdido, retry < 30 s — provisório `[FABLE]`, [`10-fatia-1.md`](10-fatia-1.md), formalizado no WP1 ([`01-combate.md`](01-combate.md), secção Morte, incluindo morte em co-op). O tom definitivo decide-se aqui.*
+**→ Contrato corrente:** renascimento no último descanso; almas numa mancha persistida atomicamente; segunda morte substitui-a; em co-op há 1 minuto para ressuscitar durante 5 s. O retry de chefe continua < 30 s. Ver [`33`](33-morte-e-almas.md) e [`59`](59-saves.md).
 → [`01-combate.md`](01-combate.md)
 
 ---

@@ -22,9 +22,9 @@ O teste que este marco pedia correu antes do plano existir ([`09-tecnico.md`](09
 
 ### M2 — O protótipo de combate (o coração; o marco mais longo)
 
-**Existe no fim:** a FSM completa do WP1 (esquiva, parry, bloqueio, stamina, as 5 armas com frames e MV de `data/`); lanceiro e brutamontes com as fichas do WP6 (IA de estados, círculo de agressão, fecho); postura e Cambaleio; as 3 magias e cargas (WP4); frasco (WP5); HUD mínimo (vida, stamina, cargas, pips). Tudo greybox — cápsulas com armas visíveis chegam.
+**Existe no fim:** a FSM completa do WP1 (esquiva, parry, bloqueio, stamina, as 5 armas com frames e MV de `data/`); lanceiro e brutamontes com as fichas do WP6 (IA de estados, círculo de agressão, fecho); postura e Cambaleio; as 3 magias com mana e meditação (WP4); frasco (WP5); HUD mínimo (vida, stamina, mana, frasco e tentativas de meditação). Tudo greybox — cápsulas com armas visíveis chegam.
 **Verifica-se a jogar, por esta ordem:**
-1. O overlay F2 confirma os frames do WP1 ao frame exacto (a esquiva tem 18 i-frames, o parry 8 activos).
+1. O overlay F2 confirma os frames do WP1 ao frame exacto (a esquiva tem **19 i-frames**, 5–23 inclusivos; o parry 8 activos).
 2. Um lanceiro morre em 3–5 leves de espada a nível 1 (a restrição do WP1 ao WP2).
 3. **O teste do divertido:** Mateus e Rico, uma noite, 3 lanceiros + 1 brutamontes em sala greybox. Se ao fim de uma hora não estiverem a repetir por gosto, **pára-se e afina-se `data/` até estarem** — avançar com combate mau é construir um jogo mau maior.
 **Risco:** ser divertido tarde. Resposta: iterar dados (a ordem de afinação do WP15B), nunca avançar "para já".
@@ -37,7 +37,7 @@ O teste que este marco pedia correu antes do plano existir ([`09-tecnico.md`](09
 
 ### M4 — Vorgar e a Toca (o primeiro chefe)
 
-**Existe no fim:** a Toca em greybox (4 salas do WP8, tecto ≥ 2,5 m); Vorgar completo pela ficha do WP7 (8 ataques, 2 fases, pilares, alternância em co-op ×1,8); morte e renascimento < 30 s; a skill que ele larga.
+**Existe no fim:** a Toca em greybox (4 salas do WP8, tecto ≥ 2,5 m); Vorgar completo pela ficha do WP7 (8 ataques, 2 fases, pilares e alternância em co-op; o ×1,8 continua só baseline `[PROTO]` da pergunta 24); morte e renascimento < 30 s; a skill que ele larga.
 **Verifica-se:** **o critério 3 da fatia, em greybox** — um dos dois, nível 1, zero pontos, mata o Vorgar. Tentativas e causas de morte saem do CSV. Se falhar por números, o WP2 volta atrás — é para isso que está em `data/`.
 **Risco:** o chefe ser pior de ler em greybox sem animação final. Mitigação: as telegrafias fazem-se já aqui com as poses-chave (a antecipação de 0,5–0,9 s), mesmo toscas — a legibilidade testa-se antes da beleza.
 

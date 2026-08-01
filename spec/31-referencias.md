@@ -54,7 +54,7 @@ Vale confirmar uma coisa que já intuímos: nesses jogos as classes iniciais sã
 ### Itens e consumíveis (`→WP9`)
 - Como se estruturam: cura, buffs temporários, materiais de melhoria, itens-chave
 - **Quantos consumíveis um jogador carrega de facto** — para dimensionar a nossa mochila
-- Como a cura funciona e porque é que a escolha (frasco recarregável vs poções finitas) muda todo o ritmo. É a nossa **pergunta 7**, ainda aberta
+- Como a cura funciona e porque é que a escolha muda todo o ritmo. A **pergunta 7 decidiu** o Frasco de Bruma recarregável no descanso; a referência serve para afinar os baselines, não para reabrir poções finitas
 
 ### Mundo (`→WP8`)
 - **Interligação e atalhos:** como um mapa grande se sente pequeno quando os caminhos se cruzam. Crítico para os nossos 10+ biomas e ~30 min a pé
@@ -62,7 +62,7 @@ Vale confirmar uma coisa que já intuímos: nesses jogos as classes iniciais sã
 - Como se comunica que uma zona é perigosa **sem trancar nada** — é o nosso **soft gating**
 
 ### Progressão e morte (`→WP9`)
-- O que se perde ao morrer e como se recupera. É a nossa **pergunta 10**, aberta, e é a decisão de tom do jogo inteiro
+- O que se perde ao morrer e como se recupera. A **pergunta 10 decidiu** almas na mancha, perdidas se outra morte a substituir; a comparação serve para testar clareza e tensão
 - Curva de custo de subir de nível
 
 ## O protocolo de investigação
@@ -84,7 +84,7 @@ Registado agora, para não parecer descoberta depois:
 - **Variedade de armas:** 5 na fatia contra as dezenas de um jogo completo. Intencional para a fatia; por decidir para o jogo inteiro
 - **Número de chefes:** os nossos ~61 planeados são mais do que a maioria dos jogos do género tem. Já está assinalado como o maior risco de escopo ([`00-visao.md`](00-visao.md))
 - **Densidade de conteúdo por zona:** com 10+ biomas, é a pergunta que o WP8 tem de responder com um número
-- **Melhoria de armas:** existe nesses jogos e é um sistema inteiro; na nossa spec ainda não existe (`→WP5`)
+- **Melhoria de armas:** já existe no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) como base + seis escolhas de verbo/escala/conversão, sem aumento linear de dano (`→WP5`)
 - **Estados alterados** (veneno, sangramento, queimadura): nem mencionados na sessão 1, e são parte grande do género
 
 ## Ligações

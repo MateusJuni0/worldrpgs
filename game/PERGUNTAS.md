@@ -1,9 +1,14 @@
-# Perguntas que NAO decidi
+# Perguntas encontradas ao construir — retrato historico
 
-Coisas grandes que apareceram a construir e que **nao sao minhas para decidir**.
-Contornei cada uma para o prototipo andar, e deixo aqui o que fica em cima da mesa.
+> ⚠️ **SNAPSHOT DA PRIMEIRA NOITE.** O texto abaixo preserva os bloqueios que o
+> prototipo encontrou; nao e a lista corrente. Desde entao: P1 escolheu Godot;
+> P2 foi dissolvida por controlos configuraveis; P3 foi corrigida; P5 decidiu
+> almas/mancha; P6 decidiu e construiu o frasco; P7 ganhou armadura/carga sem
+> mudar i-frames. Rede, ligacao das manchas, tres habilidades de classe e o fluxo
+> de nivel continuam producao. A autoridade corrente e [`ESTADO`](../ESTADO.md),
+> [`LACUNAS`](../LACUNAS.md) e [`spec/99`](../spec/99-perguntas-abertas.md).
 
-As pequenas, que decidi, estao em [DECISOES-PROTOTIPO.md](DECISOES-PROTOTIPO.md).
+As pequenas decisoes de prototipo estao em [DECISOES-PROTOTIPO.md](DECISOES-PROTOTIPO.md).
 
 ---
 

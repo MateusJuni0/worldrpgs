@@ -8,13 +8,13 @@
 
 ## 1. ⭐ A resposta curta: aos 70 **estás mesmo** forte. E é assim que deve ser.
 
-**O problema não é seres forte aos 70. É não haver razão para chegar aos 100.** E a referência resolve isso com **três travões que trabalham juntos** — nós temos dois e falta-nos o terceiro.
+**O problema não é seres forte aos 70. É não haver razão para chegar aos 100.** A primeira versão encontrou três travões; os três têm agora contrato executável:
 
 | Travão | Temos? |
 |---|---|
-| **1. Custo cúbico** — cada nível custa desproporcionalmente mais | ⚠️ **não** — a nossa curva é linear |
-| **2. Soft caps aos 40** — os pontos rendem quase nada depois | ⚠️ **não** — decidido no [`39`](39-estudo-profundo.md) §2, **por implementar** |
-| **3. ⭐ Os níveis tardios compram LARGURA, não profundidade** | ⚠️ **nunca foi escrito** |
+| **1. Custo cúbico** — cada nível custa desproporcionalmente mais | ✅ curva canónica no [`72`](72-materiais-consumiveis-e-economia.md) |
+| **2. Curvas próprias por atributo** — cada papel satura no seu breakpoint | ✅ [`70`](70-fecho-dos-sistemas-de-combate.md) + `attributes.json` |
+| **3. ⭐ Os níveis tardios compram LARGURA, não profundidade** | ✅ regra abaixo; nenhum requisito proíbe usar ferramentas |
 
 ---
 
@@ -81,9 +81,9 @@
 | | |
 |---|---|
 | ⭐ **Curva cúbica**, com a forma da referência ajustada ao nosso tecto de 100 | substitui a linear `80 + 20n` |
-| ⭐ **Soft caps aos 40** em todos os atributos | ⚠️ **mais duros em vida e stamina** |
+| ⭐ **Curvas próprias por atributo** | Vida 20/50 · Stamina 20/40 · Constituição 25/50 · mana 35 · dano 40/60 · Carga 30/50/70 |
 | **Acaba-se o jogo pelo 60–70** | e ninguém verifica nível — Lei 1 |
-| ⭐ **Os últimos 30 níveis compram largura** | três especialidades, nunca quatro |
+| ⭐ **Os últimos 30 níveis compram largura** | podem alargar ferramentas; não existe limite matemático de três especialidades |
 | ⚠️ **A validar a jogar** (M2) | os números exactos da curva |
 
 ---

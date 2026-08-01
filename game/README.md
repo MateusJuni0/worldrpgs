@@ -62,12 +62,12 @@ Um parry certeiro parte a postura do inimigo (fica branco) — bate logo a segui
 |---|---|
 | **Combate (WP1)** | máquina de estados completa: esquiva com i-frames, parry com riposte, bloqueio com guarda quebrada, stamina com atraso e histerese, hit-stun, poise/postura, hiper-armadura, lock-on, combos e cancelamentos |
 | **5 armas** | adaga, espada longa, machadão (pesado carregável), cajado, escudo — frames e MV exactos da spec |
-| **6 classes** | atributos e equipamento de arranque do WP2. Qualquer uma pega em qualquer arma (Lei 3) |
+| **6 classes** | atributos e equipamento de arranque do WP2; Ímpeto, Provocação e Fúria executáveis. Qualquer uma pega em qualquer arma (Lei 3) |
 | **3 magias** | Dardo (projéctil), Ruína (área), Égide (barreira com hiper-armadura), com mana sem regeneração passiva |
 | **2 inimigos** | orc lanceiro (ensina a esquiva) e orc brutamontes (ensina o parry), com anti-kite aos 4 s |
 | **Vorgar** | chefe de 2 fases — a segunda muda padrões, não números. Reset total quando morres |
 | **Brumal + a Toca** | floresta greybox com névoa, caminho, entrada escondida sob a árvore morta, 3 salas e a arena |
-| **Morte** | renasces em ~1,2 s, não se perde nada, os inimigos voltam (o alvo da spec era < 30 s) |
+| **Morte** | o greybox renasce em ~1,2 s e repõe inimigos; a mancha de almas está especificada/save-ready, mas ainda não ligada ao HP zero (lacuna registada) |
 | **HUD** | vida, stamina, mana, frasco, barra do chefe |
 
 Inclui o **game feel do WP1B**: paragem de impacto (3 f num leve, 6 f num pesado, **10 f num parry**), registo de comandos com a esquiva a ter prioridade, e a câmara nos números da spec (4,0 m / 4,8 m com lock-on, FOV 55°, sem aceleração de rato).
@@ -76,13 +76,12 @@ Inclui o **game feel do WP1B**: paragem de impacto (3 f num leve, 6 f num pesado
 
 Por ordem de importância — o detalhe está em [PERGUNTAS.md](PERGUNTAS.md).
 
-1. **As 6 habilidades de classe** — o WP3 chegou já de madrugada e escreve-as (Ímpeto, Eco, Provocação, Passo Sombra, Fúria, Julgamento). Os atributos já estão implementados; **as habilidades não**. Sem elas, as classes só se distinguem por números — o que a Lei 2 recusa
-2. **Curar** — não há forma nenhuma de recuperar vida sem morrer (pergunta 7 da spec)
-3. **⚠️ Os dois mapas de comandos da spec discordam** — o WP1 põe o parry em `Q`, o WP1B põe-no no toque do `RMB`. Não é meu para decidir; ver P2
-4. **Rede / co-op (WP10)** — fora do escopo desta noite, e `[EM ABERTO]` na spec
-5. **XP e níveis** — a curva do WP2 está nos dados, mas não há progressão
-6. **Arco e Batedor** — fatia 2, por decisão da spec
-7. Animações, som, tremor de ecrã e partículas de impacto (WP12)
+1. **Três habilidades de classe no runtime** — Eco, Passo Sombra e Julgamento têm ficha, mas o `Player` ainda só executa Ímpeto, Provocação e Fúria
+2. **Morte → mancha/save** — o contrato perdeu o provisório “nada se perde”, mas o produtor de HP zero ainda não chama a transacção do [`59`](../spec/59-saves.md)
+3. **Rede / co-op (WP10)** — autoridade e contratos estão escritos; transporte e sessão continuam produção
+4. **XP e níveis** — a curva e economia estão nos dados, mas não há ecrã/fluxo de subida
+5. **Arco e Batedor** — fatia 2, por decisão da spec
+6. Animações finais, música/ambiente, tremor de ecrã e partículas de impacto (WP12)
 
 ---
 

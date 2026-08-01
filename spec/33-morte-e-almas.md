@@ -145,7 +145,7 @@ Isso é tensão de propósito, não bug. É o momento em que o jogo pergunta se 
 
 O jogo é **inteiramente jogável sozinho** `[DECIDIDO]`. Sozinho não há ressurreição: morreste, acordas no ponto de descanso, as almas ficam onde caíste.
 
-⚠️ **A consequência que o WP15B tem de medir:** a dois há uma rede que a solo não existe. Se o teste mostrar que o Vorgar é muito mais fácil a dois **por causa disso**, o ajuste é na vida e nos padrões do chefe em co-op (o ×1,8 já existe) — **nunca** tirar a ressurreição nem penalizar quem joga sozinho.
+⚠️ **A consequência que o WP15B tem de medir:** a dois há uma rede que a solo não existe. Se o teste mostrar que o Vorgar é muito mais fácil a dois **por causa disso**, não se tira a ressurreição nem se penaliza quem joga sozinho. A resposta de PV/padrões segue a `[TENSÃO]` da pergunta 24; o ×1,8 existente é apenas `[PROTO]`, não decisão fechada.
 
 ---
 

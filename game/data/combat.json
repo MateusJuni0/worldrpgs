@@ -176,8 +176,8 @@
   },
 
   "death": {
-    "_fonte": "spec/01-combate.md seccao Morte + spec/10-fatia-1.md",
-    "lose_nothing": true,
+    "_fonte": "spec/33-morte-e-almas.md + spec/59-saves.md; o runtime greybox ainda nao liga HP zero a mancha/save (lacuna de producao registada).",
+    "lose_nothing": false,
     "restore_health": true,
     "restore_stamina": true,
     "restore_mana": true,

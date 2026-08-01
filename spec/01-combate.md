@@ -185,12 +185,12 @@ O risco conhecido ([`00-visao.md`](00-visao.md)): se atacar de longe for seguro,
 
 Formaliza o provisório da fatia 1 ([`10-fatia-1.md`](10-fatia-1.md)):
 
-- Renasces na **entrada de Brumal**; depois de descoberta, a **boca da Toca** é o ponto de renascimento (descobrir = checkpoint, sem fogueira nem menu).
+- Renasces no **último ponto de descanso**; em Brumal, a entrada e a boca da Toca são os primeiros pontos disponíveis. O contrato completo vive no [`33`](33-morte-e-almas.md).
 - ⚠️ **ACTUALIZADO:** ~~não se perde nada~~ → **perdem-se as almas**, que ficam no sítio onde se morreu. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md), que substitui esta linha. Vida, stamina, mana e tentativas de meditação são restauradas; inimigos normais renascem; o chefe faz reset total.
 - Morrer no Vorgar → nova tentativa em **< 30 s**, também em co-op (critério 4 da fatia).
-- ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro fica 5 s em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4, que substitui o provisório de que um jogador morto (chefe: até a tentativa acabar; mundo: até o parceiro sair de combate) e renasce ao lado do parceiro. `[FABLE]` *Razão:* reviver a meio do chefe transformava o ×1,8 de vida em corrida de revezamento. *Alternativa descartada:* ressuscitar o parceiro no local — é a pergunta certa para o WP10 revisitar com a rede à frente.
+- ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro fica 5 s em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4. Se a janela acabar, renasce no último descanso e a mancha conserva as almas; a escala de PV do chefe continua a `[TENSÃO]` da pergunta 24.
 
-A **pergunta 10** (perde-se alguma coisa ao morrer — o tom do jogo) **continua deles**. Quando decidirem, muda aqui e o resto da spec herda.
+A **pergunta 10 está decidida**: a morte larga as almas numa mancha e uma segunda morte antes da recolha substitui-a. O [`33`](33-morte-e-almas.md) manda no desenho e o [`59`](59-saves.md) na persistência atómica.
 
 ## Comandos
 
@@ -216,7 +216,7 @@ Nenhuma das duas máquinas tem comando (pergunta 0) — **teclado+rato é o esqu
 
 As três últimas linhas vieram do protótipo `[FABLE]` — a tabela original não dava botão a conjurar, ao bash nem ao andar (o teclado não tem analógico).
 
-> ⚠️ **Divergência aberta com o WP1B:** este documento põe o parry em `Q`; o [`25-controlo.md`](25-controlo.md) propõe parry no *toque* de `RMB` (bloqueio no *segurar*). São filosofias diferentes — botão dedicado vs uma só tecla de defesa — e o próprio WP1B avisa que a escolha contamina os testes da Lei 1. **Não se decide no papel: o protótipo tem de testar as duas cedo**, e o resultado fecha as duas specs ao mesmo tempo.
+> ✅ **Divergência dissolvida pela pergunta 30:** o [`45`](45-controlos-configuraveis.md) permite as duas ligações e cada jogador escolhe. O protótipo arranca com `Q`; toque de `RMB` continua opção configurável, não uma segunda regra de combate.
 
 Sensibilidade, remapeamento e afinação são do **WP1B/WP11** — isto é o mapa por defeito.
 
@@ -227,12 +227,11 @@ Sensibilidade, remapeamento e afinação são do **WP1B/WP11** — isto é o map
 | **WP2** | os MV de todas as armas; a fórmula `MV × base × escala − defesa`; as restrições de golpes-para-matar a nível 1 (secção Ataques) |
 | **WP1B** | as janelas em frames que o buffer e a latência têm de servir; a lista de estados canceláveis |
 | **WP6** | ≥ 0,5 s de aviso legível em todo o ataque; a marca `aparável`/`só esquiva` por ataque; postura por inimigo; anti-kite aos 4 s; velocidade de patrulha < 5,0 m/s |
-| **WP7** | o sistema de postura e o riposte; o reset total do chefe na morte; o ×1,8 em co-op (da fatia 1) |
+| **WP7** | o sistema de postura e o riposte; o reset total do chefe na morte; alternância de alvo em co-op. O ×1,8 corrente é só `[PROTO]` até a pergunta 24 decidir a escala |
 | **WP4** | tempos de conjuração de partida; mana paga no arranque não volta ao interromper; hiper-armadura da Égide |
 | **WP15** | o **marco 2** valida cada número deste documento no protótipo — um boneco, três inimigos, as cinco armas |
 
 ## O que continua aberto
 
-- **Pergunta 10** — o tom da morte (perder algo?). Deles.
 - **Pergunta 20** — fogo amigo. Decide-se no WP10 com a rede à frente.
 - **Todos os números deste documento** fecham no protótipo do marco 2. Até lá são `[FABLE]`, com esta ordem de confiança: janelas de esquiva/parry (alta — vêm da gramática do género), frames por arma (média), custos de stamina (média), restrições de golpes-para-matar (baixa — dependem do WP2).

@@ -78,18 +78,16 @@ Nenhuma tinha tecla; o protótipo atribuiu provisórias para poder correr:
 - **O cajado** estava listado como arma de duas mãos *e* como combinável com escudo. Corrigido no PR do WP1: vale a tabela de bloqueio.
 - **Hiper-armadura do machadão** — "frames 30–48" à letra deixava o golpe **carregado** desprotegido no momento do impacto. Corrigido para "do frame 30 até ao fim dos frames activos".
 
-## 4. A divergência que continua aberta, e é a mais urgente
+## 4. A divergência de controlos foi dissolvida
 
-**O parry tem dois botões diferentes em dois documentos aprovados:**
+Os dois documentos propuseram botões diferentes para o parry:
 
 | Documento | Proposta |
 |---|---|
 | [`01-combate.md`](01-combate.md) (WP1, Fable) | parry em `Q` — botão dedicado |
 | [`25-controlo.md`](25-controlo.md) (WP1B, Claude) | parry no **toque** de `RMB`; bloqueio no segurar |
 
-São filosofias diferentes, as duas defensáveis, e **o próprio WP1B avisa que a escolha contamina todos os testes da Lei 1**. Não se decide no papel: o protótipo tem as duas a um `if` de distância, e quem joga decide em cinco minutos.
-
-**Precisa de decisão de:** Mateus + Rico, depois de jogarem.
+✅ A pergunta 30 decidiu que os controlos são configuráveis: as duas ligações podem existir e cada jogador escolhe a sua. O protótipo usa `Q` como baseline `[PROTO]`; a UI de remapeamento pertence à produção do [`45`](45-controlos-configuraveis.md)/[`73`](73-fecho-dos-buracos-de-integracao.md), não a uma nova decisão de combate.
 
 ## 5. Como o Rico abre isto
 

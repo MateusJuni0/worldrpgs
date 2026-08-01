@@ -48,7 +48,7 @@ data/
   armas.json       frames, MV, custos, dano, requisitos, escala   (WP1/WP2/WP5)
   inimigos.json    PV, DEF, postura, velocidade, fichas de ataque  (WP6)
   chefes.json      fases, sequências, alternância                  (WP7)
-  magias.json      cargas, tempos, alcances, dano                  (WP4)
+  spells.json      mana, tempos, formas, alcances, efeitos         (WP4)
   curvas.json      XP, escala f(x), tectos da Lei 1               (WP2)
   jogador.json     esquiva, parry, stamina, movimento             (WP1)
   encontros.json   composição por zona                             (WP6/WP8)

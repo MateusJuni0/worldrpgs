@@ -86,4 +86,4 @@ Posições em coordenadas de 1920×1080; tudo escala com a opção "tamanho do H
 
 ## Ligações
 
-[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (comandos) · [`13-magia.md`](13-magia.md) (3 slots) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)
+[`08-ui.md`](08-ui.md) (sessão 1) · [`01-combate.md`](01-combate.md) (acções) · [`45`](45-controlos-configuraveis.md) (controlos actuais) · [`66`](66-catalogo-de-magia.md) (mana e favoritos; substitui os 3 slots históricos do [`13`](13-magia.md)) · [`21-arte-render.md`](21-arte-render.md) (feedback visual) · [`19-rede.md`](19-rede.md) · [`27-aprendizagem.md`](27-aprendizagem.md) · [`62-acessibilidade-auditiva.md`](62-acessibilidade-auditiva.md) · [`64-criacao-de-personagem.md`](64-criacao-de-personagem.md) · [`65-musica-e-ambiente.md`](65-musica-e-ambiente.md)
