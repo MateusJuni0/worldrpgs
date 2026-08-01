@@ -19,7 +19,19 @@ func run(main: Node3D) -> void:
 
 func _shoot_all() -> void:
 	await _wait(40)  # warmup: shader compilation, fog settling
+	# ⚠️ 01-08: 40 frames chegavam para o greybox mas nao chegam para instanciar os
+	# modelos .glb da fatia 1 — o mundo ainda era nulo, o tour morria EM SILENCIO, e
+	# ficavam capturas velhas no disco a fingir que eram novas. Espera pelo mundo.
 	var world = _main.world
+	var esperou := 0
+	while (world == null or not ("path_points" in world)) and esperou < 600:
+		await _wait(10)
+		world = _main.world
+		esperou += 10
+	if world == null or not ("path_points" in world):
+		push_error("[photo] mundo nao ficou pronto em %d frames — SEM capturas novas" % (40 + esperou))
+		_main.get_tree().quit(1)
+		return
 	var shots: Array = []
 	if Bench.scene_arg == "combat":
 		shots = [
