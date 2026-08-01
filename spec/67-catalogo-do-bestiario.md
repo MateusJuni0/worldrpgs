@@ -47,7 +47,7 @@ Cada inimigo comum usa pelo menos três perguntas diferentes. “Esquivar para t
 
 ## 3. As 33 fichas
 
-Formato numérico: `PV / DEF / postura · massa · almas`. Os nomes de equipamento do baralho são identificadores reservados para o catálogo WP5; materiais/consumíveis fecham no WP9. `✅` é conteúdo imediato da fatia 1.
+Formato numérico: `PV / DEF / postura · massa · almas`. Equipamento resolve no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md); materiais/consumíveis e a transacção resolvem no [`72`](72-materiais-consumiveis-e-economia.md). `✅` é conteúdo imediato da fatia 1.
 
 | ID | Nome · raça · bioma | Papel | Ficha | Descrição visual | Fatia 1? |
 |---|---|---|---|---|---:|
@@ -219,8 +219,8 @@ Dados inactivos custam memória desprezável; uma luta mantém ≤5 inimigos ani
 
 ## 10. O que fica para os pacotes seguintes
 
-- WP5 (tarefa 3.3) cria as armas, armaduras e anéis referidos pelos cartões; até lá os IDs estão reservados, não são objectos equipáveis.
-- WP9 liga morte → compra → save e cria materiais/consumíveis. O baralho e a ordem determinística já existem; a transacção de recompensa ainda não.
+- ✅ WP5 no [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) materializa armas, armaduras e anéis referidos pelos cartões.
+- ✅ WP9 no [`72`](72-materiais-consumiveis-e-economia.md) liga morte → compra → recibo/save, resolve os 40 materiais e corrige os 17 tokens antigos para 15 consumíveis canónicos.
 - WP8 coloca as populações no traçado; estes totais são orçamento e não autorizam copiar a mesma composição para todos os atalhos.
 - WP15B produz animações/hitboxes e corre o teste 10/10, o banco sem som e o limite de cinco animados.
 

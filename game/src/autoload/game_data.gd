@@ -22,6 +22,8 @@ var armor: Dictionary = {}
 var equipment: Dictionary = {}
 var world: Dictionary = {}
 var progression: Dictionary = {}
+var named_catalog: Dictionary = {}
+var economy: Dictionary = {}
 var save_state: Dictionary = {}
 
 var load_errors: Array[String] = []
@@ -41,6 +43,8 @@ func _ready() -> void:
 	equipment = _load_json("equipment.json")
 	world = _load_json("world.json")
 	progression = _load_json("progression.json")
+	named_catalog = _load_json("named_encounters.json")
+	economy = _load_json("economy.json")
 	_expand_enemy_catalog()
 	_build_input_map()
 	_validate()
@@ -99,6 +103,20 @@ func equipment_armor(id: String) -> Dictionary:
 
 func world_zone(id: String) -> Dictionary:
 	return (world.get("zones", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func named_encounter(id: String) -> Dictionary:
+	return (named_catalog.get("encounters", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func material(id: String) -> Dictionary:
+	return (economy.get("materials", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func consumable(id: String) -> Dictionary:
+	var aliases: Dictionary = economy.get("aliases", {}) as Dictionary
+	var canonical_id := String(aliases.get(id, id))
+	return (economy.get("consumables", {}) as Dictionary).get(canonical_id, {}) as Dictionary
 
 
 ## O JSON guarda declaracoes compactas de ataques, mas o runtime recebe sempre
@@ -200,6 +218,108 @@ func loot_draw_order(enemy_id: String, seed_value: int) -> Array:
 		cards[i] = cards[j]
 		cards[j] = held
 	return cards
+
+
+## Custo cubico canonico do nivel que se compra (spec/58 corrigido por spec/72).
+## O minimo evita custos negativos nos primeiros niveis sem criar uma segunda
+## tabela que possa divergir da formula publicada.
+func level_cost(level_to_buy: int) -> int:
+	var economy_rules: Dictionary = economy.get("rules", {}) as Dictionary
+	var cost_rule: Dictionary = economy_rules.get("level_cost", {}) as Dictionary
+	var level := clampi(level_to_buy, 1, int(cost_rule.get("maximum_level", 100)))
+	return maxi(1, roundi(0.02 * pow(level, 3) + 3.06 * pow(level, 2)
+		+ 105.6 * level - 895.0))
+
+
+## Resolve apenas a carta de enchimento. As cartas obrigatorias nunca passam
+## aqui e, portanto, nunca mudam com a classe. Em co-op o chamador fornece a
+## classe do destinatario: quem e esse destinatario continua pergunta dos donos.
+func resolve_loot_card(enemy_id: String, raw_card: String, receiver_class_id: String) -> String:
+	if raw_card != "bias:classe":
+		var split: PackedStringArray = raw_card.split(":", false, 1)
+		if split.size() == 2 and split[0] == "consumivel":
+			var aliases: Dictionary = economy.get("aliases", {}) as Dictionary
+			return "consumivel:%s" % String(aliases.get(split[1], split[1]))
+		return raw_card
+	var e := enemy(enemy_id)
+	var zone_ids: Array = e.get("biome_ids", []) as Array
+	if zone_ids.is_empty():
+		return ""
+	var bias: Dictionary = economy.get("class_bias", {}) as Dictionary
+	var profile := String((bias.get("profiles", {}) as Dictionary).get(receiver_class_id, "martial"))
+	var zone_pool: Dictionary = (bias.get("by_zone", {}) as Dictionary).get(
+		String(zone_ids[0]), {}) as Dictionary
+	return String(zone_pool.get(profile, ""))
+
+
+## Compra transaccional em memoria. O chamador persiste o dicionario inteiro
+## com SaveSystem.commit_enemy_defeat(), cujo rename atomico publica ao mesmo
+## tempo almas, indice do baralho, item e recibo. event_id torna a operacao
+## idempotente quando uma repeticao de rede ou recuperacao volta a pedi-la.
+func reward_enemy_defeat(state: Dictionary, enemy_id: String, event_id: String,
+		seed_value: int, receiver_class_id: String) -> Dictionary:
+	var e := enemy(enemy_id)
+	if state.is_empty() or e.is_empty() or bool(e.get("is_boss", false)) or event_id == "":
+		return {"status": "invalid"}
+	var world_state: Dictionary = state.get("world", {}) as Dictionary
+	var receipts: Array = world_state.get("reward_receipts", []) as Array
+	for receipt_value: Variant in receipts:
+		var previous := receipt_value as Dictionary
+		if String(previous.get("event_id", "")) == event_id:
+			var repeated := previous.duplicate(true)
+			repeated["status"] = "already_committed"
+			return repeated
+
+	var loot_decks: Dictionary = world_state.get("loot_decks", {}) as Dictionary
+	var deck_state: Dictionary = loot_decks.get(enemy_id, {}) as Dictionary
+	if deck_state.is_empty():
+		deck_state = {
+			"seed": seed_value,
+			"order": loot_draw_order(enemy_id, seed_value),
+			"next_index": 0,
+		}
+	var order: Array = deck_state.get("order", []) as Array
+	var next_index := int(deck_state.get("next_index", 0))
+	if next_index >= order.size():
+		return {"status": "exhausted", "enemy_id": enemy_id, "event_id": event_id}
+
+	var raw_card := String(order[next_index])
+	var resolved_card := resolve_loot_card(enemy_id, raw_card, receiver_class_id)
+	if resolved_card == "":
+		return {"status": "invalid_bias", "enemy_id": enemy_id, "event_id": event_id}
+	var soul_delta := int(e.get("souls", 0))
+	var card_parts: PackedStringArray = resolved_card.split(":", false, 1)
+	if card_parts.size() == 2 and card_parts[0] == "almas_bonus":
+		soul_delta += int(card_parts[1])
+
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var character_progression: Dictionary = character.get("progression", {}) as Dictionary
+	character_progression["souls_held"] = int(character_progression.get("souls_held", 0)) + soul_delta
+	if card_parts.size() == 2 and card_parts[0] not in ["almas_bonus", "bias"]:
+		var inventory: Dictionary = character.get("inventory", {}) as Dictionary
+		var items: Dictionary = inventory.get("items", {}) as Dictionary
+		items[resolved_card] = int(items.get(resolved_card, 0)) + 1
+		inventory["items"] = items
+		character["inventory"] = inventory
+	character["progression"] = character_progression
+	state["character"] = character
+
+	deck_state["next_index"] = next_index + 1
+	loot_decks[enemy_id] = deck_state
+	world_state["loot_decks"] = loot_decks
+	var receipt := {
+		"status": "awarded",
+		"event_id": event_id,
+		"enemy_id": enemy_id,
+		"deck_index": next_index,
+		"raw_card": raw_card,
+		"resolved_card": resolved_card,
+		"souls_awarded": soul_delta,
+	}
+	receipts.append(receipt.duplicate(true))
+	world_state["reward_receipts"] = receipts
+	state["world"] = world_state
+	return receipt
 
 
 func _attack_sound_profile(attack: Dictionary) -> String:
@@ -986,6 +1106,103 @@ func _validate() -> void:
 		var count := int(history_door_counts.get(biome_id, 0))
 		if count < 2 or count > 3:
 			_fail("[SPEC] zona '%s' tem %d portas; spec/53 exige 2-3" % [biome_id, count])
+	checks += 1
+
+	# 13. Tarefa 4: os 36 encontros nomeados e todos os IDs economicos que os
+	# baralhos prometem existem de verdade. O runtime tambem faz esta auditoria
+	# para uma carta nova nunca poder criar espolio fantasma.
+	var named_entries: Dictionary = named_catalog.get("encounters", {}) as Dictionary
+	var named_counts_by_zone: Dictionary = {}
+	if named_entries.size() != 36:
+		_fail("[SPEC] encontros nomeados: %d/36" % named_entries.size())
+	for named_id: String in named_entries.keys():
+		var named: Dictionary = named_entries[named_id] as Dictionary
+		var named_zone := String(named.get("zone_id", ""))
+		var base_enemy_id := String(named.get("base_enemy_id", ""))
+		var base_enemy := enemy(base_enemy_id)
+		if not world_zones.has(named_zone):
+			_fail("[SPEC] nomeado '%s' aponta a zona inexistente '%s'" % [named_id, named_zone])
+		if base_enemy.is_empty() or bool(base_enemy.get("is_boss", false)):
+			_fail("[SPEC] nomeado '%s' nao reutiliza um inimigo comum" % named_id)
+		elif not (base_enemy.get("biome_ids", []) as Array).has(named_zone):
+			_fail("[SPEC] nomeado '%s' desloca '%s' para fora do bioma" % [named_id, base_enemy_id])
+		named_counts_by_zone[named_zone] = int(named_counts_by_zone.get(named_zone, 0)) + 1
+		var health_multiplier := float(named.get("health_multiplier", 0.0))
+		var posture_multiplier := float(named.get("posture_multiplier", 0.0))
+		if health_multiplier < 1.25 or health_multiplier > 1.55 \
+				or posture_multiplier < 1.10 or posture_multiplier > 1.30:
+			_fail("[SPEC] nomeado '%s' sai da faixa curta de PV/postura" % named_id)
+		var extra_attack: Dictionary = named.get("extra_attack", {}) as Dictionary
+		for named_attack_field: String in ["id", "display_name", "startup", "active",
+				"recovery", "parryable", "vector", "tell"]:
+			if not extra_attack.has(named_attack_field) or str(extra_attack.get(named_attack_field, "")) == "":
+				_fail("[SPEC] ataque extra de '%s' sem '%s'" % [named_id, named_attack_field])
+		if int(extra_attack.get("startup", 0)) < 30:
+			_fail("[SPEC] ataque extra de '%s' tem aviso inferior a 30 f" % named_id)
+		if String(extra_attack.get("vector", "")) not in ATTACK_VECTORS:
+			_fail("[SPEC] ataque extra de '%s' usa vector inexistente" % named_id)
+		var named_reward_parts: PackedStringArray = String(named.get(
+			"guaranteed_loot", "")).split(":", false, 1)
+		if named_reward_parts.size() != 2:
+			_fail("[SPEC] nomeado '%s' sem carta garantida" % named_id)
+		elif named_reward_parts[0] == "material" and material(named_reward_parts[1]).is_empty():
+			_fail("[SPEC] nomeado '%s' promete material inexistente" % named_id)
+		elif named_reward_parts[0] == "consumivel" and consumable(named_reward_parts[1]).is_empty():
+			_fail("[SPEC] nomeado '%s' promete consumivel inexistente" % named_id)
+	for named_zone: String in world_zones.keys():
+		if int(named_counts_by_zone.get(named_zone, 0)) != 3:
+			_fail("[SPEC] zona '%s' tem %d/3 nomeados" % [
+				named_zone, int(named_counts_by_zone.get(named_zone, 0))])
+
+	var materials: Dictionary = economy.get("materials", {}) as Dictionary
+	var consumables: Dictionary = economy.get("consumables", {}) as Dictionary
+	if materials.size() != 40:
+		_fail("[SPEC] economia tem %d/40 materiais" % materials.size())
+	if consumables.size() != 15:
+		_fail("[SPEC] economia tem %d/15 consumiveis canonicos" % consumables.size())
+	for material_id: String in materials.keys():
+		var material_entry: Dictionary = materials[material_id] as Dictionary
+		if not world_zones.has(String(material_entry.get("zone_id", ""))):
+			_fail("[SPEC] material '%s' sem zona valida" % material_id)
+		if int(material_entry.get("refinement", 0)) not in [1, 2, 3] \
+				or int(material_entry.get("trade_value", 0)) <= 0:
+			_fail("[SPEC] material '%s' sem valor/refinamento" % material_id)
+		if String(material_entry.get("visual", "")).length() < 40:
+			_fail("[SPEC] material '%s' sem descricao visual" % material_id)
+	for consumable_id: String in consumables.keys():
+		var consumable_entry: Dictionary = consumables[consumable_id] as Dictionary
+		if (consumable_entry.get("effect", {}) as Dictionary).is_empty() \
+				or float(consumable_entry.get("use_seconds", 0.0)) <= 0.0:
+			_fail("[SPEC] consumivel '%s' sem efeito/tempo exacto" % consumable_id)
+		if String(consumable_entry.get("visual", "")).length() < 30 \
+				or String(consumable_entry.get("sound", "")).length() < 10:
+			_fail("[SPEC] consumivel '%s' sem leitura visual/sonora" % consumable_id)
+	for loot_enemy_id: String in enemies.keys():
+		if loot_enemy_id.begins_with("_") or bool(enemy(loot_enemy_id).get("is_boss", false)):
+			continue
+		for promised_card_value: Variant in enemy(loot_enemy_id).get("loot_cards", []):
+			var promised_card := String(promised_card_value)
+			var promised_parts: PackedStringArray = promised_card.split(":", false, 1)
+			if promised_parts.size() != 2:
+				continue
+			if promised_parts[0] == "material" and not materials.has(promised_parts[1]):
+				_fail("[SPEC] carta '%s' promete material fantasma" % promised_card)
+			elif promised_parts[0] == "consumivel" and consumable(promised_parts[1]).is_empty():
+				_fail("[SPEC] carta '%s' promete consumivel fantasma" % promised_card)
+			elif promised_card == "consumivel:brasa_portatil":
+				_fail("[SPEC] Brasa voltou a um baralho repetivel")
+	var bias_by_zone: Dictionary = ((economy.get("class_bias", {}) as Dictionary).get(
+		"by_zone", {}) as Dictionary)
+	for bias_zone_id: String in world_zones.keys():
+		var bias_pool: Dictionary = bias_by_zone.get(bias_zone_id, {}) as Dictionary
+		for profile: String in ["martial", "arcane"]:
+			var bias_card := String(bias_pool.get(profile, ""))
+			var bias_parts: PackedStringArray = bias_card.split(":", false, 1)
+			if bias_parts.size() != 2 or bias_parts[0] != "material" or not materials.has(bias_parts[1]):
+				_fail("[SPEC] enviesamento %s/%s nao resolve" % [bias_zone_id, profile])
+	if level_cost(20) != 2601 or level_cost(40) != 9505 \
+			or level_cost(70) != 28351 or level_cost(100) != 60265:
+		_fail("[SPEC] curva cubica de almas divergiu dos marcos publicados")
 	checks += 1
 
 	if load_errors.is_empty():

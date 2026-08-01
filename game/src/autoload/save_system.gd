@@ -100,6 +100,30 @@ func save_current(slot: int = -1) -> bool:
 	return saved
 
 
+## Publica a recompensa inteira numa unica geracao de save. Se a escrita ou a
+## verificacao falhar, o estado em memoria volta exactamente ao snapshot anterior.
+func commit_enemy_defeat(enemy_id: String, event_id: String, seed_value: int,
+		receiver_class_id: String, slot: int = -1) -> Dictionary:
+	var before := GameData.save_state_snapshot()
+	if before.is_empty():
+		return {"status": "no_active_save"}
+	var working := before.duplicate(true)
+	var receipt := GameData.reward_enemy_defeat(
+		working, enemy_id, event_id, seed_value, receiver_class_id)
+	if String(receipt.get("status", "")) != "awarded":
+		return receipt
+	GameData.replace_save_state(working)
+	if not save_current(slot):
+		GameData.replace_save_state(before)
+		return {
+			"status": "save_failed",
+			"enemy_id": enemy_id,
+			"event_id": event_id,
+			"message": last_error,
+		}
+	return receipt
+
+
 func load_slot(slot: int = 0) -> Dictionary:
 	active_slot = slot
 	var path := slot_path(slot)

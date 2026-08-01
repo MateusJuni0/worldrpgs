@@ -20,6 +20,8 @@ func _ready() -> void:
 	_test_parry_window()
 	_test_task4_combat_closures()
 	_test_progression_closures()
+	_test_named_encounters()
+	_test_economy_and_loot_transaction()
 	_test_weapon_frames()
 	_test_stamina()
 	_test_damage_worked_example()
@@ -43,6 +45,94 @@ func _ready() -> void:
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------
+
+# --- spec/71-72: nomeados, economia e compra atomica de espolio --------------
+
+func _test_named_encounters() -> void:
+	var encounters: Dictionary = GameData.named_catalog.get("encounters", {}) as Dictionary
+	_check(encounters.size() == 36, "nomeados: 36 fichas fechadas")
+	var by_zone: Dictionary = {}
+	for named_id: String in encounters.keys():
+		var encounter: Dictionary = GameData.named_encounter(named_id)
+		var zone_id := String(encounter.get("zone_id", ""))
+		by_zone[zone_id] = int(by_zone.get(zone_id, 0)) + 1
+		_check(not GameData.enemy(String(encounter.get("base_enemy_id", ""))).is_empty(),
+			"nomeado %s reutiliza ficha comum" % named_id)
+		var extra: Dictionary = encounter.get("extra_attack", {}) as Dictionary
+		_check(int(extra.get("startup", 0)) >= 30 and int(extra.get("active", 0)) > 0
+			and int(extra.get("recovery", 0)) > 0,
+			"nomeado %s tem um ataque extra mensuravel" % named_id)
+		_check(String(encounter.get("guaranteed_loot", "")).contains(":"),
+			"nomeado %s declara espolio garantido" % named_id)
+	for zone_id: String in (GameData.world.get("zones", {}) as Dictionary).keys():
+		_check(int(by_zone.get(zone_id, 0)) == 3, "%s: exactamente 3 nomeados" % zone_id)
+
+
+func _test_economy_and_loot_transaction() -> void:
+	var materials: Dictionary = GameData.economy.get("materials", {}) as Dictionary
+	var consumables: Dictionary = GameData.economy.get("consumables", {}) as Dictionary
+	_check(materials.size() == 40, "economia: os 40 materiais prometidos existem")
+	_check(consumables.size() == 15,
+		"economia: 15 consumiveis canonicos depois de corrigir Brasa e duplicado acentuado")
+	_check(GameData.consumable("véu_sombra") == GameData.consumable("veu_sombra"),
+		"economia: grafia antiga de veu_sombra migra para o ID canonico")
+	_check(GameData.consumable("brasa_portatil").is_empty(),
+		"economia: Brasa unica nao volta como consumivel de baralho")
+	_check(GameData.level_cost(20) == 2601 and GameData.level_cost(40) == 9505
+		and GameData.level_cost(70) == 28351 and GameData.level_cost(100) == 60265,
+		"economia: curva cubica publica os quatro marcos exactos")
+	_check(GameData.resolve_loot_card("orc_spearman", "bias:classe", "warrior")
+		== "material:couro_javali", "bias: carta marcial resolve por zona")
+	_check(GameData.resolve_loot_card("orc_spearman", "bias:classe", "sorcerer")
+		== "material:limalha_ferro", "bias: carta arcana resolve por zona")
+
+	var state := SaveSystem.create_save("loot-transaction", "warrior")
+	var seed_value := 7204
+	var order := GameData.loot_draw_order("orc_spearman", seed_value)
+	var first := GameData.reward_enemy_defeat(
+		state, "orc_spearman", "defeat-000", seed_value, "warrior")
+	_check(String(first.get("status", "")) == "awarded"
+		and String(first.get("raw_card", "")) == String(order[0]),
+		"espolio: derrota compra a proxima carta da ordem reproduzivel")
+	var world_state: Dictionary = state.get("world", {}) as Dictionary
+	var character: Dictionary = state.get("character", {}) as Dictionary
+	var held_after_first := int((character.get("progression", {}) as Dictionary).get("souls_held", 0))
+	var repeated := GameData.reward_enemy_defeat(
+		state, "orc_spearman", "defeat-000", seed_value, "warrior")
+	_check(String(repeated.get("status", "")) == "already_committed"
+		and int((character.get("progression", {}) as Dictionary).get("souls_held", 0)) == held_after_first,
+		"espolio: repetir event_id nao paga almas nem carta duas vezes")
+	_check((world_state.get("reward_receipts", []) as Array).size() == 1
+		and int(((world_state.get("loot_decks", {}) as Dictionary).get(
+			"orc_spearman", {}) as Dictionary).get("next_index", 0)) == 1,
+		"espolio: recibo e indice avancam juntos")
+	for draw_index: int in range(1, 10):
+		GameData.reward_enemy_defeat(state, "orc_spearman", "defeat-%03d" % draw_index,
+			seed_value, "warrior")
+	var exhausted := GameData.reward_enemy_defeat(
+		state, "orc_spearman", "defeat-010", seed_value, "warrior")
+	_check(String(exhausted.get("status", "")) == "exhausted"
+		and ((state.get("world", {}) as Dictionary).get("reward_receipts", []) as Array).size() == 10,
+		"espolio: dez cartas fecham a torneira sem uma 11.a recompensa")
+
+	var slot := 97
+	var path := SaveSystem.slot_path(slot)
+	_remove_save_artifacts(path)
+	GameData.replace_save_state(SaveSystem.create_save("loot-atomic", "sorcerer"))
+	var committed := SaveSystem.commit_enemy_defeat(
+		"goblin_mist_scout", "atomic-001", 72, "sorcerer", slot)
+	var persisted := SaveSystem.load_from_path(path, false)
+	var persisted_world: Dictionary = persisted.get("world", {}) as Dictionary
+	_check(String(committed.get("status", "")) == "awarded"
+		and (persisted_world.get("reward_receipts", []) as Array).size() == 1,
+		"espolio atomico: recibo publicado na mesma geracao do save")
+	_check(int(((persisted_world.get("loot_decks", {}) as Dictionary).get(
+		"goblin_mist_scout", {}) as Dictionary).get("next_index", 0)) == 1,
+		"espolio atomico: indice persistido com o recibo")
+	_remove_save_artifacts(path)
+
+
+# --- spec/59-saves.md: persistencia ------------------------------------------
 
 func _test_save_round_trip() -> void:
 	var path := "user://worldrpgs-self-test/round-trip.json"

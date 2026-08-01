@@ -86,7 +86,7 @@ Baralho do lanceiro leve:
 
 `→WP6` — **coluna obrigatória no bestiário: o baralho de 10.**
 
-✅ Os 33 baralhos estão declarados e validados no [`67`](67-catalogo-do-bestiario.md). A compra transaccional na morte e a gravação do índice continuam WP9.
+✅ Os 33 baralhos estão declarados e validados no [`67`](67-catalogo-do-bestiario.md). A compra transaccional, recibo idempotente e gravação atómica do índice foram entregues no [`72`](72-materiais-consumiveis-e-economia.md).
 
 ---
 

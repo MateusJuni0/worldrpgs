@@ -8,7 +8,7 @@
 
 ## 1. ⚠️ O jogo existe, e até hoje vivia num sítio só
 
-**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8268 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
+**O protótipo joga-se.** Combate fiel ao WP1 + correcções canónicas do [`70`](spec/70-fecho-dos-sistemas-de-combate.md) (i-frames 0,08→0,38, parry 8/8/40, empunhadura de 12 f, as 5 armas com frames exactos), lanceiro e brutamontes com telegrafia, 3 magias executáveis, o Vorgar com 2 fases, frasco de cura, habilidades de classe e 17 sons sintetizados. **8402 auto-testes contra a spec.** Godot 4.7.1, renderer Mobile, **416 fps na máquina do Rico**. Detalhe em [`spec/44-prototipo.md`](spec/44-prototipo.md).
 
 ⚠️ **E até 31-07 vivia apenas no disco do Rico**, num repositório local `worldrpgs-game` que nunca chegou ao GitHub. Sem cópia. Sem revisão possível. Um disco avariado e perdia-se tudo.
 
@@ -44,9 +44,9 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **72** em `spec/` | — | — |
-| Código e dados | 17 ficheiros `.gd` · 14 catálogos JSON | — | — |
-| Testes | **8268, todos a passar** | — | — |
+| Documentos de spec | **74** em `spec/` | — | — |
+| Código e dados | 17 ficheiros `.gd` · 16 catálogos JSON | — | — |
+| Testes | **8402, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
 | **Armaduras** | **68 peças** · 9 slots · 4 estados de carga · **11 ícones** ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md)) | 68 | 57 esperam `Fatia 1?`; equipar é WP11 |
@@ -119,7 +119,7 @@ O [`67`](spec/67-catalogo-do-bestiario.md) fecha **33 tipos comuns** (dentro da 
 
 As 12 zonas têm população de referência e orçamento recalculado pelo teste: **390→2 050 almas** na primeira limpeza e exactamente ×10 no limite recompensado. `GameplayCue` apresenta a mesma informação por som e geometria/glifo/bordo; padrões de IA e baralhos aceitam semente. Os três conceitos imediatos — lanceiro, brutamontes e Vorgar — foram auditados e reutilizados; as outras 31 fichas ficam sem imagem até `Fatia 1?` mudar.
 
-⚠️ O catálogo não finge WP9/WP15: morte ainda não compra/grava a carta; armas, armaduras e anéis já resolvem no [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md), mas 40 materiais/17 consumíveis continuam WP9 e os 31 inimigos futuros não têm modelo/animação/hitbox. As perguntas 23 e 29 do [`99`](spec/99-perguntas-abertas.md) continuam abertas; o `67` não escolheu por Mateus/Rico.
+✅ O WP9 que este catálogo exigia foi entregue no [`72`](spec/72-materiais-consumiveis-e-economia.md): morte compra e grava carta/recibo, 40 materiais e 15 consumíveis canónicos resolvem. Os 17 tokens antigos continham uma Brasa repetível ilegal e uma grafia duplicada, ambas corrigidas. Os 31 inimigos futuros continuam sem modelo/animação/hitbox; a pergunta 29 só decide o destinatário co-op e não foi escolhida por Mateus/Rico.
 
 ## 1k. ✅ O WP5 deixou de ser cinco armas e uma promessa de anéis
 
@@ -143,7 +143,15 @@ O [`70`](spec/70-fecho-dos-sistemas-de-combate.md) passa a ser a autoridade das 
 
 `T` ou `Y/triângulo` muda a empunhadura em 12 frames interrompíveis. `hook_pull` atravessa 40% do escudo e `slam` custa ×2,5 stamina de guarda no runtime. O bestiário liga ainda duas largadas, ramo de combo, falsa recuperação, castigo de cura, fingir morte e corpo duro a fichas concretas. Estes ramos avançados estão especificados e testados como dados; animação/IA completa e ressalto geométrico continuam construção M2 conhecida.
 
-Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8268/8268** testes passam neste ponto.
+Queda, ciclos, ressurreição partilhada e Brasa têm contrato executável em `progression.json`. `Fôlego Roubado` já não depende de uma stamina inimiga inexistente. **8402/8402** testes passam neste ponto.
+
+## 1n. ✅ Os vazios entre comuns, chefes e recompensa estão fechados
+
+O [`71`](spec/71-encontros-nomeados.md) fecha **36 encontros nomeados, exactamente três por zona**. Cada um reutiliza uma ficha comum, recebe multiplicadores curtos, exactamente um ataque extra com tell mensurável e uma carta garantida. Não cria esqueletos, arenas, barras ou música de chefe; quando o tipo-base entrar numa fatia, a dívida marginal é só um ataque/colocação.
+
+O [`72`](spec/72-materiais-consumiveis-e-economia.md) fecha a economia prometida pelos baralhos: **40 materiais, 15 consumíveis canónicos**, curva cúbica com marcos exactos, receitas regionais partilhadas por arma/feitiço e enviesamento marcial/arcano apenas no enchimento. A transacção local é idempotente e publica almas, item, índice e recibo na mesma geração atómica do save; `Enemy.died` já a chama e apresenta a recompensa.
+
+⚠️ A política de destinatário em co-op continua a pergunta 29 do [`99`](spec/99-perguntas-abertas.md). A infraestrutura recebe um destinatário explícito e, por isso, não decidiu à socapa se cai uma ou duas cartas.
 
 ## 2. Decisões que mudaram documentos de execução antigos
 

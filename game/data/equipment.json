@@ -499,7 +499,7 @@
   },
   "weapon_improvement": {
     "rule": "cada nível abre uma decisão reversível no altar; nenhum aumenta dano base, defesa ou velocidade",
-    "materials": "Limalha abre +1…+3; Limalha Nobre abre +4…+6; exploração fixa, nunca farm repetível",
+    "materials": "materiais do bioma de origem somam 1/2/3 pontos por refinamento; os seis votos custam 1/2/3/5/8/12; o baralho finito impede farm repetível",
     "levels": [
       {
         "level": 0,

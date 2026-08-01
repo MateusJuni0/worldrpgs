@@ -21,6 +21,7 @@ var _respawning := false
 
 
 func _ready() -> void:
+	_ensure_runtime_save()
 	_graphics = _load_graphics()
 	_palette = _graphics.get("palette", {})
 	_preset = _pick_preset()
@@ -108,6 +109,7 @@ func _spawn(enemy_id: String, at: Vector3) -> Enemy:
 	e.setup(enemy_id, _palette)
 	e.target = player
 	e.home = at
+	e.died.connect(_on_enemy_died)
 	return e
 
 
@@ -160,6 +162,42 @@ func _populate_zone() -> void:
 
 
 # --- Morte e recomeco ---------------------------------------------------------
+
+func _ensure_runtime_save() -> void:
+	if not GameData.save_state.is_empty():
+		return
+	var path := SaveSystem.slot_path(0)
+	if not FileAccess.file_exists(path):
+		SaveSystem.new_game("local-prototype", "warrior", 0)
+		return
+	var loaded := SaveSystem.load_slot(0)
+	if loaded.is_empty():
+		SaveSystem.new_game("local-prototype", "warrior", 0)
+
+
+func _on_enemy_died(defeated: Enemy) -> void:
+	if defeated.is_boss:
+		return
+	var snapshot := GameData.save_state_snapshot()
+	var world_state: Dictionary = snapshot.get("world", {}) as Dictionary
+	var deck_state: Dictionary = ((world_state.get("loot_decks", {}) as Dictionary).get(
+		defeated.enemy_id, {}) as Dictionary)
+	var next_index := int(deck_state.get("next_index", 0))
+	var event_id := "enemy:%s:%d" % [defeated.enemy_id, next_index]
+	var character: Dictionary = snapshot.get("character", {}) as Dictionary
+	var identity: Dictionary = character.get("identity", {}) as Dictionary
+	var class_id := String(identity.get("class_id", "warrior"))
+	var seed_value := hash(String(world_state.get("owner_profile_id", "local-prototype")))
+	var receipt := SaveSystem.commit_enemy_defeat(
+		defeated.enemy_id, event_id, seed_value, class_id)
+	match String(receipt.get("status", "")):
+		"awarded":
+			var card := String(receipt.get("resolved_card", ""))
+			hud.toast("+%d almas · %s" % [int(receipt.get("souls_awarded", 0)), card], 3.0)
+		"exhausted":
+			hud.toast("Este tipo ja entregou as dez cartas.", 2.5)
+		"save_failed":
+			hud.toast("Recompensa nao gravada; nada foi consumido.", 3.0)
 
 func _on_player_died() -> void:
 	if _respawning:

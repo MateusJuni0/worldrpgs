@@ -68,7 +68,7 @@
 | 🟠 | **Quem manda nos invocados em co-op?** *(proposta: quem os levantou)* | [`50`](spec/52-mago-do-mal.md) §9 |
 | 🟠 | **Inimigos que lançam magia usam as mesmas regras?** *(proposta: sim, incluindo ser interrompíveis)* | [`42`](spec/42-estudo-magia.md), [`48`](spec/48-arcos-bestas-escudos.md) |
 | ✅ | ~~**Quantos feitiços na fatia 1**~~ **RESOLVIDO 01-08** — Dardo, Ruína e Égide; os três têm ícone aprovado e ficha completa | [`66`](spec/66-catalogo-de-magia.md) |
-| 🟠 | **O material de melhoria de feitiço é o mesmo das armas, ou outro?** | [`42`](spec/42-estudo-magia.md) §6 |
+| ✅ | ~~**O material de melhoria de feitiço é o mesmo das armas, ou outro?**~~ **RESOLVIDO NA TAREFA 4** — catálogo regional partilhado; evita uma moeda paralela e conserva preferência marcial/arcana nas cartas `bias:classe` | [`72`](spec/72-materiais-consumiveis-e-economia.md) §2.1 |
 | 🔴 | **O catálogo tem 53 feitiços, mas o runtime só executa os 3 da Fatia 1 e três renderers (`projectile`, `aoe`, `barrier`).** As outras formas não podem entrar numa fatia futura sem comportamento, hitbox e cue próprios | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
 | 🔴 | **Roda e edição dos 8 favoritos não existem.** A regra “só fora de combate/no descanso” está nos dados, mas ainda não há UI que a aplique | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
 | 🟠 | **Só o cajado existe como instrumento no runtime.** Sino, talismã, chama e relicário estão declarados por escola, mas faltam instâncias de WP5 e validação por feitiço | encontrado ao implementar o [`66`](spec/66-catalogo-de-magia.md) |
@@ -81,8 +81,8 @@
 | ✅ | ~~⭐ **`GameplayCue` + renderer e migração**~~ **RESOLVIDO 01-08** — faixa/área, glifo no mundo, bordo fora do ecrã, cancelamento 0,15 s e cinco perfis sonoros | [`67`](spec/67-catalogo-do-bestiario.md) §7 |
 | ✅ | ~~**Massa de cada inimigo**~~ **RESOLVIDO 01-08** — 33 comuns + Vorgar, em kg, validada positiva | [`67`](spec/67-catalogo-do-bestiario.md) §3 |
 | ✅ | ~~**Almas por inimigo e total por zona**~~ **RESOLVIDO 01-08** — primeira limpeza + limite de dez nas 12 zonas, recalculados no teste | [`67`](spec/67-catalogo-do-bestiario.md) §6 |
-| 🔴 | **Ligar morte → compra do baralho → recibo/save.** A ordem determinística, as 330 cartas e `world.loot_decks` existem; `Enemy.died` ainda não executa a transacção nem apresenta a recompensa | encontrado ao implementar o [`67`](spec/67-catalogo-do-bestiario.md) · `→WP9` |
-| 🟠 | **Resolver os IDs de materiais e consumíveis dos cartões.** As 32 armas, 57 armaduras e 3 anéis já resolvem no [`68`]; 40 materiais e 17 consumíveis continuam WP9 | [`67`](spec/67-catalogo-do-bestiario.md) §5 |
+| ✅ | ~~**Ligar morte → compra do baralho → recibo/save**~~ **RESOLVIDO NA TAREFA 4** — `Enemy.died` chama compra idempotente; almas, item, índice e recibo são publicados na mesma geração atómica e a falha repõe o snapshot | [`72`](spec/72-materiais-consumiveis-e-economia.md) §4 · 8402 testes |
+| ✅ | ~~**Resolver os IDs de materiais e consumíveis dos cartões**~~ **RESOLVIDO NA TAREFA 4** — 40 materiais; os 17 tokens antigos eram 15 objectos + Brasa ilegal + grafia acentuada duplicada, ambos corrigidos | [`72`](spec/72-materiais-consumiveis-e-economia.md) §§2–3 |
 | 🟠 | **31 fichas fora da Fatia 1 ainda não têm modelo/animações/hitboxes.** A descrição gerável existe; produzir só quando `Fatia 1?` mudar | [`67`](spec/67-catalogo-do-bestiario.md) §8 · `→WP15B` |
 
 ### Volta 7 — chefes
@@ -255,7 +255,7 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 | | Buraco | |
 |---|---|---|
 | 🟠 | ⭐ **A fatia 1 ([`10`](spec/10-fatia-1.md)) foi aprovada antes de ~40 decisões** | fala de cargas de magia que já não existem, de 6 zonas, de espólio sem baralho. **Precisa de uma passagem** |
-| 🟠 | **Os ~36 "nomeados"** que substituíram os chefes de campo ([`53`](spec/53-chefes-ritmo-e-o-mago-forte.md) §1) | ninguém os desenhou ainda — são 36 fichas curtas |
+| ✅ | ~~**Os ~36 "nomeados" que substituíram os chefes de campo**~~ **RESOLVIDO NA TAREFA 4** — 36 fichas, exactamente 3 por zona, com tipo-base, localização, multiplicadores curtos, um ataque extra e carta garantida | [`71`](spec/71-encontros-nomeados.md) |
 | ⏳ | **O Assassino** — proposta completa escrita e testada; **falta o Mateus confirmar** Passo Mudo, Corte Alternado, Cruz Carmesim e Entre Sombras | [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) §5 · pergunta 37 |
 
 ---
