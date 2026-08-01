@@ -15,7 +15,12 @@
     "free_climbing": false,
     "free_traversal_jump": false,
     "automatic_step_max_m": 0.45,
-    "authored_vertical_links": ["escada_interactiva", "elevador", "rampa", "queda_sem_retorno_legivel"],
+    "authored_vertical_links": [
+      "escada_interactiva",
+      "elevador",
+      "rampa",
+      "queda_sem_retorno_legivel"
+    ],
     "deep_water": "perigo ou rota lenta com fundo caminhável; nunca exige nadar",
     "weapon_move_a_saltar": "investida terrestre de ataque; não é verbo de travessia",
     "geometry_guard": "nenhuma rota obrigatória, segredo ou fuga depende de nadar, escalar ou saltar"
@@ -505,6 +510,14 @@
         "effect": "a bruma fica opaca durante 3 s e vira o jogador para terreno seguro",
         "telegraph": "densidade sobe em três degraus; ramos e pedras apontam de volta",
         "escape": "recuar antes dos 3 s",
+        "rules": {
+          "telegraph_s": 3
+        },
+        "unresolved_parameters": [
+          "turn_speed_deg_s",
+          "control_lock_s",
+          "cooldown_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "carvalho-negro, ferro rude, couro de javali; densidade sobe em três degraus; ramos e pedras apontam de volta",
         "fatia_1": true
@@ -638,6 +651,13 @@
         "effect": "tábua marcada range 1,2 s antes de cair para uma rede 4 m abaixo",
         "telegraph": "vime esbranquiçado, fibras soltas e oscilação crescente",
         "escape": "sair da placa ou usar a queda segura para o piso inferior",
+        "rules": {
+          "telegraph_s": 1.2,
+          "safe_fall_m": 4
+        },
+        "unresolved_parameters": [
+          "reset_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "vime trancado, espinho de aves gigantes, seda crua; vime esbranquiçado, fibras soltas e oscilação crescente",
         "fatia_1": false
@@ -765,6 +785,10 @@
         "effect": "andar no lodo reduz a deslocação para 50%; rolar sai para terreno seco",
         "telegraph": "água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme",
         "escape": "usar diques ou rolar para uma ilha seca",
+        "rules": {
+          "movement_multiplier": 0.5
+        },
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "osso, madeira encharcada, ferro comido de ferrugem; água opaca só até ao joelho, bolhas em linha e estacas que marcam o caminho firme",
         "fatia_1": false
@@ -888,7 +912,7 @@
           "marcas de picareta terminam numa parede lisa"
         ],
         "rooms_before_guardian": 4,
-        "guardian_slot": "minotauro",
+        "guardian_slot": "guardiao_fojo_wp7",
         "descricao_visual": "porta rectangular de granito sem dobradiças, contorno de pó limpo e cunhas de ferro no chão",
         "image_source": "planeado_depois_da_fatia_1",
         "fatia_1": false
@@ -897,7 +921,16 @@
         "nome": "armadilhas kobold",
         "effect": "placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s",
         "telegraph": "pedra mais clara, fio de cobre e orifícios alinhados na parede",
-        "escape": "parar antes da placa, saltar a faixa ou bloquear os dardos",
+        "escape": "parar antes da placa, recuar para fora da faixa ou bloquear os dardos",
+        "rules": {
+          "telegraph_s": 0.8,
+          "safe_fall_m": 4
+        },
+        "unresolved_parameters": [
+          "dart_speed_m_s",
+          "dart_damage",
+          "reset_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "granito, ferro em bruto, corda e roldana; pedra mais clara, fio de cobre e orifícios alinhados na parede",
         "fatia_1": false
@@ -1027,6 +1060,14 @@
         "effect": "faixa exposta recebe empurrão máximo de 1,5 m após assobio de 1 s",
         "telegraph": "fitas de vela, chuva inclinada e espuma movem-se antes da força",
         "escape": "baixar-se atrás de quebra-ventos ou sair da faixa marcada",
+        "rules": {
+          "telegraph_s": 1,
+          "max_push_m": 1.5
+        },
+        "unresolved_parameters": [
+          "lane_width_m",
+          "repeat_interval_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "madeira de naufragio, bronze verde de azinhavre, sal; fitas de vela, chuva inclinada e espuma movem-se antes da força",
         "fatia_1": false
@@ -1160,6 +1201,14 @@
         "effect": "após 25 s sem abrigo, stamina máxima perde 5% a cada 20 s até ao tecto de 25%",
         "telegraph": "vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco",
         "escape": "entrar num abrigo; recupera 10% por segundo junto a uma fogueira",
+        "rules": {
+          "exposure_delay_s": 25,
+          "tick_s": 20,
+          "loss_fraction_per_tick": 0.05,
+          "max_loss_fraction": 0.25,
+          "recovery_fraction_s": 0.1
+        },
+        "unresolved_parameters": [],
         "requires_unresolved_movement": false,
         "descricao_visual": "aco temperado a frio, pele de cabra-das-neves, gelo-azul; vinheta de gelo cresce em cinco marcas e a respiração ganha equivalente visual branco",
         "fatia_1": false
@@ -1287,6 +1336,13 @@
         "effect": "crosta marcada cede 1 s depois e deixa cair 4 m numa calha lateral, nunca no vazio",
         "telegraph": "vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
         "escape": "sair da placa ou aceitar o atalho de queda sobrevivível",
+        "rules": {
+          "telegraph_s": 1,
+          "safe_fall_m": 4
+        },
+        "unresolved_parameters": [
+          "reset_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "obsidiana, bronze fundido, couro curtido; vermelho pulsante, fissuras concêntricas e pó a subir antes da quebra",
         "fatia_1": false
@@ -1421,6 +1477,14 @@
         "effect": "o impacto ocorre 1 s depois de um círculo de 3 m acender no chão",
         "telegraph": "fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
         "escape": "sair do círculo ou ficar sobre a Pedra Aterrada",
+        "rules": {
+          "telegraph_s": 1,
+          "radius_m": 3
+        },
+        "unresolved_parameters": [
+          "damage",
+          "repeat_interval_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "fulgurite, couro seco, osso polido pelo vento; fissuras violetas convergem, poeira levanta e a silhueta do jogador ganha contorno branco",
         "fatia_1": false
@@ -1549,6 +1613,15 @@
         "effect": "atravessar acumula veneno a 35 por segundo; fora da nuvem decai 20 por segundo",
         "telegraph": "volume ciano opaco com partículas a correr para cima e barra visível",
         "escape": "rebentar o saco à distância ou esperar a nuvem baixar",
+        "rules": {
+          "poison_buildup_s": 35,
+          "poison_decay_s": 20
+        },
+        "unresolved_parameters": [
+          "cloud_radius_m",
+          "cloud_lifetime_s",
+          "sack_respawn_s"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "quitina, madeira-cogumelo, seda de teia; volume ciano opaco com partículas a correr para cima e barra visível",
         "fatia_1": false
@@ -1679,9 +1752,15 @@
       },
       "environmental_threat": {
         "nome": "água profunda",
-        "effect": "a rota principal usa passadiços; zonas opcionais fundas desactivam ataque e esquiva enquanto se nada",
+        "effect": "a rota principal usa passadiços; zonas opcionais fundas têm fundo caminhável lento e desactivam ataque e esquiva",
         "telegraph": "mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
-        "escape": "ficar nos aquedutos; natação não é necessária para chegar ao guardião",
+        "escape": "ficar nos aquedutos; a água funda nunca exige natação livre",
+        "rules": {
+          "free_swimming": false
+        },
+        "unresolved_parameters": [
+          "deep_water_movement_multiplier"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "marmore afogado, prata escurecida, vidro; mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água",
         "fatia_1": false
@@ -1810,6 +1889,14 @@
         "effect": "encarar um foco marcado acumula 25 por segundo após 0,8 s; a barra cheia cega durante 3 s",
         "telegraph": "padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
         "escape": "olhar para baixo, quebrar visão numa coluna ou entrar na sombra",
+        "rules": {
+          "exposure_delay_s": 0.8,
+          "blind_buildup_s": 25,
+          "blind_duration_s": 3
+        },
+        "unresolved_parameters": [
+          "blind_threshold"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "marmore branco, ouro baco, cera; padrão radial no chão, sobre-exposição gradual e borda negra fora do foco",
         "fatia_1": false
@@ -1944,6 +2031,13 @@
         "effect": "fora dos focos de bruma a visibilidade cai para 6 m; a lanterna ocupa a mão esquerda",
         "telegraph": "silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
         "escape": "usar a lanterna, caminhar junto ao rio ou trocar defesa por visão",
+        "rules": {
+          "visibility_m": 6,
+          "lantern_slot": "left_hand"
+        },
+        "unresolved_parameters": [
+          "lantern_item_id"
+        ],
         "requires_unresolved_movement": false,
         "descricao_visual": "pedra negra, raiz petrificada, prata baca; silhuetas brancas nas bordas, reflectores de prata no caminho e olhos do parceiro realçados",
         "fatia_1": false

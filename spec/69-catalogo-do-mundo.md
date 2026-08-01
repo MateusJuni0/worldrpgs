@@ -149,7 +149,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 | Círculo vertical — **Círculo vertical de Fojo** | plataforma de minério em três paragens; 28 m; abre por dentro | jaula de ferro em bruto com 5 m presa a roldana de madeira, contrapeso de blocos de granito | ⬜ |
 | Atalho — **Elevador do Veio** | labirinto → boca alta, repetição em 58 s; abre por dentro e persiste | plataforma de ferro de 4 m, alavanca dentada voltada para o fundo da mina e corrente grossa | ⬜ |
 | Dungeon — **Contramina Cega** | porta lateral atrás do Veio Rubro; 2 pistas; 4 salas + guardião | porta rectangular de granito sem dobradiças, contorno de pó limpo e cunhas de ferro no chão | ⬜ |
-| Ameaça — **armadilhas kobold** | placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s; saída: parar antes da placa, saltar a faixa ou bloquear os dardos | granito, ferro em bruto, corda e roldana; pedra mais clara, fio de cobre e orifícios alinhados na parede | ⬜ |
+| Ameaça — **armadilhas kobold** | placas visíveis activam dardos ou queda sobrevivível de 4 m após 0,8 s; saída: parar antes da placa, recuar para fora da faixa ou bloquear os dardos | granito, ferro em bruto, corda e roldana; pedra mais clara, fio de cobre e orifícios alinhados na parede | ⬜ |
 
 **Marcos e descansos**
 
@@ -284,7 +284,7 @@ O catálogo não toca na pergunta de escopo. A geometria usa patamares com separ
 | Círculo vertical — **Círculo vertical de Cidade Afogada** | contrapeso do sino move uma plataforma entre praça e campanário; 31 m; abre por dentro | plataforma de mármore de 5 m suspensa por corrente de prata, água a cair das quatro bordas | ⬜ |
 | Atalho — **Ascensor do Sino** | torre → cais, repetição em 51 s; abre por dentro e persiste | plataforma do campanário com alavanca de prata no piso superior e contrapeso visível sob a água | ⬜ |
 | Dungeon — **Arquivo Submerso** | porta seca sob o Aqueduto Quebrado; 2 pistas; 4 salas + guardião | porta de mármore azul com 4 m, moldura de prata escurecida e vidro verde intacto no centro | ⬜ |
-| Ameaça — **água profunda** | a rota principal usa passadiços; zonas opcionais fundas desactivam ataque e esquiva enquanto se nada; saída: ficar nos aquedutos; natação não é necessária para chegar ao guardião | marmore afogado, prata escurecida, vidro; mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água | ⬜ |
+| Ameaça — **água profunda** | a rota principal usa passadiços; zonas opcionais fundas têm fundo caminhável lento e desactivam ataque e esquiva; saída: ficar nos aquedutos; a água funda nunca exige natação livre | marmore afogado, prata escurecida, vidro; mudança do mármore claro para mosaico azul e silhuetas visíveis sob a água | ⬜ |
 
 **Marcos e descansos**
 

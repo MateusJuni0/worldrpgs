@@ -36,7 +36,7 @@ const EXPECTED_GUARDIAN_GAPS = new Set([
   "guardiao_raizama_wp7",
   "guardiao_santuario_branco_wp7",
   "guardiao_selva_funda_wp7",
-  "minotauro",
+  "guardiao_fojo_wp7",
 ]);
 
 const errors = [];

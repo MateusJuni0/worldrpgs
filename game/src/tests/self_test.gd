@@ -20,6 +20,7 @@ func _ready() -> void:
 	_test_parry_window()
 	_test_task4_combat_closures()
 	_test_progression_closures()
+	_test_class_ability_contracts()
 	_test_named_encounters()
 	_test_economy_and_loot_transaction()
 	_test_integration_closures()
@@ -48,6 +49,37 @@ func _ready() -> void:
 # --- spec/59-saves.md · persistencia -----------------------------------------
 
 # --- spec/71-72: nomeados, economia e compra atomica de espolio --------------
+
+func _test_class_ability_contracts() -> void:
+	var expected_effects := {
+		"warrior": "dash_then_strike",
+		"sorcerer": "repeat_last_spell",
+		"tank": "force_enemy_target",
+		"assassin": "dodge_passthrough_branch",
+		"berserker": "hyper_armor_trade",
+		"paladin": "weapon_element_conversion",
+	}
+	for class_id: String in expected_effects:
+		var ability: Dictionary = GameData.abilities.get(class_id, {}) as Dictionary
+		_check(String(ability.get("effect_type", "")) == expected_effects[class_id],
+			"habilidade de %s declara o verbo executavel" % class_id)
+		_check(float(ability.get("cooldown_s", 0.0)) > 0.0,
+			"habilidade de %s declara cooldown positivo" % class_id)
+	_check(float((GameData.abilities.get("sorcerer", {}) as Dictionary).get(
+		"mana_cost", -1.0)) == 0.0, "Eco declara custo de mana zero")
+	var assassin: Dictionary = GameData.abilities.get("assassin", {}) as Dictionary
+	_check(not bool(assassin.get("changes_iframes", true)),
+		"Entre Sombras nao altera os i-frames universais")
+	var berserker: Dictionary = GameData.abilities.get("berserker", {}) as Dictionary
+	_check(bool(berserker.get("hyper_armor_all_attacks", false))
+		and not bool(berserker.get("can_block", true))
+		and not bool(berserker.get("can_dodge", true)),
+		"Furia fecha hiper-armadura, bloqueio e esquiva")
+	var paladin: Dictionary = GameData.abilities.get("paladin", {}) as Dictionary
+	_check(String(paladin.get("element", "")) == "raio"
+		and float(paladin.get("conversion_fraction", 0.0)) == 1.0
+		and not bool(paladin.get("increases_total_damage", true)),
+		"Julgamento converte 100% para raio sem aumentar o dano total")
 
 func _test_named_encounters() -> void:
 	var encounters: Dictionary = GameData.named_catalog.get("encounters", {}) as Dictionary
@@ -530,7 +562,7 @@ func _test_world_catalogue() -> void:
 			continue
 		for field: String in ["nome", "biome_id", "traversal", "encounter_curve", "rest_points",
 				"landmarks", "horizontal_loop", "vertical_loop", "shortcut", "dungeon",
-				"connections", "descricao_visual", "concept_art", "fatia_1"]:
+				"environmental_threat", "connections", "descricao_visual", "concept_art", "fatia_1"]:
 			_check(zone.has(field) and str(zone.get(field, "")) != "",
 				"WP8/%s: declara '%s'" % [biome_id, field])
 		var minutes := int((zone.get("traversal", {}) as Dictionary).get("clean_minutes", 0))
@@ -561,6 +593,11 @@ func _test_world_catalogue() -> void:
 			"WP8/%s: circulo vertical declara como regressa" % biome_id)
 		_check((zone.get("connections", []) as Array).size() >= 2,
 			"WP8/%s: pelo menos duas direccoes" % biome_id)
+		var threat: Dictionary = zone.get("environmental_threat", {}) as Dictionary
+		_check(typeof(threat.get("rules", null)) == TYPE_DICTIONARY,
+			"WP8/%s: ameaca materializa os numeros dedutiveis" % biome_id)
+		_check(typeof(threat.get("unresolved_parameters", null)) == TYPE_ARRAY,
+			"WP8/%s: ameaca enumera parametros por decidir" % biome_id)
 		_check(FileAccess.file_exists(String(zone.get("concept_art", ""))),
 			"WP8/%s: conceito visual arquivado" % biome_id)
 		if bool(zone.get("fatia_1", false)):

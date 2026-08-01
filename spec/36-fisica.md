@@ -85,8 +85,11 @@ O que isto dá na prática, com tiro horizontal:
 | | Dardo | Ruína | Égide |
 |---|---|---|---|
 | Trajectória | recta, **sem queda** | arco alto até um ponto do chão | no próprio |
-| Velocidade | 35 m/s | 20 m/s | — |
-| A 20 m | 0,57 s de voo | 1,0 s | — |
+| Velocidade canónica | 20 m/s | 8 m/s | — |
+| Alcance máximo | 18 m | 12 m | no próprio/parceiro a 8 m |
+| Voo recto até ao alcance máximo | 0,90 s | 1,50 s antes da curvatura autorada | — |
+
+⚠️ **CORRIGIDO NA REVISÃO 2:** os antigos 35/20 m/s desta tabela eram anteriores ao catálogo canónico do [`66`](66-catalogo-de-magia.md) e contradiziam `game/data/spells.json`. O valor da Ruína mede a componente recta; o contrato exacto da curva continua em `[TENSÃO]` na pergunta 46.
 
 *Porquê a magia não tem queda e a seta tem:* são ferramentas diferentes. A seta é precisão que se aprende; o dardo é fiável mas caro (gasta mana). Se ambas tivessem balística, a magia perdia a identidade — e o mago já é frágil ao perto.
 
