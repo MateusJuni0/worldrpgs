@@ -26,6 +26,17 @@
     "attack_range": 2.8,
     "preferred_distance": 2.4,
     "color_idle": "#777777",
+    "crowd": {
+      "separation_radius_multiplier": 1.35,
+      "separation_speed_m_s": 1.15,
+      "spawn_clearance_m": 0.12,
+      "spawn_resolution_attempts": 24,
+      "spawn_ring_slots": 8
+    },
+    "attack_coordination": {
+      "retry_delay_s": 0.25,
+      "post_action_gap_s": 0.20
+    },
     "perception": {
       "vision_cone_deg": 90.0, "vision_range_m": 15.0,
       "hearing_range_m": 8.0, "combat_sound_range_m": 20.0,
@@ -35,6 +46,47 @@
       "return_speed_policy": "same_as_chase", "return_arrival_radius_m": 1.2,
       "return_heal_pulse_s": 1.0, "return_heal_fraction": 1.0,
       "damage_reacquires": true
+    }
+  },
+  "_presentation": {
+    "_decision": "[CODEX] Perfis de silhueta e som materializam as fichas já decididas sem alterar dano, janelas ou alcance. Razão: família e resposta têm de ser reconhecíveis antes do contacto, sobretudo em primeira pessoa. Alternativa descartada: continuar a reutilizar o mesmo orc e os cinco cues genéricos, porque isso apaga o bestiário e torna ataques fora do ecrã indistinguíveis.",
+    "audio_sample_rate_hz": 22050,
+    "animation_blend_s": 0.12,
+    "crowd_probe_duration_s": 4.0,
+    "visual_profiles": {
+      "orcs:rapido": {"body":"orc_small","target_height_m":1.90,"source_height_m":2.347329,"collision_height_m":1.90,"collision_radius_m":0.45,"body_yaw_deg":180.0,"silhouette":"polearm","accent_color":"#b8a06a","tint_strength":0.08,"variant_count":3},
+      "orcs:pesado": {"body":"orc_big","target_height_m":2.30,"source_height_m":3.208673,"collision_height_m":2.30,"collision_radius_m":0.62,"body_yaw_deg":180.0,"silhouette":"maul","accent_color":"#6f6252","tint_strength":0.08,"variant_count":3},
+      "vorgar": {"body":"orc_skull","target_height_m":3.00,"source_height_m":3.267947,"collision_height_m":3.00,"collision_radius_m":0.85,"body_yaw_deg":180.0,"silhouette":"cleaver","accent_color":"#2b2524","tint_strength":0.04,"variant_count":1},
+      "goblins:grupo": {"body":"orc_small","target_height_m":1.42,"source_height_m":2.347329,"collision_height_m":1.42,"collision_radius_m":0.34,"body_yaw_deg":180.0,"silhouette":"dagger","accent_color":"#d1a64b","tint_strength":0.22,"variant_count":3},
+      "goblins:distancia": {"body":"orc_small","target_height_m":1.42,"source_height_m":2.347329,"collision_height_m":1.42,"collision_radius_m":0.34,"body_yaw_deg":180.0,"silhouette":"sling","accent_color":"#c04c8c","tint_strength":0.22,"variant_count":3},
+      "kobolds:armadilha": {"body":"orc_small","target_height_m":1.55,"source_height_m":2.347329,"collision_height_m":1.55,"collision_radius_m":0.37,"body_yaw_deg":180.0,"silhouette":"bell","accent_color":"#c58a36","tint_strength":0.18,"variant_count":3},
+      "teceloes:armadilha": {"body":"procedural","target_height_m":1.35,"source_height_m":1.35,"collision_height_m":1.10,"collision_radius_m":0.74,"body_yaw_deg":0.0,"silhouette":"weaver","accent_color":"#26b9a8","tint_strength":0.0,"variant_count":3},
+      "esqueletos:rapido": {"body":"skeleton_agile","target_height_m":1.84,"source_height_m":1.80,"collision_height_m":1.84,"collision_radius_m":0.41,"body_yaw_deg":180.0,"silhouette":"blade","accent_color":"#c5b58a","tint_strength":0.14,"variant_count":3},
+      "esqueletos:distancia": {"body":"skeleton_rogue","target_height_m":1.82,"source_height_m":1.80,"collision_height_m":1.82,"collision_radius_m":0.40,"body_yaw_deg":180.0,"silhouette":"crossbow","accent_color":"#7f948c","tint_strength":0.14,"variant_count":3},
+      "zumbis:pesado": {"body":"orc_big","target_height_m":2.05,"source_height_m":3.208673,"collision_height_m":2.05,"collision_radius_m":0.56,"body_yaw_deg":180.0,"silhouette":"zombie","accent_color":"#72877a","tint_strength":0.36,"variant_count":3},
+      "minotauros:pesado": {"body":"orc_big","target_height_m":2.65,"source_height_m":3.208673,"collision_height_m":2.65,"collision_radius_m":0.76,"body_yaw_deg":180.0,"silhouette":"horns","accent_color":"#d4c4a0","tint_strength":0.12,"variant_count":3},
+      "mimicos:armadilha": {"body":"procedural","target_height_m":1.25,"source_height_m":1.25,"collision_height_m":1.25,"collision_radius_m":0.72,"body_yaw_deg":0.0,"silhouette":"mimic","accent_color":"#775333","tint_strength":0.0,"variant_count":2},
+      "submersos:rapido": {"body":"orc_small","target_height_m":1.96,"source_height_m":2.347329,"collision_height_m":1.96,"collision_radius_m":0.44,"body_yaw_deg":180.0,"silhouette":"trident_fins","accent_color":"#4fa9a4","tint_strength":0.30,"variant_count":3},
+      "ventaneiras:distancia": {"body":"orc_small","target_height_m":1.86,"source_height_m":2.347329,"collision_height_m":1.86,"collision_radius_m":0.43,"body_yaw_deg":180.0,"silhouette":"wings","accent_color":"#c5d7df","tint_strength":0.24,"variant_count":3},
+      "borralheiros:pesado": {"body":"orc_big","target_height_m":2.25,"source_height_m":3.208673,"collision_height_m":2.25,"collision_radius_m":0.63,"body_yaw_deg":180.0,"silhouette":"jagged","accent_color":"#f06a2a","tint_strength":0.30,"variant_count":3},
+      "penitentes:grupo": {"body":"skeleton_mage","target_height_m":2.08,"source_height_m":1.80,"collision_height_m":2.08,"collision_radius_m":0.43,"body_yaw_deg":180.0,"silhouette":"tuning_fork","accent_color":"#dfd8c4","tint_strength":0.34,"variant_count":3},
+      "penitent_censer": {"body":"skeleton_mage","target_height_m":2.12,"source_height_m":1.80,"collision_height_m":2.12,"collision_radius_m":0.47,"body_yaw_deg":180.0,"silhouette":"censer","accent_color":"#c8b27a","tint_strength":0.34,"variant_count":3},
+      "sem_rosto:pesado": {"body":"skeleton_mage","target_height_m":2.45,"source_height_m":1.80,"collision_height_m":2.45,"collision_radius_m":0.52,"body_yaw_deg":180.0,"silhouette":"rings","accent_color":"#9e94a8","tint_strength":0.58,"variant_count":2}
+    },
+    "audio_profiles": {
+      "orcs": {"base_hz":118.0,"end_hz":226.0,"noise_mix":0.34,"roughness_hz":33.0,"pulse_hz":5.0,"duration_s":0.34,"gain_db":-3.0,"unit_size_m":5.5,"signature_step_hz":7.0,"signature_steps":7,"harmonic_mix":0.20},
+      "goblins": {"base_hz":315.0,"end_hz":690.0,"noise_mix":0.24,"roughness_hz":47.0,"pulse_hz":9.0,"duration_s":0.27,"gain_db":-4.0,"unit_size_m":4.5,"signature_step_hz":16.0,"signature_steps":7,"harmonic_mix":0.12},
+      "kobolds": {"base_hz":440.0,"end_hz":286.0,"noise_mix":0.10,"roughness_hz":71.0,"pulse_hz":7.0,"duration_s":0.36,"gain_db":-4.0,"unit_size_m":5.0,"signature_step_hz":19.0,"signature_steps":5,"harmonic_mix":0.38},
+      "teceloes": {"base_hz":196.0,"end_hz":520.0,"noise_mix":0.52,"roughness_hz":83.0,"pulse_hz":12.0,"duration_s":0.31,"gain_db":-3.0,"unit_size_m":5.0,"signature_step_hz":11.0,"signature_steps":7,"harmonic_mix":0.08},
+      "esqueletos": {"base_hz":610.0,"end_hz":380.0,"noise_mix":0.18,"roughness_hz":109.0,"pulse_hz":11.0,"duration_s":0.30,"gain_db":-3.0,"unit_size_m":5.0,"signature_step_hz":23.0,"signature_steps":7,"harmonic_mix":0.44},
+      "zumbis": {"base_hz":82.0,"end_hz":126.0,"noise_mix":0.62,"roughness_hz":21.0,"pulse_hz":4.0,"duration_s":0.41,"gain_db":-2.0,"unit_size_m":6.0,"signature_step_hz":5.0,"signature_steps":5,"harmonic_mix":0.12},
+      "minotauros": {"base_hz":67.0,"end_hz":174.0,"noise_mix":0.30,"roughness_hz":17.0,"pulse_hz":3.0,"duration_s":0.43,"gain_db":-1.0,"unit_size_m":7.0,"signature_step_hz":4.0,"signature_steps":7,"harmonic_mix":0.28},
+      "mimicos": {"base_hz":154.0,"end_hz":94.0,"noise_mix":0.48,"roughness_hz":59.0,"pulse_hz":6.0,"duration_s":0.37,"gain_db":-3.0,"unit_size_m":5.0,"signature_step_hz":9.0,"signature_steps":5,"harmonic_mix":0.17},
+      "submersos": {"base_hz":132.0,"end_hz":348.0,"noise_mix":0.43,"roughness_hz":29.0,"pulse_hz":8.0,"duration_s":0.35,"gain_db":-3.0,"unit_size_m":6.0,"signature_step_hz":8.0,"signature_steps":7,"harmonic_mix":0.18},
+      "ventaneiras": {"base_hz":720.0,"end_hz":410.0,"noise_mix":0.36,"roughness_hz":97.0,"pulse_hz":10.0,"duration_s":0.29,"gain_db":-4.0,"unit_size_m":6.5,"signature_step_hz":29.0,"signature_steps":5,"harmonic_mix":0.10},
+      "borralheiros": {"base_hz":104.0,"end_hz":248.0,"noise_mix":0.57,"roughness_hz":43.0,"pulse_hz":13.0,"duration_s":0.39,"gain_db":-2.0,"unit_size_m":6.0,"signature_step_hz":6.0,"signature_steps":7,"harmonic_mix":0.22},
+      "penitentes": {"base_hz":262.0,"end_hz":524.0,"noise_mix":0.08,"roughness_hz":31.0,"pulse_hz":6.0,"duration_s":0.42,"gain_db":-4.0,"unit_size_m":6.0,"signature_step_hz":21.0,"signature_steps":7,"harmonic_mix":0.52},
+      "sem_rosto": {"base_hz":174.0,"end_hz":116.0,"noise_mix":0.22,"roughness_hz":37.0,"pulse_hz":5.0,"duration_s":0.40,"gain_db":-3.0,"unit_size_m":6.5,"signature_step_hz":13.0,"signature_steps":5,"harmonic_mix":0.34}
     }
   },
   "_chase_profiles": {
