@@ -93,7 +93,7 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 59 | Fable | sistema de saves (fase 1.1 do `TERMINAR-A-SPEC`) |
 | 61 | Codex | arena de chefe (tarefa 2.1) |
 | 62 | Codex | acessibilidade auditiva (tarefa 2.2) |
-| 63 | Fable | criação de personagem (fase 2.6) |
+| 63 | Codex | como se afinam os números (tarefa 2.3) |
 | 64 | Fable | música e ambiente (fase 2.7) |
 | **65+** | **livre** | |
 
