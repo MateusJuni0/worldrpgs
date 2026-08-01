@@ -89,7 +89,14 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 55 | Claude | as formas de um feitiço |
 | 56 | Claude | voz e vendedores |
 | 57 | Claude | mapa e minimapa |
-| **58+** | **livre** | |
+| 58 | Fable | sistema de saves (fase 1.1 do `TERMINAR-A-SPEC`) |
+| 59 | Fable | o fim do jogo e o ciclo novo (fase 2.1 + 2.2) |
+| 60 | Fable | desenho de arena de chefe (fase 2.3) |
+| 61 | Fable | acessibilidade auditiva (fase 2.4) |
+| 62 | Fable | como se afinam os números (fase 2.5) |
+| 63 | Fable | criação de personagem (fase 2.6) |
+| 64 | Fable | música e ambiente (fase 2.7) |
+| **65+** | **livre** | |
 
 ## ⭐ O ciclo Fable ↔ Claude — como se trabalha a partir de 31-07
 
