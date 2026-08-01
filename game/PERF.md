@@ -60,6 +60,11 @@ para `Enabled`; o resultado piorou para 85,3 fps, p99 19,076 ms e quatro frames
 >33 ms. A alteração foi rejeitada e revertida. Não se muda o jogo para um modo
 que este adaptador não suporta.
 
+Também se pediu `Adaptive`: o Godot avisou que o modo não está disponível e
+voltou a `Enabled`. A amostra resultante deu 60,0 fps, p99 16,952 ms, um frame
+>20 ms e pior 33,33 ms, mas **não é uma prova de VSync adaptativo**, porque o
+modo pedido nunca ficou activo. Por isso também não foi adoptado.
+
 ---
 
 ## Auditoria de qualidade de 01-08-2026
