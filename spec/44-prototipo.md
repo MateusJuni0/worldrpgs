@@ -35,7 +35,7 @@ O caminho A está escolhido com dados. O risco “esqueleto nunca medido” fech
 
 ## 2. O que já se joga
 
-Construído inicialmente com 130 verificações; o fecho corrente passa **8433 auto-testes** contra a spec:
+Construído inicialmente com 130 verificações; o fecho corrente passa **8434 auto-testes** contra a spec:
 
 | Sistema | Estado | Fonte |
 |---|---|---|
@@ -44,7 +44,7 @@ Construído inicialmente com 130 verificações; o fecho corrente passa **8433 a
 | Lanceiro e brutamontes, telegrafia ≥ 0,5 s, anti-kite aos 4 s | ✅ | [`15-inimigos.md`](15-inimigos.md) |
 | Dardo, Ruína, Égide com mana; interrupção não devolve o custo pago no arranque | ✅ | [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md) |
 | Vorgar, 2 fases (padrões diferentes, não números), reset total | ✅ | [`16-chefes.md`](16-chefes.md) |
-| **Frasco de cura** — 3 usos, 40% PV, 1,0 s a beber, recarrega no renascimento | ✅ `[PROTO]` | pergunta 7 |
+| **Frasco de cura** — 3 usos, 40% PV, 1,2 s a beber a 50% de movimento; recarrega no descanso | ✅ modelo `[DECIDIDO]`, números `[FABLE]` | [`14`](14-equipamento.md) · pergunta 7 |
 | **Habilidades de classe** — Ímpeto, Fúria, Provocação jogáveis | ✅ `[PROTO]` | [`12-classes.md`](12-classes.md) |
 | **Som** — 12 efeitos sintetizados em código, zero ficheiros e zero licenças | ✅ `[PROTO]` | [`21-arte-render.md`](21-arte-render.md) |
 

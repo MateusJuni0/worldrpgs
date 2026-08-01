@@ -43,7 +43,7 @@
 |---|---|
 | **Especificação** | **75 documentos**, em `spec/` |
 | **Jogo** | **corre** — Godot **4.7.1**, renderer **Mobile**, em `game/` |
-| **Testes** | **8433 auto-testes** contra a spec, todos a passar |
+| **Testes** | **8434 auto-testes** contra a spec, todos a passar |
 | **Desempenho** | 416 fps na máquina do Rico *(greybox, sem animação de esqueleto)* |
 | **Arte** | **54 imagens curadas** (32 conceitos, 20 ícones, menu e céu) + **10 packs CC0** (785 modelos, 1954 texturas, 182 sons) |
 | ⚠️ **Estado visual** | **greybox** — cones por árvores, cápsulas por personagens. Os packs estão no repositório mas **não estão importados** |

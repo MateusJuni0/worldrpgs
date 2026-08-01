@@ -1085,10 +1085,10 @@ func ability_label() -> String:
 	return "%s ok" % n if _ability_cd <= 0.0 else "%s %ds" % [n, ceili(_ability_cd)]
 
 
-# --- Frasco (cura) [PROTO] ----------------------------------------------------
-# A pergunta 7 da spec (como se recupera vida) continua dos donos. Ate la:
-# frasco recarregavel no renascimento; beber demora 1,0 s a 40% de velocidade e
-# interrompe-se com dano — curar a meio de um duelo e uma aposta, como no genero.
+# --- Frasco (cura) ------------------------------------------------------------
+# A pergunta 7 decidiu o frasco recarregavel no descanso. O baseline [FABLE] da
+# spec/14 demora 1,2 s a 50% de velocidade e interrompe-se com dano — curar a
+# meio de um duelo e uma aposta, como no genero.
 # O gole gasta-se ao COMECAR: interrompido = perdido (a regra da magia, igual).
 
 func _start_flask() -> void:
@@ -1100,8 +1100,8 @@ func _start_flask() -> void:
 
 func _tick_flask(delta: float) -> void:
 	var fl := GameData.section("flask")
-	_move(delta, float(GameData.section("movement").get("walk_speed", 3.0)) * float(fl.get("move_factor", 0.4)))
-	if state_frame >= int(float(fl.get("use_seconds", 1.0)) * 60.0):
+	_move(delta, float(GameData.section("movement").get("walk_speed", 3.0)) * float(fl.get("move_factor", 0.5)))
+	if state_frame >= int(float(fl.get("use_seconds", 1.2)) * 60.0):
 		health = minf(max_health, health + max_health * float(fl.get("heal_fraction", 0.4)))
 		Sfx.play("flask")
 		_change_state(State.FREE)

@@ -966,6 +966,10 @@ func _test_parry_window() -> void:
 # --- spec/70 · fecho dos sistemas de combate ---------------------------------
 
 func _test_task4_combat_closures() -> void:
+	var flask := GameData.section("flask")
+	_check(absf(float(flask.get("use_seconds", 0.0)) - 1.2) < 0.001
+		and absf(float(flask.get("move_factor", 0.0)) - 0.50) < 0.001,
+		"frasco: beber dura 1,2 s e conserva 50% do movimento")
 	var grip := GameData.section("grip")
 	_check(int(grip.get("switch_frames", 0)) == 12 and bool(grip.get("interruptible", false)),
 		"empunhadura: transicao de 12 frames e interrompivel")

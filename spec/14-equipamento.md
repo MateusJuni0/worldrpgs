@@ -67,9 +67,9 @@ O modelo do WP1: escudo absorve **100% físico / 50% mágico**, custo de stamina
 
 O modelo numérico acima foi revogado: comprar +6% por nível era precisamente a Lei 2 quebrada. O [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) §3 fecha **base + seis níveis** que dão postura/moveset, arte nova, troca de escala ou conversão elemental; nenhum aumenta dano base, defesa, velocidade ou janelas. Limalha abre +1…+3 e Limalha Nobre +4…+6 por exploração fixa, nunca por inimigo repetível.
 
-## Cura e consumíveis — a proposta para a pergunta 7
+## Cura e consumíveis — frasco aprovado; baselines por validar
 
-`[DECIDIDO]` que há itens de cura (00:26 → 00:32). O modelo `[FABLE]`, a fechar com o sim dos dois:
+`[DECIDIDO]` que há itens de cura (00:26 → 00:32) e, pelo Mateus em 31-07-2026, que são **frascos recarregados nos pontos de descanso**, não poções compráveis. Os números abaixo são baselines `[FABLE]` até ao ciclo de afinação do [`63`](63-como-se-afinam-os-numeros.md):
 
 | Parâmetro | Valor |
 |---|---|
@@ -78,7 +78,7 @@ O modelo numérico acima foi revogado: comprar +6% por nível era precisamente a
 | Beber | 1,2 s (estado UsoDeItem do WP1), movimento a 50%; **dano interrompe e perde a carga** — beber é decisão, não reflexo |
 | Recarrega | ao descansar no ponto de renascimento (o mesmo que restaura mana e tentativas de meditação — [`54`](54-mana-meditacao-e-tracos-de-classe.md) — e renasce inimigos) |
 
-*Porquê frasco e não poções compráveis:* poções finitas criam o incentivo exacto que a Lei 1 proíbe — farmar stock antes do chefe; o frasco faz de cada tentativa um recomeço igual e mensurável (o WP15B agradece). *Alternativa descartada:* poções de loja — pedem economia que não existe e pagam-se em grind. **A decisão de tom é deles — pergunta 7 continua no [`99-perguntas-abertas.md`](99-perguntas-abertas.md).**
+*Porquê frasco e não poções compráveis:* poções finitas criam o incentivo exacto que a Lei 1 proíbe — farmar stock antes do chefe; o frasco faz de cada tentativa um recomeço igual e mensurável (o WP15B agradece). *Alternativa descartada:* poções de loja — pedem economia que não existe e pagam-se em grind. **A pergunta 7 está decidida; só os baselines numéricos continuam sujeitos a teste de feel.**
 
 Outros consumíveis (facas de arremesso, bombas, antídotos) ⬜ — entram com a economia (WP9), debaixo da regra: consumível dá conveniência, **nunca a única resposta a um padrão**.
 

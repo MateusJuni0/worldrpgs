@@ -28,7 +28,7 @@ Três frases. Chega para: justificar orcs na floresta, dar peso ao nome "Guarda-
 
 `[CLAUDE]` para a fatia 1: **zero NPCs, zero missões.** O mundo hostil e vazio é uma escolha estética válida do género, é gratuita em produção (cada NPC custa modelo+voz/texto+estado), e não fecha a porta: a clareira da fogueira (§1 do `27-aprendizagem.md`) é o sítio natural para um vendedor/ferreiro aparecer na fatia 2 **se eles quiserem**.
 
-O que isto implica já: a cura da fatia vem de drops/descanso, não de loja (`→WP9` alinha; pergunta 7 continua dos donos).
+O que isto implica já: a cura da fatia vem do **Frasco de Bruma recarregado no descanso**, não de loja — modelo decidido na pergunta 7 (`→WP9` alinha).
 
 ## §3. As perguntas que só uma gravação responde
 

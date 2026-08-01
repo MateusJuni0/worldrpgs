@@ -168,11 +168,11 @@
   },
 
   "flask": {
-    "_fonte": "[PROTO] — a pergunta 7 da spec (como se recupera vida) continua dos donos. Frasco recarregavel no renascimento; beber interrompe-se e o gole perde-se (regra da magia).",
+    "_fonte": "spec/14-equipamento.md — o modelo de frasco recarregavel no descanso foi decidido na pergunta 7; 1,2 s e movimento a 50% sao o baseline [FABLE]. O gole gasta-se ao comecar e perde-se se o dano interromper.",
     "uses": 3,
     "heal_fraction": 0.40,
-    "use_seconds": 1.0,
-    "move_factor": 0.40
+    "use_seconds": 1.2,
+    "move_factor": 0.50
   },
 
   "death": {

@@ -65,9 +65,11 @@ A spec diz "a segunda muda padroes, nao numeros". Os golpes, frames e dano sao *
 Nao estao na spec. Existem para a Lei 4 ter um botao: mexem em sombras, densidade de nevoa, distancia de visao, numero de arvores e escala de render. Defeito **medio**.
 **Razao:** e a forma honesta de escolher 60 fps em vez de bonito quando for preciso, sem tocar no combate.
 
-### D8 — Frasco de cura [PROTO] (iteracao 2 do loop)
-A pergunta 7 da spec (como se recupera vida) continua dos donos. Ate decidirem:
-frasco com 3 usos, cura 40% dos PV, beber demora 1,0 s a 40% de velocidade,
-recarrega no renascimento. O gole gasta-se ao COMECAR — interrompido = perdido,
-a mesma regra da magia (conjurar mal custa; beber mal tambem). Tecla R, que a
-spec ja reservava para 'usar item activo'. Valores em data/combat.json (flask).
+### D8 — Frasco de cura (iteracao 2 do loop; substituida pela decisao da pergunta 7)
+O prototipo nasceu com 3 usos, cura de 40% dos PV, 1,0 s a 40% de velocidade e
+recarga no renascimento. A pergunta 7 decidiu depois o **modelo**: frasco
+recarregavel no descanso, nunca pocoes compraveis. O contrato corrente do
+[`spec/14`](../spec/14-equipamento.md) preserva 3 usos/40%, mas fixa os baselines
+em 1,2 s e 50% de movimento. O gole continua gasto ao COMECAR — interrompido =
+perdido. Tecla R, reservada na spec para 'usar item activo'. Valores correntes em
+`data/combat.json` (`flask`).
