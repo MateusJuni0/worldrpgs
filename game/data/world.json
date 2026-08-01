@@ -67,6 +67,7 @@
       "reveal_radius_m": 7.0,
       "minimap_range_m": 40.0,
       "update_hz": 10.0,
+      "save_debounce_s": 4.0,
       "projection_degrees": 40.0,
       "minimap_default": "roda_com_o_jogador",
       "minimap_can_disable": true

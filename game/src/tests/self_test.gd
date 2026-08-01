@@ -81,6 +81,17 @@ func _test_exploration_map() -> void:
 	_check(explored.call("discover_landmark", "descanso_1_brumal")
 		and not explored.call("discover_landmark", "descanso_1_brumal"),
 		"mapa: um marco descoberto entra uma vez")
+	var map_block: Dictionary = explored.call("to_save_block")
+	var restored: RefCounted = ExplorationMapScript.new()
+	restored.call("configure", "brumal", Rect2(-110, -110, 220, 220), 4.0)
+	_check(restored.call("load_save_block", map_block)
+		and int(restored.call("revealed_count")) == int(explored.call("revealed_count"))
+		and restored.call("is_landmark_discovered", "descanso_1_brumal"),
+		"nevoeiro: bitset e marcos sobrevivem ao round-trip do save")
+	var incompatible_block := map_block.duplicate(true)
+	incompatible_block["cell_size_m"] = 8.0
+	_check(not restored.call("load_save_block", incompatible_block),
+		"nevoeiro: recusa grelha incompatível em vez de deslocar a memória")
 
 
 # --- spec/59-saves.md · persistencia -----------------------------------------

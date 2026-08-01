@@ -23,11 +23,18 @@ var _config: Dictionary = {}
 var _update_clock := 0.0
 var _map_open := false
 var _paused_before_map := false
+var _exploration_dirty := false
+var _save_clock := 0.0
+var _persistence_disabled := false
 
 
 func _ready() -> void:
 	layer = 54
 	process_mode = Node.PROCESS_MODE_ALWAYS
+
+
+func _exit_tree() -> void:
+	_save_exploration()
 
 
 func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
@@ -47,8 +54,12 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 		Vector2(float(bounds_data.get("size_x", 220.0)), float(bounds_data.get("size_z", 220.0))))
 	_exploration = ExplorationMapScript.new()
 	_exploration.call("configure", zone_id, bounds, float(_config.get("cell_size_m", 4.0)))
-	_exploration.call("reveal", player.global_position, float(_config.get("reveal_radius_m", 7.0)))
-	_discover_nearby_landmarks()
+	_persistence_disabled = Bench.is_benchmarking() or "--photos" in OS.get_cmdline_user_args()
+	_load_exploration_from_save()
+	var terrain_changed: bool = _exploration.call("reveal", player.global_position,
+		float(_config.get("reveal_radius_m", 7.0)))
+	var landmarks_changed := _discover_nearby_landmarks()
+	_exploration_dirty = terrain_changed or landmarks_changed
 	_build_minimap(bounds)
 	_build_full_map(bounds)
 	set_minimap_enabled(minimap_enabled)
@@ -78,6 +89,7 @@ func is_full_map_open() -> bool:
 func show_full_map() -> void:
 	if _map_open or _full_overlay == null:
 		return
+	_save_exploration()
 	_map_open = true
 	_paused_before_map = get_tree().paused
 	get_tree().paused = true
@@ -221,7 +233,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
-	if _exploration == null or not is_instance_valid(player) or _map_open:
+	if _exploration == null or not is_instance_valid(player):
+		return
+	if _exploration_dirty and not _persistence_disabled:
+		_save_clock += delta
+		if _save_clock >= float(_config.get("save_debounce_s", 4.0)):
+			_save_exploration()
+	if _map_open:
 		return
 	_update_clock += delta
 	var interval := 1.0 / maxf(float(_config.get("update_hz", 10.0)), 1.0)
@@ -232,6 +250,7 @@ func _process(delta: float) -> void:
 		float(_config.get("reveal_radius_m", 7.0)))
 	var changed := _discover_nearby_landmarks() or terrain_changed
 	if changed:
+		_exploration_dirty = true
 		_refresh_surfaces(terrain_changed)
 
 
@@ -257,3 +276,39 @@ func _discover_nearby_landmarks() -> bool:
 			changed = _exploration.call("discover_landmark",
 				String(landmark.get("id", ""))) or changed
 	return changed
+
+
+func _load_exploration_from_save() -> void:
+	var snapshot := GameData.save_state_snapshot()
+	var world_state: Dictionary = snapshot.get("world", {}) as Dictionary
+	var map_state: Dictionary = world_state.get("map", {}) as Dictionary
+	var zones: Dictionary = map_state.get("exploration", {}) as Dictionary
+	var block: Dictionary = zones.get(zone_id, {}) as Dictionary
+	if not block.is_empty():
+		_exploration.call("load_save_block", block)
+
+
+## Publica o bitset dentro do save atómico existente. O estado em memória volta
+## ao snapshot anterior se a escrita falhar, tal como as recompensas de combate.
+func _save_exploration() -> bool:
+	if not _exploration_dirty or _persistence_disabled:
+		return true
+	var before := GameData.save_state_snapshot()
+	if before.is_empty():
+		return false
+	var working := before.duplicate(true)
+	var world_state: Dictionary = working.get("world", {}) as Dictionary
+	var map_state: Dictionary = world_state.get("map", {}) as Dictionary
+	var zones: Dictionary = map_state.get("exploration", {}) as Dictionary
+	zones[zone_id] = _exploration.call("to_save_block")
+	map_state["exploration"] = zones
+	world_state["map"] = map_state
+	working["world"] = world_state
+	GameData.replace_save_state(working)
+	if not SaveSystem.save_current():
+		GameData.replace_save_state(before)
+		_save_clock = 0.0
+		return false
+	_exploration_dirty = false
+	_save_clock = 0.0
+	return true
