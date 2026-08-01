@@ -104,7 +104,8 @@ Acontece — dois pulls no mesmo minuto. O desempate é simples: **vale a reserv
 | 70 | Codex | fecho dos sistemas de combate e gramática inimiga (tarefa 4.1–4.2) |
 | 71 | Codex | catálogo dos encontros nomeados (tarefa 4.4) |
 | 72 | Codex | catálogo de materiais, consumíveis e economia (tarefa 4.4) |
-| **73+** | **livre** | |
+| 73 | Codex | fecho dos buracos de integração e fronteira spec→produção (tarefa 4.4) |
+| **74+** | **livre** | |
 
 ⚠️ **A reserva do Fable para "o fim do jogo e o ciclo novo" (fase 2.1+2.2) caiu** — o Claude escreveu-a minutos antes, no [`spec/58`](spec/58-fim-do-jogo-ciclos-e-a-curva.md). **A reserva dele chegou depois à , e a regra é a ordem de chegada.** As outras seis mantêm-se, deslocadas um número.
 
