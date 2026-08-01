@@ -10,6 +10,9 @@ extends CharacterBody3D
 ##
 ## Nenhum numero deste ficheiro esta escrito a mao: vem todo de res://data/.
 
+const WorldBoundsTracker = preload("res://src/world/bounds.gd")
+const WorldBoundsWarningScene = preload("res://src/world/bounds_warning.gd")
+
 signal died
 signal state_changed(state: int)
 
@@ -94,6 +97,14 @@ var _palette: Dictionary = {}
 var _frame := 0
 var _waking_up := false
 
+# --- Queda --------------------------------------------------------------------
+var _fall_tracker: WorldBounds = WorldBoundsTracker.new()
+var _fall_tracking_ready := false
+var _load_fraction := 0.0
+var death_stain_position := Vector3.ZERO
+var _last_supported_position := Vector3.ZERO
+var _has_supported_position := false
+
 
 # --- Arranque -----------------------------------------------------------------
 
@@ -135,6 +146,7 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 
 	_build_body(body_id)
 	_build_children()
+	call_deferred("_install_world_bounds_warning")
 
 
 func _build_body(body_id: String) -> void:
@@ -180,6 +192,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		move_and_slide()
+		evaluate_fall_sample(global_position.y, is_on_floor())
 		return
 
 	state_frame += 1
@@ -203,6 +216,7 @@ func _physics_process(delta: float) -> void:
 	_tick_state(delta)
 	_apply_gravity(delta)
 	move_and_slide()
+	evaluate_fall_sample(global_position.y, is_on_floor())
 	_refresh_colour()
 	_refresh_animation()
 
@@ -215,6 +229,53 @@ func _apply_gravity(delta: float) -> void:
 		velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity", 20.0) * delta
 	else:
 		velocity.y = minf(velocity.y, 0.0)
+
+
+func reset_fall_tracking(height_m: float, fall_config := {}) -> void:
+	var config: Dictionary = fall_config as Dictionary
+	if config.is_empty():
+		config = GameData.progression.get("fall", {}) as Dictionary
+	_fall_tracker.reset(height_m, config)
+	_fall_tracking_ready = true
+
+
+func evaluate_fall_sample(height_m: float, grounded: bool) -> void:
+	if state == State.DEAD:
+		return
+	if not _fall_tracking_ready:
+		reset_fall_tracking(height_m)
+	var outcome := _fall_tracker.sample(height_m, grounded)
+	if grounded:
+		_last_supported_position = global_position
+		_has_supported_position = true
+	match outcome:
+		WorldBounds.Outcome.DAMAGE:
+			var amount := GameData.fall_damage(
+				_fall_tracker.last_drop_m, max_health, _load_fraction)
+			_apply_raw_health_loss(amount)
+		WorldBounds.Outcome.FATAL:
+			_die(_last_supported_position if _has_supported_position else global_position)
+
+
+func _install_world_bounds_warning() -> void:
+	if "--bounds-warning=off" in OS.get_cmdline_user_args():
+		return
+	var gameplay := get_parent()
+	if gameplay == null:
+		return
+	var world := gameplay.get_node_or_null("World") as Node3D
+	if world == null or world.has_node("WorldBoundsWarning"):
+		return
+	var path_value: Variant = world.get("path_points")
+	if not path_value is Array or (path_value as Array).is_empty():
+		return
+	var map_reading: Dictionary = GameData.world.get("map_reading", {}) as Dictionary
+	var runtime: Dictionary = map_reading.get("runtime", {}) as Dictionary
+	var traversal: Dictionary = GameData.world.get("_traversal_rules", {}) as Dictionary
+	var warning: WorldBoundsWarning = WorldBoundsWarningScene.new()
+	warning.name = "WorldBoundsWarning"
+	world.add_child(warning)
+	warning.setup(runtime, _palette, traversal)
 
 
 # --- Entrada ------------------------------------------------------------------
@@ -826,6 +887,7 @@ func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> v
 	_load_can_run = bool(load_profile.get("can_run", true))
 	_load_can_sprint = bool(load_profile.get("can_sprint", true))
 	_load_max_speed = float(load_profile.get("max_speed", 999.0))
+	_load_fraction = float(load_profile.get("fraction", 0.0))
 	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
 
 
@@ -969,8 +1031,25 @@ func _apply_health_loss(amount: float) -> void:
 		return
 	health = maxf(0.0, health - GameData.apply_defense(amount, defense))
 	if health <= 0.0:
-		_change_state(State.DEAD)
-		died.emit()
+		_die()
+
+
+func _apply_raw_health_loss(amount: float) -> void:
+	if amount <= 0.0:
+		return
+	health = maxf(0.0, health - amount)
+	if health <= 0.0:
+		_die()
+
+
+func _die(stain_position: Variant = null) -> void:
+	if state == State.DEAD:
+		return
+	death_stain_position = stain_position as Vector3 \
+		if stain_position is Vector3 else global_position
+	health = 0.0
+	_change_state(State.DEAD)
+	died.emit()
 
 
 func _is_in_front(info: DamageInfo) -> bool:
@@ -995,6 +1074,9 @@ func respawn_at(p: Vector3) -> void:
 	_egide_shield = 0.0
 	_combo_index = 0
 	_buffered = ""
+	reset_fall_tracking(global_position.y)
+	_last_supported_position = global_position
+	_has_supported_position = true
 	_change_state(State.FREE)
 
 
