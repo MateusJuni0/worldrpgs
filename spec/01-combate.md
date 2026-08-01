@@ -3,6 +3,8 @@
 O núcleo do jogo. É aqui que o pilar "habilidade acima de nível" vive ou morre.
 
 > **WP1 · reescrito pelo Fable** (31-07-2026). Tudo o que era `[EM ABERTO]` neste documento tem agora um número. **Todos os números são pontos de partida `[FABLE]`**, escritos para o protótipo de combate os validar (marco 2 do plano de construção, WP15) — o que o protótipo desmentir, volta aqui e muda-se **neste documento primeiro**. Fronteira com o WP1B (`spec/25-controlo.md`, do Claude): este documento define **o que as acções fazem e quando**; o WP1B define **como se sentem** — câmara, guarda de entrada (*input buffer*), orçamento de latência, paragem de impacto. Nada aqui duplica isso.
+>
+> ⚠️ **Autoridade posterior de magia:** o [`54`](54-mana-meditacao-e-tracos-de-classe.md) revogou cargas/slots. Feitiços e artes gastam **mana**, paga no arranque; não há regeneração passiva; o [`66`](66-catalogo-de-magia.md) fecha meditação e catálogo.
 
 ## O que eles decidiram
 
@@ -120,7 +122,7 @@ Sem variação por peso de equipamento na fatia 1 — não há armadura (pergunt
 | A bloquear | 10/s |
 | A zero | sem acções ofensivas/defensivas até recuperar **15** (histerese); andar e correr sempre possíveis; sprint não |
 
-Custos, todos num sítio: esquiva 25 · parry 10 · sprint 8/s · bloqueio por golpe (tabela acima) · ataques (tabela abaixo). Magia gasta **cargas**, não stamina (03:50) — dois recursos, duas decisões.
+Custos, todos num sítio: esquiva 25 · parry 10 · sprint 8/s · bloqueio por golpe (tabela acima) · ataques (tabela abaixo). Magia e artes de arma gastam **mana**, não stamina; a mana não regenera passivamente ([`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md)).
 
 *Teste da Lei 1:* a zero, o jogador nunca fica indefeso de facto — anda, corre, cria distância, e 0,8 s + 15 de histerese devolvem-lhe a esquiva em ~1,2 s. Exaustão pune a ganância; não executa ninguém. ✅
 
@@ -169,11 +171,11 @@ Ao quebrar por morte do alvo, **não re-engata sozinho** — re-engatar é decis
 
 O risco conhecido ([`00-visao.md`](00-visao.md)): se atacar de longe for seguro, ninguém esquiva nem apara, e as duas mecânicas centrais morrem. A resposta não é proibir a distância — é fazê-la **cara, lenta e interrompível**:
 
-1. **Magia gasta cargas** (03:50, decidido por eles) — o recurso não regenera em combate (recuperação: WP4/WP5, com o modelo de descanso da pergunta 7).
+1. **Magia gasta mana**, paga no arranque — o recurso não regenera passivamente; descanso/morte repõem e meditação segue o [`66`](66-catalogo-de-magia.md) §3.
 2. **Conjurar trava o movimento a 40%** e tem tempo de lançamento por magia (pontos de partida no WP4: Dardo 0,8 s · Ruína 1,6 s · Égide 0,5 s).
-3. **Levar dano durante a conjuração interrompe e gasta a carga.** `[FABLE]` *Razão:* conjurar na cara de um inimigo tem de ser uma aposta, senão a magia vira spam-até-sair. *Alternativa descartada:* interromper sem gastar — mais simpática, mas remove o único custo de conjurar mal.
+3. **Levar dano durante a conjuração interrompe; a mana paga no arranque não volta.** *Razão:* conjurar na cara de um inimigo tem de ser uma aposta, senão a magia vira spam-até-sair.
 4. **Anti-kite:** um inimigo que passe **4 s** sem conseguir alcançar o alvo ganha comportamento de fecho — sprint, salto, projéctil próprio (o WP6 implementa por inimigo; o lanceiro é o primeiro).
-5. **O plano B do mago é o cajado** — pancada sem custo nenhum (tabela acima). Sem cargas, o Feiticeiro é um lutador fraco mas inteiro: esquiva, apara com escudo se o tiver, e bate. **A Lei 1 nunca fica refém do contador de cargas.**
+5. **O plano B do mago é o cajado** — pancada sem custo nenhum (tabela acima). Sem mana, o Feiticeiro é um lutador fraco mas inteiro: esquiva, apara com escudo se o tiver, e bate. **A Lei 1 nunca fica refém da reserva de mana.**
 
 **Arco (fatia 2), regras desde já** para o WP5 herdar: puxar 0,9 s para dano pleno (50% aos 0,45 s) · movimento a 30% enquanto puxa · aljava de 15 · ~70% das setas recuperáveis dos corpos · sem i-frames a disparar. O Batedor entra quando isto entrar.
 
@@ -184,7 +186,7 @@ O risco conhecido ([`00-visao.md`](00-visao.md)): se atacar de longe for seguro,
 Formaliza o provisório da fatia 1 ([`10-fatia-1.md`](10-fatia-1.md)):
 
 - Renasces na **entrada de Brumal**; depois de descoberta, a **boca da Toca** é o ponto de renascimento (descobrir = checkpoint, sem fogueira nem menu).
-- ⚠️ **ACTUALIZADO 31-07:** ~~não se perde nada~~ → **perdem-se as almas**, que ficam no sítio onde se morreu. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md), que substitui esta linha. Vida, stamina e cargas continuam restauradas; inimigos normais renascem; o chefe faz reset total.
+- ⚠️ **ACTUALIZADO:** ~~não se perde nada~~ → **perdem-se as almas**, que ficam no sítio onde se morreu. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md), que substitui esta linha. Vida, stamina, mana e tentativas de meditação são restauradas; inimigos normais renascem; o chefe faz reset total.
 - Morrer no Vorgar → nova tentativa em **< 30 s**, também em co-op (critério 4 da fatia).
 - ⚠️ **ACTUALIZADO 31-07:** em co-op o jogador morto **pode ser ressuscitado** — 1 minuto de janela, o parceiro fica 5 s em cima do corpo. Ver [`33-morte-e-almas.md`](33-morte-e-almas.md) §4, que substitui o provisório de que um jogador morto (chefe: até a tentativa acabar; mundo: até o parceiro sair de combate) e renasce ao lado do parceiro. `[FABLE]` *Razão:* reviver a meio do chefe transformava o ×1,8 de vida em corrida de revezamento. *Alternativa descartada:* ressuscitar o parceiro no local — é a pergunta certa para o WP10 revisitar com a rede à frente.
 
@@ -226,7 +228,7 @@ Sensibilidade, remapeamento e afinação são do **WP1B/WP11** — isto é o map
 | **WP1B** | as janelas em frames que o buffer e a latência têm de servir; a lista de estados canceláveis |
 | **WP6** | ≥ 0,5 s de aviso legível em todo o ataque; a marca `aparável`/`só esquiva` por ataque; postura por inimigo; anti-kite aos 4 s; velocidade de patrulha < 5,0 m/s |
 | **WP7** | o sistema de postura e o riposte; o reset total do chefe na morte; o ×1,8 em co-op (da fatia 1) |
-| **WP4** | tempos de conjuração de partida; a regra interrupção-gasta-carga; hiper-armadura da Égide |
+| **WP4** | tempos de conjuração de partida; mana paga no arranque não volta ao interromper; hiper-armadura da Égide |
 | **WP15** | o **marco 2** valida cada número deste documento no protótipo — um boneco, três inimigos, as cinco armas |
 
 ## O que continua aberto

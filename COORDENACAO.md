@@ -41,7 +41,7 @@ Uma reserva é uma linha na tabela. Custa trinta segundos e evita deitar fora um
 | Volta 1 | `spec/49-biomas.md` + `game/data/biomes.json` | Fable | 31-07 | ✅ entregue — PR #14 |
 | Volta 2 | `spec/50-racas.md` + `game/data/races.json` | Fable | 31-07 | ✅ entregue — PR #15 |
 | Volta 3 | `spec/51-familias.md` + `game/data/weapons.json`/`armor.json` | Fable | 31-07 | ✅ entregue — 8 famílias, 3 escudos, 9 slots, 6 kits, espólio do Rico |
-| Tarefa 4 | `spec/70`–`72` + alinhamento dos documentos antigos | Codex | 01-08 | 🔨 em curso — fechar lacunas de spec sem decidir `[TENSÃO]` |
+| Tarefa 4 | `spec/70`–`73` + alinhamento dos documentos antigos | Codex | 01-08 | ✅ entregue (`e57ffb7`; mapa `24d78a6`) — contratos, integração e lacunas vermelhas fechados |
 
 *Estados: 🔨 em curso · ✅ entregue · ⏸️ parado (dizer porquê)*
 

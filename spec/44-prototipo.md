@@ -35,14 +35,14 @@ O caminho A está escolhido com dados. O risco “esqueleto nunca medido” fech
 
 ## 2. O que já se joga
 
-Construído e verificado por auto-teste (130 verificações contra a spec):
+Construído inicialmente com 130 verificações; o fecho corrente passa **8433 auto-testes** contra a spec:
 
 | Sistema | Estado | Fonte |
 |---|---|---|
 | Máquina de estados, esquiva (i-frames 5–23 inclusivos, 317 ms), parry (8 f) + riposte, bloqueio + guarda quebrada, stamina com histerese | ✅ fiel ao documento | [`01-combate.md`](01-combate.md) |
 | As 5 armas com frames e MV exactos, hiper-armadura do machadão, poise/postura, lock-on, hit-stun | ✅ | [`01-combate.md`](01-combate.md) |
 | Lanceiro e brutamontes, telegrafia ≥ 0,5 s, anti-kite aos 4 s | ✅ | [`15-inimigos.md`](15-inimigos.md) |
-| Dardo, Ruína, Égide com cargas; interrupção gasta a carga | ✅ | [`13-magia.md`](13-magia.md) |
+| Dardo, Ruína, Égide com mana; interrupção não devolve o custo pago no arranque | ✅ | [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md) |
 | Vorgar, 2 fases (padrões diferentes, não números), reset total | ✅ | [`16-chefes.md`](16-chefes.md) |
 | **Frasco de cura** — 3 usos, 40% PV, 1,0 s a beber, recarrega no renascimento | ✅ `[PROTO]` | pergunta 7 |
 | **Habilidades de classe** — Ímpeto, Fúria, Provocação jogáveis | ✅ `[PROTO]` | [`12-classes.md`](12-classes.md) |

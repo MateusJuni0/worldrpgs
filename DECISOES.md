@@ -100,6 +100,8 @@ Ordem inversa: **o mais recente primeiro.**
 - **Abre as perguntas 26–29** no `99`
 - **Substitui:** nada — os estudos que a sustentam são o [`41`](spec/41-estudo-armas-e-golpes.md), [`42`](spec/42-estudo-magia.md) e [`43`](spec/43-estudo-espolio-inventario-mundo.md)
 
+⚠️ **Substituições posteriores (01-08):** a lista de atributos preserva a fala original, mas **slots deixaram de existir** e o bolo de cargas foi revogado pelo [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md); a execução está no [`66`](spec/66-catalogo-de-magia.md). Carga equipada e curvas próprias por atributo foram fechadas no [`70`](spec/70-fecho-dos-sistemas-de-combate.md).
+
 ### Estudo profundo da referência → [`spec/39-estudo-profundo.md`](spec/39-estudo-profundo.md)
 - ⭐ **PISO DE 30%** — nenhuma defesa reduz um golpe abaixo de 30%. É a **Lei 1 em equação**, e não a tínhamos
 - ⭐ **Soft cap aos ~40** — sem ele o nível 100 ganha jogos. Lá, dos 40 aos 99 ganham-se **10 pontos de stamina**: é a curva que segura a Lei 1, não a boa vontade
@@ -113,6 +115,8 @@ Ordem inversa: **o mais recente primeiro.**
 - ⚠️ **NÃO copiar:** chefe de co-op só com mais vida (esponja, castiga quem já perde) · inimigos que encadeiam ataques na recuperação · estatística de interrupção que só funciona a atacar
 - **Abre as perguntas 22–25** no `99`
 - **Substitui:** nada — completa o [`spec/35-estudo-referencia.md`](spec/35-estudo-referencia.md)
+
+⚠️ **Substituições posteriores (01-08):** soft cap universal → curvas próprias; distância variável de esquiva → recuperação/regen/sobrecarga; bolo de cargas → frasco + mana; descanso em cada porta → descanso por arco antes do guardião. Autoridades: [`53`](spec/53-chefes-ritmo-e-o-mago-forte.md), [`54`](spec/54-mana-meditacao-e-tracos-de-classe.md), [`66`](spec/66-catalogo-de-magia.md), [`70`](spec/70-fecho-dos-sistemas-de-combate.md).
 
 ### Ataques dos inimigos e o contrato de honestidade → [`spec/38-ataques-e-honestidade.md`](spec/38-ataques-e-honestidade.md)
 - **5 fases por ataque**; aviso ≥ **0,50 s**; hitbox viva só **3–6 frames**

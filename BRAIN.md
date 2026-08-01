@@ -1,5 +1,7 @@
 # BRAIN — WorldRPGs
 
+> ⚠️ **Snapshot histórico de 31-07.** Para o estado corrente, ler [`ESTADO.md`](ESTADO.md), [`LACUNAS.md`](LACUNAS.md) e [`MAPA.md`](MAPA.md). As secções de PRs abertos, 226 testes e “próximo trabalho” abaixo não são instruções activas.
+
 Contexto de sessão. Ler ao começar a trabalhar, actualizar ao acabar.
 
 ## O que é

@@ -1,5 +1,7 @@
 # Terminar a spec — para o Opus 5
 
+> ⚠️ **PROMPT HISTÓRICO, CONCLUÍDO NA TAREFA 4.** Não executar de novo nem usar as contagens abaixo como estado corrente. O resultado está nos contratos [`70`](../spec/70-fecho-dos-sistemas-de-combate.md)–[`73`](../spec/73-fecho-dos-buracos-de-integracao.md); o retrato actual vive no [`ESTADO`](../ESTADO.md).
+
 **De:** Mateus (via Claude) · **01-08-2026** · **É o prompt para fechar a especificação.**
 
 ---

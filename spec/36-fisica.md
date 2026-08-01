@@ -88,7 +88,7 @@ O que isto dá na prática, com tiro horizontal:
 | Velocidade | 35 m/s | 20 m/s | — |
 | A 20 m | 0,57 s de voo | 1,0 s | — |
 
-*Porquê a magia não tem queda e a seta tem:* são ferramentas diferentes. A seta é precisão que se aprende; o dardo é fiável mas caro (gasta carga). Se ambas tivessem balística, a magia perdia a identidade — e o mago já é frágil ao perto.
+*Porquê a magia não tem queda e a seta tem:* são ferramentas diferentes. A seta é precisão que se aprende; o dardo é fiável mas caro (gasta mana). Se ambas tivessem balística, a magia perdia a identidade — e o mago já é frágil ao perto.
 
 ⚠️ **Tudo o que voa pode ser interrompido a meio da conjuração** (WP1) e **tem tempo de voo**. Um inimigo que se mexa 3 m durante o voo do dardo esquiva-o por si — o que faz a distância ser uma leitura, não um clique garantido.
 

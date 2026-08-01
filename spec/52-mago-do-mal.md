@@ -2,6 +2,8 @@
 
 `[DECIDIDO]` (Mateus, 31-07-2026) — **é o personagem dele.** *"Vou com ele. Necromancia pesada, chamas, magia negra também — ela é a mais forte."*
 
+> ⚠️ **Autoridade posterior:** catálogo e dados seguem o Voto de Sangue por **trocas de verbo** do [`53`](53-chefes-ritmo-e-o-mago-forte.md) §§4–5, não o +30/+60/+90% preservado abaixo. Como essa mudança colide com uma decisão explícita do Mateus, a revisão não a promove a decisão dos donos: fica registada como `[TENSÃO]` no [`99`](99-perguntas-abertas.md).
+
 > **Porque este documento é do Claude e não do Fable:** o Mateus disse-o à frente — *"o Rico não vai pensar nisso quando criar"*. Uma classe que uma pessoa vai jogar durante cem horas desenha-se **com** essa pessoa, não por delegação.
 >
 > **Isto é uma proposta detalhada, não uma decisão fechada.** Está aqui para o Mateus cortar, mudar e acrescentar.

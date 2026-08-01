@@ -2,6 +2,8 @@
 
 `[DECIDIDO]` (Mateus, 31-07-2026, segunda conversa) — quinze decisões de uma vez. Este documento é o **registo**; o estudo que as sustenta está nos [`41`](41-estudo-armas-e-golpes.md), [`42`](42-estudo-magia.md) e [`43`](43-estudo-espolio-inventario-mundo.md).
 
+> ⚠️ **Leitura actual:** as falas dos donos ficam preservadas, mas os mecanismos de slots/bolo de cargas foram revogados pelo [`54`](54-mana-meditacao-e-tracos-de-classe.md). Hoje há Inteligência/Fé, mana sem regeneração, oito favoritos e artes a gastar mana ([`66`](66-catalogo-de-magia.md)). Carga equipada usa recuperação/regen/sobrecarga do [`70`](70-fecho-dos-sistemas-de-combate.md), e descanso por arco — não por porta — vem do [`53`](53-chefes-ritmo-e-o-mago-forte.md).
+
 > **A instrução por trás de tudo, e é a mais importante:**
 >
 > *"É melhor estudar primeiro completo como funciona o jogo, cada funcionalidade, mecanismo e tudo do jogo, e depois a gente pega e implementa aqui no nosso projeto. Sinto que você está olhando muito superficial. A gente não quer o jogo superficial."*
@@ -90,7 +92,7 @@ Cada inimigo tem um **baralho de 10 cartas**. Cada morte tira uma carta, **e ess
 
 ✅ **Já está desenhado** — [`39`](39-estudo-profundo.md) §3, com os três escalões e a tabela. **Confirma-se agora pelo dono.**
 
-⚠️ **E confirma-se com a linha que não se atravessa:** a carga muda **distância, velocidade e stamina**. **Nunca a invencibilidade** ([`38`](38-ataques-e-honestidade.md), cláusula 3). O jogador pesado esquiva o mesmo golpe — só fica mais perto depois, e cansa-se mais depressa.
+⚠️ **Linha que não se atravessa:** a carga nunca muda a invencibilidade ([`38`](38-ataques-e-honestidade.md), cláusula 3). O contrato corrente cobra recuperação e regeneração; acima de 100% remove esquiva/corrida/sprint ([`70`](70-fecho-dos-sistemas-de-combate.md) §1.1).
 
 ---
 
@@ -102,14 +104,14 @@ Cada inimigo tem um **baralho de 10 cartas**. Cada morte tira uma carta, **e ess
 |---|---|
 | **Vida** | pontos de vida |
 | **Stamina** | o recurso de todas as acções |
-| **Magia** | ⬜ o bolo de energia? ou o dano? — `→WP2` desambiguar |
+| **Magia** | ⚠️ nome histórico; o modelo corrente usa **mana** calculada pelo maior de Inteligência/Fé |
 | **Inteligência** | força dos feitiços |
 | **Slots de magia** | quantos feitiços se levam |
 | **Carga** | quanto se veste sem ficar pesado |
 
 ⚠️ **Duas notas honestas:**
 
-1. **"Magia" e "slot de magia" podem ser o mesmo atributo.** Na referência são: um atributo dá **os dois** — mais energia e mais espaços, com soft caps diferentes (espaços aos 30, energia aos 35). ⭐ **Isso é melhor desenho** do que dois atributos, porque um só atributo já obriga a uma escolha. **Proposta `[CLAUDE]`: fundir.** Decisão dos donos.
+1. ~~**"Magia" e "slot de magia" podem ser o mesmo atributo.**~~ **Superada:** não existem slots. A reserva de mana usa o maior de Inteligência/Fé; favoritos não são atributo ([`54`](54-mana-meditacao-e-tracos-de-classe.md)).
 2. ⚠️ **Falta Força e Destreza nesta lista**, e o [`11-formulas.md`](11-formulas.md) já as tinha para os requisitos de arma. O Mateus falou de destreza logo a seguir (§7). **Assumo que continuam** — se não, é `[EM ABERTO]`. `→WP2`
 
 ---
@@ -130,7 +132,7 @@ E `[DECIDIDO]` — **magia do mal** entra, ao lado de raio, fogo, veneno e escur
 
 `[TENSÃO]` — proponho, **não decido**:
 
-> A magia é a mais **vasta em verbos** — faz coisas que mais nada faz. Mas **cada feitiço come do mesmo bolo de cargas que a cura** ([`39`](39-estudo-profundo.md) §7). Um mago que lança muito **cura pouco**. A largura paga-se em fragilidade, não em números mais baixos.
+> A magia é a mais **vasta em verbos** — faz coisas que mais nada faz. O travão corrente é mana sem regeneração, conjuração interrompível, oito favoritos e custos próprios da escola; **cura por frasco não partilha cargas** ([`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md)).
 
 Assim o mago continua a ser a classe mais rica e mais divertida — que é o que o Mateus quer — **sem ser a classe correcta**. `→WP3`/`→WP4`, e vai à [`99`](99-perguntas-abertas.md).
 
@@ -210,7 +212,7 @@ Sem quebrar a garantia da §3:
 | **As peças e a arma que se vêem no inimigo** | ❌ **nunca** — são a promessa, e a promessa não muda |
 | **As cartas de enchimento** | ✅ **sim** — é aqui que vive a preferência |
 
-**Um mago tira das cartas de enchimento** mais material de feitiço e cargas de energia; um espadachim tira mais pedras de melhoria e material de arma.
+**Um mago tira das cartas de enchimento** mais material de feitiço; um espadachim tira mais pedras de melhoria e material de arma. A mana não cai como “carga de energia”.
 
 ⚠️ **E a regra que isto obriga em co-op** `→WP10`: se os dois jogam classes diferentes, **o enviesamento é de quem dá o golpe final** ou é partilhado? Vai à [`99`](99-perguntas-abertas.md). *(Proposta `[CLAUDE]`: cai uma carta para cada um, enviesada pela classe de cada um. Ninguém disputa espólio com um amigo.)*
 
@@ -289,9 +291,9 @@ Entra no [`prompts/REALINHAMENTO.md`](../prompts/REALINHAMENTO.md), parte A.
 
 | Pergunta | Onde |
 |---|---|
-| "Magia" e "slots de magia" são o mesmo atributo? *(proposta: sim, fundir)* | §5 |
+| ~~"Magia" e "slots de magia" são o mesmo atributo?~~ **Dissolvida: não há slots** | [`54`](54-mana-meditacao-e-tracos-de-classe.md) |
 | Força e Destreza continuam na lista? | §5 |
-| ⚠️ **O mago faz tudo — como é que não é a classe correcta?** *(proposta: paga-se em cargas de cura)* | §6 |
+| ⚠️ **O mago faz tudo — como é que não é a classe correcta?** *(custos actuais em mana/tempo/favoritos; suficiência continua na pergunta 28 do [`99`](99-perguntas-abertas.md))* | §6 |
 | Em co-op, o enviesamento do espólio é de quem dá o último golpe? *(proposta: uma carta para cada um)* | §11 |
 
 → entram na [`99-perguntas-abertas.md`](99-perguntas-abertas.md).

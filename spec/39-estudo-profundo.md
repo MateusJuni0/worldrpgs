@@ -252,9 +252,9 @@ E olha o que resolve de uma vez:
 | A Lei 3 (*qualquer classe pega em qualquer arma*) | a divisão passa a ser **escolha por descanso**, não escolha na criação |
 | Onde vive a decisão fora do combate | no ponto de descanso, que é onde já está o jogador |
 
-`→WP5`/`→WP9` — **adoptar.** Total ~12–15 cargas, distribuídas no ponto de descanso.
+⚠️ **MODELO REVOGADO:** não adoptar. Cura continua no frasco; feitiços e artes gastam mana; meditação e as duas tentativas por descanso vivem no [`54`](54-mana-meditacao-e-tracos-de-classe.md) e no [`66`](66-catalogo-de-magia.md).
 
-⚠️ **A pergunta que fica para os donos:** em co-op, cada um distribui as suas. Se um leva 15/0 e o outro 5/10, o segundo cura-se menos. **É uma boa tensão** — obriga os dois a falar antes de entrar. Fica no [`99-perguntas-abertas.md`](99-perguntas-abertas.md).
+~~A pergunta sobre repartir cargas em co-op~~ ficou **dissolvida** com a separação entre frasco e mana; registo no [`99`](99-perguntas-abertas.md) n.º 25.
 
 **Fontes:** [Ashen Estus Flask — DS3 Wiki](https://darksouls3.wiki.fextralife.com/Ashen+Estus+Flask) · [Ashen Estus Flask — Wikidot](http://darksouls3.wikidot.com/tool:ashen-estus-flask)
 
@@ -288,7 +288,7 @@ O Mateus quer 10+ biomas e ~30 minutos a pé. Com um mapa linear, isso são 30 m
 
 O debate na comunidade é claro: **a corrida de volta ao chefe é fricção, não dificuldade.** Quem defende a fogueira perto da porta di-lo bem — quer *"dominar o chefe, e não passar 20 minutos a lá chegar de cada vez que morre"*.
 
-⚠️ **Para nós isto não é opinião — é obrigatório.** São **dois amigos** a jogar. Um `runback` de 3 minutos multiplica-se por dois, porque um espera pelo outro. `→WP7`/`→WP8`: **ponto de descanso à vista da porta de cada chefe. Sem excepção.**
+⚠️ **CORRIGIDO PELO [`53`](53-chefes-ritmo-e-o-mago-forte.md) §3:** o princípio anti-`runback` mantém-se no **guardião**; o descanso é por arco e não aparece à porta de cada subchefe. Não há uma fogueira por cada encontro catalogado.
 
 **Fontes:** [World Design lessons from FromSoftware](https://medium.com/@Jamesroha/world-design-lessons-from-fromsoftware-78cadc8982df) · [The Ultimate Methodology of creating Souls-like Level](https://medium.com/@bramasolejm030206/preface-ec08bc1459d0) · [Interconnected Level Design — TheGamer](https://www.thegamer.com/dark-souls-1-fromsoftwares-magnum-opus-of-interconnected-level-design/) · [Bonfires — DS3 Wiki](https://darksouls3.wiki.fextralife.com/Bonfires)
 
@@ -448,12 +448,12 @@ Ordenado por **quanto muda a nossa spec**, não por ordem de secção.
 |---|---|---|---|
 | 1 | ⭐ **O piso de 30%** — nenhuma defesa reduz um golpe abaixo disso. É a Lei 1 em equação, e não a temos | `→WP2` | **adoptar** |
 | 2 | ⭐ **Soft cap aos ~40** — sem ele, o nosso nível 100 ganha jogos e a Lei 1 cai | `→WP2` | **criar** |
-| 3 | ⭐ **A carga muda distância e stamina, nunca a invencibilidade** (12 vs 13 frames = ruído) | `→WP1`/`→WP5` | **adoptar** |
+| 3 | ⭐ **A carga nunca muda a invencibilidade**; no contrato actual cobra recuperação/regen e sobrecarga | [`70`](70-fecho-dos-sistemas-de-combate.md) §1.1 | **fechado** |
 | 4 | ⭐ **Interrupção e hiper-armadura** — o sistema inteiro falta-nos; sem ele armas lentas não existem | `→WP1` | **criar** |
-| 5 | ⭐ **Um bolo de cargas repartido entre curar e usar** — resolve artes de arma, magia e a Lei 3 de uma vez | `→WP5`/`→WP9` | **adoptar** |
+| 5 | ~~**Um bolo de cargas repartido entre curar e usar**~~ | [`54`](54-mana-meditacao-e-tracos-de-classe.md), [`66`](66-catalogo-de-magia.md) | **revogado: frasco + mana separados** |
 | 6 | ⭐ **Contador de mortes por sala** — a Lei 1 posta em código; acaba com o grind e amolece a zona sozinha | `→WP6`/`→WP9` | **adoptar (10)** |
 | 7 | ⭐ **Toda a zona fecha um círculo**, e o atalho abre-se do lado de dentro | `→WP8` | **regra** |
-| 8 | ⭐ **Ponto de descanso à vista da porta do chefe** — a corrida de volta é fricção ×2 em co-op | `→WP7`/`→WP8` | **obrigatório** |
+| 8 | ⭐ **Descanso antes do guardião**, por arco; não antes de cada subchefe | [`53`](53-chefes-ritmo-e-o-mago-forte.md) §3 | **fechado** |
 | 9 | ⭐ **Descrição em todo o objecto, colocado por relevância** — é daqui que vem "nunca zera" | `→WP13` | **regra contínua** |
 | 10 | **Defesa por curva sobre a razão, absorção multiplicativa** — dá decrescentes de graça | `→WP2` | substituir |
 | 11 | **Dois eixos de melhoria:** reforço (números) e infusão (troca escala = Lei 2) | `→WP5` | criar |
@@ -472,7 +472,7 @@ Ordenado por **quanto muda a nossa spec**, não por ordem de secção.
 | Pergunta | Porquê agora |
 |---|---|
 | **Se os inimigos param de reaparecer, de onde vêm as almas para o nível 100?** | ou o mundo é maior, ou o 100 não é para uma passagem |
-| **Cada jogador reparte as suas cargas — e se ficarem desequilibrados?** | boa tensão, mas tem de ser escolha vossa |
+| ~~**Cada jogador reparte as suas cargas — e se ficarem desequilibrados?**~~ | **dissolvida:** frasco e mana são recursos separados ([`54`](54-mana-meditacao-e-tracos-de-classe.md)) |
 | **Aceitamos +40% de vida no chefe a dois, ou zero?** | fecha a pergunta 6 do `99` |
 | **O contador é 10 por sala? por zona? por par ou por jogador?** | proposta `[CLAUDE]`: 10, por sala, por par |
 

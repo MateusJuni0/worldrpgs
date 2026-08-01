@@ -63,12 +63,12 @@ Um parry certeiro parte a postura do inimigo (fica branco) — bate logo a segui
 | **Combate (WP1)** | máquina de estados completa: esquiva com i-frames, parry com riposte, bloqueio com guarda quebrada, stamina com atraso e histerese, hit-stun, poise/postura, hiper-armadura, lock-on, combos e cancelamentos |
 | **5 armas** | adaga, espada longa, machadão (pesado carregável), cajado, escudo — frames e MV exactos da spec |
 | **6 classes** | atributos e equipamento de arranque do WP2. Qualquer uma pega em qualquer arma (Lei 3) |
-| **3 magias** | Dardo (projéctil), Ruína (área), Égide (barreira com hiper-armadura), com bolsa de cargas partilhada |
+| **3 magias** | Dardo (projéctil), Ruína (área), Égide (barreira com hiper-armadura), com mana sem regeneração passiva |
 | **2 inimigos** | orc lanceiro (ensina a esquiva) e orc brutamontes (ensina o parry), com anti-kite aos 4 s |
 | **Vorgar** | chefe de 2 fases — a segunda muda padrões, não números. Reset total quando morres |
 | **Brumal + a Toca** | floresta greybox com névoa, caminho, entrada escondida sob a árvore morta, 3 salas e a arena |
 | **Morte** | renasces em ~1,2 s, não se perde nada, os inimigos voltam (o alvo da spec era < 30 s) |
-| **HUD** | vida, stamina, cargas, barra do chefe |
+| **HUD** | vida, stamina, mana, frasco, barra do chefe |
 
 Inclui o **game feel do WP1B**: paragem de impacto (3 f num leve, 6 f num pesado, **10 f num parry**), registo de comandos com a esquiva a ter prioridade, e a câmara nos números da spec (4,0 m / 4,8 m com lock-on, FOV 55°, sem aceleração de rato).
 

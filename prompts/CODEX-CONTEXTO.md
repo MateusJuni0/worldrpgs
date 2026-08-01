@@ -41,11 +41,11 @@
 
 | | |
 |---|---|
-| **Especificação** | **69 documentos**, em `spec/` |
+| **Especificação** | **75 documentos**, em `spec/` |
 | **Jogo** | **corre** — Godot **4.7.1**, renderer **Mobile**, em `game/` |
-| **Testes** | **5737 auto-testes** contra a spec, todos a passar |
+| **Testes** | **8433 auto-testes** contra a spec, todos a passar |
 | **Desempenho** | 416 fps na máquina do Rico *(greybox, sem animação de esqueleto)* |
-| **Arte** | 43 imagens curadas (32 conceitos, 9 ícones, menu e céu) + **10 packs CC0** (785 modelos, 1954 texturas, 182 sons) |
+| **Arte** | **54 imagens curadas** (32 conceitos, 20 ícones, menu e céu) + **10 packs CC0** (785 modelos, 1954 texturas, 182 sons) |
 | ⚠️ **Estado visual** | **greybox** — cones por árvores, cápsulas por personagens. Os packs estão no repositório mas **não estão importados** |
 
 ---
@@ -141,7 +141,7 @@
 | ❌ **Decidir uma `[TENSÃO]`** | propõe-se e recomenda-se. Decidem o Mateus e o Rico |
 | ❌ **Mexer num `[DECIDIDO]`** | detalha-se por baixo |
 | ❌ **Números de combate em `.gd`** | pertencem a `data/*.json` |
-| ❌ **Binários novos no repositório** | já tem 460 MB de packs; ⚠️ o `game/.gitignore` **não trava** `.glb`, `.png` nem `.ogg` |
+| ❌ **Binários novos no repositório** | `art/` ocupa **466,1 MiB** no working tree; as bibliotecas CC0 em `models/textures/audio` ocupam **203,2 MiB** · ⚠️ o `game/.gitignore` **não trava** `.glb`, `.png` nem `.ogg` |
 | ❌ **Caminhos absolutos ou segredos** | o repositório é **público** |
 | ❌ **Assets de jogos comerciais** | |
 | ❌ **Sobrevender** | ⭐ dizer **o que ainda não está provado** é o que torna um relatório útil |
@@ -201,7 +201,7 @@ curl -fsSL "<url>" -o art/ui/icons/<nome>.png
 
 | | |
 |---|---|
-| **Um só modelo** | `nano_banana_pro`. **Não misturar** — as 43 imagens existentes são todas dele, e misturar parte o alinhamento visual |
+| **Modelo e proveniência explícitos** | os 43 assets históricos usam `nano_banana_pro`; os 11 ícones de armadura usam `imagegen`, conforme o manifesto. Não misturar estilos sem registar a mudança |
 | ⭐ **A frase de estilo é literal** | está em [`../art/prompts/00-estilo.md`](../art/prompts/00-estilo.md) e vai **no início de cada prompt**, sem alterar uma palavra. É ela que faz 100 imagens parecerem do mesmo jogo |
 | **Ícones com fundo transparente** | pede `isolated on transparent background`, e passa pelo `image_background_remover`. Verifica que sai **RGBA** |
 | **Prompt em inglês** | os geradores respondem melhor |

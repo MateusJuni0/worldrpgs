@@ -1,5 +1,7 @@
 # Briefing 2 — para o Fable
 
+> ⚠️ **PROMPT HISTÓRICO, CONCLUÍDO.** Não executar de novo nem usar as contagens/regras abaixo como estado corrente. Ler [`../ESTADO.md`](../ESTADO.md), [`../LACUNAS.md`](../LACUNAS.md) e os contratos [`70`](../spec/70-fecho-dos-sistemas-de-combate.md)–[`73`](../spec/73-fecho-dos-buracos-de-integracao.md).
+
 **De:** Mateus (via Claude) · **31-07-2026** · **É o único briefing. Cobre tudo.**
 
 ---

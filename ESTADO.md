@@ -2,7 +2,7 @@
 
 **Actualizado: 01-08-2026, Tarefa 4 fechada e lacunas vermelhas varridas.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
-> **Porque existe:** a spec tem 71 documentos e ~35 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
+> **Porque existe:** a spec tem **75 documentos** e ~50 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
 
 ---
 
@@ -35,7 +35,7 @@ O código está em [`game/`](game/) desde 31-07 (PR #13), com os 8 commits origi
 
 ```
 $ godot --headless --path game/ scenes/selftest.tscn
-=== 130 passaram, 0 falharam ===
+=== 8433 passaram, 0 falharam ===
 ```
 
 ## 1b. ⭐ O que temos, em números
@@ -44,8 +44,8 @@ $ godot --headless --path game/ scenes/selftest.tscn
 
 | | Temos | A spec promete | Falta |
 |---|---|---|---|
-| Documentos de spec | **74** em `spec/` | — | — |
-| Código e dados | 17 ficheiros `.gd` · 16 catálogos JSON | — | — |
+| Documentos de spec | **75** em `spec/` | — | — |
+| Código e dados | **18** ficheiros `.gd` · **17** catálogos JSON | — | — |
 | Testes | **8433, todos a passar** | — | — |
 | Imagens curadas | **54** fora dos packs: 32 conceitos · 20 ícones · menu · céu | — | só itens futuros, travados por `Fatia 1?` |
 | **Armas** | **120 fichas** · 8 famílias · 88 golpes ([`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md)) | 120 | 5 executáveis/com imagem; 115 esperam fatia/runtime |
