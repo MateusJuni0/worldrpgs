@@ -23,6 +23,73 @@ O nome do adaptador vem lido do próprio Godot em cada medição (`Intel(R) Iris
 
 ---
 
+## Investigação da queda aparente de 56 para 36 fps — 01-08-2026
+
+**Resultado: as camadas de chão e a sua transparência não causaram a queda.**
+À hora do registo de 36 fps já estava órfão um modo fotografia iniciado às
+14:04; durante a reprodução ficou também órfão um auto-teste concluído. Ambos
+continuaram abertos a disputar a mesma Iris Xe depois de os processos-pai
+saírem. Terminados apenas esses quatro processos Godot sem pai, a zona densa
+completa passou a **142,5 fps** sem VSync. Portanto 36 fps era um estado real da
+máquina, mas não uma medição que permitisse atribuir a causa ao mundo.
+
+### Hipótese principal destruída antes de alterar o visual
+
+`ground_material_probe.gd` leu as superfícies importadas de erva, arbusto,
+cogumelo, tronco, seixo e flor. Todas usam `StandardMaterial3D` com
+`transparency=0`, alfa 1,0 e sem textura de albedo. **Não existe alpha blend nem
+alpha scissor nestes modelos low-poly.** Trocar blend por scissor não é uma
+optimização disponível; seria introduzir transparência que o jogo não tem.
+
+### A/B limpo das seis camadas
+
+Mobile/Vulkan, 1920×1080, preset médio, 8 s de aquecimento e 30 s de amostra:
+
+| Zona completa | Média | p95 | p99 | 1% low | Draws finais | Primitivas finais | Pior |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Sem VSync, **todas as camadas** | **142,5** | 10,752 ms | **16,443 ms** | 45,0 | 26 | 275 700 | 74,86 ms |
+| Sem VSync, **sem as seis camadas** | 129,3 | 15,485 ms | 16,594 ms | 49,1 | 18 | 238 900 | 50,63 ms |
+| FIFO + cap 120, **todas as camadas** | **60,0** | 16,666 ms | **16,666 ms** | **56,6** | 24 | 275 680 | 33,33 ms |
+| FIFO + cap 120, **sem as seis camadas** | 59,9 | 16,666 ms | **16,666 ms** | 53,7 | 18 | 238 900 | 33,33 ms |
+
+Retirar conteúdo teve a média de sinal contrário e não mudou o p99. A carga de
+outros agentes ainda introduz ruído nos picos, mas o controlo simultâneo de
+apresentação dá o mesmo p95/p99 com e sem camadas. **Não se paga fealdade por um
+ganho que a medição não encontra.**
+
+### Hipóteses secundárias
+
+| Hipótese | Medição | Resultado |
+|---|---|---|
+| Material diferente por camada | material partilhado 139,7 fps vs controlo 138,1 na mesma sequência ainda contaminada; no A/B limpo retirar todas as camadas também não melhora p99 | rejeitada; não há ganho atribuível à troca de estado |
+| MultiMesh sem culling por instância | chunks de 64 m: 143,1 fps, p99 16,212 ms, 33 draws e 246 500 primitivas; controlo: 142,5, 16,443 ms, 26 draws e 275 700 primitivas | rejeitado no preset: +0,4% por +7 draws, sem ganho material de p99 |
+| Sombras | `medio.shadows=false` antes e depois | não podiam causar a queda |
+| Densidade | todas vs nenhuma camada têm o mesmo p99 com FIFO+cap120 | não cortar árvores/erva |
+
+### O gargalo reproduzível é o pacing duplamente limitado
+
+O jogo normal activa FIFO e também aplica `Engine.max_fps=60` a partir de
+`settings_system.gd`. A combinação cria atrasos perto de dois refreshes:
+
+| Zona completa, FIFO | Média | p95 | p99 | 1% low | >20 ms | Pior |
+|---|---:|---:|---:|---:|---:|---:|
+| Cap interno 60 — comportamento normal actual | 60,0 | 18,280 ms | **29,691 ms** | 32,9 | 79 | 30,93 ms |
+| Sem cap interno | 59,6 | 17,152 ms | 19,469 ms | 36,0 | 15 | 50,00 ms |
+| **Cap interno 120** | **60,0** | **16,666 ms** | **16,666 ms** | **56,6** | **1** | 33,33 ms |
+
+`[CODEX]` **Recomendação:** quando FIFO está activo, usar cap interno 120.
+Razão: foi a única variante que fez passar o p99 sem reduzir resolução, mundo
+ou qualidade. Alternativas descartadas: cap 60 (p99 29,691 ms), sem cap (p99
+19,469 ms), Mailbox e Adaptive (indisponíveis neste driver, já documentados).
+
+⚠️ **Ainda não está aplicado ao jogo normal.** O consumidor é
+`game/src/autoload/settings_system.gd`, que pertence a outra árvore. A tarefa
+exacta ficou em `LACUNAS.md`; `graphics.json` guarda o valor medido para o dono
+não ter de o inventar. E o pico isolado de 33,33 ms mantém aberto o gate de pior
+frame, apesar de o p99 e os 60 fps sustentados passarem.
+
+---
+
 ## A resposta curta
 
 **A arena final real tem margem de render: 150,9 fps médios e p99 12,673 ms
@@ -362,6 +429,13 @@ godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene
 
 # custo isolado de 5 e 10 esqueletos UAL reais
 godot --audio-driver Dummy --path . --rendering-method mobile --script res://src/tools/animation_benchmark.gd -- --asset=res://assets/models/animations/quaternius/UAL1_Standard.glb --actors=5 --seconds=24 --warmup=6 --width=1920 --height=1080 --vsync=off
+
+# auditar se as seis familias de chão usam alpha, texturas e quantas faces têm
+godot --headless --audio-driver Dummy --path . --script res://src/tools/ground_material_probe.gd
+
+# repetir o A/B que isolou camadas e pacing (a sonda não muda o jogo normal)
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=zone --seconds=30 --warmup=8 --vsync=on --quality=medio --presentation-probe=fifo-cap120 --label=chao-todas
+godot --audio-driver Dummy --path . --rendering-method mobile -- --bench --scene=zone --seconds=30 --warmup=8 --vsync=on --quality=medio --presentation-probe=fifo-cap120 --ground-details=none --label=chao-nenhuma
 ```
 
 Os JSON crus ficam em `perf-raw/` (fora do git). Se algum número aqui e no JSON divergirem, **manda o JSON**.

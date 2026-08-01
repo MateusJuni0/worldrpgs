@@ -3,8 +3,9 @@ extends Node3D
 ## Constroi a zona navegavel e veste-a com a seleccao CC0 da Fatia 1.
 ##
 ## Tecnica de desempenho central (Lei 4): as arvores e as pedras vao num
-## MultiMeshInstance3D cada — centenas de objectos, UM draw call. Numa Iris Xe
-## o numero de draw calls e o que mata, nao os poligonos.
+## MultiMeshInstance3D por familia, impedindo centenas de Nodes e draw calls.
+## A medicao actual mostra que nem os 18-33 draws nem as camadas de chao sao o
+## estrangulamento; qualquer nova fragmentacao continua a exigir A/B.
 ##
 ## A nevoa faz duas coisas ao mesmo tempo: e o tom de Brumal e e o que deixa
 ## cortar a distancia de visao sem se ver o corte.
@@ -40,6 +41,9 @@ var palette: Dictionary = {}
 ## e configuracao do motor, nao decoracao.
 var biome: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
+var _ground_detail_selection := "all"
+var _ground_detail_chunk_size := 0.0
+var _ground_detail_shared_material: StandardMaterial3D
 
 ## Pontos de interesse que o main usa para colocar o jogador e os inimigos.
 var spawn_point := Vector3.ZERO
@@ -58,6 +62,8 @@ func build(p_preset: Dictionary, p_palette: Dictionary, layout: String, biome_id
 	preset = p_preset
 	palette = p_palette
 	biome = GameData.biome(biome_id)  # a arena tambem vive em Brumal
+	_parse_ground_detail_probe_args()
+	_apply_presentation_probe_args()
 	_rng.seed = SEED
 	_build_environment()
 	_build_light()
@@ -370,6 +376,82 @@ func _add_asset_multimesh(mesh: Mesh, transforms: Array, shadows: bool, node_nam
 	instances.cast_shadow = (GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadows
 		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 	add_child(instances)
+
+
+## Controlos apenas de diagnóstico para medições A/B do mundo. Sem argumento,
+## o jogo conserva as seis famílias e um único MultiMesh por família.
+func _parse_ground_detail_probe_args() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--ground-details="):
+			_ground_detail_selection = argument.trim_prefix("--ground-details=").to_lower()
+		elif argument.begins_with("--ground-detail-chunk="):
+			_ground_detail_chunk_size = maxf(
+				0.0, argument.trim_prefix("--ground-detail-chunk=").to_float())
+
+
+## O benchmark autoload aplica primeiro o modo pedido por --vsync. Esta sonda
+## corre depois para comparar FIFO com um limitador sem depender de outro dono.
+## O comportamento normal nao muda sem o argumento explicito.
+func _apply_presentation_probe_args() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument == "--presentation-probe=cap60":
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+			Engine.max_fps = 60
+		elif argument == "--presentation-probe=fifo-cap60":
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+			Engine.max_fps = 60
+		elif argument == "--presentation-probe=fifo-cap120":
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+			Engine.max_fps = 120
+		elif argument == "--presentation-probe=exclusive-fifo":
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+			Engine.max_fps = 0
+
+
+func _ground_detail_enabled(family_id: String) -> bool:
+	if _ground_detail_selection == "all":
+		return true
+	if _ground_detail_selection == "none":
+		return false
+	return family_id in _ground_detail_selection.split(",", false)
+
+
+func _ground_probe_uses_shared_material() -> bool:
+	return "--ground-detail-material=shared" in OS.get_cmdline_user_args()
+
+
+func _shared_ground_detail_material() -> StandardMaterial3D:
+	if _ground_detail_shared_material == null:
+		_ground_detail_shared_material = StandardMaterial3D.new()
+		_ground_detail_shared_material.albedo_color = Color("#7d8971")
+		_ground_detail_shared_material.roughness = 0.94
+		_ground_detail_shared_material.metallic = 0.0
+		_ground_detail_shared_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	return _ground_detail_shared_material
+
+
+func _apply_shared_ground_detail_material(mesh: Mesh) -> void:
+	var material := _shared_ground_detail_material()
+	for surface: int in mesh.get_surface_count():
+		mesh.surface_set_material(surface, material)
+
+
+func _add_ground_detail_multimesh(mesh: Mesh, transforms: Array, node_name: String) -> void:
+	if _ground_detail_chunk_size <= 0.0:
+		_add_asset_multimesh(mesh, transforms, false, node_name)
+		return
+	var chunks: Dictionary = {}
+	for transform: Transform3D in transforms:
+		var chunk := Vector2i(
+			floori(transform.origin.x / _ground_detail_chunk_size),
+			floori(transform.origin.z / _ground_detail_chunk_size))
+		if not chunks.has(chunk):
+			chunks[chunk] = []
+		(chunks[chunk] as Array).append(transform)
+	for chunk: Vector2i in chunks:
+		_add_asset_multimesh(mesh, chunks[chunk] as Array, false,
+			"%s_%d_%d" % [node_name, chunk.x, chunk.y])
 
 
 func _build_path_visual() -> void:
@@ -732,50 +814,54 @@ func _scatter_forest() -> void:
 func _scatter_ground_details() -> void:
 	var families := [
 		{
-			"name": "GroundLeafGrass", "scene": DETAIL_GRASS,
+			"id": "grass", "name": "GroundLeafGrass", "scene": DETAIL_GRASS,
 			"count": int(preset.get("grass_detail_count", 520)),
 			"path_clearance": 1.85, "scale_min": 0.72, "scale_max": 1.45,
 			"path_bias": 0.78, "roughness": 0.96, "tint": Color("#7d8971"),
 		},
 		{
-			"name": "GroundBushes", "scene": DETAIL_BUSH,
+			"id": "bush", "name": "GroundBushes", "scene": DETAIL_BUSH,
 			"count": int(preset.get("bush_detail_count", 120)),
 			"path_clearance": 2.35, "scale_min": 0.72, "scale_max": 1.35,
 			"path_bias": 0.72, "roughness": 0.94, "tint": Color("#748064"),
 		},
 		{
-			"name": "GroundMushrooms", "scene": DETAIL_MUSHROOM,
+			"id": "mushroom", "name": "GroundMushrooms", "scene": DETAIL_MUSHROOM,
 			"count": int(preset.get("mushroom_count", 54)),
 			"path_clearance": 1.65, "scale_min": 0.70, "scale_max": 1.15,
 			"path_bias": 0.82, "roughness": 0.90, "tint": Color.WHITE,
 		},
 		{
-			"name": "FallenLogs", "scene": DETAIL_LOG,
+			"id": "log", "name": "FallenLogs", "scene": DETAIL_LOG,
 			"count": int(preset.get("fallen_log_count", 14)),
 			"path_clearance": 3.1, "scale_min": 0.80, "scale_max": 1.35,
 			"path_bias": 0.54, "roughness": 0.92, "tint": Color("#8c7b6a"),
 		},
 		{
-			"name": "GroundPebbles", "scene": DETAIL_STONE,
+			"id": "pebble", "name": "GroundPebbles", "scene": DETAIL_STONE,
 			"count": int(preset.get("pebble_count", 210)),
 			"path_clearance": 1.45, "scale_min": 0.65, "scale_max": 1.50,
 			"path_bias": 0.62, "roughness": 0.86, "tint": Color("#8a8c86"),
 		},
 		{
-			"name": "GroundFlowers", "scene": DETAIL_FLOWER,
+			"id": "flower", "name": "GroundFlowers", "scene": DETAIL_FLOWER,
 			"count": int(preset.get("flower_count", 70)),
 			"path_clearance": 1.75, "scale_min": 0.72, "scale_max": 1.22,
 			"path_bias": 0.78, "roughness": 0.92, "tint": Color("#d0c29d"),
 		},
 	]
 	for family: Dictionary in families:
+		if not _ground_detail_enabled(String(family["id"])):
+			continue
 		var transforms := _scatter_detail_transforms(
 			int(family["count"]), float(family["path_clearance"]),
 			float(family["scale_min"]), float(family["scale_max"]),
 			float(family["path_bias"]))
 		var mesh := _asset_mesh(family["scene"] as PackedScene,
 			float(family["roughness"]), family["tint"] as Color, false)
-		_add_asset_multimesh(mesh, transforms, false, String(family["name"]))
+		if _ground_probe_uses_shared_material():
+			_apply_shared_ground_detail_material(mesh)
+		_add_ground_detail_multimesh(mesh, transforms, String(family["name"]))
 
 
 func _scatter_detail_transforms(count: int, path_clearance: float,

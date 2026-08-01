@@ -2,13 +2,16 @@
   "_fonte": "spec/09-tecnico.md — Intel Iris Xe integrados, 8 GB partilhados com os graficos, 1080p @ 60 Hz.",
   "_lei_4": "Se for preciso escolher entre bonito e 60 fps, escolhe-se 60 fps. Estes presets sao o botao que faz essa escolha.",
   "_nota": "A nevoa nao e so estetica: encurta a distancia de visao e esconde o corte do mundo. E a aliada do desempenho (spec/10-fatia-1.md).",
-  "_densidade_medida": "[CLAUDE] 01-08 na PROPRIA Iris Xe: cortar o medio 40% (850->520 arvores, 1100->600 ervas) deu EXACTAMENTE 0 fps de volta — 36 fps / 28,1 ms nos dois casos, draw 66 -> 63. Logo a densidade NAO e o travao e nao vale a pena pagar feiura por ela. O que custou os ~20 fps foi ACRESCENTAR as camadas de chao (56 -> 36 fps), e o custo nao escala com a contagem: e por camada, nao por instancia. Suspeita a investigar: transparencia/overdraw nas ervas e flores, ou estado de material por camada. NAO cortar densidade para tentar resolver isto.",
+  "_densidade_medida": "[CODEX] 01-08 na Iris Xe, depois de remover dois Godot orfaos que disputavam a mesma GPU: todas as camadas deram 142,5 fps/p99 16,443 ms sem VSync; retirar as seis deu 129,3 fps/p99 16,594 ms. Com FIFO+cap120, ambas deram p99 16,666 ms. O sinal inverso da media e o p99 igual provam ruido do host, nao custo das camadas. Razao: preservar a floresta sem atribuir 36 fps a uma variavel que o A/B limpo inocentou. Alternativa descartada: cortar densidade ou camadas; nao ganhou tempo de frame.",
+  "_materiais_chao_medidos": "[CODEX] A sonda ground_material_probe.gd confirmou as seis familias opacas: transparency=0, albedo alpha=1 e nenhuma textura de alpha. A hipotese alpha blend/overdraw foi destruida antes de alterar o visual. Alternativa alpha scissor rejeitada: nao existe alpha para recortar.",
   "_densidade": "[CLAUDE] 01-08: os tree_count antigos (200/100/80) eram o travao que fazia o mapa parecer vazio. O mundo tem 210x210 m = 44.100 m2; 100 arvores davam UMA ARVORE A CADA 21 METROS — campo de golfe, nao floresta de Brumal. Os valores novos dao ~6,8 m (alto), ~8,8 m (medio) e ~11,9 m (baixo) entre arvores. Custa pouco porque o greybox usa MultiMeshInstance3D: 1600 arvores continuam a ser 3 draw calls. O que sobe e a contagem de vertices, nao as chamadas. MEDIR sempre depois de mexer aqui — e a Lei 4.",
 
   "default": "medio",
 
   "presentation": {
     "_why": "[CODEX] No Iris Xe medido, cinco e dez esqueletos têm custo semelhante mas o modo janela acrescenta jitter de apresentação; ecrã inteiro reduziu os picos do caso de cinco actores, sem fazer passar ainda o p99. Validar de novo no M2 e em cada máquina-alvo.",
+    "_pacing_medido": "[CODEX] Zona completa limpa: FIFO+cap60 deu p99 29,691 ms; sem cap deu 19,469 ms; FIFO+cap120 deu p99 16,666 ms e 1% low 56,6, com um pico isolado de 33,33 ms. Recomenda-se cap interno 120 quando FIFO esta activo. Razao: e a unica variante que fez passar o p99 sem cortar imagem. Alternativas cap60 e sem cap rejeitadas pelos p99; falta o consumidor em settings_system.gd, registado no LACUNAS.md.",
+    "recommended_engine_cap_with_fifo": 120,
     "default_mode": "fullscreen",
     "windowed_supported": true,
     "native_width": 1920,
