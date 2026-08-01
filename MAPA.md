@@ -4,7 +4,7 @@
 >
 > Mostra **os links reais entre documentos**. Um documento muito citado é uma fundação: mexer nele mexe em tudo o que aponta para lá.
 
-**124 documentos · 19 255 linhas**
+**124 documentos · 19 262 linhas**
 
 ## ⭐ As fundações — o que mais se cita
 
@@ -38,7 +38,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`DECISOES.md`](DECISOES.md) — Registo de decisões | 222 | 17 |
 | [`ESTADO.md`](ESTADO.md) — ESTADO — o que é verdade hoje | 327 | 16 |
 | [`LACUNAS.md`](LACUNAS.md) — LACUNAS — o que falta, e ninguém está a fazer | 284 | 18 |
-| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 187 | 5 |
+| [`MAPA.md`](MAPA.md) — MAPA — a estrutura do projecto | 194 | 5 |
 | [`PARA-O-RICO.md`](PARA-O-RICO.md) — Rico, lê isto primeiro | 94 | 3 |
 | [`PONTE-CLAUDE.md`](PONTE-CLAUDE.md) — Ponte Claude — guia do Rico | 62 | 2 |
 | [`README.md`](README.md) — WorldRPGs | 73 | 2 |
@@ -145,7 +145,7 @@ Mexer num destes obriga a rever o que aponta para lá.
 |---|---|---|
 | [`AUDITORIA-CODEX-2026-08-01.md`](docs/AUDITORIA-CODEX-2026-08-01.md) — Auditoria independente — Codex (gpt-5.6-sol, esforço máximo) | 858 | 7 |
 | [`AUDITORIA-CODEX-COMPARACAO-2026-08-01.md`](docs/AUDITORIA-CODEX-COMPARACAO-2026-08-01.md) — Auditoria 2 — comparação sistemática com Dark Souls 2 e 3 | 571 | 3 |
-| [`REVISAO-1.md`](docs/REVISAO-1.md) — Revisão 1 de 3 — coerência interna | 132 | 0 |
+| [`REVISAO-1.md`](docs/REVISAO-1.md) — Revisão 1 de 3 — coerência interna | 132 | 1 |
 
 ### game/ — o jogo — 5 ficheiros
 
@@ -185,9 +185,3 @@ Mexer num destes obriga a rever o que aponta para lá.
 | [`glossary.md`](memory/glossary.md) — Glossário | 13 | 2 |
 | [`research.md`](memory/research.md) — Investigação | 4 | 2 |
 | [`reviews.md`](memory/reviews.md) — Revisões | 4 | 2 |
-
-## ⚠️ Documentos que ninguém cita
-
-Existem, mas nada aponta para eles. Ou estão a ser esquecidos, ou deviam estar ligados a algum lado.
-
-- [`docs/REVISAO-1.md`](docs/REVISAO-1.md) — Revisão 1 de 3 — coerência interna
