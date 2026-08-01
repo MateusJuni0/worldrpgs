@@ -140,7 +140,7 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 ## O que trava
 
-**Cinco lacunas `🔴` travam as famílias afectadas, não toda a construção:** mecanismos de 11 feitiços utilitários, melhorias dos 53 feitiços, afinidade elemental de escudos, velocidade de perseguição em 18 fichas e cinco acessórios obrigatórios sem catálogo. Estão no [`LACUNAS`](LACUNAS.md); as decisões reservadas aos donos estão no [`99`](spec/99-perguntas-abertas.md). Combate da Fatia 1, produção independente e medição podem continuar.
+**Cinco lacunas `🔴` travam as famílias afectadas, não toda a construção:** mecanismos de 12 feitiços, melhorias dos 53 feitiços, afinidade elemental de escudos, velocidade de perseguição em 18 fichas e cinco acessórios obrigatórios sem catálogo. Estão no [`LACUNAS`](LACUNAS.md); as decisões reservadas aos donos estão no [`99`](spec/99-perguntas-abertas.md). Combate da Fatia 1, produção independente e medição podem continuar.
 
 ⚠️ **Mesmo depois de fechar as cinco lacunas, o maior risco continua a ser escopo:** 13 chefes, 12 subchefes, 36 nomeados, 12 biomas, 120 armas, 68 armaduras, 70 anéis e 53 feitiços, **feito por duas pessoas e dois agentes**. Os donos sabem e decidiram avançar. A alavanca que dá vastidão barata são os **círculos e atalhos** ([`39`](spec/39-estudo-profundo.md) §8, [`69`](spec/69-catalogo-do-mundo.md)).
 

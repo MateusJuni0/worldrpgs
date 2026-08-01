@@ -2199,8 +2199,9 @@
   "chama_faminta": {
     "display_name": "Chama Faminta",
     "school": "mal",
-    "question": "preciso de queimar e tirar stamina ao mesmo alvo",
-    "verb": "feixe curto que queima e rouba stamina",
+    "question": "preciso de queimar e pressionar a postura ou guarda do mesmo alvo",
+    "verb": "feixe curto que queima; a conversao do antigo roubo de stamina em postura/guarda ainda nao tem magnitude executavel",
+    "_lacuna_revisao_1": "spec/70 revoga stamina inimiga; faltam posture_damage_base e regra de retorno antes de implementar esta metade do verbo",
     "formula": "1.44 × força_do_instrumento − 40",
     "mana_cost": 44,
     "cast_time": 1.2,

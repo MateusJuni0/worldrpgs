@@ -212,7 +212,7 @@ O contrato garante que **todo o ataque avisa com pelo menos 0,50 s**. O espelho 
 |---|---|
 | **Marca Ardente** | acende o alvo; o medidor enche e come vida |
 | **Febre** | queimação que **passa ao inimigo do lado** quando o alvo morre |
-| **Chama Faminta** | queima **e** rouba stamina enquanto arde |
+| **Chama Faminta** | queima e pressiona postura/guarda enquanto arde; magnitude/retorno continua `🔴` no catálogo actual |
 
 ### Necromancia
 
@@ -229,7 +229,7 @@ O contrato garante que **todo o ataque avisa com pelo menos 0,50 s**. O espelho 
 | Nome | O que faz |
 |---|---|
 | **Sanguessuga** | vida → regeneração, com tecto |
-| ⭐ **Fôlego Roubado** | stamina do inimigo → tua |
+| ⭐ **Fôlego Roubado** | dano de postura/guarda → devolve 50% do efeito real em stamina |
 | ⭐ **Marca do Usurário** | mais almas quando aquele inimigo morrer |
 
 ### Reactivos e enfraquecer
