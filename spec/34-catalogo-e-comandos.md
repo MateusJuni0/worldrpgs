@@ -2,13 +2,15 @@
 
 `[DECIDIDO]` (Mateus, 31-07-2026) — a dimensão do equipamento, e uma regra de processo que vale para o projeto inteiro.
 
+> ⚠️ **TENSÃO POSTERIOR:** o alvo decidido abaixo era **~30 armaduras**. O catálogo [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) cresceu para **68 peças** ao resolver os 57 IDs visíveis prometidos pelo bestiário, além das 11 iniciais. Nenhum agente transforma esse aumento em nova decisão: a pergunta 44 do [`99`](99-perguntas-abertas.md) pede aos donos que aceitem 68 ou mandem consolidar IDs.
+
 ---
 
 ## 1. A escala
 
 | | Alvo | Na fatia 1 |
 |---|---|---|
-| **Armaduras** | **~30**, cada uma com habilidade própria | por decidir — poucas |
+| **Armaduras** | **~30**, alvo original decidido; catálogo corrente 68 em `[TENSÃO]` | 11 peças |
 | **Armas** | **~20 por classe** | 5 partilhadas |
 
 `[DECIDIDO]` — **toda a armadura tem uma habilidade ou uma identidade visual própria.** Nenhuma peça existe só para dar +2 de defesa.
@@ -17,7 +19,7 @@ As habilidades podem ser defesa, sorte, ou o que fizer sentido — o critério �
 
 ### O que isto obriga
 
-Com 6 classes, 20 armas por classe são **120 armas**. Mais 30 armaduras. É um catálogo grande, e é o que o Mateus quer — fica registado como decisão consciente, com duas condições:
+Com 6 classes, 20 armas por classe são **120 armas**. Mais **~30 armaduras no alvo original**; as 68 correntes aguardam a pergunta 44. É um catálogo grande, e fica registado como decisão consciente, com duas condições:
 
 1. **Famílias que partilham conjunto de movimentos.** 120 armas não são 120 conjuntos de animação. São talvez 8 famílias (espada, machado, lança, adaga, cajado, arco, martelo, mangual) com variações dentro de cada — que é o padrão do género e está no [`31-referencias.md`](31-referencias.md). **A animação é o custo real, não o número de linhas na tabela.**
 2. **A fatia 1 não cresce.** Continua com 5 armas e a armadura mínima que o WP5 definir. O catálogo constrói-se por cima da fatia, arma a arma — nunca de uma vez.

@@ -151,7 +151,7 @@
 
 ## 11. O risco, dito uma vez
 
-**Duas pessoas e dois agentes.** O escopo aprovado é grande: 12 biomas, 13 chefes verdadeiros + 12 subchefes + ~36 nomeados, ~120 armas, ~30 armaduras, ~70 anéis, catálogo de magia largo.
+**Duas pessoas e dois agentes.** O escopo escrito é grande: 12 biomas, 13 chefes verdadeiros + 12 subchefes + ~36 nomeados, 120 armas, **68 peças de armadura (acima do alvo decidido de ~30; pergunta 44)**, 70 anéis e 53 feitiços.
 
 Duas auditorias independentes ([`../docs/`](../docs/)) estimaram o que honestamente não fica feito, e deram uma **ordem de corte com menor perda**:
 

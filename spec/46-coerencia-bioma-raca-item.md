@@ -8,7 +8,7 @@ E `[DECIDIDO]` — **10 a 15 raças** · **mais inimigos** · **subchefes a sér
 
 ## 1. O problema que este documento resolve
 
-Vamos escrever **~15 raças × 12 biomas × ~120 armas × ~30 armaduras × ~70 anéis**, e cada um leva descrição.
+Vamos escrever **12 raças × 12 biomas × 120 armas × ~30 armaduras no alvo original (68 peças correntes em `[TENSÃO]`) × 70 anéis**, e cada um leva descrição. A pergunta 44 decide se as 68 peças ficam ou se os IDs visíveis se consolidam.
 
 ⚠️ **Sem uma lei, isso vira sopa.** Um machado de orc do gelo a cair num vulcão. Uma descrição que fala de floresta num deserto. Uma armadura de fogo num sítio onde não há fogo nenhum.
 

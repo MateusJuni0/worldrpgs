@@ -167,7 +167,7 @@ Também deixou de haver uma incógnita sem número na animação: UAL Standard e
 | retarget KayKit/Quaternius dentro do nível completo | o spike mediu o custo do esqueleto, mas não prova encaixe, IA, efeitos e duas perspectivas juntos |
 | `TuningRecorder` e três sessões de feel | 8434 testes provam coerência; não provam prazer nem confirmam os baselines |
 | identidades/fichas dos 11 guardiões restantes e do Ultra; música final e narrativa | dependem das sete respostas do [`26`](spec/26-narrativa.md) e da pergunta 34; inventá-las seria decidir autoria dos donos |
-| políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto e escudos elementais | perguntas 24, 28, 29, 32 e 35–43 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
+| políticas co-op, mapa, Assassino, invocados, vendedores, melhorias/Voto, escudos elementais e o salto ~30→68 armaduras | perguntas 24, 28, 29, 32 e 35–44 continuam em [`99`](spec/99-perguntas-abertas.md); algumas são `[TENSÃO]` e não foram decididas pelo Codex |
 
 Portanto, **não se declara o jogo completo nem a camada sistémica inteiramente fechada**. O núcleo executável continua coerente e verde; a magia futura e os escudos elementais precisam das decisões/mecanismos agora isolados, além do catálogo mecânico/narrativo dos doze confrontos finais.
 

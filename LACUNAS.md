@@ -51,7 +51,7 @@
 | ✅ | ~~**Requisitos de atributo**~~ **RESOLVIDO** — abaixo do requisito continua utilizável a ×0,6 sem escala; nenhum catálogo passa 18 | [`11`](spec/11-formulas.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🟠 | **Produção M2: executar os sete golpes novos, estados e segunda adaga.** O contrato está fechado; leve/pesado/cadeia/bash são o runtime actual, e corrida, rolar, salto de ataque, queda, empurrão universal, artes, medidores e Corte Alternado têm prova de saída no [`73`](spec/73-fecho-dos-buracos-de-integracao.md) §8 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
 | 🟠 | **Equipar, votos de melhoria, 2→10 dedos e persistência não têm UI/save.** Dados e invariantes existem; clientes são WP11 + save v2 | encontrado ao fechar o [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
-| 🟠 | **O catálogo de armadura cresceu de ~30 para 68 peças** porque o WP6 já prometia 57 IDs além das 11 iniciais. A coluna `Fatia 1?` contém a produção (só 11 agora), mas o custo futuro ficou maior | [`67`](spec/67-catalogo-do-bestiario.md) · [`68`](spec/68-catalogo-de-armas-armaduras-e-aneis.md) |
+| 🟠 | **O catálogo de armadura cresceu do alvo `[DECIDIDO]` de ~30 para 68 peças** porque o WP6 já prometia 57 IDs além das 11 iniciais. A coluna `Fatia 1?` contém a produção (só 11 agora), mas Mateus + Rico têm de aceitar a expansão ou mandar consolidar IDs | [`34`](spec/34-catalogo-e-comandos.md) · [`67`](spec/67-catalogo-do-bestiario.md) · pergunta 44 |
 | 🔵 | **Como a mira do arco comunica a queda da flecha** — sem isso o jogador aprende "o arco falha às vezes" | [`36`](spec/36-fisica.md) §3 |
 
 ### Volta 4 — magia

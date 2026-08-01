@@ -169,6 +169,8 @@ Nunca falado. É a decisão que define o tom de um souls-like: perde-se o quê, 
 
 43. ⚠️ **A afinidade elemental do escudo pertence à família ou ao escudo individual?** — `[TENSÃO]` de execução. Está `[DECIDIDO]` que escudos diferem por elemento ([`37`](37-aneis-e-elementos.md) §2), mas `weapons.json` só diferencia estabilidade/físico e o runtime usa absorção mágica global de 50%. **Proposta e recomendação `[CODEX]`:** família define parry, estabilidade, deflexão e físico; cada instância define o mapa fogo/raio/mágico/escuridão. Assim um escudo grande não fica preso para sempre a um elemento e a decisão produz escolhas reais. Mateus + Rico confirmam o eixo antes de se inventarem os valores.
 
+44. ⚠️ **O alvo é ~30 armaduras ou o catálogo corrente de 68 peças?** — `[TENSÃO]` de escopo. O Mateus decidiu **~30 armaduras, cada uma com identidade própria** ([`34`](34-catalogo-e-comandos.md) §1), mas o [`68`](68-catalogo-de-armas-armaduras-e-aneis.md) materializou **68 peças**: 11 iniciais + 57 IDs de equipamento visível que o bestiário já prometia largar. A matriz de coerência [`46`](46-coerencia-bioma-raca-item.md) também dependia do alvo original. **Proposta:** ou Mateus + Rico aceitam explicitamente as 68, ou o catálogo consolida vários IDs visuais em peças partilhadas/variantes até regressar a ~30 sem quebrar «larga o que se vê». **Recomendação `[CODEX]`:** manter só as 11 da Fatia 1 agora e, antes de produzir as outras 57, rever o catálogo por famílias visuais para aproximar o alvo de ~30; só conservar 68 quando uma peça responder a uma escolha distinta, não apenas a outro nome.
+
 ---
 
 ## Perdido no áudio

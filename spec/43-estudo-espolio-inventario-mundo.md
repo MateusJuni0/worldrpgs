@@ -158,7 +158,7 @@ E há um **armazém** com ~2000 espaços, acessível só nos pontos de descanso.
 
 ✅ **A decisão do Mateus ([`40`](40-decisoes-espolio-magia-inventario.md) §9) é exactamente este modelo.** Confirmado.
 
-⭐ **E o armazém não nos faz falta — faz falta a razão dele.** O problema real que ele resolve é **a mochila cheia de lixo à procura do frasco**. Com 30 armaduras e 120 armas ([`34`](34-catalogo-e-comandos.md) §1), vamos ter esse problema a sério.
+⭐ **E o armazém não nos faz falta — faz falta a razão dele.** O problema real que ele resolve é **a mochila cheia de lixo à procura do frasco**. Com 120 armas e **~30 armaduras no alvo dos donos / 68 peças no catálogo corrente em tensão** ([`34`](34-catalogo-e-comandos.md) §1; pergunta 44), vamos ter esse problema a sério.
 
 **Proposta `[CLAUDE]` `→WP11`:** sem armazém — **filtros e favoritos**. A mochila é infinita e nunca se gere; o que se gere é **a vista**. Menos sistema, mesmo resultado, e nada se perde por engano num baú a que não se pode chegar.
 
