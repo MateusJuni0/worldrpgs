@@ -1,7 +1,7 @@
 {
   "_fonte": "spec/01-combate.md + spec/45-controlos-configuraveis.md + spec/73-fecho-dos-buracos-de-integracao.md.",
   "_nota": "O mapa e construido em runtime pelo GameData a partir deste ficheiro - remapear nao exige recompilar. Teclado+rato continua primario porque nenhuma das duas maquinas tem comando; o esquema de comando e um default completo e sintetico a provar em hardware no M2.",
-  "_lacuna_spec": "A tabela da spec nao tem tecla para CONJURAR (so 'magia seguinte: F'). Ver PERGUNTAS.md P2 e DECISOES-PROTOTIPO.md D6 - o prototipo usa C.",
+  "_nota_cast": "O contrato corrente usa F/roda para percorrer os oito favoritos e C para conjurar; ambos sao remapeaveis.",
 
   "gamepad_required": [
     "move_forward", "move_back", "move_left", "move_right", "attack", "heavy_mod",

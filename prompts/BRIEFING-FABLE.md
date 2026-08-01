@@ -403,10 +403,10 @@ O sistema mais complexo do jogo, e está descrito numa única frase da gravaçã
 
 ### WP11 — Interface e configurações · `spec/20-interface.md`
 
-- **HUD:** vida, stamina, cargas de magia, vida do chefe, estado do parceiro. Onde, que tamanho, com que comportamento
-- **Barra de atalhos** no fundo do ecrã (04:37): quantos espaços, como se troca
-- **Mochila** de capacidade limitada (04:34): quantos espaços, o que acontece quando enche, abre em pausa ou em tempo real, há baú
-- **Magias no ecrã** — ficou por resolver na gravação (04:55, 04:59). Quantas visíveis, onde, troca-se em combate
+- **HUD:** vida, stamina, **mana**, frasco, tentativas de meditação, vida do chefe e estado do parceiro. Onde, que tamanho, com que comportamento
+- **Barra de atalhos:** cinco consumíveis em `1`–`5`; `R` usa o seleccionado. Magia não ocupa estes cinco espaços: `F`/roda percorre os oito favoritos e `C` lança
+- **Mochila infinita:** filtros e favoritos tornam o catálogo navegável; não há limite nem baú que possa deixar itens para trás
+- **Magias no ecrã:** mostra a seleccionada entre os oito favoritos; a lista de favoritos só se edita fora de combate ou num descanso
 - Ecrã de personagem e distribuição de pontos
 - Menus: principal, pausa, gravar
 - **Configurações completas:** gráficos, áudio, comandos e remapeamento, acessibilidade, opções de rede

@@ -58,7 +58,7 @@ Toda a habilidade tem de encaixar numa destas. Se não encaixar em nenhuma, **n�
 
 - **Armaduras: habilidades passivas ou condicionais.** Trinta armaduras com trinta teclas é impossível; trinta armaduras com trinta efeitos passivos é trivial e funciona.
 - **Armas: uma tecla partilhada para a arte da arma.** 120 armas, uma tecla — o que ela faz depende do que tens na mão. É assim que o género resolve isto, e é o único modo que escala.
-- **Consumíveis e magias: a barra de atalhos** que já existe (`1`–`5` + roda), com a mochila a trocar o que lá está.
+- **Consumíveis:** a barra de cinco atalhos (`1`–`5`) escolhe o item e `R` usa-o. **Magias:** `F`/roda percorre os oito favoritos e `C` lança a seleccionada; os favoritos só se editam fora de combate ou num descanso ([`66`](66-catalogo-de-magia.md)).
 
 ### O que cada ficha tem de trazer
 

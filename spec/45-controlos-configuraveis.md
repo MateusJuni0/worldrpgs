@@ -37,7 +37,7 @@ E há a razão simples: **são dois amigos com mãos diferentes.** Não há nenh
 |---|---|
 | **Movimento** | andar, correr, esquivar, saltar, andar devagar |
 | **Combate** | ataque leve, pesado, **parry**, bloquear, empurrão, arte de arma, habilidade de classe |
-| **Magia e itens** | conjurar, feitiço seguinte/anterior, atalhos `1`–`5`, frasco |
+| **Magia e itens** | `F`/roda percorre favoritos, `C` conjura; atalhos `1`–`5` escolhem consumível e `R` usa-o |
 | **Câmara e alvo** | engatar alvo, trocar de alvo, inverter eixos, sensibilidade, campo de visão |
 | **Mundo** | interagir, apanhar, mapa, mochila, descansar |
 | **Sistema** | pausa, capturas, consola de depuração |
