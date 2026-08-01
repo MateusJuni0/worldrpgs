@@ -70,6 +70,8 @@ São o registo de uma conversa, **não o estado actual**. Em caso de divergênci
 
 | # | Documento | Do que trata | Estado |
 |---|---|---|---|
+| 57 | [**O mapa e o minimapa**](spec/57-mapa-e-minimapa.md) | Mostra onde já estiveste, nunca onde as coisas estão · marcas partilhadas · vista inclinada para a verticalidade se ler | 🟢 01-08 |
+| 56 | [**Voz no co-op e vendedores**](spec/56-voz-e-vendedores.md) | Voz pelo cano que já existe, posicional · e o vendedor vende o que TU encontraste | 🟢 01-08 |
 | 55 | [**As formas de um feitiço**](spec/55-formas-de-feitico.md) | 12 formas de entrega diferentes · o espaço como variável (a chuva morre debaixo de tecto) · velocidade com rendimentos decrescentes · como se escapa a cada forma | 🟢 estudo 01-08 |
 | 54 | [**Mana, meditação e traços de classe**](spec/54-mana-meditacao-e-tracos-de-classe.md) | Sem slots de magia · mana que não regenera · meditar 40 s (mas não os frascos) · um traço passivo por classe · a roda de feitiços obrigatória | 🟢 revoga o bolo de cargas do 39 §7 |
 | 53 | [**13 chefes, o ritmo da travessia, e o mago forte**](spec/53-chefes-ritmo-e-o-mago-forte.md) | Resposta do Mateus à auditoria: 13 verdadeiros + portas de história abertas, travessia de 8–12 min, e o Voto de Sangue a trocar verbos em vez de multiplicar dano | 🟢  01-08 |

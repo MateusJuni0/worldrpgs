@@ -89,7 +89,10 @@
 | | Lacuna | Origem |
 |---|---|---|
 | 🟠 | **A curva de nível é linear, devia ser cúbica** · **"XP" devia ser "almas"** | [`35`](spec/35-estudo-referencia.md) §3 |
-| 🟠 | ⚠️ **Sistema de saves** — onde vive o progresso, e como funciona a dois. **Sem cobertura** | [`48`](spec/48-arcos-bestas-escudos.md) |
+| 🟠 | ⚠️ **Sistema de saves** — ⭐ **agora com TRÊS clientes à espera**: progresso, inventário e o **mapa** ([`57`](spec/57-mapa-e-minimapa.md) §6). Continua sem uma linha na spec |
+| 🟠 | ⚠️ **A leitura do mapa tem de ser decidida ANTES de o WP8 traçar as zonas** — senão há zonas impossíveis de mapear | [`57`](spec/57-mapa-e-minimapa.md) §5 |
+| 🟠 | ⚠️ **Texturas, modelos 3D e som: ZERO.** Os packs CC0 do [`22`](spec/22-assets.md) nunca foram descarregados nem importados. **Nenhuma volta cobre isto** |
+| 🟠 | ~~Sistema de saves~~ *(linha antiga)* — onde vive o progresso, e como funciona a dois. **Sem cobertura** | [`48`](spec/48-arcos-bestas-escudos.md) |
 | 🟠 | **Lock-on em 1.ª pessoa** — duas opções propostas, nenhuma escolhida | [`29`](spec/29-perspectiva.md) |
 | 🟠 | **A cura à distância funciona com que latência?** | [`42`](spec/42-estudo-magia.md) |
 
