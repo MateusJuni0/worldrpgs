@@ -3,6 +3,28 @@ extends RefCounted
 ## velocidades: limita-se a somar o afastamento definido em enemies.json.
 
 
+static func tactical_velocity(actor_position: Vector3, target_position: Vector3,
+		current: Vector3, action: String, enemy: Dictionary,
+		clockwise: bool) -> Vector3:
+	var to_target := target_position - actor_position
+	to_target.y = 0.0
+	if to_target.is_zero_approx():
+		return current
+	var direction := to_target.normalized()
+	var horizontal := Vector3.ZERO
+	match action:
+		"approach":
+			horizontal = direction * float(enemy.get("chase_speed", 0.0))
+		"orbit":
+			var tangent := direction.cross(Vector3.UP)
+			if not clockwise:
+				tangent = -tangent
+			horizontal = tangent * float(enemy.get("strafe_speed", 0.0))
+		"withdraw":
+			horizontal = -direction * float(enemy.get("strafe_speed", 0.0))
+	return Vector3(horizontal.x, current.y, horizontal.z)
+
+
 static func resolve_spawn_overlap(actor: CharacterBody3D, neighbours: Array,
 		config: Dictionary) -> void:
 	var attempts := int(config.get("spawn_resolution_attempts", 0))
