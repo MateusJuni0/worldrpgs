@@ -1,12 +1,13 @@
 class_name CharacterVisual
 extends Node3D
-## Corpo Quaternius ou silhueta de classe KayKit sobre a capsula de fisica.
+## Corpo humano Quaternius vestido sobre a capsula de fisica.
 ##
-## Os dois corpos base partilham o esqueleto UAL de 65 ossos. Os fatos KayKit
-## sao personagens completos com o seu rig comum de 23 ossos; o pack so traz
-## clips gerais e de locomocao, por isso os verbos em falta usam equivalentes
-## visuais ate existir uma biblioteca KayKit completa.
+## Os dois corpos base partilham o esqueleto UAL de 65 ossos. A origem nunca
+## substitui esse corpo: acrescenta poucas pecas por cima, presas aos mesmos
+## ossos. O KayKit continua no repositorio para cenario, mas nao e um corpo de
+## jogador.
 
+const PLAYER_BODY_PACK := "quaternius"
 const BODY_PATHS := {
 	"body_male": "res://assets/models/characters/quaternius/Superhero_Male_FullBody.gltf",
 	"body_female": "res://assets/models/characters/quaternius/Superhero_Female_FullBody.gltf",
@@ -16,25 +17,6 @@ const BODY_SOURCE_HEIGHTS := {
 	"body_female": 1.775051,
 }
 
-# [CODEX] Uma silhueta distinta por origem. Razao: a classe tem de se ler antes
-# do detalhe. Alternativa descartada: repetir Knight no guerreiro, tanque e
-# paladino; poupava seleccao, mas os tornava iguais a distancia.
-const CLASS_PATHS := {
-	"warrior": "res://assets/models/characters/kaykit-adventurers/Ranger.glb",
-	"sorcerer": "res://assets/models/characters/kaykit-adventurers/Mage.glb",
-	"tank": "res://assets/models/characters/kaykit-adventurers/Knight.glb",
-	"assassin": "res://assets/models/characters/kaykit-adventurers/Rogue_Hooded.glb",
-	"berserker": "res://assets/models/characters/kaykit-adventurers/Barbarian.glb",
-	"paladin": "res://assets/models/characters/kaykit-adventurers/Rogue.glb",
-}
-const CLASS_SOURCE_HEIGHTS := {
-	"warrior": 2.274951,
-	"sorcerer": 2.654696,
-	"tank": 2.543104,
-	"assassin": 2.172992,
-	"berserker": 2.397775,
-	"paladin": 2.180353,
-}
 const CLASS_TINTS := {
 	"warrior": Color("d9b46f"),
 	"sorcerer": Color("829de0"),
@@ -42,33 +24,137 @@ const CLASS_TINTS := {
 	"assassin": Color("71907c"),
 	"berserker": Color("c87562"),
 	"paladin": Color("e2c66f"),
+	"evil_mage": Color("8f789e"),
 }
-const CLASS_PROPS := {
+
+# [CODEX] Silhuetas de baixo custo para as pecas iniciais que ainda nao tem
+# modelo UAL compativel. Razao: um corpo adulto vestido com geometria simples
+# cumpre a decisao e preserva as animacoes. Alternativa descartada: usar os
+# aventureiros KayKit como fatos completos; voltava a trocar corpo, proporcao e
+# esqueleto. As assinaturas descrevem geometria, nao cor, e sao unicas.
+const ORIGIN_OUTFITS := {
+	"warrior": {
+		"signature": "cuirass_tapered|pauldron_left|boots_paired",
+		"pieces": [
+			{"name": "Cuirass", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.50, 0.46, 0.38), "depth": 0.38,
+				"position": Vector3(0.0, 1.24, 0.02),
+				"material": "leather"},
+			{"name": "PauldronLeft", "shape": "sphere", "bone": "upperarm_l",
+				"scale": Vector3(0.30, 0.16, 0.35), "position": Vector3(-0.28, 1.43, 0.0),
+				"material": "iron"},
+			{"name": "BootLeft", "shape": "box", "bone": "calf_l",
+				"size": Vector3(0.17, 0.38, 0.24), "position": Vector3(-0.13, 0.31, 0.015),
+				"material": "leather"},
+			{"name": "BootRight", "shape": "box", "bone": "calf_r",
+				"size": Vector3(0.17, 0.38, 0.24), "position": Vector3(0.13, 0.31, 0.015),
+				"material": "leather"},
+		],
+	},
+	"sorcerer": {
+		"signature": "robe_fitted|cape_long_flared|belt_narrow",
+		"pieces": [
+			{"name": "RobeTorso", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.44, 0.54, 0.36), "depth": 0.34,
+				"position": Vector3(0.0, 1.20, 0.02), "material": "cloth"},
+			{"name": "LongCape", "shape": "cape", "bone": "spine_03",
+				"size": Vector3(0.36, 0.98, 0.66), "depth": 0.045,
+				"position": Vector3(0.0, 1.06, -0.17), "material": "cloth"},
+			{"name": "Belt", "shape": "box", "bone": "pelvis",
+				"size": Vector3(0.46, 0.10, 0.29), "position": Vector3(0.0, 0.99, 0.0),
+				"material": "leather"},
+		],
+	},
+	"tank": {
+		"signature": "helm_closed|cuirass_wide_tapered|pauldrons_symmetric",
+		"pieces": [
+			{"name": "ClosedHelm", "shape": "frustum", "bone": "Head",
+				"size": Vector3(0.18, 0.28, 0.21), "position": Vector3(0.0, 1.67, 0.0),
+				"material": "iron"},
+			{"name": "WideCuirass", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.60, 0.52, 0.46), "depth": 0.40,
+				"position": Vector3(0.0, 1.24, 0.02),
+				"material": "iron"},
+			{"name": "PauldronLeft", "shape": "sphere", "bone": "upperarm_l",
+				"scale": Vector3(0.32, 0.18, 0.38), "position": Vector3(-0.30, 1.43, 0.0),
+				"material": "iron"},
+			{"name": "PauldronRight", "shape": "sphere", "bone": "upperarm_r",
+				"scale": Vector3(0.32, 0.18, 0.38), "position": Vector3(0.30, 1.43, 0.0),
+				"material": "iron"},
+		],
+	},
+	"assassin": {
+		"signature": "hood_close|mask_band|tunic_fitted|boots_paired",
+		"pieces": [
+			{"name": "CloseHood", "shape": "hood", "bone": "Head",
+				"size": Vector3(0.38, 0.30, 0.34), "position": Vector3(0.0, 1.68, 0.0),
+				"material": "cloth"},
+			{"name": "MaskBand", "shape": "box", "bone": "Head",
+				"size": Vector3(0.25, 0.10, 0.08), "position": Vector3(0.0, 1.63, 0.11),
+				"material": "cloth"},
+			{"name": "FittedTunic", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.42, 0.44, 0.32), "depth": 0.32,
+				"position": Vector3(0.0, 1.18, 0.02), "material": "cloth"},
+			{"name": "BootLeft", "shape": "box", "bone": "calf_l",
+				"size": Vector3(0.18, 0.32, 0.23), "position": Vector3(-0.13, 0.28, 0.015),
+				"material": "cloth"},
+			{"name": "BootRight", "shape": "box", "bone": "calf_r",
+				"size": Vector3(0.18, 0.32, 0.23), "position": Vector3(0.13, 0.28, 0.015),
+				"material": "cloth"},
+		],
+	},
+	"berserker": {
+		"signature": "vest_short|pauldron_left_large|pauldron_right_small",
+		"pieces": [
+			{"name": "LeatherVest", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.47, 0.40, 0.35), "depth": 0.36,
+				"position": Vector3(0.0, 1.25, 0.02), "material": "leather"},
+			{"name": "PauldronLeftHuge", "shape": "sphere", "bone": "upperarm_l",
+				"scale": Vector3(0.36, 0.20, 0.40), "position": Vector3(-0.30, 1.43, 0.0),
+				"material": "leather"},
+			{"name": "PauldronRightSmall", "shape": "sphere", "bone": "upperarm_r",
+				"scale": Vector3(0.22, 0.12, 0.26), "position": Vector3(0.28, 1.43, 0.0),
+				"material": "leather"},
+		],
+	},
 	"paladin": {
-		"path": "res://assets/models/characters/kaykit-adventurers/shield_badge_color.gltf",
-		"bone": "handslot.l",
+		"signature": "cuirass_polished_tapered|cape_long_straight",
+		"pieces": [
+			{"name": "PolishedCuirass", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.52, 0.48, 0.39), "depth": 0.38,
+				"position": Vector3(0.0, 1.24, 0.02),
+				"material": "polished"},
+			{"name": "StraightCape", "shape": "cape", "bone": "spine_03",
+				"size": Vector3(0.58, 1.04, 0.48), "depth": 0.06,
+				"position": Vector3(0.0, 1.04, -0.18), "material": "light_cloth"},
+		],
+	},
+	"evil_mage": {
+		"signature": "hood_high|robe_torso|cape_long_inverted_taper",
+		"pieces": [
+			{"name": "HighHood", "shape": "hood", "bone": "Head",
+				"size": Vector3(0.42, 0.38, 0.38), "position": Vector3(0.0, 1.69, 0.0),
+				"material": "dark_cloth"},
+			{"name": "DarkRobeTorso", "shape": "tunic", "bone": "spine_02",
+				"size": Vector3(0.46, 0.54, 0.35), "depth": 0.36,
+				"position": Vector3(0.0, 1.20, 0.02), "material": "dark_cloth"},
+			{"name": "InvertedCape", "shape": "cape", "bone": "spine_03",
+				"size": Vector3(0.68, 1.05, 0.40), "depth": 0.06,
+				"position": Vector3(0.0, 1.04, -0.18), "material": "dark_cloth"},
+		],
 	},
 }
 
-const QUATERNIUS_ANIMATION_PATH := "res://assets/models/animations/quaternius/UAL1_Standard.glb"
-const KAYKIT_ANIMATION_PATHS := [
-	"res://assets/models/characters/kaykit-adventurers/Rig_Medium_General.glb",
-	"res://assets/models/characters/kaykit-adventurers/Rig_Medium_MovementBasic.glb",
-]
-const KAYKIT_ANIMATION_ALIASES := {
-	"Idle": "Idle_A",
-	"Sword_Idle": "Idle_B",
-	"Walk": "Walking_A",
-	"Jog_Fwd": "Running_A",
-	"Sprint": "Running_B",
-	"Death01": "Death_A",
-	"Hit_Chest": "Hit_A",
-	"Interact": "Interact",
-	"Sitting_Idle": "Idle_B",
-	"Roll": "Jump_Full_Short",
-	"Sword_Attack": "Throw",
-	"Spell_Simple_Shoot": "Use_Item",
+const OUTFIT_MATERIALS := {
+	"leather": {"colour": Color("49342a"), "roughness": 0.92, "metallic": 0.0},
+	"cloth": {"colour": Color("292c34"), "roughness": 1.0, "metallic": 0.0},
+	"light_cloth": {"colour": Color("a79f8c"), "roughness": 0.95, "metallic": 0.0},
+	"dark_cloth": {"colour": Color("171820"), "roughness": 1.0, "metallic": 0.0},
+	"iron": {"colour": Color("606873"), "roughness": 0.68, "metallic": 0.55},
+	"polished": {"colour": Color("aeb5bd"), "roughness": 0.38, "metallic": 0.72},
 }
+
+const QUATERNIUS_ANIMATION_PATH := "res://assets/models/animations/quaternius/UAL1_Standard.glb"
 
 # Um unico ShaderMaterial por material-fonte; actor_tint e class_tint sao
 # uniforms de instancia. Assim seis cores nao criam seis materiais por actor.
@@ -85,6 +171,7 @@ uniform bool use_roughness_texture = false;
 uniform sampler2D normal_texture : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform bool use_normal_texture = false;
 uniform float normal_scale = 1.0;
+uniform float material_metallic = 0.0;
 instance uniform vec4 actor_tint : source_color = vec4(1.0);
 instance uniform vec4 class_tint : source_color = vec4(1.0);
 
@@ -95,6 +182,7 @@ void fragment() {
 	}
 	ALBEDO = base_colour * actor_tint.rgb * mix(vec3(1.0), class_tint.rgb, 0.35);
 	ROUGHNESS = material_roughness;
+	METALLIC = material_metallic;
 	if (use_roughness_texture) {
 		ROUGHNESS *= texture(roughness_texture, UV).r;
 	}
@@ -106,13 +194,19 @@ void fragment() {
 """
 
 static var _quaternius_library: AnimationLibrary
-static var _kaykit_library: AnimationLibrary
 static var _quaternius_library_configured := false
 static var _shared_shader: Shader
+static var _shared_double_sided_shader: Shader
 static var _shared_materials: Dictionary = {}
+static var _outfit_source_materials: Dictionary = {}
 
 var _animation_player: AnimationPlayer
 var _meshes: Array[MeshInstance3D] = []
+var _body: Node3D
+var _skeleton: Skeleton3D
+var _generated_attachments: Array[BoneAttachment3D] = []
+var _body_source_path := ""
+var _origin_id := ""
 var _current_animation := ""
 var _current_tint := Color(-1.0, -1.0, -1.0, -1.0)
 
@@ -120,32 +214,105 @@ var _current_tint := Color(-1.0, -1.0, -1.0, -1.0)
 func setup(target_height: float, tint := Color.WHITE, casts_shadow := true,
 		body_id := "body_male", class_id := "") -> void:
 	name = "CharacterVisual"
-	# Player ja conhece a origem antes de construir o visual. Esta leitura deixa
-	# o chamador actual vestido sem tocar em player.gd, que pertence a outro agente.
+	# Player ja conhece a origem antes de construir o visual. A procura pelos
+	# ascendentes tambem alcanca o rascunho do criador de personagem, sem obrigar
+	# os ficheiros que pertencem a outros agentes a mudar de chamada.
 	if class_id.is_empty():
 		class_id = _parent_class_id()
-	var uses_class_outfit := CLASS_PATHS.has(class_id)
-	var model_path := String(CLASS_PATHS.get(class_id, BODY_PATHS.get(
-		body_id, BODY_PATHS["body_male"])))
-	var source_height := float(CLASS_SOURCE_HEIGHTS.get(class_id, BODY_SOURCE_HEIGHTS.get(
-		body_id, BODY_SOURCE_HEIGHTS["body_male"])))
-	var body_scene := load(model_path) as PackedScene
+	_origin_id = class_id
+	_body_source_path = body_path_for(body_id)
+	var source_height := float(BODY_SOURCE_HEIGHTS.get(body_id, BODY_SOURCE_HEIGHTS["body_male"]))
+	var body_scene := load(_body_source_path) as PackedScene
 	if body_scene == null:
 		push_error("[CharacterVisual] Modelo desconhecido: %s / %s" % [body_id, class_id])
 		return
-	var body := body_scene.instantiate()
-	body.name = "Body"
-	# Ambos os packs chegam a olhar para +Z; o combate usa -Z como frente.
-	body.rotation.y = PI
-	add_child(body)
+	_body = body_scene.instantiate() as Node3D
+	if _body == null:
+		push_error("[CharacterVisual] Corpo Quaternius sem raiz Node3D: %s" % _body_source_path)
+		return
+	_body.name = "Body"
+	# O Quaternius chega a olhar para +Z; o combate usa -Z como frente.
+	_body.rotation.y = PI
+	_body.set_meta("character_body_pack", PLAYER_BODY_PACK)
+	_body.set_meta("character_body_source", _body_source_path)
+	add_child(_body)
 	scale = Vector3.ONE * (target_height / source_height)
-	if uses_class_outfit:
-		_attach_class_prop(body, class_id)
+	_skeleton = _find_skeleton(_body)
+	if _skeleton == null:
+		push_error("[CharacterVisual] Corpo Quaternius sem Skeleton3D: %s" % _body_source_path)
+		return
+	_build_animation_player()
+	# A biblioteca UAL tem uma pose inicial diferente do rest pose importado.
+	# Aplicamo-la antes de calcular encaixes, para a roupa nao ganhar um braco de
+	# alavanca invisivel quando a primeira animacao entra.
+	if _animation_player != null and _animation_player.has_animation("Idle"):
+		_animation_player.play("Idle", 0.0)
+		_animation_player.advance(0.0)
+		_current_animation = "Idle"
+	_build_origin_outfit(class_id)
 	var class_tint: Color = CLASS_TINTS.get(class_id, Color.WHITE)
-	_collect_meshes(body, casts_shadow, class_tint)
-	_build_animation_player(uses_class_outfit)
+	_collect_meshes(_body, casts_shadow, class_tint)
 	set_tint(tint)
 	play_animation("Idle")
+	set_meta("character_body_pack", PLAYER_BODY_PACK)
+	set_meta("character_body_source", _body_source_path)
+	set_meta("origin_id", _origin_id)
+	set_meta("silhouette_signature", silhouette_signature_for(_origin_id))
+
+
+static func body_path_for(body_id: String) -> String:
+	return String(BODY_PATHS.get(body_id, BODY_PATHS["body_male"]))
+
+
+static func body_id_uses_quaternius(body_id: String) -> bool:
+	return body_path_for(body_id).begins_with(
+		"res://assets/models/characters/quaternius/")
+
+
+static func silhouette_signature_for(class_id: String) -> String:
+	var profile: Dictionary = ORIGIN_OUTFITS.get(class_id, {}) as Dictionary
+	return String(profile.get("signature", ""))
+
+
+static func outfit_contract_errors(origin_ids: Array) -> PackedStringArray:
+	## Contrato que o repro-inicio pode chamar sem conhecer a implementacao.
+	var errors := PackedStringArray()
+	var signatures := {}
+	for body_id: String in BODY_PATHS:
+		if not body_id_uses_quaternius(body_id):
+			errors.append("corpo %s nao usa Quaternius" % body_id)
+	for origin_value: Variant in origin_ids:
+		var origin := String(origin_value)
+		var signature := silhouette_signature_for(origin)
+		if signature.is_empty():
+			errors.append("origem %s sem silhueta" % origin)
+		elif signatures.has(signature):
+			errors.append("origens %s e %s repetem silhueta" % [signatures[signature], origin])
+		else:
+			signatures[signature] = origin
+	return errors
+
+
+func uses_quaternius_body() -> bool:
+	return _body != null and String(_body.get_meta(
+		"character_body_pack", "")) == PLAYER_BODY_PACK \
+		and BODY_PATHS.values().has(_body_source_path)
+
+
+func get_body_source_path() -> String:
+	return _body_source_path
+
+
+func get_origin_id() -> String:
+	return _origin_id
+
+
+func get_character_body() -> Node3D:
+	return _body
+
+
+func get_equipment_skeleton() -> Skeleton3D:
+	return _skeleton
 
 
 func set_tint(tint: Color) -> void:
@@ -169,42 +336,309 @@ func play_animation(animation_name: String, speed := 1.0) -> void:
 
 
 func _parent_class_id() -> String:
-	var parent := get_parent()
-	if parent == null:
-		return ""
-	for property: Dictionary in parent.get_property_list():
-		if String(property.get("name", "")) == "class_id":
-			return String(parent.get("class_id"))
+	var ancestor := get_parent()
+	while ancestor != null:
+		for property: Dictionary in ancestor.get_property_list():
+			var property_name := String(property.get("name", ""))
+			if property_name == "class_id":
+				return String(ancestor.get("class_id"))
+			if property_name == "_draft":
+				var draft: Dictionary = ancestor.get("_draft") as Dictionary
+				if draft.has("class_id"):
+					return String(draft["class_id"])
+		ancestor = ancestor.get_parent()
 	return ""
 
 
 func _collect_meshes(node: Node, casts_shadow: bool, class_tint: Color) -> void:
+	if node is MeshInstance3D:
+		_register_mesh(node as MeshInstance3D, casts_shadow, class_tint)
 	for descendant: Node in node.find_children("*", "MeshInstance3D", true, false):
-		var mesh_instance := descendant as MeshInstance3D
-		_meshes.append(mesh_instance)
-		mesh_instance.set_instance_shader_parameter("class_tint", class_tint)
-		if not casts_shadow:
-			mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		for surface: int in mesh_instance.mesh.get_surface_count():
-			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
-			if source != null:
-				mesh_instance.set_surface_override_material(surface, _shared_material_for(source))
+		_register_mesh(descendant as MeshInstance3D, casts_shadow, class_tint)
 
 
-func _attach_class_prop(body: Node, class_id: String) -> void:
-	if not CLASS_PROPS.has(class_id):
+func _register_mesh(mesh_instance: MeshInstance3D, casts_shadow: bool,
+		class_tint: Color) -> void:
+	if mesh_instance == null or mesh_instance.mesh == null or mesh_instance in _meshes:
 		return
-	var config: Dictionary = CLASS_PROPS[class_id]
-	var prop_scene := load(String(config["path"])) as PackedScene
-	var skeleton := _find_skeleton(body)
-	if prop_scene == null or skeleton == null:
-		push_warning("[CharacterVisual] Acessorio de %s nao encontrou modelo/rig" % class_id)
-		return
+	_meshes.append(mesh_instance)
+	mesh_instance.set_instance_shader_parameter("class_tint", class_tint)
+	if _current_tint.a >= 0.0:
+		mesh_instance.set_instance_shader_parameter("actor_tint", _current_tint)
+	if not casts_shadow:
+		mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for surface: int in mesh_instance.mesh.get_surface_count():
+		var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
+		if source != null:
+			mesh_instance.set_surface_override_material(surface, _shared_material_for(source))
+
+
+func _build_origin_outfit(class_id: String) -> void:
+	var profile: Dictionary = ORIGIN_OUTFITS.get(class_id, {}) as Dictionary
+	for raw_piece: Variant in profile.get("pieces", []):
+		var config := raw_piece as Dictionary
+		var piece := _create_outfit_piece(config)
+		if piece == null:
+			continue
+		var model_transform := _piece_model_transform(config)
+		var attachment := attach_equipment_to_bone(
+			piece, StringName(config.get("bone", "")), model_transform, true)
+		if attachment == null:
+			piece.free()
+			push_warning("[CharacterVisual] Peca %s da origem %s sem osso %s" % [
+				config.get("name", "?"), class_id, config.get("bone", "?")])
+
+
+func attach_equipment_to_bone(piece: Node3D, bone_name: StringName,
+		model_space_transform: Transform3D, generated := false,
+		casts_shadow := true) -> BoneAttachment3D:
+	## Fronteira para o agente de armaduras: uma peca externa conserva o corpo,
+	## o rig e a animacao e declara apenas osso + transform no espaco do modelo.
+	if piece == null or _body == null or _skeleton == null:
+		return null
+	var bone_index := _skeleton.find_bone(bone_name)
+	if bone_index < 0:
+		return null
 	var attachment := BoneAttachment3D.new()
-	attachment.name = "ClassProp"
-	attachment.bone_name = String(config["bone"])
-	skeleton.add_child(attachment)
-	attachment.add_child(prop_scene.instantiate())
+	attachment.name = "%sAttachment" % piece.name
+	attachment.bone_name = bone_name
+	attachment.set_meta("character_equipment_attachment", true)
+	attachment.set_meta("generated_origin_outfit", generated)
+	_skeleton.add_child(attachment)
+	attachment.add_child(piece)
+
+	# Converte uma pose facil de rever (coordenadas do modelo em repouso) para a
+	# pose local do osso. A peca passa depois a seguir esse osso em cada clip UAL.
+	var skeleton_to_body := _transform_from_ancestor(_body, _skeleton)
+	var desired_skeleton_space := skeleton_to_body.affine_inverse() * model_space_transform
+	var bone_pose := _skeleton.get_bone_global_pose(bone_index)
+	piece.transform = bone_pose.affine_inverse() * desired_skeleton_space
+	if generated:
+		_generated_attachments.append(attachment)
+	# Durante setup() a recolha conjunta acontece depois. Pecas equipadas mais
+	# tarde entram aqui sem obrigar o consumidor a conhecer o shader interno.
+	if not _meshes.is_empty():
+		_collect_meshes(piece, casts_shadow, CLASS_TINTS.get(_origin_id, Color.WHITE))
+	return attachment
+
+
+static func _transform_from_ancestor(ancestor: Node3D, descendant: Node3D) -> Transform3D:
+	## Equivalente local de global_transform, tambem funciona nos testes que
+	## constroem um Player fora da SceneTree.
+	var result := Transform3D.IDENTITY
+	var cursor := descendant
+	while cursor != ancestor:
+		result = cursor.transform * result
+		cursor = cursor.get_parent() as Node3D
+		if cursor == null:
+			return Transform3D.IDENTITY
+	return result
+
+
+func clear_generated_origin_outfit() -> void:
+	## Permite ao sistema de armaduras substituir o placeholder por uma peca
+	## real sem remover nem reinstanciar o corpo Quaternius.
+	for attachment: BoneAttachment3D in _generated_attachments:
+		if is_instance_valid(attachment):
+			for descendant: Node in attachment.find_children(
+					"*", "MeshInstance3D", true, false):
+				_meshes.erase(descendant as MeshInstance3D)
+			attachment.queue_free()
+	_generated_attachments.clear()
+
+
+func _create_outfit_piece(config: Dictionary) -> MeshInstance3D:
+	var piece := MeshInstance3D.new()
+	piece.name = String(config.get("name", "OutfitPiece"))
+	piece.add_to_group("character_origin_outfit")
+	var shape := String(config.get("shape", "box"))
+	match shape:
+		"box":
+			var box := BoxMesh.new()
+			box.size = config.get("size", Vector3(0.2, 0.2, 0.2)) as Vector3
+			box.material = _outfit_source_material(String(config.get("material", "cloth")))
+			piece.mesh = box
+		"sphere":
+			var sphere := SphereMesh.new()
+			sphere.radius = 0.5
+			sphere.height = 1.0
+			sphere.radial_segments = 12
+			sphere.rings = 6
+			sphere.material = _outfit_source_material(String(config.get("material", "cloth")))
+			piece.mesh = sphere
+		"frustum":
+			var dimensions: Vector3 = config.get("size", Vector3(0.2, 0.3, 0.3)) as Vector3
+			var frustum := CylinderMesh.new()
+			frustum.top_radius = dimensions.x
+			frustum.height = dimensions.y
+			frustum.bottom_radius = dimensions.z
+			frustum.radial_segments = 10
+			frustum.rings = 1
+			frustum.material = _outfit_source_material(String(config.get("material", "cloth")))
+			piece.mesh = frustum
+		"hood":
+			piece.mesh = _hood_mesh(
+				config.get("size", Vector3(0.4, 0.3, 0.35)) as Vector3,
+				_outfit_source_material(String(config.get("material", "cloth"))))
+		"cape":
+			var cape_size: Vector3 = config.get("size", Vector3(0.4, 0.8, 0.6)) as Vector3
+			piece.mesh = _cape_mesh(cape_size.x, cape_size.z, cape_size.y,
+				float(config.get("depth", 0.05)),
+				_outfit_source_material(String(config.get("material", "cloth"))))
+		"tunic":
+			var tunic_size: Vector3 = config.get("size", Vector3(0.45, 0.45, 0.35)) as Vector3
+			piece.mesh = _torso_mesh(tunic_size.x, tunic_size.z, tunic_size.y,
+				float(config.get("depth", 0.32)),
+				_outfit_source_material(String(config.get("material", "cloth"))))
+		_:
+			push_warning("[CharacterVisual] Forma de roupa desconhecida: %s" % shape)
+			piece.free()
+			return null
+	return piece
+
+
+func _piece_model_transform(config: Dictionary) -> Transform3D:
+	var rotation_degrees: Vector3 = config.get("rotation_degrees", Vector3.ZERO) as Vector3
+	var rotation_radians := Vector3(
+		deg_to_rad(rotation_degrees.x), deg_to_rad(rotation_degrees.y),
+		deg_to_rad(rotation_degrees.z))
+	var basis := Basis.from_euler(rotation_radians)
+	if config.has("scale"):
+		basis = basis.scaled(config["scale"] as Vector3)
+	return Transform3D(basis, config.get("position", Vector3.ZERO) as Vector3)
+
+
+static func _cape_mesh(top_width: float, bottom_width: float, height: float,
+		depth: float, material: Material) -> ArrayMesh:
+	var half_top := top_width * 0.5
+	var half_bottom := bottom_width * 0.5
+	var half_height := height * 0.5
+	var half_depth := depth * 0.5
+	var vertices := PackedVector3Array([
+		Vector3(-half_top, half_height, half_depth),
+		Vector3(half_top, half_height, half_depth),
+		Vector3(-half_bottom, -half_height, half_depth),
+		Vector3(half_bottom, -half_height, half_depth),
+		Vector3(-half_top, half_height, -half_depth),
+		Vector3(half_top, half_height, -half_depth),
+		Vector3(-half_bottom, -half_height, -half_depth),
+		Vector3(half_bottom, -half_height, -half_depth),
+	])
+	var triangles := PackedInt32Array([
+		0, 2, 1, 1, 2, 3,
+		5, 7, 4, 4, 7, 6,
+		4, 6, 0, 0, 6, 2,
+		1, 3, 5, 5, 3, 7,
+		4, 0, 5, 5, 0, 1,
+		2, 6, 3, 3, 6, 7,
+	])
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in range(0, triangles.size(), 3):
+		var a := vertices[triangles[index]]
+		var b := vertices[triangles[index + 1]]
+		var c := vertices[triangles[index + 2]]
+		var normal := (b - a).cross(c - a).normalized()
+		for vertex: Vector3 in [a, b, c]:
+			surface.set_normal(normal)
+			surface.add_vertex(vertex)
+	surface.set_material(material)
+	return surface.commit()
+
+
+static func _torso_mesh(top_width: float, bottom_width: float, height: float,
+		depth: float, material: Material) -> ArrayMesh:
+	# Peitoral/tunica de dez vertices: afunila na cintura e ganha uma nervura
+	# central. Continua barato, mas deixa de parecer uma caixa pousada no corpo.
+	var half_top := top_width * 0.5
+	var half_bottom := bottom_width * 0.5
+	var half_height := height * 0.5
+	var front := depth * 0.5
+	var back := -depth * 0.5
+	var ridge := depth * 0.11
+	var v := PackedVector3Array([
+		Vector3(-half_top, half_height, front),
+		Vector3(0.0, half_height, front + ridge),
+		Vector3(half_top, half_height, front),
+		Vector3(-half_bottom, -half_height, front * 0.82),
+		Vector3(0.0, -half_height, front * 0.82 + ridge * 0.45),
+		Vector3(half_bottom, -half_height, front * 0.82),
+		Vector3(-half_top, half_height, back),
+		Vector3(half_top, half_height, back),
+		Vector3(-half_bottom, -half_height, back * 0.82),
+		Vector3(half_bottom, -half_height, back * 0.82),
+	])
+	var triangles := PackedInt32Array([
+		0, 3, 1, 1, 3, 4, 1, 4, 2, 2, 4, 5,
+		7, 9, 6, 6, 9, 8,
+		6, 8, 0, 0, 8, 3,
+		2, 5, 7, 7, 5, 9,
+		6, 0, 1, 6, 1, 7, 7, 1, 2,
+		3, 8, 4, 4, 8, 9, 4, 9, 5,
+	])
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in range(0, triangles.size(), 3):
+		_add_triangle(surface, v[triangles[index]], v[triangles[index + 1]],
+			v[triangles[index + 2]])
+	surface.set_material(material)
+	return surface.commit()
+
+
+static func _hood_mesh(size: Vector3, material: Material) -> ArrayMesh:
+	# Casca angular aberta a frente: le-se como capuz sem tapar a cara com uma
+	# esfera nem repetir o chapeu de bruxa do KayKit.
+	var rings := [
+		{"y": -size.y * 0.50, "x": size.x * 0.48, "z": size.z * 0.46},
+		{"y": size.y * 0.05, "x": size.x * 0.52, "z": size.z * 0.52},
+		{"y": size.y * 0.50, "x": size.x * 0.30, "z": size.z * 0.34},
+	]
+	var arc_steps := 8
+	var start_angle := deg_to_rad(48.0)
+	var end_angle := deg_to_rad(312.0)
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for ring_index in rings.size() - 1:
+		var lower: Dictionary = rings[ring_index]
+		var upper: Dictionary = rings[ring_index + 1]
+		for step in arc_steps:
+			var t0 := float(step) / float(arc_steps)
+			var t1 := float(step + 1) / float(arc_steps)
+			var angle0 := lerpf(start_angle, end_angle, t0)
+			var angle1 := lerpf(start_angle, end_angle, t1)
+			var a := Vector3(sin(angle0) * float(lower["x"]), float(lower["y"]),
+				cos(angle0) * float(lower["z"]))
+			var b := Vector3(sin(angle1) * float(lower["x"]), float(lower["y"]),
+				cos(angle1) * float(lower["z"]))
+			var c := Vector3(sin(angle0) * float(upper["x"]), float(upper["y"]),
+				cos(angle0) * float(upper["z"]))
+			var d := Vector3(sin(angle1) * float(upper["x"]), float(upper["y"]),
+				cos(angle1) * float(upper["z"]))
+			_add_triangle(surface, a, b, c)
+			_add_triangle(surface, c, b, d)
+	surface.set_material(material)
+	return surface.commit()
+
+
+static func _add_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	var normal := (b - a).cross(c - a).normalized()
+	for vertex: Vector3 in [a, b, c]:
+		surface.set_normal(normal)
+		surface.add_vertex(vertex)
+
+
+static func _outfit_source_material(material_id: String) -> StandardMaterial3D:
+	if _outfit_source_materials.has(material_id):
+		return _outfit_source_materials[material_id] as StandardMaterial3D
+	var config: Dictionary = OUTFIT_MATERIALS.get(
+		material_id, OUTFIT_MATERIALS["cloth"]) as Dictionary
+	var material := StandardMaterial3D.new()
+	material.albedo_color = config.get("colour", Color.WHITE) as Color
+	material.roughness = float(config.get("roughness", 1.0))
+	material.metallic = float(config.get("metallic", 0.0))
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_outfit_source_materials[material_id] = material
+	return material
 
 
 static func _shared_material_for(source: StandardMaterial3D) -> ShaderMaterial:
@@ -215,9 +649,18 @@ static func _shared_material_for(source: StandardMaterial3D) -> ShaderMaterial:
 		_shared_shader = Shader.new()
 		_shared_shader.code = CHARACTER_SHADER_SOURCE
 	var material := ShaderMaterial.new()
-	material.shader = _shared_shader
+	if source.cull_mode == BaseMaterial3D.CULL_DISABLED:
+		if _shared_double_sided_shader == null:
+			_shared_double_sided_shader = Shader.new()
+			_shared_double_sided_shader.code = CHARACTER_SHADER_SOURCE.replace(
+				"render_mode diffuse_burley, specular_schlick_ggx;",
+				"render_mode diffuse_burley, specular_schlick_ggx, cull_disabled;")
+		material.shader = _shared_double_sided_shader
+	else:
+		material.shader = _shared_shader
 	material.set_shader_parameter("material_albedo", source.albedo_color)
 	material.set_shader_parameter("material_roughness", source.roughness)
+	material.set_shader_parameter("material_metallic", source.metallic)
 	if source.albedo_texture != null:
 		material.set_shader_parameter("albedo_texture", source.albedo_texture)
 		material.set_shader_parameter("use_albedo_texture", true)
@@ -232,8 +675,8 @@ static func _shared_material_for(source: StandardMaterial3D) -> ShaderMaterial:
 	return material
 
 
-func _build_animation_player(uses_kaykit: bool) -> void:
-	var library := _kaykit_animation_library() if uses_kaykit else _quaternius_animation_library()
+func _build_animation_player() -> void:
+	var library := _quaternius_animation_library()
 	_animation_player = AnimationPlayer.new()
 	_animation_player.name = "AnimationPlayer"
 	_animation_player.root_node = NodePath("../Body")
@@ -263,33 +706,6 @@ static func _quaternius_animation_library() -> AnimationLibrary:
 			_quaternius_library.get_animation(looping).loop_mode = Animation.LOOP_LINEAR
 	_quaternius_library_configured = true
 	return _quaternius_library
-
-
-static func _kaykit_animation_library() -> AnimationLibrary:
-	if _kaykit_library != null:
-		return _kaykit_library
-	var sources := {}
-	for path: String in KAYKIT_ANIMATION_PATHS:
-		var source_scene := load(path) as PackedScene
-		if source_scene == null:
-			continue
-		var source_root := source_scene.instantiate()
-		var source_player := _find_animation_player(source_root)
-		if source_player != null and source_player.has_animation_library(""):
-			var source_library := source_player.get_animation_library("")
-			for animation_name: StringName in source_library.get_animation_list():
-				sources[String(animation_name)] = source_library.get_animation(animation_name)
-		source_root.free()
-	_kaykit_library = AnimationLibrary.new()
-	for semantic_name: String in KAYKIT_ANIMATION_ALIASES:
-		var source_name := String(KAYKIT_ANIMATION_ALIASES[semantic_name])
-		if sources.has(source_name):
-			_kaykit_library.add_animation(semantic_name, sources[source_name])
-	for looping: String in ["Idle", "Sword_Idle", "Walk", "Jog_Fwd", "Sprint", "Sitting_Idle"]:
-		if _kaykit_library.has_animation(looping):
-			_kaykit_library.get_animation(looping).loop_mode = Animation.LOOP_LINEAR
-	return _kaykit_library
-
 
 static func _find_animation_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
