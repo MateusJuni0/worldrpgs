@@ -1,5 +1,5 @@
 {
-  "_fonte": "spec/11-formulas.md (WP2) + spec/70 §1. As curvas por atributo de 70 substituem o soft cap global antigo.",
+  "_fonte": "spec/11-formulas.md (WP2) + spec/70 §1 + DECISOES.md 01-08 (Mago do Mal como 7.a origem). As curvas por atributo de 70 substituem o soft cap global antigo.",
   "_lei_1": "A regeneracao de stamina, as janelas de esquiva/parry e a velocidade NUNCA escalam com atributos. O nivel compra margem (PV, STA, defesa, mana), nunca compra as ferramentas.",
 
   "base_value": 8,
@@ -38,13 +38,39 @@
   "attribute_ids": ["vida", "stamina", "constituicao", "inteligencia", "fe", "forca", "destreza", "carga"],
 
   "classes": {
-    "_fonte": "spec/12-classes.md (WP3), tabela das seis fichas. LEI — deixou de ser [PROTO] quando o WP3 chegou.",
-    "_verificacao": "Feiticeiro Int 14 -> 116 mana. Paladino Fe 11 -> 104 mana. Berserker cumpre o machadao exactamente (For 14). Assassino sobra na adaga (Des 14 > 10).",
+    "_fonte": "spec/12-classes.md (WP3), seis fichas historicas, mais [DECIDIDO] Mateus 01-08 em DECISOES.md: Mago do Mal e a 7.a origem.",
+    "_verificacao": "Todas as sete origens distribuem +14 sobre a base 8. Feiticeiro Int 14 -> 116 mana. Mago do Mal equilibra Int 13/Fe 13 porque a escola vermelha escala pelo menor dos dois.",
     "warrior":   { "display_name": "Guerreiro",  "vida": 11, "stamina": 11, "constituicao": 10, "inteligencia": 8,  "fe": 8,  "forca": 12, "destreza": 10, "carga": 8 },
     "sorcerer":  { "display_name": "Feiticeiro", "vida": 10, "stamina": 10, "constituicao": 9,  "inteligencia": 14, "fe": 8,  "forca": 9,  "destreza": 10, "carga": 8 },
     "tank":      { "display_name": "Tanque",     "vida": 12, "stamina": 10, "constituicao": 13, "inteligencia": 8,  "fe": 8,  "forca": 11, "destreza": 8, "carga": 8 },
     "assassin":  { "display_name": "Assassino",  "vida": 10, "stamina": 12, "constituicao": 9,  "inteligencia": 8,  "fe": 8,  "forca": 9,  "destreza": 14, "carga": 8 },
     "berserker": { "display_name": "Berserker",  "vida": 11, "stamina": 12, "constituicao": 9,  "inteligencia": 8,  "fe": 8,  "forca": 14, "destreza": 8, "carga": 8 },
-    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 10, "inteligencia": 8,  "fe": 11, "forca": 11, "destreza": 9, "carga": 8 }
+    "paladin":   { "display_name": "Paladino",   "vida": 11, "stamina": 10, "constituicao": 10, "inteligencia": 8,  "fe": 11, "forca": 11, "destreza": 9, "carga": 8 },
+    "evil_mage": {
+      "display_name": "Mago do Mal",
+      "vida": 10,
+      "stamina": 10,
+      "constituicao": 8,
+      "inteligencia": 13,
+      "fe": 13,
+      "forca": 8,
+      "destreza": 8,
+      "carga": 8,
+      "fatia_1": true,
+      "starting_school": "mal",
+      "starting_spells": ["agulha", "levantar", "voto_sangue"],
+      "ability_id": "cortejo_carmim",
+      "posture": "anda_entre_os_mortos",
+      "origin_trait": {
+        "id": "reservatorio_profano",
+        "effect_type": "max_mana_multiplier",
+        "multiplier": 1.40,
+        "always_active": true,
+        "visible_in_sheet": true,
+        "source": "[DECIDIDO] Mateus, spec/54 §4"
+      },
+      "_code_decision": "[CODEX] Int 13 e Fe 13 preservam a escala pelo menor; Vida 10 e Stamina 10 obrigam-no a estar entre os mortos sem fingir que e um Feiticeiro de retaguarda.",
+      "_discarded_alternative": "Int alta e Fe base: dava mais mana, mas tornava a escola vermelha deliberadamente ineficaz e repetia a postura do Feiticeiro."
+    }
   }
 }
