@@ -198,6 +198,10 @@ Atributo que controla i-frames *(viola a nossa Lei 1)* · durabilidade *(só ger
 
 ---
 
+| 🔴 | ⭐ **A semente fixa do acaso — é a única parte do banco de ensaio que tem de ser feita JÁ.** Se o baralho de espólio, a variação de IA e a colocação forem escritos sem semente, enxertá-la depois obriga a mexer em tudo. **Escrita agora custa uma linha por sítio** | [`60`](spec/60-o-agente-que-joga.md) §2 |
+
+---
+
 ## 🕳️ Buracos de sistema — coisas que NUNCA foram escritas
 
 **Varrimento de 01-08.** Não são detalhes por afinar: são sistemas inteiros que a spec assume e nunca definiu. Ordenados por quanto custa descobri-los tarde.
