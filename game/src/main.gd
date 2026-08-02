@@ -657,7 +657,12 @@ func _tick_rest_points() -> void:
 		if distance < nearest_distance:
 			nearest = rest_id
 			nearest_distance = distance
-	_nearest_rest_id = nearest if nearest_distance <= 2.5 else ""
+	# ⚠️ 02-08: eram 2,5 m medidos ao CENTRO da fogueira — e a fogueira e um monte
+	# de pedras com mais de um metro de raio, que impede o jogador de la chegar.
+	# Resultado: ficava-se encostado ao fogo e o jogo dizia "nao foi possivel
+	# descansar agora". O Mateus: "nao da pra senta nas outras fogueiras".
+	# 4,5 m e a distancia a que se ESTA na fogueira, nao a que se esta dentro dela.
+	_nearest_rest_id = nearest if nearest_distance <= 4.5 else ""
 	if _nearest_rest_id == "":
 		hud.set_prompt("")
 		return
@@ -683,7 +688,16 @@ func _on_bonfire_rest_completed(_result: Dictionary, rest_id: String) -> void:
 	_respawn_point = (_rest_points[rest_id] as Vector3) + REST_SPAWN_OFFSET
 	if is_instance_valid(necromancy_runtime):
 		necromancy_runtime.rest()
-	hud.toast("Descansaste. Este é agora o teu ponto de regresso.", 3.0)
+	# ⭐ 02-08: A FOGUEIRA GRAVA. Antes so se gravava ao SAIR do jogo — o Mateus
+	# disse "nunca salva o jogo", e tinha razao: quem fechasse a janela a bruta
+	# perdia tudo. Num souls-like a fogueira e o ponto de gravacao, e e por isso
+	# que descansar tem peso: e o momento em que o progresso fica seguro.
+	if SaveSystem.save_current():
+		hud.toast("Descansaste. Progresso guardado neste ponto de regresso.", 3.0)
+	else:
+		# ⚠️ Nunca em silencio: se a gravacao falhar, o jogador TEM de saber,
+		# senao continua a jogar a pensar que esta seguro.
+		hud.toast("Descansaste, mas NAO foi possivel gravar: %s" % SaveSystem.last_error, 6.0)
 
 
 func _on_bonfire_operation_failed(_result: Dictionary) -> void:
