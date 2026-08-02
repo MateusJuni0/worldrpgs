@@ -6,6 +6,7 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 |---|---|---|---|---|
 | **Universal Base Characters** (Standard) | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-base-characters) | corpo base das 6 classes — esqueleto partilhado (Lei 3) |
 | **Modular Character Outfits — Fantasy** (Standard) | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/modular-character-outfits-fantasy) | ⭐ roupa e armadura modular para o **mesmo esqueleto** dos corpos — Ranger (corpo, braços, pernas, botas, ombreiras, capuz) e Camponês, ♂ e ♀. ⚠️ A versão grátis traz **2 fatos**, não os 12 do cartaz; os outros são pagos. Texturas reduzidas de 4096² para 1024² por nós: 282 MB → 43 MB, e é a Lei 4 |
+| **Modular Character Outfits — Fantasy** (Standard) | Quaternius | CC0 1.0 | [quaternius.com](https://quaternius.com) | componentes modulares Ranger e Camponês, masculinos e femininos; a roupa substitui o corpo e conserva apenas a cabeça base |
 | **Universal Animation Library** | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-animation-library) | ⭐ ciclos de animação — é o que permite medir o risco do M1 |
 | **Ultimate Monsters** | Quaternius | CC0 1.0 | [quaternius.com](https://quaternius.com/packs/ultimatemonsters.html) | Orc, Orc Small e Orc Skull como corpos-base do lanceiro, brutamontes e Vorgar; máscaras sem rosto, armadura, lança, maça e cutelo são geometria sintetizada em `monster_visual.gd` |
 | **KayKit — Adventurers** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-adventurers) | seis silhuetas jogáveis; clips General + Movement Basic do rig Medium; seis props de arma escolhidos individualmente: espada, adaga, machado de duas mãos, arco, besta de duas mãos e escudo redondo |
@@ -21,7 +22,9 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 
 ## A licença foi lida no ficheiro, não na página
 
-**Os onze packs trazem `License.txt` (ou `License_Standard.txt`) dentro da distribuição, com CC0 1.0 explícito.** Verifiquei um a um por leitura do ficheiro — uma página de download pode mudar; o ficheiro que veio com os assets é a prova, e fica junto deles.
+**Os doze packs trazem `License.txt` (ou `License_Standard.txt`) dentro da distribuição, com CC0 1.0 explícito.** Verifiquei um a um por leitura do ficheiro — uma página de download pode mudar; o ficheiro que veio com os assets é a prova, e fica junto deles.
+
+Para **Modular Character Outfits — Fantasy**, entrou apenas o conteúdo que a edição Standard gratuita realmente contém: Ranger e Camponês, nos dois corpos. Foram copiados individualmente para `game/assets/models/outfits/` os 20 componentes `Body`, `Arms`, `Legs`, `Feet`/`Boots`, `Acc_Pauldron(s)` e `Head_Hood`, mais as 12 texturas 1024×1024 que esses GLTF referenciam. O cartaz mostra fatos da edição paga que não existem nesta distribuição; não foram procurados nem fingidos. O `Readme.txt` interno fixa ainda o contrato usado no runtime: com roupa, só a cabeça do corpo base fica visível; usar o corpo inteiro causa clipping e desperdiça geometria.
 
 No caso de **Ultimate Monsters**, a distribuição oficial é a pasta Google Drive ligada pela página do pack. O `License.txt` interno foi lido e copiado para `game/assets/models/characters/quaternius-ultimate-monsters/License.txt`; declara literalmente **CC0 1.0 Universal / Public Domain Dedication**. Há uma gralha de empacotamento que não se esconde: o cabeçalho desse ficheiro diz “Ultimate Platformer Pack”, apesar de viver na pasta oficial Ultimate Monsters. A página oficial e os nomes dos modelos confirmam a origem; a concessão CC0 do próprio ficheiro é inequívoca.
 

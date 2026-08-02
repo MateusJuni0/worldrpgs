@@ -2,27 +2,70 @@ class_name ArmorVisual
 extends CharacterVisual
 ## Armadura modular para o corpo Quaternius.
 ##
-## [CODEX] As peças da Fatia 1 usam cascas curvas de baixo custo presas aos
-## ossos UAL. Razão: nenhum modelo modular do repositório partilha o Skin
-## Quaternius, e misturar o Skin KayKit foi a origem dos volumes colados ao
-## corpo. Alternativa descartada: reutilizar personagens KayKit como roupa;
-## mudaria corpo, proporção e esqueleto em cada troca.
+## Ranger e Campones vem do pack Modular Character Outfits - Fantasy e usam o
+## mesmo Skin UAL de 65 ossos. Os quatro componentes de cobertura substituem o
+## corpo; o corpo base conserva apenas a cabeca. Slots sem modelo gratuito
+## continuam com geometria suave gerada em codigo.
 
 const SLOT_ORDER := [
 	"cabeca", "rosto", "ombros", "peito", "maos", "cintura", "pernas", "pes", "capa",
 ]
+const BODY_REPLACEMENT_SLOTS := ["peito", "maos", "pernas", "pes"]
+const MODEL_SLOTS := ["cabeca", "ombros", "peito", "maos", "pernas", "pes"]
+const ORIGIN_OUTFIT_FAMILY := {
+	"warrior": "ranger", "tank": "ranger", "berserker": "ranger",
+	"evil_mage": "ranger", "sorcerer": "peasant", "assassin": "peasant",
+	"paladin": "peasant",
+}
+const OUTFIT_MODEL_PATHS := {
+	"body_male": {
+		"ranger": {
+			"peito": "res://assets/models/outfits/Male_Ranger_Body.gltf",
+			"maos": "res://assets/models/outfits/Male_Ranger_Arms.gltf",
+			"pernas": "res://assets/models/outfits/Male_Ranger_Legs.gltf",
+			"pes": "res://assets/models/outfits/Male_Ranger_Feet_Boots.gltf",
+			"ombros": "res://assets/models/outfits/Male_Ranger_Acc_Pauldron.gltf",
+			"cabeca": "res://assets/models/outfits/Male_Ranger_Head_Hood.gltf",
+		},
+		"peasant": {
+			"peito": "res://assets/models/outfits/Male_Peasant_Body.gltf",
+			"maos": "res://assets/models/outfits/Male_Peasant_Arms.gltf",
+			"pernas": "res://assets/models/outfits/Male_Peasant_Legs.gltf",
+			"pes": "res://assets/models/outfits/Male_Peasant_Feet.gltf",
+		},
+	},
+	"body_female": {
+		"ranger": {
+			"peito": "res://assets/models/outfits/Female_Ranger_Body.gltf",
+			"maos": "res://assets/models/outfits/Female_Ranger_Arms.gltf",
+			"pernas": "res://assets/models/outfits/Female_Ranger_Legs.gltf",
+			"pes": "res://assets/models/outfits/Female_Ranger_Feet.gltf",
+			"ombros": "res://assets/models/outfits/Female_Ranger_Acc_Pauldrons.gltf",
+			"cabeca": "res://assets/models/outfits/Female_Ranger_Head_Hood.gltf",
+		},
+		"peasant": {
+			"peito": "res://assets/models/outfits/Female_Peasant_Body.gltf",
+			"maos": "res://assets/models/outfits/Female_Peasant_Arms.gltf",
+			"pernas": "res://assets/models/outfits/Female_Peasant_Legs.gltf",
+			"pes": "res://assets/models/outfits/Female_Peasant_Feet.gltf",
+		},
+	},
+}
 
 static var _material_cache := {}
 
 var _armor_attachments: Array[BoneAttachment3D] = []
+var _outfit_meshes: Array[MeshInstance3D] = []
 var _armor_piece_ids: Array[String] = []
 var _signatures := {}
 var _armor_casts_shadow := true
+var _armor_body_id := "body_male"
 
 
 func setup(target_height: float, tint := Color.WHITE, casts_shadow := true,
 		body_id := "body_male", class_id := "") -> void:
 	_armor_casts_shadow = casts_shadow
+	_armor_body_id = body_id if body_id in OUTFIT_MODEL_PATHS else "body_male"
 	super.setup(target_height, tint, casts_shadow, body_id, class_id)
 	_remove_origin_placeholders()
 
@@ -36,11 +79,42 @@ func apply_equipment(piece_ids: Array) -> void:
 		var slot := String(data.get("slot", ""))
 		if not data.is_empty() and slot in SLOT_ORDER:
 			selected_by_slot[slot] = piece_id
+	if selected_by_slot.is_empty():
+		return
+
+	# Body, Arms, Legs e Feet sao um fato completo. Mesmo que armor.json ainda
+	# nao equipe maos/pernas na Fatia 1, estes componentes cobrem o corpo nu e
+	# tornam-se o underlayer visual; o item do slot, quando existe, escolhe a
+	# familia e o material desse componente.
+	var base_family := _base_outfit_family(selected_by_slot)
+	var body_model_ok := true
+	var model_result_by_slot := {}
+	for slot: String in BODY_REPLACEMENT_SLOTS:
+		var piece_id := String(selected_by_slot.get(slot, ""))
+		var data := _piece_data(piece_id) if not piece_id.is_empty() else {}
+		var family := _family_for_piece(data, base_family)
+		var built := _build_model_slot(slot, family, piece_id, data)
+		model_result_by_slot[slot] = built
+		body_model_ok = body_model_ok and built
+	set_body_replaced_by_outfit(body_model_ok)
+	if not body_model_ok:
+		push_warning("[armor-visual] fato modular incompleto; corpo restaurado para evitar buracos")
+
 	for slot: String in SLOT_ORDER:
 		var piece_id := String(selected_by_slot.get(slot, ""))
 		if piece_id.is_empty():
 			continue
-		_build_piece(piece_id, _piece_data(piece_id))
+		var data := _piece_data(piece_id)
+		if slot in BODY_REPLACEMENT_SLOTS:
+			if not bool(model_result_by_slot.get(slot, false)):
+				_build_piece(piece_id, data)
+		elif slot in MODEL_SLOTS:
+			var family := "ranger" if slot in ["cabeca", "ombros"] \
+				else _family_for_piece(data, base_family)
+			if not _build_model_slot(slot, family, piece_id, data):
+				_build_piece(piece_id, data)
+		else:
+			_build_piece(piece_id, data)
 		_armor_piece_ids.append(piece_id)
 
 
@@ -92,6 +166,12 @@ func _remove_origin_placeholders() -> void:
 
 
 func _clear_armor() -> void:
+	set_body_replaced_by_outfit(false)
+	for mesh_instance: MeshInstance3D in _outfit_meshes:
+		_meshes.erase(mesh_instance)
+		if is_instance_valid(mesh_instance):
+			mesh_instance.free()
+	_outfit_meshes.clear()
 	for attachment: BoneAttachment3D in _armor_attachments:
 		if not is_instance_valid(attachment):
 			continue
@@ -101,6 +181,88 @@ func _clear_armor() -> void:
 	_armor_attachments.clear()
 	_armor_piece_ids.clear()
 	_signatures.clear()
+
+
+func _base_outfit_family(selected_by_slot: Dictionary) -> String:
+	var fallback := String(ORIGIN_OUTFIT_FAMILY.get(_origin_id, "peasant"))
+	for slot: String in BODY_REPLACEMENT_SLOTS:
+		var piece_id := String(selected_by_slot.get(slot, ""))
+		if not piece_id.is_empty():
+			return _family_for_piece(_piece_data(piece_id), fallback)
+	return fallback
+
+
+static func _family_for_piece(data: Dictionary, fallback: String) -> String:
+	var material_text := String(data.get("material", "")).to_lower()
+	if "pano" in material_text or "la" in material_text or "lã" in material_text:
+		return "peasant"
+	if "couro" in material_text or "ferro" in material_text or "pelo" in material_text:
+		return "ranger"
+	return fallback
+
+
+func _build_model_slot(slot: String, family: String, piece_id: String,
+		data: Dictionary) -> bool:
+	# Campones nao traz capuz nem ombreiras na versao gratuita. Estes dois slots
+	# usam o equivalente Ranger; nao se procura nem se finge o conteudo pago.
+	if slot in ["cabeca", "ombros"]:
+		family = "ranger"
+	var by_body := OUTFIT_MODEL_PATHS.get(_armor_body_id, {}) as Dictionary
+	var by_family := by_body.get(family, {}) as Dictionary
+	var model_path := String(by_family.get(slot, ""))
+	if model_path.is_empty():
+		return false
+	var packed := load(model_path) as PackedScene
+	if packed == null:
+		push_warning("[armor-visual] modelo ausente: %s" % model_path)
+		return false
+	var donor_root := packed.instantiate()
+	var donor_skeleton := _find_skeleton(donor_root)
+	if donor_skeleton == null or not _skeletons_match(donor_skeleton, _skeleton):
+		donor_root.free()
+		push_warning("[armor-visual] rig nao coincide: %s" % model_path)
+		return false
+	var donor_nodes := donor_root.find_children("*", "MeshInstance3D", true, false)
+	if donor_nodes.is_empty():
+		donor_root.free()
+		push_warning("[armor-visual] modelo sem malha: %s" % model_path)
+		return false
+	var material := _material_for(piece_id, data) if not data.is_empty() \
+		else _source_material("dark_cloth" if family == "peasant" else "leather")
+	var material_strength := 0.58 if not data.is_empty() else 0.36
+	var moved := 0
+	for donor_node: Node in donor_nodes:
+		var donor_mesh := donor_node as MeshInstance3D
+		donor_mesh.owner = null
+		donor_mesh.reparent(_skeleton, false)
+		donor_mesh.name = "Outfit_%s" % donor_mesh.name
+		donor_mesh.skeleton = NodePath("..")
+		donor_mesh.mesh = reduced_skinned_mesh(donor_mesh.mesh,
+			"%s#%s" % [model_path, donor_mesh.name])
+		donor_mesh.add_to_group("armor_visual_piece")
+		donor_mesh.set_meta("armor_slot", slot)
+		donor_mesh.set_meta("outfit_source", model_path)
+		donor_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON \
+			if _armor_casts_shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_outfit_meshes.append(donor_mesh)
+		_register_mesh(donor_mesh, _armor_casts_shadow,
+			CLASS_TINTS.get(_origin_id, Color.WHITE))
+		apply_equipment_material(donor_mesh, material.albedo_color,
+			material_strength, material.roughness, material.metallic)
+		moved += 1
+	donor_root.free()
+	if not piece_id.is_empty():
+		_signatures[slot] = "%s:quaternius_%s_%s" % [piece_id, family, slot]
+	return moved > 0
+
+
+static func _skeletons_match(donor: Skeleton3D, target: Skeleton3D) -> bool:
+	if donor.get_bone_count() != target.get_bone_count():
+		return false
+	for bone_index: int in donor.get_bone_count():
+		if donor.get_bone_name(bone_index) != target.get_bone_name(bone_index):
+			return false
+	return true
 
 
 func _build_piece(piece_id: String, data: Dictionary) -> void:
@@ -544,7 +706,8 @@ static func _add_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vecto
 static func _fechar_suave(surface: SurfaceTool, material: Material) -> ArrayMesh:
 	surface.index()
 	surface.generate_normals()
-	surface.generate_tangents()
+	# As cascas geradas nao tem UV nem normal map; tangentes seriam trabalho
+	# inutil e o Godot rejeita gera-las sem UV. As normais continuam suaves.
 	surface.set_material(material)
 	return surface.commit()
 
