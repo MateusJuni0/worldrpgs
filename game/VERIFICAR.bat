@@ -43,23 +43,23 @@ if not defined GODOT (
 set FALHOU=0
 
 echo.
-echo == 1/12  auto-teste principal (contra a spec e os catalogos) ==
+echo == 1/13  auto-teste principal (contra a spec e os catalogos) ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/selftest.tscn || set FALHOU=1
 
 echo.
-echo == 2/12  audio e icones das familias de armas ==
+echo == 2/13  audio e icones das familias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/audio/delivery_self_test.gd || set FALHOU=1
 
 echo.
-echo == 3/12  abertura jogavel ==
+echo == 3/13  abertura jogavel ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/ui/intro_selftest.gd || set FALHOU=1
 
 echo.
-echo == 4/12  arranque real: criar personagem e entrar no jogo ==
+echo == 4/13  arranque real: criar personagem e entrar no jogo ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/repro-inicio.tscn || set FALHOU=1
 
 echo.
-echo == 5/12  descanso real na fogueira (save isolado) ==
+echo == 5/13  descanso real na fogueira (save isolado) ==
 set "ORIGINAL_APPDATA=%APPDATA%"
 set "ORIGINAL_WORLDRPGS_TEST_USER_ROOT=%WORLDRPGS_TEST_USER_ROOT%"
 set "BONFIRE_TEST_PARENT=%TEMP%\worldrpgs-verificar"
@@ -80,11 +80,11 @@ if errorlevel 1 (
 )
 
 echo.
-echo == 6/12  melhorias de armas ==
+echo == 6/13  melhorias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/weapons/weapon_progression_selftest.gd || set FALHOU=1
 
 echo.
-echo == 7/12  camada de rede (protocolo, interpolacao, latencia) ==
+echo == 7/13  camada de rede (protocolo, interpolacao, latencia) ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/net/net_selftest.gd || set FALHOU=1
 
 rem ---------------------------------------------------------------
@@ -94,31 +94,50 @@ rem  mao, nem a fogueira que nao gravava. Isto apanha.
 rem ---------------------------------------------------------------
 
 echo.
-echo == 8/12  sessao de jogo: nasce, equipa, bate, mata, bebe, descansa ==
+echo == 8/13  sessao de jogo: nasce, equipa, bate, mata, bebe, descansa ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/sessao-de-jogo.tscn || set FALHOU=1
 
 echo.
 if "!RAPIDO!"=="1" (
-  echo == 9/12  percurso ate ao chefe  [SALTADO por --rapido] ==
+  echo == 9/13  percurso ate ao chefe  [SALTADO por --rapido] ==
 ) else (
-  echo == 9/12  percurso: ANDA de ponta a ponta e chega ao chefe ==
+  echo == 9/13  percurso: ANDA de ponta a ponta e chega ao chefe ==
   "%GODOT%" --headless --audio-driver Dummy --path . scenes/percurso.tscn || set FALHOU=1
 )
 
 echo.
-echo == 10/12  codigo que o jogo nunca chama (orfaos) ==
+echo == 10/13  o chefe cai: luta inteira, 1950 PV, sem baixar a vida dele ==
+set "VORGAR_PARENT=%TEMP%\worldrpgs-verificar"
+for %%I in ("!VORGAR_PARENT!") do set "VORGAR_PARENT=%%~fI"
+set "VORGAR_APPDATA=!VORGAR_PARENT!\vorgar-!RANDOM!-!RANDOM!"
+2>nul md "!VORGAR_APPDATA!"
+if errorlevel 1 (
+  echo Nao foi possivel criar o APPDATA temporario da prova do chefe.
+  set FALHOU=1
+) else (
+  set "APPDATA=!VORGAR_APPDATA!"
+  set "WORLDRPGS_TEST_USER_ROOT=!VORGAR_APPDATA!"
+  "%GODOT%" --headless --audio-driver Dummy --path . scenes/arena_vorgar.tscn -- --scene=vorgar --vorgar-full-fight-proof || set FALHOU=1
+  set "APPDATA=!ORIGINAL_APPDATA!"
+  set "WORLDRPGS_TEST_USER_ROOT=!ORIGINAL_WORLDRPGS_TEST_USER_ROOT!"
+  if exist "!VORGAR_APPDATA!\" rd /s /q "!VORGAR_APPDATA!"
+  2>nul rd "!VORGAR_PARENT!"
+)
+
+echo.
+echo == 11/13  codigo que o jogo nunca chama (orfaos) ==
 pushd ..
 node tools/orfaos.mjs || set FALHOU=1
 popd
 
 echo.
-echo == 11/12  spec que o codigo nunca implementou ==
+echo == 12/13  spec que o codigo nunca implementou ==
 pushd ..
 node tools/cobertura-spec.mjs || set FALHOU=1
 popd
 
 echo.
-echo == 12/12  guarda da spec (precisa de node) ==
+echo == 13/13  guarda da spec (precisa de node) ==
 pushd ..
 node tools/check-coerencia.mjs || set FALHOU=1
 popd
