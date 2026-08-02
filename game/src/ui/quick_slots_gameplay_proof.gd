@@ -28,6 +28,8 @@ func _run() -> void:
 		_fail("a prova de acesso rapido nao encontrou o Player real")
 		return
 	_state_before = GameData.save_state_snapshot()
+	if not _prove_starting_loadouts():
+		return
 	_weapon_key = _catalogue_test_weapon_key()
 	if _weapon_key == "":
 		_fail("o catalogo nao forneceu uma segunda arma principal executavel")
@@ -39,6 +41,106 @@ func _run() -> void:
 	if not await _prove_selected_item_use():
 		return
 	await _prove_equipped_weapon_attack()
+
+
+func _prove_starting_loadouts() -> bool:
+	var contract_errors: Array = _gameplay.get("starting_loadout_contract_errors") as Array
+	if not contract_errors.is_empty():
+		return _loadout_failure("StartingLoadouts recusou o catalogo no jogo: %s" % \
+			", ".join(contract_errors))
+	var loadouts := GameData.weapons.get("loadouts", {}) as Dictionary
+	var origin_ids: Array[String] = []
+	for value: Variant in loadouts.keys():
+		var origin_id := String(value)
+		if not origin_id.begins_with("_"):
+			origin_ids.append(origin_id)
+	origin_ids.sort()
+	var creation_ids: Array[String] = GameShell.CLASS_IDS.duplicate()
+	creation_ids.sort()
+	if origin_ids != creation_ids:
+		return _loadout_failure("criacao e kits activos discordam: %s/%s" % [
+			creation_ids, origin_ids])
+	var armor_visual := _player.get("_visual") as ArmorVisual
+	var weapon_visual := _player.get_node_or_null("WeaponAttach") as WeaponAttach
+	var surface := _quick_slots.get("_surface") as Control
+	if armor_visual == null or weapon_visual == null or surface == null:
+		return _loadout_failure("o Player real nao expos armadura, armas e caixa visiveis")
+	var default_spells: Array = (GameData.spells.get("_rules", {}) as Dictionary).get(
+		"default_favorites", []) as Array
+	for origin_id: String in origin_ids:
+		var expected := loadouts.get(origin_id, {}) as Dictionary
+		var state := SaveSystem.create_save("repro-kit-%s" % origin_id, origin_id)
+		QuickSlotsModel.normalise_state(state, GameData.weapons, default_spells)
+		GameData.replace_save_state(state)
+		_gameplay.call("refresh_inventory_state")
+		InventorySystem.emit_signal("inventory_changed")
+		weapon_visual.sync_from_actor()
+		_quick_slots.call("_refresh")
+
+		var character := state.get("character", {}) as Dictionary
+		var identity := character.get("identity", {}) as Dictionary
+		var inventory := character.get("inventory", {}) as Dictionary
+		var equipment := inventory.get("equipment", {}) as Dictionary
+		var items := inventory.get("items", {}) as Dictionary
+		var main_id := String(expected.get("main", ""))
+		var offhand_value: Variant = expected.get("offhand", null)
+		var offhand_id := "" if offhand_value == null else String(offhand_value)
+		var pieces := expected.get("pecas", []) as Array
+		if String(identity.get("class_id", "")) != origin_id \
+				or main_id.is_empty() or _player.main_weapon != main_id \
+				or _player.offhand_weapon != offhand_id:
+			return _loadout_failure("%s nao chegou com as duas maos catalogadas" % origin_id)
+		if int(items.get("arma:%s" % main_id, 0)) < 1 \
+				or (offhand_id != "" and int(items.get("arma:%s" % offhand_id, 0)) < 1) \
+				or int(items.get(QuickSlotsModel.FLASK_ITEM_KEY, 0)) < 1:
+			return _loadout_failure("%s nao recebeu armas e Frasco de Bruma" % origin_id)
+		for piece_value: Variant in pieces:
+			if int(items.get("armadura:%s" % String(piece_value), 0)) < 1:
+				return _loadout_failure("%s nao recebeu a peca %s" % [origin_id, piece_value])
+		var equipped_pieces := armor_visual.equipped_piece_ids()
+		for piece_value: Variant in pieces:
+			if not equipped_pieces.has(String(piece_value)):
+				return _loadout_failure("%s nao vestiu %s no boneco" % [origin_id, piece_value])
+		if not weapon_visual.has_visible_weapon(main_id, true) \
+				or (offhand_id != "" and not weapon_visual.has_visible_weapon(offhand_id, false)):
+			return _loadout_failure("%s guardou o kit, mas nao o mostrou nas maos" % origin_id)
+		var visible_slots: Array = surface.get("slots") as Array
+		var right := _slot_by_name(visible_slots, "right_hand")
+		var left := _slot_by_name(visible_slots, "left_hand")
+		var item := _slot_by_name(visible_slots, "item")
+		var expected_left := "arma:%s" % offhand_id if offhand_id != "" \
+			else QuickSlotsModel.FREE_HAND_KEY
+		if not _quick_slots.visible or String(right.get("key", "")) != "arma:%s" % main_id \
+				or String(left.get("key", "")) != expected_left \
+				or String(item.get("key", "")) != QuickSlotsModel.FLASK_ITEM_KEY \
+				or int(item.get("count", -1)) != _player.flask_uses:
+			return _loadout_failure("%s nao apareceu completo no acesso rapido" % origin_id)
+
+	GameData.replace_save_state(_state_before)
+	_gameplay.call("refresh_inventory_state")
+	InventorySystem.emit_signal("inventory_changed")
+	weapon_visual.sync_from_actor()
+	_quick_slots.call("_refresh")
+	print("[repro] kits iniciais: %d origens com armas, armadura, frasco, caixa e boneco" % \
+		origin_ids.size())
+	return true
+
+
+func _slot_by_name(slots: Array, slot_name: String) -> Dictionary:
+	for value: Variant in slots:
+		var slot := value as Dictionary
+		if String(slot.get("slot", "")) == slot_name:
+			return slot
+	return {}
+
+
+func _loadout_failure(message: String) -> bool:
+	GameData.replace_save_state(_state_before)
+	if is_instance_valid(_gameplay):
+		_gameplay.call("refresh_inventory_state")
+	InventorySystem.emit_signal("inventory_changed")
+	_fail("kits iniciais: %s" % message)
+	return false
 
 
 func _give_test_weapon() -> bool:

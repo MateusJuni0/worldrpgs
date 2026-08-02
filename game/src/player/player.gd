@@ -157,7 +157,7 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
 	main_weapon = loadout.get("main", "longsword")
 	offhand_weapon = loadout.get("offhand", "") if loadout.get("offhand") != null else ""
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 
 	var buf := GameData.section("input_buffer")
 	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
@@ -899,9 +899,11 @@ func set_waking_up(enabled: bool) -> void:
 
 
 func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
-	main_weapon = String(equipment.get("main", ""))
-	offhand_weapon = String(equipment.get("offhand", ""))
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	var main_value: Variant = equipment.get("main", "")
+	var offhand_value: Variant = equipment.get("offhand", "")
+	main_weapon = "" if main_value == null else String(main_value)
+	offhand_weapon = "" if offhand_value == null else String(offhand_value)
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 	favorite_spells.clear()
 	for spell_value: Variant in equipment.get("spell_favorites", []):
 		favorite_spells.append(String(spell_value))
@@ -953,6 +955,28 @@ func _secondary_instrument_for(spell: Dictionary) -> Dictionary:
 			or not bool(GameData.weapon(main_weapon).get("can_cast", false)):
 		return {}
 	return _instrument_for_weapon(offhand_weapon, spell)
+
+
+func _loadout_uses_two_hands(main_id: String, offhand_id: String) -> bool:
+	# A decisao mais recente emparelha o cajado principal com um instrumento na
+	# secundaria. O `hands` historico do cajado continua a valer quando ele esta
+	# sozinho, mas nao pode esconder a segunda metade do par decidido.
+	if bool(GameData.weapon(main_id).get("can_cast", false)) \
+			and _is_magic_instrument(offhand_id):
+		return false
+	return int(GameData.weapon(main_id).get("hands", 1)) >= 2
+
+
+func _is_magic_instrument(weapon_id: String) -> bool:
+	if weapon_id.is_empty():
+		return false
+	var instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
+	for instrument_id: String in instruments:
+		var instrument := instruments.get(instrument_id, {}) as Dictionary
+		if weapon_id == instrument_id \
+				or weapon_id == String(instrument.get("weapon_id", instrument_id)):
+			return true
+	return false
 
 
 func _casting_instrument_for(spell: Dictionary) -> Dictionary:
@@ -1374,7 +1398,7 @@ func _cycle_loadout(direction: int) -> void:
 	var l: Dictionary = order[_loadout_index]
 	main_weapon = l.get("main", "longsword")
 	offhand_weapon = l.get("offhand", "") if l.get("offhand") != null else ""
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 	_combo_index = 0
 
 

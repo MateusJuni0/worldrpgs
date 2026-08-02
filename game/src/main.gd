@@ -24,6 +24,7 @@ var navigation: CanvasLayer
 var necromancy_runtime: NecromancyRuntime
 var net_menu: NetMenu
 var net_hud: NetHud
+var starting_loadout_contract_errors: Array[String] = []
 
 var _preset: Dictionary = {}
 var _palette: Dictionary = {}
@@ -46,6 +47,7 @@ const REST_SPAWN_OFFSET := Vector3(1.8, 0.6, 0.8)
 
 func _ready() -> void:
 	_ensure_runtime_save()
+	_validate_starting_loadout_contract()
 	InventorySystem.normalise_current()
 	_graphics = _load_graphics()
 	_palette = _graphics.get("palette", {})
@@ -501,6 +503,25 @@ func _face_enemy_towards(enemy: Enemy, point: Vector3) -> void:
 
 # --- Morte e recomeco ---------------------------------------------------------
 
+func _validate_starting_loadout_contract() -> void:
+	# StartingLoadouts foi escrito para seis origens + o placeholder editorial
+	# do Mago do Mal. Executamos o contrato sobre esse escopo historico; quem
+	# enumera e aplica os kits jogaveis continua a ser exclusivamente o catalogo,
+	# por isso a setima origem nunca volta a desaparecer por causa desta lista.
+	var scoped_catalog := GameData.weapons.duplicate(true)
+	var scoped_loadouts := (scoped_catalog.get("loadouts", {}) as Dictionary).duplicate(true)
+	for value: Variant in scoped_loadouts.keys():
+		var origin_id := String(value)
+		if not origin_id.begins_with("_") \
+				and not StartingLoadouts.ACTIVE_ORIGIN_IDS.has(origin_id):
+			scoped_loadouts.erase(origin_id)
+	scoped_catalog["loadouts"] = scoped_loadouts
+	starting_loadout_contract_errors = StartingLoadouts.contract_errors(
+		scoped_catalog, GameData.equipment)
+	for error: String in starting_loadout_contract_errors:
+		push_error("[starting-loadouts] %s" % error)
+
+
 func _ensure_runtime_save() -> void:
 	if not GameData.save_state.is_empty():
 		return
@@ -762,11 +783,18 @@ func refresh_inventory_state() -> void:
 	if not is_instance_valid(player):
 		return
 	var state := GameData.save_state_snapshot()
-	var character: Dictionary = state.get("character", {}) as Dictionary
+	var readable_state := state.duplicate(true)
+	var character: Dictionary = readable_state.get("character", {}) as Dictionary
 	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
-	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
+	var equipment := (inventory.get("equipment", {}) as Dictionary).duplicate(true)
+	for hand: String in ["main", "offhand"]:
+		if equipment.get(hand) == null:
+			equipment[hand] = ""
+	inventory["equipment"] = equipment
+	character["inventory"] = inventory
+	readable_state["character"] = character
 	player.apply_inventory_state(equipment,
-		InventorySystem.load_profile(state))
+		InventorySystem.load_profile(readable_state))
 	var armor := player.get("_visual") as ArmorVisual
 	if armor != null:
 		armor.apply_equipment(equipment.get("armor", []) as Array)
