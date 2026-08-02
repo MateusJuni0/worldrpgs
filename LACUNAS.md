@@ -451,6 +451,40 @@ Vocabulário de situações que o DS tem e a nossa spec **não menciona em lado 
 | ✅ | ~~⭐ **Castigo de cura**~~ — `orc_spearman/closing_lunge`, estado visível + LOS + 9 f |
 | ✅ | ~~**Fingir morte e atacar ao levantar**~~ — `ancient_skeleton/black_cut`, colocação determinística |
 
+### ⭐ Gramática de ataque por raça — protocolo do [`31`](spec/31-referencias.md)
+
+**Data de corte e consulta:** 01-08-2026. A comparação usa estruturas e números
+observáveis; não entram nomes, animações, sons ou tabelas extraídas dos jogos.
+
+| Foco | Eles — DS2/DS3 | Nós antes desta árvore | Diferença / nossa versão |
+|---|---|---|---|
+| **Fim do combo = janela** | A decomposição de DS3 separa pose final e regresso: a pose final encadeia ou regressa, e o regresso é normalmente a janela de oportunidade, a fase mais longa ([Game Developer, 31-05-2022](https://www.gamedeveloper.com/game-platforms/anatomy-of-an-enemy-attack-in-dark-souls-3)) | O motor já aplicava `gap_between_patterns`, mas 31 dos 33 comuns não tinham `patterns`; por isso nunca chegavam a um fim de combo definido | Os 33 comuns têm agora **4–6 padrões finitos** e pausa obrigatória de **0,95–2,65 s**. O jogador usa o regresso ao estado de perseguição como a janela; não existe cadeia infinita |
+| **Comprimentos diferentes** | Uma análise de DS3 observa variações do mesmo combo; conta 2–3 golpes nos jogos anteriores e 3–5, por vezes 6–7 em chefes, mas também documenta o risco de stunlock quando as cadeias roubam a resposta ([Game Developer, 18-04-2016](https://www.gamedeveloper.com/design/the-successes-and-failures-of-dark-souls-3-s-design)) | Os dois únicos comuns preenchidos tinham quase só padrões de um golpe; os restantes caíam no ataque simples | Rápidos alternam sequências de **1/2/3 ataques**; zombies, minotauros e outros pesados ficam sobretudo em **1/2** para preservar o esgotamento legível. O mímico do naufrágio guarda uma única cadeia de 3 atrás de 2 s de pausa. Vorgar alterna 1–3 por fase. A diferença é intencional: copiamos a incerteza, não as cadeias de 6–7 que a própria análise critica |
+| **Falsa recuperação** | Uma ficha pública de DS2 regista uma cadeia de três golpes que pode parar **1–2 s** e ainda acrescentar dois; a análise de DS3 mede a pose final usada como isco em **≥240 ms** e exige tempo para confirmar um fim verdadeiro ([DS2 Wikidot](https://darksouls2.wikidot.com/fume-knight) · [Game Developer, 31-05-2022](https://www.gamedeveloper.com/game-platforms/anatomy-of-an-enemy-attack-in-dark-souls-3)) | `bone_rattle` já declarava `false_recovery.optional_followup`, mas `enemy.gd` ignorava o campo | A decisão é feita antes do aviso; em 20% das variantes, se o jogador entrar a ≤2,0 m, a guarda alta encadeia `rib_sweep`. O follow-up conserva aviso visual e som próprios. A recuperação verdadeira baixa a arma, conforme a ficha; a pose exacta ainda depende da ligação visual registada abaixo |
+| **Raça, não tinta** | DS3 diferencia silhueta/equipamento até dentro da mesma espécie; a leitura antecipa capacidades ([Game Developer, 18-04-2016](https://www.gamedeveloper.com/design/the-successes-and-failures-of-dark-souls-3-s-design)) | Existiam 12 raças e 105 ataques completos, mas a ordem temporal era a mesma lista vazia em 31 fichas | Goblins repetem e recuam (**0,95–1,20 s**); kobolds armam terreno e fogem (**1,55–1,70 s**); esqueletos quebram a cadência e fintam (**1,15–1,45 s**); zombies terminam golpes pesados e respiram (**2,10–2,40 s**); minotauros ligam carga/pisada e esgotam (**2,25–2,65 s**). Tecelões, submersos, ventaneiras, penitentes, mímicos, borralheiros, sem-rosto e os cinco orcs têm sequências próprias, não uma cópia por cor |
+
+`[CODEX]` **Padrões, pausas e dano por ataque (01-08-2026):** cada ficha comum
+recebe 4–6 padrões finitos, comprimentos variados e uma pausa racial; os **105
+ataques** passam a declarar `damage` próprio, consumido directamente pelo runtime.
+Razão: a identidade de combate precisa de ordem, repouso e consequência próprios,
+não apenas de três animações escolhidas ao acaso. Alternativa descartada: gerar os
+padrões em `.gd` a partir do papel (`rapido/pesado/distancia`); reduziria JSON, mas
+voltaria a fazer espécies diferentes lutar com a mesma gramática e esconderia
+números de combate no código.
+
+**As quatro perguntas do fio solto:**
+
+1. **Como usa o jogador?** Não há tecla nova. Lê a pose/som, escolhe entre esquiva, parry, bloqueio ou movimento já existentes e ataca durante o regresso; aprende também que uma guarda óssea ainda alta não é o mesmo fim que uma espada baixa.
+2. **Como se prova?** `Enemy.attack_grammar_contract_errors()` percorre as 34 fichas no primeiro `setup` e a asserção falha se faltar um padrão/pausa, se só existir um comprimento, se um padrão apontar para golpe inexistente, se faltar dano próprio ou se quaisquer dois dos 105 ataques repintarem o número. Também recusa golpes ausentes da gramática e qualquer golpe sem compromisso, curva de seguimento, vector de fuga da lista de nove, som ou equivalente visual. Na prova negativa, esvaziar temporariamente `goblin_mist_scout.patterns` produziu cinco falhas de guarda, interrompeu todos os `setup` antes de `_build_body()` e a cena Godot terminou com **exit 1**. O agregado ficou em **9703/0**.
+3. **Arte e som?** Zero binários novos. Todos os ataques já declaram `som_anuncio` e equivalente visual; `EnemyAttackAudio` sintetiza uma assinatura 3D por raça+inimigo+ataque. Cada follow-up volta a anunciar-se. Modelos/animações continuam nos packs já importados.
+4. **Quanto custa no Rico?** Sem malhas, partículas ou sons em disco novos. O custo novo é uma escolha numa lista curta por combo; a validação única dos 105 ataques/34 fichas no primeiro spawn mediu **3,978 ms**, isolada com `Time.get_ticks_usec()` e removida depois da medição. A cena aquecida com cinco inimigos terminou em **5,849 s** e o passe final do agregado de 9703 verificações em **5,000 s**; estes dois são tempos de processo completo. Não se atribui aqui um FPS novo porque esta árvore não alterou o renderer.
+
+| Estado | Lacuna fora da posse desta árvore | Fronteira pronta |
+|---|---|---|
+| 🟠 | **A pose exacta da falsa recuperação ainda não é apresentada pela animação genérica.** A ficha distingue `guarda ossea alta` de espada baixa, mas `enemy_visual.gd` só mapeia o semântico geral `Sword_Attack`. Não foi alterado porque a arte dos inimigos pertence a outro agente | `enemy.gd` escolhe a variante antes do tell e executa `optional_followup`; o dono visual deve mapear `false_recovery.readable_pose` para uma pose existente ou sintetizada e provar as duas silhuetas em 1.ª/3.ª pessoa |
+| 🟠 | **O agregador alheio ainda não chama a guarda pura da gramática.** `self_test.gd` está fora da posse desta árvore; por isso o seu contador pode ficar verde com um padrão apagado até uma cena criar o primeiro `Enemy` | O dono do agregador deve passar `GameData.enemies` a `Enemy.attack_grammar_contract_errors()` e contar a lista vazia como uma verificação. A cena com inimigos já falha com exit 1 e a prova negativa cobre esta fronteira |
+| 🟠 | **A guarda de coerência já parte de `HEAD` com dois links ausentes em `MAPA.md`.** Faltam `design/ideas/2026-07-31_0006__2026-07-30-23-52-46.ideas.md` e `design/transcripts/2026-07-31_0006__2026-07-30-23-52-46.md`; não pertencem a esta árvore | `node tools/check-coerencia.mjs` verificou **19 JSON e 3066 contratos com 0 erros** antes de reportar apenas esses dois links preexistentes |
+
 ### ⭐ Inteligência entre golpes — protocolo do [`31`](spec/31-referencias.md)
 
 | Situação | Eles | Nós antes desta árvore | Diferença / nossa versão |
