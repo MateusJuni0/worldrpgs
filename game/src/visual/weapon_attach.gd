@@ -90,9 +90,9 @@ func sync_loadout(main_weapon: String, offhand_weapon: String, two_handed: bool)
 
 func model_source_for(weapon_id: String) -> String:
 	var data := _weapon_data(weapon_id)
-	# Estas fichas recusam honestamente o prop generico da familia. Adaga, sino
-	# e talisma acabavam todos como uma vara quando essa decisao se perdia.
-	if _visual_kind(data) in ["dagger", "bell", "talisman"]:
+	# Estes instrumentos recusam honestamente o prop generico da familia; sino e
+	# talisma acabavam ambos como uma vara quando essa decisao se perdia.
+	if _visual_kind(data) in ["bell", "talisman"]:
 		return ""
 	var family := _visual_family_for(weapon_id)
 	if family.is_empty():
@@ -280,7 +280,8 @@ static func _catalogue_scale_for(model: Node3D, data: Dictionary) -> Vector3:
 	# O modelo KayKit da espada tem proporcao de cutelo de fantasia. O catalogo
 	# diz explicitamente "lamina" e "guarda curta"; comprimir apenas os eixos
 	# transversais conserva o modelo 3D e devolve-lhe a silhueta longa e estreita.
-	if source_bounds.size.y == source_length \
+	if String(data.get("familia", "")) == "espada_recta" \
+			and source_bounds.size.y == source_length \
 			and ("lamina" in normal or "lâmina" in normal):
 		result.x *= 0.38
 		result.z *= 0.62
@@ -328,8 +329,6 @@ static func _build_procedural_weapon(data: Dictionary) -> Node3D:
 	var normal := description.to_lower()
 	var target_length := _target_visual_length_m(data)
 	match _visual_kind(data):
-		"dagger":
-			return _build_dagger(maxf(target_length, 0.38))
 		"bell":
 			return _build_bell()
 		"talisman":
@@ -341,43 +340,6 @@ static func _build_procedural_weapon(data: Dictionary) -> Node3D:
 	if "haste" in normal or "lanca" in normal or "lança" in normal:
 		return _build_polearm(maxf(target_length, 1.5))
 	return _build_polearm(maxf(target_length, 1.2))
-
-
-static func _build_dagger(total_length: float) -> Node3D:
-	var root := Node3D.new()
-	root.set_meta("visual_size_ready", true)
-	var leather := _visual_material("leather", Color("2d211b"), 0.94, 0.0)
-	var iron := _visual_material("worn_iron", Color("aeb4b4"), 0.62, 0.08)
-	var grip_length := total_length * 0.29
-	var blade_length := total_length * 0.58
-	var tip_length := total_length * 0.13
-	var grip := _cylinder_mesh_instance(
-		"LeatherGrip", total_length * 0.065, grip_length, leather)
-	root.add_child(grip)
-	var guard := _box_mesh_instance("ShortGuard",
-		Vector3(total_length * 0.30, total_length * 0.045,
-			total_length * 0.065), iron)
-	guard.position.y = grip_length * 0.52
-	root.add_child(guard)
-	var blade := _box_mesh_instance("BroadDaggerBlade",
-		Vector3(total_length * 0.15, blade_length,
-			total_length * 0.035), iron)
-	blade.position.y = grip_length * 0.5 + blade_length * 0.5
-	root.add_child(blade)
-	var tip_mesh := CylinderMesh.new()
-	tip_mesh.top_radius = 0.0
-	tip_mesh.bottom_radius = total_length * 0.075
-	tip_mesh.height = tip_length
-	tip_mesh.radial_segments = 4
-	tip_mesh.rings = 1
-	tip_mesh.material = iron
-	var tip := MeshInstance3D.new()
-	tip.name = "DaggerPoint"
-	tip.mesh = tip_mesh
-	tip.scale.z = 0.28
-	tip.position.y = grip_length * 0.5 + blade_length + tip_length * 0.5
-	root.add_child(tip)
-	return root
 
 
 static func _build_bell() -> Node3D:
