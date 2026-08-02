@@ -12,6 +12,10 @@ extends CharacterBody3D
 
 const WorldBoundsTracker = preload("res://src/world/bounds.gd")
 const WorldBoundsWarningScene = preload("res://src/world/bounds_warning.gd")
+const SpellDeliveryFactoryScript = preload("res://src/spells/spell_delivery_factory.gd")
+const SpellVfxResidencyScript = preload("res://src/vfx/spell_vfx_residency.gd")
+const SpellCastVfxScript = preload("res://src/vfx/spell_cast_vfx.gd")
+const CastingWeaponAttachScript = preload("res://src/visual/weapon_attach.gd")
 
 signal died
 signal state_changed(state: int)
@@ -84,6 +88,9 @@ var _load_max_speed := 999.0
 var _cast_spell: Dictionary = {}
 var _cast_instrument: Dictionary = {}
 var _cast_frames_total := 0
+var _spell_vfx_residency: RefCounted
+var _cast_flash: Node3D
+var _casting_weapon_visual: Node3D
 var _egide_shield := 0.0
 var _egide_time := 0.0
 var _meditation_start_mana := 0
@@ -920,7 +927,7 @@ func use_primary_attack() -> String:
 		return "riposte"
 
 	var s := GameData.spell(selected_spell)
-	var instrument := _secondary_instrument_for(s)
+	var instrument := _casting_instrument_for(s)
 	if s.is_empty() or instrument.is_empty():
 		_start_attack("light")
 		return "melee"
@@ -935,18 +942,32 @@ func use_primary_attack() -> String:
 	return "cast"
 
 
-## O instrumento da mao secundaria e o catalisador. O cajado principal fornece
-## o ataque fisico; nao empresta escala ao feitico. Procurar pelo weapon_id deixa
-## o Player independente do nome concreto que o catalogo de equipamento adoptar.
+## O instrumento secundario tem prioridade. Enquanto os kits reais ainda trazem
+## apenas um cajado `can_cast`, o mesmo catalogo tambem o reconhece na mao principal.
 func _secondary_instrument_for(spell: Dictionary) -> Dictionary:
 	if offhand_weapon == "" or is_two_handed or spell.is_empty():
+		return {}
+	return _instrument_for_weapon(offhand_weapon, spell)
+
+
+func _casting_instrument_for(spell: Dictionary) -> Dictionary:
+	var secondary := _secondary_instrument_for(spell)
+	if not secondary.is_empty():
+		return secondary
+	if not bool(GameData.weapon(main_weapon).get("can_cast", false)):
+		return {}
+	return _instrument_for_weapon(main_weapon, spell)
+
+
+func _instrument_for_weapon(weapon: String, spell: Dictionary) -> Dictionary:
+	if weapon.is_empty() or spell.is_empty():
 		return {}
 	var instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
 	var school := String(spell.get("school", ""))
 	for instrument_id: String in instruments:
 		var instrument: Dictionary = instruments.get(instrument_id, {}) as Dictionary
 		var weapon_id := String(instrument.get("weapon_id", instrument_id))
-		if offhand_weapon != weapon_id and offhand_weapon != instrument_id:
+		if weapon != weapon_id and weapon != instrument_id:
 			continue
 		if not (instrument.get("school_tags", []) as Array).has(school):
 			continue
@@ -1036,12 +1057,16 @@ func _start_cast(spell: Dictionary = {}, instrument: Dictionary = {}) -> bool:
 	if s.is_empty():
 		return false
 	var active_instrument: Dictionary = instrument if not instrument.is_empty() \
-		else _secondary_instrument_for(s)
-	# [CODEX] O instrumento secundario e a fonte de escala: assim a escolha do
-	# instrumento muda a magia e paga o custo decidido de abdicar do escudo.
-	# Alternativa descartada: escalar pelo cajado principal, que tornava o
-	# instrumento secundario irrelevante. A formula numerica continua dos donos.
+		else _casting_instrument_for(s)
+	# [CODEX] Compatibilidade transitória: prefere a secundária decidida pelo
+	# Mateus, mas deixa o cajado `can_cast` dos kits actuais fechar o fio. Quando
+	# o dono dos dados equipar o talismã, este fallback deixa de ser usado. A
+	# alternativa é manter todos os kits de mago incapazes de conjurar.
 	if active_instrument.is_empty():
+		return false
+	var bundle := _spell_vfx_bundle(String(s.get("id", selected_spell)))
+	if bundle.is_empty():
+		casting_fallback.emit("vfx_nao_residente")
 		return false
 	var cost := int(s.get("mana_cost"))
 	if mana < cost:
@@ -1049,11 +1074,14 @@ func _start_cast(spell: Dictionary = {}, instrument: Dictionary = {}) -> bool:
 	mana -= cost
 	_cast_instrument = active_instrument
 	_cast_spell = s.duplicate()
+	_cast_spell["_spell_id"] = selected_spell
 	_cast_spell["_instrument_id"] = casting_instrument_id()
 	_cast_spell["_instrument_weapon_id"] = String(active_instrument.get("weapon_id", ""))
 	_cast_spell["_instrument_spell_power"] = active_instrument.get("spell_power")
-	_cast_frames_total = int(float(s.get("cast_time")) * 60.0)
+	_cast_frames_total = int(float(s.get("cast_time")) \
+		* float(Engine.physics_ticks_per_second))
 	_attack_feedback = ""
+	_start_cast_flash(bundle, s)
 	_change_state(State.CASTING)
 	return true
 
@@ -1066,6 +1094,8 @@ func _tick_casting(delta: float) -> void:
 	_move(delta, _speed_for_mode() * mult)
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
+	if is_instance_valid(_cast_flash) and _cast_flash.has_method("sync_tip"):
+		_cast_flash.call("sync_tip", _spell_origin())
 
 	if state_frame >= _cast_frames_total:
 		_release_spell()
@@ -1073,25 +1103,124 @@ func _tick_casting(delta: float) -> void:
 
 
 func _release_spell() -> void:
+	var spell_id := String(_cast_spell.get("_spell_id", selected_spell))
 	var kind: String = _cast_spell.get("type", "projectile")
-	var origin := global_position + Vector3.UP * 1.2
+	var origin := _spell_origin()
 	var dir := _facing()
 	if is_instance_valid(lock_on.target):
-		dir = ((lock_on.target.global_position + Vector3.UP * 1.0) - origin).normalized()
+		var target_radius: float = lock_on.target.get("body_radius") \
+			if lock_on.target.get("body_radius") != null else 0.0
+		dir = ((lock_on.target.global_position + Vector3.UP * target_radius) \
+			- origin).normalized()
 
-	match kind:
-		"projectile":
-			var p := Spell.make_projectile(_cast_spell, self, origin, dir, attrs)
-			get_tree().current_scene.add_child(p)
-		"aoe":
-			var centre := origin + dir * minf(float(_cast_spell.get("max_range", 14.0)), 10.0)
-			if is_instance_valid(lock_on.target):
-				centre = lock_on.target.global_position
-			var a := Spell.make_aoe(_cast_spell, self, centre, attrs)
-			get_tree().current_scene.add_child(a)
-		"barrier":
-			_egide_shield = float(_cast_spell.get("absorb", 90))
-			_egide_time = float(_cast_spell.get("duration", 6.0))
+	var target_point := origin + dir * float(_cast_spell.get("max_range",
+		_cast_spell.get("range_m", 0.0)))
+	if is_instance_valid(lock_on.target):
+		target_point = lock_on.target.global_position
+	var delivery := SpellDeliveryFactoryScript.create(spell_id, GameData.spells, {
+		"origin": origin,
+		"direction": dir,
+		"caster": self,
+		"target": lock_on.target if is_instance_valid(lock_on.target) else null,
+		"target_point": target_point,
+		"target_group": "enemies",
+		"vfx_bundle": _spell_vfx_bundle(spell_id),
+	})
+	if delivery == null:
+		casting_fallback.emit("forma_de_magia_invalida")
+		_cancel_cast_flash()
+		return
+	delivery.add_to_group("spell_deliveries")
+	delivery.contacted.connect(_on_spell_delivery_contact)
+	get_tree().current_scene.add_child(delivery)
+	if kind == "barrier":
+		_egide_shield = float(_cast_spell.get("absorb", 0.0))
+		_egide_time = float(_cast_spell.get("duration", 0.0))
+	if is_instance_valid(_cast_flash) and _cast_flash.has_method("commit"):
+		_cast_flash.call("commit", origin)
+	_cast_flash = null
+
+
+func _on_spell_delivery_contact(target: Node3D, payload: Dictionary) -> void:
+	if not bool(payload.get("damage_enabled", false)):
+		return
+	Spell.apply_contact(payload.get("spell", {}) as Dictionary, self, attrs, target)
+
+
+func _spell_vfx_bundle(spell_id: String) -> Dictionary:
+	if _spell_vfx_residency == null:
+		_spell_vfx_residency = SpellVfxResidencyScript.new()
+		_spell_vfx_residency.call("configure", GameData.spells)
+	var equipped: Array = []
+	for favorite_id: String in favorite_spells:
+		equipped.append(favorite_id)
+	if equipped.is_empty() and not spell_id.is_empty():
+		equipped.append(spell_id)
+	var resident_ids := _spell_vfx_residency.call("resident_spell_ids") as Array
+	if resident_ids != equipped:
+		if not bool(_spell_vfx_residency.call("equip", equipped)):
+			return {}
+	return _spell_vfx_residency.call("bundle_for", spell_id) as Dictionary
+
+
+func _start_cast_flash(bundle: Dictionary, spell: Dictionary) -> void:
+	_cancel_cast_flash()
+	_ensure_casting_weapon_visual()
+	var contact_contracts: Dictionary = GameData.spells.get("_contact_contracts", {}) as Dictionary
+	var contact: Dictionary = contact_contracts.get(
+		String(spell.get("contact_type", "")), {}) as Dictionary
+	var host := get_tree().current_scene
+	if host == null:
+		host = get_parent()
+	if host == null:
+		return
+	_cast_flash = SpellCastVfxScript.new()
+	host.add_child(_cast_flash)
+	_cast_flash.call("configure", bundle, float(spell.get("cast_time", 0.0)),
+		int(contact.get("active_frames", 0)), _spell_origin())
+
+
+func _cancel_cast_flash() -> void:
+	if is_instance_valid(_cast_flash):
+		if _cast_flash.has_method("cancel"):
+			_cast_flash.call("cancel")
+		else:
+			_cast_flash.queue_free()
+	_cast_flash = null
+
+
+func _ensure_casting_weapon_visual() -> void:
+	if is_instance_valid(_casting_weapon_visual):
+		return
+	if not is_instance_valid(_visual):
+		return
+	_casting_weapon_visual = _find_casting_weapon_visual(self)
+	if is_instance_valid(_casting_weapon_visual):
+		return
+	var weapon_visual := CastingWeaponAttachScript.new() as Node3D
+	add_child(weapon_visual)
+	if not bool(weapon_visual.call("setup", self, _visual)):
+		weapon_visual.queue_free()
+		return
+	_casting_weapon_visual = weapon_visual
+
+
+func _find_casting_weapon_visual(root: Node) -> Node3D:
+	for child: Node in root.get_children():
+		if child != self and child.has_method("main_weapon_tip_position"):
+			return child as Node3D
+		var nested := _find_casting_weapon_visual(child)
+		if nested != null:
+			return nested
+	return null
+
+
+func _spell_origin() -> Vector3:
+	if is_instance_valid(_casting_weapon_visual) \
+			and _casting_weapon_visual.has_method("main_weapon_tip_position"):
+		return _casting_weapon_visual.call("main_weapon_tip_position") as Vector3
+	return global_position + Vector3.UP * float(
+		GameData.section("player").get("capsule_height", 0.0))
 
 
 # --- Levar dano ---------------------------------------------------------------
@@ -1161,6 +1290,7 @@ func take_damage(info: DamageInfo) -> void:
 	# interrompe, mas conserva a mana que entrou ate este frame (spec/54 + 66).
 	if state == State.CASTING and not has_hyper_armor():
 		_cast_spell = {}
+		_cancel_cast_flash()
 		_change_state(State.FREE)
 	elif state == State.MEDITATING:
 		_change_state(State.FREE)
