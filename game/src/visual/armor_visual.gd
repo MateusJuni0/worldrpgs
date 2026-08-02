@@ -373,8 +373,7 @@ static func _cuirass_mesh(material: Material, heavy: bool) -> ArrayMesh:
 			else:
 				_add_triangle(surface, front_lower, back_lower, front_upper)
 				_add_triangle(surface, front_upper, back_lower, back_upper)
-	surface.set_material(material)
-	return surface.commit()
+	return _fechar_suave(surface, material)
 
 
 static func _cuirass_detail_mesh(material: Material, heavy: bool) -> ArrayMesh:
@@ -393,8 +392,7 @@ static func _cuirass_detail_mesh(material: Material, heavy: bool) -> ArrayMesh:
 			0.169 * depth_scale), 0.011)
 		_add_low_poly_rivet(surface, Vector3(rivet_x * 0.82 * width_scale, -0.17,
 			0.151 * depth_scale), 0.010)
-	surface.set_material(material)
-	return surface.commit()
+	return _fechar_suave(surface, material)
 
 
 static func _cuirass_point(row: Dictionary, u: float, front: bool,
@@ -474,8 +472,7 @@ static func _elliptical_shell(rings: Array, segments: int, material: Material) -
 			# normais invertidas tornavam ferro e couro em silhuetas quase pretas.
 			_add_triangle(surface, a, c, b)
 			_add_triangle(surface, c, d, b)
-	surface.set_material(material)
-	return surface.commit()
+	return _fechar_suave(surface, material)
 
 
 static func _elliptical_arc(rings: Array, segments: int, material: Material) -> ArrayMesh:
@@ -496,8 +493,7 @@ static func _elliptical_arc(rings: Array, segments: int, material: Material) -> 
 			var d := _ellipse_point(upper, angle_b)
 			_add_triangle(surface, a, c, b)
 			_add_triangle(surface, c, d, b)
-	surface.set_material(material)
-	return surface.commit()
+	return _fechar_suave(surface, material)
 
 
 static func _ellipse_point(ring: Dictionary, angle: float) -> Vector3:
@@ -524,15 +520,33 @@ static func _armor_cape_mesh(material: Material) -> ArrayMesh:
 			var d := Vector3(u1 * width1, y1, 0.035 + 0.05 * u1 * u1)
 			_add_triangle(surface, a, b, c)
 			_add_triangle(surface, c, b, d)
+	return _fechar_suave(surface, material)
+
+
+## ⚠️ NAO voltar a pôr uma normal por triângulo aqui.
+##
+## 02-08: o Mateus dizia "esse quadrado feio" e "ainda ta como uma caixa estilo
+## minecraft". A GEOMETRIA nunca foi uma caixa — é uma casca de 5 anéis × 10
+## colunas, com cintura afunilada e decote descido. O que estava errado era a
+## LUZ: este método dava a mesma normal aos três vértices de cada triângulo, ou
+## seja **flat shading**. Numa casca curva feita de 50 quadrados, cada face
+## acende-se sozinha e o resultado lê-se como cartão facetado.
+##
+## Agora os vértices entram sem normal; o `index()` solda os que partilham
+## posição e o `generate_normals()` calcula a média entre faces vizinhas. A
+## mesma malha, a mesma contagem de triângulos, e passa a curvar-se à luz.
+static func _add_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	for vertex: Vector3 in [a, b, c]:
+		surface.add_vertex(vertex)
+
+
+## Fecha uma superfície com normais suaves. Chamar antes de `commit()`.
+static func _fechar_suave(surface: SurfaceTool, material: Material) -> ArrayMesh:
+	surface.index()
+	surface.generate_normals()
+	surface.generate_tangents()
 	surface.set_material(material)
 	return surface.commit()
-
-
-static func _add_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
-	var normal := (b - a).cross(c - a).normalized()
-	for vertex: Vector3 in [a, b, c]:
-		surface.set_normal(normal)
-		surface.add_vertex(vertex)
 
 
 static func _piece_data(piece_id: String) -> Dictionary:
