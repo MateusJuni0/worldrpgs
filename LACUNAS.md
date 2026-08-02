@@ -110,9 +110,32 @@ Relatório completo: [`docs/REVISAO-3.md`](docs/REVISAO-3.md). As linhas `⏳` s
 | ⏳ | 🟠 **“Nunca se zera” não tem exemplar jogável:** recompensas/corpos esgotam, as 30 portas não devem resposta e a segunda leitura de Brumal não está autorada | revisão 3 · pergunta 62 |
 | ⏳ | 🟠 **A promessa mais própria — cadáveres/Voto/chefe portátil — não é testada pela Fatia 1.** Decidir spike/epílogo antes de produzir 50 feitiços futuros | revisão 3 · pergunta 63 |
 | 🟠 | **SEPARAR/JUNTAR e a janela de ressurreição de Vorgar já têm ficha, controladores visuais/sonoros e ensaio focado 119/119, mas ainda não entram no greybox real.** Esta árvore só possui `boss*.gd`/`arena*.gd`: o dono de `game/src/main.gd` tem de trocar `Enemy.new()` por `BossVorgar.new()` para Vorgar e suspender o respawn automático de ~1,2 s enquanto a janela de 60 s está aberta. Até essas duas ligações, o jogador não consegue aceder às mecânicas apesar de os módulos estarem executáveis. | `game/src/enemies/boss_vorgar.gd` · `game/src/world/arena_vorgar.gd` · `game/src/enemies/boss_vorgar_self_test.gd` · revisão 3 · [`61`](spec/61-arenas-de-chefe.md) §7 |
+| 🔴 | **O Feiticeiro e o Mago do Mal chegam a Vorgar sem magia utilizável.** Os dois kits declaram `main: staff` e `offhand: null`, mas `Player._secondary_instrument_for()` recusa conjurar sem instrumento secundário. O arranque real de `repro-inicio.tscn` ainda emite duas excepções `Invalid call 'String' constructor: staff` ao carregar/aplicar o inventário e, sem magia, o cajado precisa de **82–83 pesados ou 151–152 leves** para matar Vorgar. `[CODEX]` recomenda ligar um instrumento compatível no kit/runtime e provar `cast` por entrada real; alternativa rejeitada: baixar PV/dano do chefe, porque Guerreiro/Tanque/Paladino já o matam em 32–38 pesados e ficariam triviais. | medição 02-08-2026 · agente do kit inicial · `game/data/weapons.json` · `game/src/player/player.gd` · `game/src/autoload/inventory_system.gd` |
+| 🔴 | **Ainda não existe prova de que Vorgar morre numa luta completa dentro do jogo.** `selftest.tscn` verifica só a fórmula; `repro-inicio.tscn` arranca o mundo mas pára depois de levantar um comum; `boss_vorgar_self_test.gd` usa `FakePlayer`/`FakeBoss`, falha hoje **5/1** por contrato de encontro ausente/incompatível e nem sequer está no `VERIFICAR.bat`. O dono da cena/testes tem de estender o repro (ou criar equivalente ligado ao `VERIFICAR.bat`) para carregar nas acções reais, completar a luta e verificar o resultado visível de morte do chefe. | regra de prova no jogo, 02-08-2026 · `game/scenes/repro-inicio.tscn` · `game/src/enemies/boss_vorgar_self_test.gd` · `game/VERIFICAR.bat` |
 | ⏳ | 🟡 **Até dez anéis + nove peças + oito favoritos podem transformar build em espera de menu co-op.** Validar 4 anéis/presets no descanso antes de abrir a escala toda | revisão 3 · pergunta 64 |
 | ✅ | ~~O teste de honestidade só provava a esquiva certa~~ **CORRIGIDO** — agora duas esquivas sem sobreposição com o activo têm de falhar 10/10; um teste verde deixa de aceitar janela/hitbox que não discrimina timing | revisão 3 · [`38`](spec/38-ataques-e-honestidade.md) cláusula 5 |
 | ✅ | ~~O fecho do `72` ainda dizia que cinco acessórios ficavam fora do contrato~~ **CORRIGIDO** — a fronteira reconhece a migração já feita pelo `74` | revisão 3 · [`72`](spec/72-materiais-consumiveis-e-economia.md) §6 |
+
+### `[CODEX]` Medição de equilíbrio de Vorgar — 02-08-2026
+
+Baseline calculado com os dados efectivamente carregados pelo runtime, Guerreiro nível 1 (442 PV, 20 DEF, espada longa) e um castigo seguro por acção do chefe. O tempo é um orçamento determinístico dos frames dos padrões, não uma luta jogada; a prova jogável continua vermelha acima.
+
+| Medida | ELES | NÓS | DIFERENÇA |
+|---|---:|---:|---|
+| Golpes de Vorgar para matar o jogador | 3–4 | 3–5 | dentro do alvo nos pesados; um golpe extra nos leves |
+| Golpes razoáveis para matar o chefe | 20–40 | 35 pesados · 21 ripostes | dentro do alvo |
+| Golpes leves repetidos para matar o chefe | 20–40 | 63 | +23 acima do tecto; o jogo deve ensinar pesado/riposte, não vendê-los como opcionais invisíveis |
+| Duração, um pesado seguro por acção | — | 85,8 s | baseline marcial; falta confirmar a jogar |
+| Duração equivalente com o cajado sem magia | — | 201,1 s | +115,3 s causados pelo kit/runtime desligado |
+
+**Decisão `[CODEX]`:** não alterar `enemies.json`, `combat.json` nem `attributes.json` nesta ronda. Razão: o eixo marcial já coincide com a referência; a impossibilidade relatada concentra-se no kit mágico sem `cast` executável e na ausência da prova de luta. Alternativa descartada: reduzir PV ou dano de Vorgar antes de ligar o kit, porque esconderia o defeito e faria as origens marciais ganhar por número.
+
+As quatro perguntas do fio solto:
+
+1. **Como usa:** ataque leve/pesado, esquiva, parry e `cast`, todos pelo mapa remapeável; hoje `cast` não encontra instrumento nos dois kits mágicos.
+2. **Como prova:** cena real, entrada real, luta completa e morte visível de Vorgar, ligada ao `VERIFICAR.bat`; ainda não existe.
+3. **Arte e som:** Vorgar reutiliza o conceito/modelo orc e os cues sintetizados já carregados; esta ronda numérica acrescenta zero assets.
+4. **Custo no Rico:** Iris Xe, Mobile/Vulkan, 1920×1080, arena real com dois jogadores + Vorgar + dois orcs: **135,7 fps médios, p99 12,688 ms, pior 15,31 ms, zero frames >16,67 ms** em 15 s. A sonda do controlador terminou com erros de integração, portanto estes números provam a arena base, não o controlador SEPARAR/JUNTAR.
 
 ---
 
