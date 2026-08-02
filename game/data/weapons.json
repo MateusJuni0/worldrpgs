@@ -2158,7 +2158,13 @@
       "visual_description": "lamina curta de um gume com 38 cm, ponta estreita, guarda minima e punho de couro escuro",
       "model_asset": null,
       "model_status": "missing_exact_hand_model",
-      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh"
+      "sound_source": "synthesized:Sfx.swing_light/swing_heavy + hit_flesh",
+      "visual_kind": "dagger",
+      "grip_transform": {
+        "position": [0.0, 0.0, 0.0],
+        "rotation_degrees": [0.0, 0.0, 180.0],
+        "scale": [1.0, 1.0, 1.0]
+      }
     },
     "combat_stance": {
       "id": "lamina_recolhida",
@@ -2310,6 +2316,20 @@
       "spatial_weakness": "pressionado contra a parede sem mana"
     },
     "_nota": "Plano B do mago: pancada sem custo de mana (custa stamina). A Lei 1 nunca fica refem do reservatorio de mana."
+  },
+  "sino": {
+    "runtime_alias_for": "equipment.magic_instruments.sino",
+    "familia": "cajado",
+    "slot": "offhand",
+    "hands": 1,
+    "requirements": {}
+  },
+  "talisma": {
+    "runtime_alias_for": "equipment.magic_instruments.talisma",
+    "familia": "cajado",
+    "slot": "offhand",
+    "hands": 1,
+    "requirements": {}
   },
   "espada_recta_brumal_espada_de_vigilia": {
     "display_name": "Espada de vigilia",
@@ -2528,18 +2548,6 @@
   "loadouts": {
     "_fonte": "Queixa directa do Mateus (01-08): cada origem com arma inicial propria; spec/51-familias.md §5 continua a fonte das pecas. Lei 3: qualquer classe pega em qualquer arma; isto e so o arranque.",
     "_pecas": "os ids de 'pecas' vivem em armor.json. Todos os kits em carga leve, excepto o tanque (medio — a identidade dele e sentir o peso).",
-    "_pending_mago_do_mal": {
-      "status": "blocked_missing_relicario_catalogue",
-      "decision": "[DECIDIDO] Mateus 01-08: setima origem propria",
-      "known_direction": "cajado negro + relicario, postura entre os mortos",
-      "missing_before_activation": [
-        "relicario no catalogo",
-        "atributos da origem",
-        "arte/postura runtime",
-        "teste de sete origens"
-      ],
-      "reason_not_invented": "o catalogo executavel so cobre cajado; preencher main/offhand agora fingia que o relicario existe"
-    },
     "warrior": {
       "main": "longsword",
       "offhand": "shield",

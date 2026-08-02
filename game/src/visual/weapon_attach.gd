@@ -89,6 +89,11 @@ func sync_loadout(main_weapon: String, offhand_weapon: String, two_handed: bool)
 
 
 func model_source_for(weapon_id: String) -> String:
+	var data := _weapon_data(weapon_id)
+	# Estes instrumentos recusam honestamente o prop generico da familia; sino e
+	# talisma acabavam ambos como uma vara quando essa decisao se perdia.
+	if _visual_kind(data) in ["bell", "talisman"]:
+		return ""
 	var family := _visual_family_for(weapon_id)
 	if family.is_empty():
 		return ""
@@ -180,6 +185,7 @@ func _replace_model(attachment: BoneAttachment3D, previous: Node3D,
 	attachment.add_child(model)
 	if not bool(model.get_meta("visual_size_ready", false)):
 		model.scale = _catalogue_scale_for(model, weapon_data)
+	_apply_grip_transform(model, weapon_data)
 	model.set_meta("weapon_family", _visual_family_for(weapon_id))
 	model.set_meta("weapon_visual_source", scene_path if not scene_path.is_empty() else "procedural")
 	_disable_prop_shadows(model)
@@ -194,15 +200,23 @@ func _weapon_data(weapon_id: String) -> Dictionary:
 		if game_data.has_method("weapon") else {}
 	var catalogue: Dictionary = game_data.call("equipment_weapon", weapon_id) as Dictionary \
 		if game_data.has_method("equipment_weapon") else {}
-	if weapon.is_empty():
-		weapon = catalogue.duplicate(true)
-	else:
-		# O runtime curto traz frames; o catalogo largo traz materia e descricao.
-		# Completar apenas chaves ausentes mantem ambos como autoridades no seu eixo.
-		weapon = weapon.duplicate(true)
-		for key: Variant in catalogue:
+	var instrument := {}
+	var equipment_data := game_data.get("equipment") as Dictionary
+	for instrument_id: String in (equipment_data.get(
+			"magic_instruments", {}) as Dictionary):
+		var candidate := (equipment_data.get(
+			"magic_instruments", {}) as Dictionary).get(instrument_id, {}) as Dictionary
+		if instrument_id == weapon_id \
+				or String(candidate.get("weapon_id", "")) == weapon_id:
+			instrument = candidate
+			break
+	# O runtime curto traz frames/slot; os catalogos largos trazem materia e
+	# descricao. Completar chaves ausentes conserva uma autoridade por eixo.
+	weapon = weapon.duplicate(true)
+	for source: Dictionary in [instrument, catalogue]:
+		for key: Variant in source:
 			if not weapon.has(key):
-				weapon[key] = catalogue[key]
+				weapon[key] = source[key]
 	return weapon
 
 
@@ -212,6 +226,39 @@ func _visual_family_for(weapon_id: String) -> String:
 	if family.is_empty():
 		family = String(data.get("familia_escudo", ""))
 	return family
+
+
+static func _visual_kind(data: Dictionary) -> String:
+	var presentation := data.get("presentation", {}) as Dictionary
+	var result := String(presentation.get("visual_kind", ""))
+	if result.is_empty():
+		result = String(data.get("instrument_type", ""))
+	if result == "sino":
+		result = "bell"
+	elif result == "talisma":
+		result = "talisman"
+	return result
+
+
+static func _apply_grip_transform(model: Node3D, data: Dictionary) -> void:
+	var presentation := data.get("presentation", {}) as Dictionary
+	var grip := presentation.get("grip_transform", {}) as Dictionary
+	if grip.is_empty():
+		return
+	model.position = _vector3_from_data(grip.get("position", []), Vector3.ZERO)
+	model.rotation_degrees = _vector3_from_data(
+		grip.get("rotation_degrees", []), Vector3.ZERO)
+	model.scale *= _vector3_from_data(grip.get("scale", []), Vector3.ONE)
+	model.set_meta("weapon_grip_transform", grip.duplicate(true))
+
+
+static func _vector3_from_data(value: Variant, fallback: Vector3) -> Vector3:
+	if value is Vector3:
+		return value as Vector3
+	if value is Array and (value as Array).size() >= 3:
+		var values := value as Array
+		return Vector3(float(values[0]), float(values[1]), float(values[2]))
+	return fallback
 
 
 static func _catalogue_scale_for(model: Node3D, data: Dictionary) -> Vector3:
@@ -233,7 +280,8 @@ static func _catalogue_scale_for(model: Node3D, data: Dictionary) -> Vector3:
 	# O modelo KayKit da espada tem proporcao de cutelo de fantasia. O catalogo
 	# diz explicitamente "lamina" e "guarda curta"; comprimir apenas os eixos
 	# transversais conserva o modelo 3D e devolve-lhe a silhueta longa e estreita.
-	if source_bounds.size.y == source_length \
+	if String(data.get("familia", "")) == "espada_recta" \
+			and source_bounds.size.y == source_length \
 			and ("lamina" in normal or "lâmina" in normal):
 		result.x *= 0.38
 		result.z *= 0.62
@@ -280,6 +328,11 @@ static func _build_procedural_weapon(data: Dictionary) -> Node3D:
 			"visual_description", ""))
 	var normal := description.to_lower()
 	var target_length := _target_visual_length_m(data)
+	match _visual_kind(data):
+		"bell":
+			return _build_bell()
+		"talisman":
+			return _build_talisman()
 	if "curva" in normal and ("lamina" in normal or "lâmina" in normal):
 		return _build_curved_blade(maxf(target_length, 0.75))
 	if "cajado" in normal:
@@ -287,6 +340,63 @@ static func _build_procedural_weapon(data: Dictionary) -> Node3D:
 	if "haste" in normal or "lanca" in normal or "lança" in normal:
 		return _build_polearm(maxf(target_length, 1.5))
 	return _build_polearm(maxf(target_length, 1.2))
+
+
+static func _build_bell() -> Node3D:
+	var root := Node3D.new()
+	root.set_meta("visual_size_ready", true)
+	var leather := _visual_material("leather", Color("2d211b"), 0.94, 0.0)
+	var bronze := _visual_material("dull_bronze", Color("8b7042"), 0.72, 0.28)
+	var iron := _visual_material("worn_iron", Color("aeb4b4"), 0.62, 0.08)
+	var handle := _cylinder_mesh_instance(
+		"BellLeatherHandle", 0.018, 0.11, leather)
+	handle.position.y = -0.025
+	root.add_child(handle)
+	var bell_mesh := CylinderMesh.new()
+	bell_mesh.top_radius = 0.028
+	bell_mesh.bottom_radius = 0.070
+	bell_mesh.height = 0.105
+	bell_mesh.radial_segments = 12
+	bell_mesh.rings = 2
+	bell_mesh.material = bronze
+	var bell := MeshInstance3D.new()
+	bell.name = "CrackedBronzeBell"
+	bell.mesh = bell_mesh
+	bell.position.y = -0.125
+	root.add_child(bell)
+	var clapper := _cylinder_mesh_instance("IronClapper", 0.012, 0.075, iron)
+	clapper.position.y = -0.180
+	root.add_child(clapper)
+	return root
+
+
+static func _build_talisman() -> Node3D:
+	var root := Node3D.new()
+	root.set_meta("visual_size_ready", true)
+	var leather := _visual_material("leather", Color("2d211b"), 0.94, 0.0)
+	var iron := _visual_material("dead_iron", Color("54575a"), 0.88, 0.20)
+	var cord := _cylinder_mesh_instance("BlackLeatherCord", 0.010, 0.13, leather)
+	cord.position.y = -0.035
+	root.add_child(cord)
+	var plaque_mesh := CylinderMesh.new()
+	plaque_mesh.top_radius = 0.082
+	plaque_mesh.bottom_radius = 0.072
+	plaque_mesh.height = 0.018
+	plaque_mesh.radial_segments = 7
+	plaque_mesh.rings = 1
+	plaque_mesh.material = iron
+	var plaque := MeshInstance3D.new()
+	plaque.name = "PalmSizedIronTalisman"
+	plaque.mesh = plaque_mesh
+	plaque.rotation.x = PI * 0.5
+	plaque.position.y = -0.145
+	root.add_child(plaque)
+	var rune := _box_mesh_instance(
+		"DeepRune", Vector3(0.018, 0.075, 0.008), leather)
+	rune.rotation.z = PI * 0.22
+	rune.position = Vector3(0.0, -0.145, 0.014)
+	root.add_child(rune)
+	return root
 
 
 static func _build_curved_blade(total_length: float) -> Node3D:
@@ -415,6 +525,17 @@ static func _cylinder_mesh_instance(node_name: String, radius: float, height: fl
 	mesh.height = height
 	mesh.radial_segments = 10
 	mesh.rings = 1
+	mesh.material = material
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	instance.mesh = mesh
+	return instance
+
+
+static func _box_mesh_instance(node_name: String, size: Vector3,
+		material: Material) -> MeshInstance3D:
+	var mesh := BoxMesh.new()
+	mesh.size = size
 	mesh.material = material
 	var instance := MeshInstance3D.new()
 	instance.name = node_name

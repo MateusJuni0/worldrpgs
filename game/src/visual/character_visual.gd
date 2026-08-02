@@ -329,7 +329,9 @@ func play_animation(animation_name: String, speed := 1.0) -> void:
 		return
 	if not _animation_player.has_animation(animation_name):
 		animation_name = "Idle"
-	if _current_animation == animation_name and _animation_player.is_playing():
+	if _current_animation == animation_name \
+			and _animation_player.assigned_animation == animation_name \
+			and _animation_player.is_playing():
 		return
 	_current_animation = animation_name
 	_animation_player.play(animation_name, 0.12, speed)
