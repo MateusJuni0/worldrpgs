@@ -83,6 +83,8 @@ class QuickSlotsSurface extends Control:
 			_draw_shield(rect, tint)
 			return true
 		var family_id := String(data.get("familia", ""))
+		if family_id == "" and String(data.get("instrument_type", "")) != "":
+			family_id = "cajado"
 		if family_id == "":
 			return false
 		_draw_family_weapon(rect, family_id, tint)
@@ -297,12 +299,29 @@ func _refresh() -> void:
 	var readable_state := EquipmentScreenScript.state_for_inventory_read(state)
 	_surface.slots = _inventory.call(
 		"quick_slot_snapshot", readable_state, _player) as Array[Dictionary]
+	for index: int in _surface.slots.size():
+		_surface.slots[index] = _with_instrument_presentation(_surface.slots[index])
 	var item_descriptor := _selected_item_descriptor(state)
 	for index: int in _surface.slots.size():
 		if String(_surface.slots[index].get("slot", "")) == "item":
 			_surface.slots[index] = item_descriptor
 			break
 	_surface.queue_redraw()
+
+
+func _with_instrument_presentation(slot: Dictionary) -> Dictionary:
+	if String(slot.get("kind", "")) != "arma" \
+			or not (slot.get("data", {}) as Dictionary).is_empty():
+		return slot
+	var weapon_id := String(slot.get("key", "")).trim_prefix("arma:")
+	var instruments := GameData.equipment.get("magic_instruments", {}) as Dictionary
+	var instrument := instruments.get(weapon_id, {}) as Dictionary
+	if instrument.is_empty():
+		return slot
+	var presented := slot.duplicate(true)
+	presented["data"] = instrument.duplicate(true)
+	presented["name"] = String(instrument.get("display_name", weapon_id))
+	return presented
 
 
 func _on_inventory_changed() -> void:
