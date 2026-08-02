@@ -52,6 +52,7 @@ func _test_integrations_in_real_game() -> void:
 			and world_environment.environment.sky != null \
 			and world_environment.has_meta("environment_atmosphere"),
 		"jogo real: Brumal mostra a atmosfera integrada")
+	_prove_monsters(gameplay)
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.
@@ -62,3 +63,19 @@ func _test_integrations_in_real_game() -> void:
 	GameData.replace_save_state(previous_state)
 	SaveSystem.active_slot = previous_slot
 	Bench.scene_arg = previous_scene
+
+
+func _prove_monsters(gameplay: Node) -> void:
+	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
+	var visible_monsters := 0
+	for node: Node in enemies:
+		var enemy := node as Enemy
+		if enemy == null or not gameplay.is_ancestor_of(enemy):
+			continue
+		var visual := enemy.get("_visual") as MonsterVisual
+		if visual != null and not visual.silhouette_signature().is_empty() \
+				and not visual.find_children("*", "MeshInstance3D", true, false).is_empty():
+			visible_monsters += 1
+	_check(visible_monsters == enemies.filter(func(node: Node) -> bool:
+		return node is Enemy and gameplay.is_ancestor_of(node)).size(),
+		"jogo real: todos os inimigos usam MonsterVisual visivel")

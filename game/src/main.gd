@@ -299,11 +299,26 @@ func _spawn(enemy_id: String, at: Vector3) -> Enemy:
 	add_child(e)
 	e.global_position = at
 	e.setup(enemy_id, _palette)
+	_attach_monster_visual(e)
 	e.target = player
 	e.home = at
 	e.died.connect(_on_enemy_died)
 	_watch_enemy_for_necromancy(e)
 	return e
+
+
+func _attach_monster_visual(enemy: Enemy) -> void:
+	if MonsterVisual.profile_for(enemy.enemy_id).is_empty():
+		return
+	var previous_visual := enemy.get("_visual") as Node3D
+	if is_instance_valid(previous_visual):
+		enemy.remove_child(previous_visual)
+		previous_visual.queue_free()
+	var visual := MonsterVisual.new()
+	enemy.add_child(visual)
+	visual.setup(enemy.enemy_id, enemy.data, enemy.get("_visual_profile"),
+		bool(_preset.get("shadows", true)), int(enemy.get_instance_id()))
+	enemy.set("_visual", visual)
 
 
 func _populate() -> void:
