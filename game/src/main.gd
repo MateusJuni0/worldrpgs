@@ -53,6 +53,9 @@ func _ready() -> void:
 	_build_navigation()
 
 	if "--photos" in OS.get_cmdline_user_args():
+		# A primeira fotografia canonica olha do sul para o ponto de descanso.
+		# Virar o actor apenas neste modo torna peito e armas observaveis na prova.
+		player.rotation.y = PI
 		var tour: Node = load("res://src/tools/photo_tour.gd").new()
 		add_child(tour)
 		tour.run(self)
@@ -131,6 +134,8 @@ func _build_player() -> void:
 	player.name = "Player"
 	add_child(player)
 	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")))
+	_attach_player_equipment_visual(
+		player, String(appearance.get("body_id", "body_male")), class_id)
 	refresh_inventory_state()
 	var checkpoint: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
 		"checkpoint", {}) as Dictionary)
@@ -148,6 +153,36 @@ func _build_player() -> void:
 	player.camera = cam
 
 	player.died.connect(_on_player_died)
+
+
+func _attach_player_equipment_visual(actor: Player, body_id: String, class_id: String) -> void:
+	# Player conserva a capsula e toda a logica de combate. Aqui trocamos apenas
+	# o renderer-base pelo renderer modular que ja existe e prendemos os props ao
+	# mesmo Skeleton3D; nao ha uma segunda silhueta sobreposta.
+	var previous_visual := actor.get("_visual") as CharacterVisual
+	if is_instance_valid(previous_visual):
+		actor.remove_child(previous_visual)
+		previous_visual.queue_free()
+
+	var armor := ArmorVisual.new()
+	armor.name = "ArmorVisual"
+	actor.add_child(armor)
+	var height := float(GameData.section("player").get("capsule_height", 1.8))
+	armor.setup(height, Color.WHITE, true, body_id, class_id)
+	actor.set("_visual", armor)
+
+	var weapon := WeaponAttach.new()
+	actor.add_child(weapon)
+	if not weapon.setup(actor, armor):
+		weapon.queue_free()
+
+	# O controlador existente observa o ataque real do Player e move o mesmo
+	# esqueleto ao qual a arma ficou presa.
+	var attacks := AttackAnimationController.new()
+	attacks.name = "AttackAnimationController"
+	actor.add_child(attacks)
+	if not attacks.setup(actor, armor):
+		attacks.queue_free()
 
 
 func _build_hud() -> void:
@@ -621,8 +656,12 @@ func refresh_inventory_state() -> void:
 	var state := GameData.save_state_snapshot()
 	var character: Dictionary = state.get("character", {}) as Dictionary
 	var inventory: Dictionary = character.get("inventory", {}) as Dictionary
-	player.apply_inventory_state(inventory.get("equipment", {}) as Dictionary,
+	var equipment: Dictionary = inventory.get("equipment", {}) as Dictionary
+	player.apply_inventory_state(equipment,
 		InventorySystem.load_profile(state))
+	var armor := player.get("_visual") as ArmorVisual
+	if armor != null:
+		armor.apply_equipment(equipment.get("armor", []) as Array)
 
 
 func can_change_spell_favorites() -> bool:
@@ -744,17 +783,15 @@ func _exit_tree() -> void:
 
 
 # --- Troca de classe (F6, ferramenta de teste) ---------------------------------
-# Para o Rico sentir as 6 classes sem menu (o menu de escolha vem com o WP11).
-
-const CLASSES: Array[String] = [
-	"warrior", "tank", "berserker", "sorcerer", "assassin", "paladin", "evil_mage",
-]
 var _class_index := 0
 
 
 func _cycle_class() -> void:
-	_class_index = (_class_index + 1) % CLASSES.size()
-	var class_id := CLASSES[_class_index]
+	var class_ids := _playable_class_ids()
+	if class_ids.is_empty():
+		return
+	_class_index = (_class_index + 1) % class_ids.size()
+	var class_id := class_ids[_class_index]
 	var pos := player.global_position
 	var cam := player.camera
 	_clear_necromancy_runtime()
@@ -764,7 +801,12 @@ func _cycle_class() -> void:
 	player = Player.new()
 	player.name = "Player"
 	add_child(player)
-	player.setup(class_id, _palette)
+	var appearance: Dictionary = (((GameData.save_state.get("character", {}) as Dictionary).get(
+		"identity", {}) as Dictionary).get("appearance", {}) as Dictionary)
+	var body_id := String(appearance.get("body_id", "body_male"))
+	player.setup(class_id, _palette, body_id)
+	_attach_player_equipment_visual(player, body_id, class_id)
+	refresh_inventory_state()
 	player.global_position = pos
 	player.camera = cam
 	cam.target = player
@@ -782,3 +824,14 @@ func _cycle_class() -> void:
 			e.target = player
 	var display: String = GameData.class_attributes(class_id).get("display_name", class_id)
 	hud.toast(GameData.ui_text("toast.class_changed") % display, 2.5)
+
+
+func _playable_class_ids() -> Array[String]:
+	var result: Array[String] = []
+	var loadouts: Dictionary = GameData.weapons.get("loadouts", {}) as Dictionary
+	for value: Variant in loadouts.keys():
+		var class_id := String(value)
+		if not class_id.begins_with("_"):
+			result.append(class_id)
+	result.sort()
+	return result
