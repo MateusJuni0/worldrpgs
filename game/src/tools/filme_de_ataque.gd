@@ -23,6 +23,13 @@ var _tarefas_de_escrita: Array[int] = []
 
 
 func _ready() -> void:
+	# O PNG sincrono pode baixar o render para 15-20 fps. Este no tem de continuar
+	# enquanto a arvore pausa entre amostras, para cada ficheiro representar um
+	# frame fisico exacto do golpe e nao o tempo que o disco demorou a gravar.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Impede que o motor recupere varios ticks entre dois PNG lentos. O filme quer
+	# observar cada tick, nao simular em tempo real enquanto escreve no disco.
+	Engine.max_physics_steps_per_frame = 1
 	_dir = ProjectSettings.globalize_path("res://captures/")
 	DirAccess.make_dir_recursive_absolute(_dir)
 	var requested_origin := OS.get_environment("WORLDRPGS_FILM_ORIGIN")
@@ -42,7 +49,7 @@ func _ready() -> void:
 func _correr() -> void:
 	await _esperar(FRAMES_AQUECIMENTO)
 
-	var jogador: Node3D = _jogo.get("player") as Node3D
+	var jogador: Player = _jogo.get("player") as Player
 	if jogador == null:
 		printerr("[filme] sem jogador — nao ha nada para filmar")
 		get_tree().quit(1)
@@ -63,11 +70,17 @@ func _correr() -> void:
 	Input.action_press("attack")
 	await _esperar(2)
 	await _esperar_fisica(2)
+	while jogador.state != Player.State.ATTACK:
+		await jogador.state_changed
 	Input.action_release("attack")
 
 	var n := 0
-	for i in range(0, FRAMES_FILMADOS, INTERVALO):
+	for attack_frame in range(0, FRAMES_FILMADOS, INTERVALO):
+		await _esperar_frame_de_ataque(jogador, attack_frame)
+		get_tree().paused = true
+		_descrever_amostra(jogador, n, attack_frame)
 		_olhar(jogador)
+		await get_tree().process_frame
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("%sataque-%02d.png" % [_dir, n])
 		n += 1
@@ -85,6 +98,7 @@ func _correr() -> void:
 
 	for task_id: int in _tarefas_de_escrita:
 		WorkerThreadPool.wait_for_task_completion(task_id)
+		get_tree().paused = false
 
 	print("[filme] %d imagens gravadas em captures/" % n)
 	get_tree().quit(0)
@@ -114,6 +128,16 @@ func _descrever_arma(jogador: Node) -> String:
 		else "NENHUM BoneAttachment3D no jogador"
 
 
+func _descrever_amostra(jogador: Player, indice: int, pedido: int) -> void:
+	var visual := jogador.get("_visual") as Node
+	var animacao := String(visual.call("current_animation_name")) \
+		if visual != null and visual.has_method("current_animation_name") else "?"
+	var total := int(jogador.get("_atk_startup")) + int(jogador.get("_charge_frames")) \
+		+ int(jogador.get("_atk_active")) + int(jogador.get("_atk_recovery"))
+	print("[filme] imagem %02d: pedido=%d estado=%s frame=%d/%d animacao=%s" % [
+		indice, pedido, jogador.state_name(), jogador.state_frame, total, animacao])
+
+
 func _esperar(frames: int) -> void:
 	for _i in frames:
 		await get_tree().process_frame
@@ -128,3 +152,7 @@ func _guardar_imagem(image: Image, path: String) -> void:
 	var error := image.save_png(path)
 	if error != OK:
 		printerr("[filme] falhou gravar %s: %s" % [path, error_string(error)])
+func _esperar_frame_de_ataque(jogador: Node, attack_frame: int) -> void:
+	while int(jogador.get("state")) == Player.State.ATTACK \
+			and int(jogador.get("state_frame")) < attack_frame:
+		await get_tree().physics_frame

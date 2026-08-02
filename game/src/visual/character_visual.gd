@@ -155,6 +155,7 @@ const OUTFIT_MATERIALS := {
 }
 
 const QUATERNIUS_ANIMATION_PATH := "res://assets/models/animations/quaternius/UAL1_Standard.glb"
+const ANIMATION_CATALOGUE_PATH := "res://data/animations.json"
 
 # Um unico ShaderMaterial por material-fonte; actor_tint e class_tint sao
 # uniforms de instancia. Assim seis cores nao criam seis materiais por actor.
@@ -195,6 +196,8 @@ void fragment() {
 
 static var _quaternius_library: AnimationLibrary
 static var _quaternius_library_configured := false
+static var _animation_catalogue: Dictionary = {}
+static var _animation_catalogue_loaded := false
 static var _shared_shader: Shader
 static var _shared_double_sided_shader: Shader
 static var _shared_materials: Dictionary = {}
@@ -208,6 +211,8 @@ var _generated_attachments: Array[BoneAttachment3D] = []
 var _body_source_path := ""
 var _origin_id := ""
 var _current_animation := ""
+var _current_state_request := ""
+var _current_state_speed := 1.0
 var _current_tint := Color(-1.0, -1.0, -1.0, -1.0)
 
 
@@ -245,15 +250,17 @@ func setup(target_height: float, tint := Color.WHITE, casts_shadow := true,
 	# A biblioteca UAL tem uma pose inicial diferente do rest pose importado.
 	# Aplicamo-la antes de calcular encaixes, para a roupa nao ganhar um braco de
 	# alavanca invisivel quando a primeira animacao entra.
-	if _animation_player != null and _animation_player.has_animation("Idle"):
-		_animation_player.play("Idle", 0.0)
+	var initial_profile := animation_state_profile("player", "idle", "unarmed")
+	var initial_clip := String(initial_profile.get("clip", ""))
+	if _animation_player != null and _animation_player.has_animation(initial_clip):
+		_animation_player.play(initial_clip, 0.0)
 		_animation_player.advance(0.0)
-		_current_animation = "Idle"
+		_current_animation = initial_clip
 	_build_origin_outfit(class_id)
 	var class_tint: Color = CLASS_TINTS.get(class_id, Color.WHITE)
 	_collect_meshes(_body, casts_shadow, class_tint)
 	set_tint(tint)
-	play_animation("Idle")
+	play_state_animation("player", "idle", "unarmed")
 	set_meta("character_body_pack", PLAYER_BODY_PACK)
 	set_meta("character_body_source", _body_source_path)
 	set_meta("origin_id", _origin_id)
@@ -325,6 +332,46 @@ func set_tint(tint: Color) -> void:
 
 
 func play_animation(animation_name: String, speed := 1.0) -> void:
+	_current_state_request = ""
+	_play_clip(animation_name, speed)
+
+
+func play_state_animation(actor_kind: String, state_key: String,
+		context := "", target_frames := 0) -> String:
+	## Fronteira semântica: Player e Enemy dizem o estado e os frames; o nome do
+	## clip e a sua duração-fonte pertencem exclusivamente a animations.json.
+	var profile := animation_state_profile(actor_kind, state_key, context)
+	var animation_name := String(profile.get("clip", ""))
+	if animation_name.is_empty():
+		return ""
+	var speed := animation_playback_speed(profile, target_frames)
+	var request := "%s|%s|%s|%d" % [actor_kind, state_key, context, target_frames]
+	var looped := bool(profile.get("loop", false))
+	if _current_state_request == request and _current_animation == animation_name \
+			and _animation_player != null \
+			and _animation_player.assigned_animation == animation_name:
+		_animation_player.speed_scale = speed
+		_current_state_speed = speed
+		if _animation_player.is_playing() or not looped:
+			return animation_name
+	_current_state_request = request
+	_play_clip(animation_name, speed)
+	return animation_name
+
+
+func state_animation_frames(actor_kind: String, state_key: String,
+		context := "") -> int:
+	return int(animation_state_profile(actor_kind, state_key, context).get(
+		"phase_frames", 0))
+
+
+func current_animation_name() -> String:
+	if _animation_player == null:
+		return ""
+	return String(_animation_player.assigned_animation)
+
+
+func _play_clip(animation_name: String, speed: float) -> void:
 	if _animation_player == null:
 		return
 	if not _animation_player.has_animation(animation_name):
@@ -332,9 +379,125 @@ func play_animation(animation_name: String, speed := 1.0) -> void:
 	if _current_animation == animation_name \
 			and _animation_player.assigned_animation == animation_name \
 			and _animation_player.is_playing():
+		animation_name = String(_catalogue().get("fallback_clip", ""))
+	if animation_name.is_empty() or not _animation_player.has_animation(animation_name):
+		return
+	speed = maxf(speed, 0.001)
+	if _current_animation == animation_name and _animation_player.is_playing() \
+			and _animation_player.assigned_animation == animation_name:
+		_animation_player.speed_scale = speed
+		_current_state_speed = speed
 		return
 	_current_animation = animation_name
-	_animation_player.play(animation_name, 0.12, speed)
+	_current_state_speed = speed
+	_animation_player.speed_scale = speed
+	_animation_player.play(animation_name, 0.12)
+
+
+static func animation_state_profile(actor_kind: String, state_key: String,
+		context := "") -> Dictionary:
+	var catalogue := _catalogue()
+	var actor: Dictionary = catalogue.get(actor_kind, {}) as Dictionary
+	var states: Dictionary = actor.get("states", {}) as Dictionary
+	var state_value: Variant = states.get(state_key, {})
+	if not state_value is Dictionary:
+		return _profile_for_clip(String(state_value))
+	var state_profile := state_value as Dictionary
+	var selected: Variant = state_profile
+	var contexts: Dictionary = state_profile.get("contexts", {}) as Dictionary
+	if not contexts.is_empty():
+		selected = contexts.get(context)
+		if selected == null and context.begins_with("unarmed"):
+			selected = contexts.get("unarmed")
+		if selected == null and not context.begins_with("unarmed"):
+			selected = contexts.get("armed")
+		if selected == null:
+			selected = contexts.get("default")
+	var profile := _normalise_profile(selected)
+	for inherited_key: String in ["phase_frames", "loop", "source_frames"]:
+		if state_profile.has(inherited_key) and not profile.has(inherited_key):
+			profile[inherited_key] = state_profile[inherited_key]
+	return _complete_profile(profile)
+
+
+static func animation_playback_speed(profile: Dictionary, target_frames: int) -> float:
+	if target_frames <= 0:
+		return float(profile.get("speed", 1.0))
+	var source_frames := float(profile.get("source_frames", 0.0))
+	if source_frames <= 0.0:
+		return 1.0
+	return source_frames / float(target_frames)
+
+
+static func animation_catalogue_errors() -> PackedStringArray:
+	var errors := PackedStringArray()
+	var catalogue := _catalogue()
+	var clips: Dictionary = catalogue.get("clips", {}) as Dictionary
+	if clips.size() != 43:
+		errors.append("o catálogo UAL declara %d clips, esperados 43" % clips.size())
+	for actor_kind: String in ["player", "enemy"]:
+		var states: Dictionary = (catalogue.get(actor_kind, {}) as Dictionary).get(
+			"states", {}) as Dictionary
+		if states.is_empty():
+			errors.append("%s não declara estados" % actor_kind)
+		for state_key: String in states:
+			_collect_profile_errors(actor_kind, state_key, states[state_key], clips, errors)
+	return errors
+
+
+static func _collect_profile_errors(actor_kind: String, state_key: String,
+		value: Variant, clips: Dictionary, errors: PackedStringArray) -> void:
+	if value is String:
+		if not clips.has(String(value)):
+			errors.append("%s/%s aponta clip ausente %s" % [actor_kind, state_key, value])
+		return
+	if not value is Dictionary:
+		errors.append("%s/%s não é um perfil" % [actor_kind, state_key])
+		return
+	var profile := value as Dictionary
+	if profile.has("clip") and not clips.has(String(profile.get("clip", ""))):
+		errors.append("%s/%s aponta clip ausente %s" % [
+			actor_kind, state_key, profile.get("clip", "")])
+	for context: String in (profile.get("contexts", {}) as Dictionary):
+		_collect_profile_errors(actor_kind, "%s[%s]" % [state_key, context],
+			(profile.get("contexts", {}) as Dictionary)[context], clips, errors)
+
+
+static func _normalise_profile(value: Variant) -> Dictionary:
+	if value is String:
+		return {"clip": String(value)}
+	if value is Dictionary:
+		return (value as Dictionary).duplicate(true)
+	return {}
+
+
+static func _profile_for_clip(animation_name: String) -> Dictionary:
+	return _complete_profile({"clip": animation_name})
+
+
+static func _complete_profile(profile: Dictionary) -> Dictionary:
+	var animation_name := String(profile.get("clip", ""))
+	var clip_profile: Dictionary = (_catalogue().get("clips", {}) as Dictionary).get(
+		animation_name, {}) as Dictionary
+	for key: String in clip_profile:
+		if not profile.has(key):
+			profile[key] = clip_profile[key]
+	return profile
+
+
+static func _catalogue() -> Dictionary:
+	if _animation_catalogue_loaded:
+		return _animation_catalogue
+	_animation_catalogue_loaded = true
+	var parsed: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string(ANIMATION_CATALOGUE_PATH))
+	if parsed is Dictionary:
+		_animation_catalogue = parsed as Dictionary
+		for error: String in animation_catalogue_errors():
+			push_error("[CharacterVisual] %s" % error)
+	else:
+		push_error("[CharacterVisual] catálogo inválido: %s" % ANIMATION_CATALOGUE_PATH)
+	return _animation_catalogue
 
 
 func _parent_class_id() -> String:
@@ -700,12 +863,16 @@ static func _quaternius_animation_library() -> AnimationLibrary:
 	source_root.free()
 	if _quaternius_library == null or _quaternius_library_configured:
 		return _quaternius_library
-	for looping: String in [
-		"Idle", "Sword_Idle", "Walk", "Jog_Fwd", "Sprint", "Crouch_Idle",
-		"Crouch_Fwd", "Spell_Simple_Idle", "Sitting_Idle",
-	]:
-		if _quaternius_library.has_animation(looping):
-			_quaternius_library.get_animation(looping).loop_mode = Animation.LOOP_LINEAR
+	var clips: Dictionary = (_catalogue().get("clips", {}) as Dictionary)
+	for animation_name: String in clips:
+		var clip_profile: Dictionary = clips.get(animation_name, {}) as Dictionary
+		if not _quaternius_library.has_animation(animation_name):
+			push_error("[CharacterVisual] clip catalogado ausente na UAL: %s" \
+				% animation_name)
+			continue
+		if bool(clip_profile.get("loop", false)) \
+				and _quaternius_library.has_animation(animation_name):
+			_quaternius_library.get_animation(animation_name).loop_mode = Animation.LOOP_LINEAR
 	_quaternius_library_configured = true
 	return _quaternius_library
 

@@ -107,6 +107,11 @@ var _visual: CharacterVisual
 var _palette: Dictionary = {}
 var _frame := 0
 var _waking_up := false
+var _resting := false
+var _sitting_visual_started_at := 0
+var _visual_previous_state := State.FREE
+var _visual_transition_state := ""
+var _visual_transition_started_at := 0
 static var _casting_attack_self_test_ran := false
 
 # --- Queda --------------------------------------------------------------------
@@ -902,8 +907,22 @@ func cast_selected_spell() -> bool:
 
 
 func set_waking_up(enabled: bool) -> void:
+	if enabled and not _waking_up:
+		_sitting_visual_started_at = _frame
+	elif not enabled and _waking_up:
+		_start_visual_transition("sitting_exit")
 	_waking_up = enabled
-	input_enabled = not enabled
+	input_enabled = not enabled and not _resting
+	velocity = Vector3.ZERO
+
+
+func set_resting(enabled: bool) -> void:
+	if enabled and not _resting:
+		_sitting_visual_started_at = _frame
+	elif not enabled and _resting:
+		_start_visual_transition("sitting_exit")
+	_resting = enabled
+	input_enabled = not enabled and not _waking_up
 	velocity = Vector3.ZERO
 
 
@@ -1459,12 +1478,24 @@ func _refresh_colour() -> void:
 func _refresh_animation() -> void:
 	if _visual == null:
 		return
-	if _waking_up:
-		_visual.play_animation("Sitting_Idle")
+	_update_visual_transition()
+	if _waking_up or _resting:
+		var sitting_enter_frames := _visual.state_animation_frames(
+			"player", "sitting_enter")
+		var sitting_elapsed := maxi(0, _frame - _sitting_visual_started_at)
+		if sitting_elapsed < sitting_enter_frames:
+			_play_visual_state("sitting_enter", "", sitting_enter_frames)
+		else:
+			_play_visual_state("sitting_idle")
+		return
+	if state == State.FREE and Input.is_action_just_pressed("interact") \
+			and _ground_pickup_in_range():
+		_start_visual_transition("pickup")
+	if _play_visual_transition():
 		return
 	match state:
 		State.DEAD:
-			_visual.play_animation("Death01")
+			_play_visual_state("death")
 		State.DODGE:
 			_visual.play_animation("Roll")
 		State.ATTACK:
@@ -1474,22 +1505,112 @@ func _refresh_animation() -> void:
 				_visual.play_animation("Sword_Attack")
 		State.RIPOSTE:
 			_visual.play_animation("Sword_Attack")
+			var dodge_frames := int(GameData.section("dodge").get(
+				"duration_frames", 0)) + _dodge_recovery_extra
+			_play_visual_state("dodge", "", dodge_frames)
+		State.ATTACK:
+			_play_visual_state("attack", _attack_animation_context(),
+				_attack_animation_frames())
+		State.RIPOSTE:
+			var riposte_frames := int(float(GameData.section("parry").get(
+				"riposte_duration", 0.0)) * float(Engine.physics_ticks_per_second))
+			_play_visual_state("riposte", _weapon_animation_context(main_weapon),
+				riposte_frames)
 		State.CASTING:
-			_visual.play_animation("Spell_Simple_Shoot")
+			_play_casting_animation()
 		State.HITSTUN, State.GUARD_BREAK:
-			_visual.play_animation("Hit_Chest")
+			var locked_frames := _hitstun_frames if state == State.HITSTUN else int(
+				float(GameData.section("block").get("guard_break_duration", 0.0))
+				* float(Engine.physics_ticks_per_second))
+			_play_visual_state("hit_chest", "", locked_frames)
 		State.BLOCK, State.PARRY:
-			_visual.play_animation("Sword_Idle")
+			_play_visual_state("block", _weapon_animation_context(main_weapon))
 		State.MEDITATING:
-			_visual.play_animation("Sitting_Idle")
-		State.USING_ITEM, State.ABILITY, State.GRIP_SWITCH:
-			_visual.play_animation("Interact")
+			_play_visual_state("meditating")
+		State.USING_ITEM:
+			var item_frames := int(float(GameData.section("flask").get(
+				"use_seconds", 0.0)) * float(Engine.physics_ticks_per_second))
+			_play_visual_state("using_item", "", item_frames)
+		State.ABILITY:
+			_play_visual_state("ability")
+		State.GRIP_SWITCH:
+			_play_visual_state("grip_switch", "",
+				int(GameData.section("grip").get("switch_frames", 0)))
 		_:
 			var planar_speed := Vector2(velocity.x, velocity.z).length()
 			if planar_speed > 0.1:
-				_visual.play_animation("Sprint" if _sprinting else "Jog_Fwd")
+				_play_visual_state("sprint" if _sprinting else "jog")
 			else:
-				_visual.play_animation("Idle")
+				_play_visual_state("idle", _weapon_animation_context(main_weapon))
+
+
+func _play_visual_state(state_key: String, context := "", target_frames := 0) -> void:
+	_visual.play_state_animation("player", state_key, context, target_frames)
+
+
+func _weapon_animation_context(weapon_id: String) -> String:
+	if weapon_id.is_empty():
+		return "unarmed"
+	var family := String(GameData.weapon(weapon_id).get("familia", ""))
+	return family if not family.is_empty() else "armed"
+
+
+func _attack_animation_context() -> String:
+	if _atk_weapon.is_empty():
+		return "unarmed_cross" if _combo_index % 2 == 0 else "unarmed_jab"
+	return _weapon_animation_context(_atk_weapon)
+
+
+func _attack_animation_frames() -> int:
+	return _atk_startup + _charge_frames + _atk_active + _atk_recovery
+
+
+func _ground_pickup_in_range() -> bool:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return false
+	for candidate: Node in scene.find_children("*", "SecretsGroundItem", true, false):
+		if candidate.has_method("prompt_state") \
+				and not (candidate.call("prompt_state", global_position) as Dictionary).is_empty():
+			return true
+	return false
+
+
+func _play_casting_animation() -> void:
+	var enter_frames := _visual.state_animation_frames("player", "casting_enter")
+	var shoot_frames := _visual.state_animation_frames("player", "casting_shoot")
+	if state_frame <= enter_frames:
+		_play_visual_state("casting_enter", "", enter_frames)
+	elif state_frame > maxi(enter_frames, _cast_frames_total - shoot_frames):
+		_play_visual_state("casting_shoot", "", shoot_frames)
+	else:
+		_play_visual_state("casting_idle")
+
+
+func _update_visual_transition() -> void:
+	if state == _visual_previous_state:
+		return
+	if _visual_previous_state == State.CASTING and state == State.FREE:
+		_start_visual_transition("casting_exit")
+	elif state != State.FREE:
+		_visual_transition_state = ""
+	_visual_previous_state = state
+
+
+func _start_visual_transition(state_key: String) -> void:
+	_visual_transition_state = state_key
+	_visual_transition_started_at = _frame
+
+
+func _play_visual_transition() -> bool:
+	if _visual_transition_state.is_empty() or state != State.FREE:
+		return false
+	var frames := _visual.state_animation_frames("player", _visual_transition_state)
+	if frames <= 0 or _frame - _visual_transition_started_at >= frames:
+		_visual_transition_state = ""
+		return false
+	_play_visual_state(_visual_transition_state, "", frames)
+	return true
 
 
 func _attack_animation_controller() -> Node:

@@ -69,6 +69,7 @@ var _attack_audio: Node3D
 var _palette: Dictionary = {}
 var _presentation: Dictionary = {}
 var _visual_profile: Dictionary = {}
+var _visual_animation_request := ""
 
 static var _presentation_catalogue_validated := false
 static var _attack_grammar_catalogue_validated := false
@@ -792,17 +793,34 @@ func _refresh_animation() -> void:
 		return
 	match state:
 		State.DEAD:
-			_visual.call("play_animation", "Death01")
+			_play_state_animation("death")
 		State.ATTACK:
-			_visual.call("play_animation", "Sword_Attack")
+			var attack_frames := int(_atk.get("startup", 0)) \
+				+ int(_atk.get("active", 0)) + int(_atk.get("recovery", 0))
+			_play_state_animation("attack", attack_frames, String(_atk.get("id", "")))
 		State.STAGGER, State.BROKEN:
-			_visual.call("play_animation", "Hit_Chest")
+			_play_state_animation("hit", 0, str(state))
 		State.CHASE:
-			_visual.call("play_animation", "Jog_Fwd")
+			_play_state_animation("chase")
 		State.PATROL:
-			_visual.call("play_animation", "Walk")
+			_play_state_animation("patrol")
 		_:
-			_visual.call("play_animation", "Idle")
+			_play_state_animation("idle")
+
+
+func _play_state_animation(state_key: String, target_frames := 0,
+		request_suffix := "") -> void:
+	var profile := CharacterVisual.animation_state_profile("enemy", state_key, enemy_id)
+	var animation_name := String(profile.get("clip", ""))
+	if animation_name.is_empty():
+		return
+	var request := "%s|%s|%d|%s" % [state_key, enemy_id, target_frames, request_suffix]
+	var looped := bool(profile.get("loop", false))
+	if request == _visual_animation_request and not looped:
+		return
+	_visual_animation_request = request
+	var speed := CharacterVisual.animation_playback_speed(profile, target_frames)
+	_visual.call("play_animation", animation_name, speed)
 
 
 ## Para o HUD: o golpe em preparacao da-se para aparar?

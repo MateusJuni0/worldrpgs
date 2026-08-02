@@ -79,17 +79,33 @@ func _passo_equipamento() -> void:
 
 ## Carregar em atacar tem de mudar a pose. Se não muda, não há combate.
 func _passo_atacar() -> void:
+	var visual: Node = _jogador.get("_visual") as Node
+	var erros_catalogo := CharacterVisual.animation_catalogue_errors()
+	var fronteira_catalogada := visual != null \
+		and visual.has_method("play_state_animation") \
+		and FileAccess.file_exists("res://data/animations.json") \
+		and erros_catalogo.is_empty()
+	_diz("os estados visuais obedecem ao catálogo de animações",
+		fronteira_catalogada,
+		"" if fronteira_catalogada \
+		else "falta catálogo/API ou há erros: %s" % ", ".join(erros_catalogo))
+
 	var antes := _pose()
 	Input.action_press("attack")
 	await _esperar(2)
 	Input.action_release("attack")
 	await _esperar(8)
 	var meio := _pose()
+	var animacao_do_golpe := _animacao_tocada()
 	await _esperar(20)
 	_diz("atacar muda a pose do boneco", antes != meio,
 		"o esqueleto não se mexeu entre o repouso e o meio do golpe" if antes == meio else "")
+	_diz("atacar com espada toca um golpe de espada, nunca um Punch",
+		animacao_do_golpe.contains("Sword_Attack") and not animacao_do_golpe.contains("Punch"),
+		"animação=%s" % animacao_do_golpe)
 
-	var estado := String(_jogador.get("state_name")) if "state_name" in _jogador else "?"
+	var estado := String(_jogador.call("state_name")) \
+		if _jogador.has_method("state_name") else "?"
 	_diz("atacar entra em estado de ataque", estado != "?", "estado=%s" % estado)
 
 
@@ -208,6 +224,23 @@ func _achar_esqueleto(no: Node) -> Skeleton3D:
 		if r != null:
 			return r
 	return null
+
+
+func _animacao_tocada() -> String:
+	var candidatas: Array[String] = []
+	var por_ver: Array[Node] = [_jogador]
+	while not por_ver.is_empty():
+		var no: Node = por_ver.pop_back()
+		if no is AnimationPlayer:
+			var atribuida := String((no as AnimationPlayer).assigned_animation)
+			if not atribuida.is_empty():
+				candidatas.append(atribuida)
+		for filha: Node in no.get_children():
+			por_ver.append(filha)
+	for animacao: String in candidatas:
+		if animacao.contains("weapon_attacks/"):
+			return animacao
+	return candidatas[0] if not candidatas.is_empty() else "nenhuma"
 
 
 func _esperar(frames: int) -> void:
