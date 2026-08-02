@@ -2,8 +2,9 @@ extends Node
 ## Prova de co-op pelo percurso do jogador, em dois processos Godot reais.
 ##
 ## Sem argumentos, este processo abre anfitriao e convidado. Cada filho instancia
-## `gameplay.tscn`, carrega em F3, activa Hospedar/Entrar, anda com o comando real
-## e observa o corpo visivel do parceiro a mover-se no seu proprio mundo.
+## `gameplay.tscn`, clica em JOGAR A DOIS/Hospedar/Entrar, confirma que F3 volta
+## a abrir o menu, anda com o comando real e observa o corpo visivel do parceiro
+## a mover-se no seu proprio mundo.
 ##
 ## Nao deixa saves: usa slots temporarios altos, limpa-os antes de sair e o pai
 ## recusa perfis desta prova nos slots reais ou ficheiros temporarios proprios.
@@ -122,11 +123,45 @@ func _run_child() -> void:
 	for node: Node in get_tree().get_nodes_in_group("enemies"):
 		node.set_physics_process(false)
 
-	var started_at := _now()
-	await _press_action("toggle_mouse")
 	var menu := _gameplay.get("net_menu") as NetMenu
-	if menu == null or not menu.visible or Input.mouse_mode != Input.MOUSE_MODE_VISIBLE:
-		await _finish_child(false, "F3 nao abriu Jogar a dois com o rato livre")
+	var launcher := _gameplay.get("_net_launcher") as Button
+	if menu == null or launcher == null or not launcher.visible \
+			or Input.mouse_mode != Input.MOUSE_MODE_VISIBLE:
+		await _finish_child(false,
+			"JOGAR A DOIS nao ficou alcancavel com o rato livre ao entrar no mundo")
+		return
+
+	var started_at := _now()
+	await _click_button(launcher)
+	if not menu.visible or Input.mouse_mode != Input.MOUSE_MODE_VISIBLE \
+			or _actor.input_enabled:
+		await _finish_child(false,
+			"o clique em JOGAR A DOIS nao abriu o menu com o rato livre e o corpo suspenso")
+		return
+
+	# Fechar devolve o jogo e volta a prender o rato. Usar F3 a seguir prova
+	# tambem o caminho de recuperacao que o HUD ensina ao jogador.
+	var close_button := _gameplay.get("_net_close") as Button
+	if close_button == null or not close_button.visible:
+		await _finish_child(false, "o menu de rede nao mostrou o botao Fechar")
+		return
+	await _click_button(close_button)
+	# O driver headless nao tem janela do sistema e converte CAPTURED em VISIBLE.
+	# Com display real, a captura continua a fazer parte do contrato observado.
+	var capture_is_observable := DisplayServer.get_name() != "headless"
+	if menu.visible or not _actor.input_enabled \
+			or (capture_is_observable and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED):
+		await _finish_child(false,
+			"Fechar nao devolveu o rato e o controlo ao mundo " \
+			+ "(menu=%s, rato=%d, corpo=%s, driver=%s)" % [
+				menu.visible, Input.mouse_mode, _actor.input_enabled,
+				DisplayServer.get_name()])
+		return
+	await _press_action("toggle_mouse")
+	if not menu.visible or Input.mouse_mode != Input.MOUSE_MODE_VISIBLE \
+			or _actor.input_enabled:
+		await _finish_child(false,
+			"F3 nao reabriu Jogar a dois com o rato livre")
 		return
 
 	if _role == ROLE_HOST:
@@ -237,7 +272,8 @@ func _run_child() -> void:
 		await _finish_child(false, "a sessão gastou %.0f bps, acima do tecto da spec" % measured_bps)
 		return
 	await _finish_child(true,
-		"%s: dois corpos/origens visiveis, movimento remoto em %.2f s, %.0f bps%s" % [
+		("%s: JOGAR A DOIS clicavel, dois corpos/origens visiveis, " \
+		+ "movimento remoto em %.2f s, %.0f bps%s") % [
 			_role_label(), join_elapsed, measured_bps,
 			", falhas explicadas no ecra" if _role == ROLE_GUEST else ""])
 
