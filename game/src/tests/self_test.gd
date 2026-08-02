@@ -13,6 +13,7 @@ var _failed := 0
 
 const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
 const ExplorationMapScript = preload("res://src/world/exploration_map.gd")
+const RegraDeOuroGuardScript = preload("res://src/tests/regra_de_ouro_guard.gd")
 
 
 func _ready() -> void:
@@ -42,6 +43,7 @@ func _ready() -> void:
 	_test_equipment_catalogue()
 	_test_world_catalogue()
 	_test_game_shell_and_character_creation()
+	_test_regra_de_ouro_guard()
 	_test_opening_context()
 	_test_pause_contract()
 	_test_settings_contract()
@@ -104,7 +106,8 @@ func _test_game_shell_and_character_creation() -> void:
 
 
 func _test_opening_context() -> void:
-	var joined := " ".join(GameShell.OPENING_LINES)
+	var joined := String((GameData.ui_strings.get("opening", {}) as Dictionary).get(
+		"story_bbcode", ""))
 	for required: String in ["Brumal", "bruma", "orcs", "Toca", "Vorgar", "forasteiro"]:
 		_check(joined.contains(required),
 			"abertura: o contexto minimo conserva '%s'" % required)
@@ -124,6 +127,12 @@ func _test_opening_context() -> void:
 	_check(String(anim_sentado.get("clip", "")) == "Sitting_Idle"
 		and player_source.contains("_waking_up"),
 		"despertar: a personagem acorda sentada antes de receber controlo")
+
+
+func _test_regra_de_ouro_guard() -> void:
+	var errors := RegraDeOuroGuardScript.contract_errors()
+	_check(errors.is_empty(), "regra de ouro: produção não contém fallbacks de combate " \
+		+ "nem catálogos manuais%s" % ("" if errors.is_empty() else " — " + " | ".join(errors)))
 
 
 func _test_pause_contract() -> void:
@@ -177,8 +186,10 @@ func _test_settings_contract() -> void:
 		"configuracoes: texto consulta o mapa actual, nao a tecla de fabrica")
 	_check(GameShell.tutorial_tip_text("parry").contains("F12"),
 		"aprendizagem: dica contextual consulta a tecla actual")
-	_check(GameShell.LEARNING_TIP_IDS.size() == 5 and SettingsSystem.data.has("learning"),
-		"aprendizagem: cinco batidas podem ser desligadas e lembradas por perfil")
+	_check(not GameShell.LEARNING_TIP_IDS.is_empty() \
+		and GameShell.LEARNING_TIP_IDS == IntroSequence.tip_ids(GameData.ui_strings) \
+		and SettingsSystem.data.has("learning"),
+		"aprendizagem: as batidas do catálogo podem ser desligadas e lembradas por perfil")
 	var encoded := SettingsSystem.encode_event(test_event)
 	var decoded := SettingsSystem.decode_event(encoded)
 	_check(decoded != null and SettingsSystem.events_match(test_event, decoded),

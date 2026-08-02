@@ -3,12 +3,6 @@ extends RefCounted
 ## Contrato dos kits iniciais. Mantem a escolha de origem separada do catalogo
 ## inteiro: a origem escolhe o arranque, nunca autoriza ou bloqueia uma arma.
 
-const ACTIVE_ORIGIN_IDS: Array[String] = [
-	# Compatibilidade para o teste isolado e consumidores antigos. O contrato
-	# nao usa esta lista como autoridade: descobre as origens no proprio catalogo.
-	"warrior", "sorcerer", "tank", "assassin", "berserker", "paladin",
-	"evil_mage",
-]
 const KATANA_ID := "katana_brumal_sabre_de_vigilia"
 
 

@@ -555,20 +555,10 @@ func _face_enemy_towards(enemy: Enemy, point: Vector3) -> void:
 # --- Morte e recomeco ---------------------------------------------------------
 
 func _validate_starting_loadout_contract() -> void:
-	# StartingLoadouts foi escrito para seis origens + o placeholder editorial
-	# do Mago do Mal. Executamos o contrato sobre esse escopo historico; quem
-	# enumera e aplica os kits jogaveis continua a ser exclusivamente o catalogo,
-	# por isso a setima origem nunca volta a desaparecer por causa desta lista.
-	var scoped_catalog := GameData.weapons.duplicate(true)
-	var scoped_loadouts := (scoped_catalog.get("loadouts", {}) as Dictionary).duplicate(true)
-	for value: Variant in scoped_loadouts.keys():
-		var origin_id := String(value)
-		if not origin_id.begins_with("_") \
-				and not StartingLoadouts.ACTIVE_ORIGIN_IDS.has(origin_id):
-			scoped_loadouts.erase(origin_id)
-	scoped_catalog["loadouts"] = scoped_loadouts
+	# O contrato recebe os catalogos inteiros. Uma origem nova entra na mesma
+	# execucao sem precisar de ser repetida numa lista de compatibilidade.
 	starting_loadout_contract_errors = StartingLoadouts.contract_errors(
-		scoped_catalog, GameData.equipment)
+		GameData.weapons, GameData.equipment, GameData.attributes)
 	for error: String in starting_loadout_contract_errors:
 		push_error("[starting-loadouts] %s" % error)
 

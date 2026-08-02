@@ -1110,3 +1110,12 @@ Relatório completo: [`docs/REVISAO-CODIGO.md`](docs/REVISAO-CODIGO.md). Nenhuma
 ⭐ **Era o teste a ter razão.** O orçamento de Brumal declara `orc_spearman: 4 · orc_brute: 2 · goblin_mist_scout: 2` e **nenhum guardião**; os marcadores da Toca não entram no plano, e o Vorgar deixou de ser registado. **O caminho antigo morreu e o novo não assumiu o que ele fazia.**
 
 ⛔ **Não fechar isto baixando o teste.** O que falta é o produtor de população passar a cobrir os marcadores da Toca e o guardião, ou `_populate_zone` voltar a ser chamada para essa parte.
+
+## Limpeza da Regra de Ouro — CODEX, 02-08-2026
+
+| Estado | Resultado | Prova exacta |
+|---|---|---|
+| ✅ | Os números de combate auditados deixaram de ter fallbacks positivos em GDScript; arcos, alcance de riposte, multiplicadores, tempos, PV/postura e defaults de ataque vivem nos JSON. As famílias, clips, poses, papéis de classe, abertura, dicas, armas iniciais e origens activas passam a ser descobertos nos catálogos. | Guard integrado: **verde** no auto-teste. Teste negativo confirmado: trocar temporariamente `Player.health` por `420.0` produziu `player.gd:36 — baseline numérico de combate`; o literal foi revertido. |
+| ✅ | A funcionalidade foi vista no jogo real, sem instanciar apenas a classe isolada: criação mostrou `evil_mage` com as três linhas, abertura mostrou o texto catalogado, o jogador correu até aos inimigos, carregou em ataque pesado, mostrou a animação `cajado`, acertou, matou e levantou o corpo; a recusa por falta de PV apareceu no HUD. | `godot --headless --audio-driver Dummy --path game scenes/repro-inicio.tscn -- --regra-de-ouro-isolada` → `ARRANQUE + NECROMANCIA OK`; **9 ficheiros de save de teste apagados**, nenhum dos slots 0–2 usado por esta prova. |
+| 🟠 | O auto-teste global conserva **9764 verdes**, mas termina com uma falha fora dos ficheiros desta tarefa: os marcadores da Toca não têm corpo nem colocação no plano virtualizado. | `game/scenes/selftest_integrated.gd:56-93` · `game/src/world/spawn_population.gd:24-82,402-446`; lacuna vermelha imediatamente acima. |
+| 🟠 | O modo completo de `repro-inicio.tscn` continua bloqueado pela prova paralela de acesso rápido: `InventoryMenu._show_detail()` lança `Invalid call 'String' constructor: adaga` e, depois da virtualização, a prova procura `gameplay.boss`/barra antes de o guardião estar materializado. Não alterado porque pertence a outros ficheiros/agentes. | `game/src/ui/inventory_menu.gd:218` · `game/src/ui/quick_slots_gameplay_proof.gd:299-313`; a passagem isolada da Regra de Ouro acima fica verde. |

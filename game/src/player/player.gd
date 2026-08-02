@@ -25,19 +25,19 @@ signal raise_requested(spell_id: String)
 enum State { FREE, ATTACK, DODGE, BLOCK, PARRY, CASTING, HITSTUN, GUARD_BREAK, RIPOSTE, DEAD, USING_ITEM, ABILITY, MEDITATING, GRIP_SWITCH }
 
 # Guarda de entrada: os valores vem de spec/25-controlo.md (WP1B), via data/combat.json.
-var _buffer_life := 24        # 400 ms
-var _buffer_life_parry := 5   # 80 ms — parry e timing puro, guarda-se quase nada
+var _buffer_life := 0
+var _buffer_life_parry := 0
 var hitstop_frames := 0
 
 # --- Estado -------------------------------------------------------------------
 var state := State.FREE
 var state_frame := 0
 
-var health := 420.0
-var max_health := 420.0
-var defense := 20.0
-var flask_uses := 3
-var flask_max := 3
+var health := 0.0
+var max_health := 0.0
+var defense := 0.0
+var flask_uses := 0
+var flask_max := 0
 var _ability: Dictionary = {}
 var _ability_cd := 0.0
 var _fury_time := 0.0
@@ -45,15 +45,15 @@ var attrs: Dictionary = {}
 var class_id := "warrior"
 
 var stamina := Stamina.new()
-var mana := 100
-var max_mana := 100
+var mana := 0
+var max_mana := 0
 var meditation_uses := 0
 var meditation_uses_max := 0
-var selected_spell := "dardo"
+var selected_spell := ""
 var favorite_spells: Array[String] = []
 
-var main_weapon := "longsword"
-var offhand_weapon := "shield"
+var main_weapon := ""
+var offhand_weapon := ""
 var _loadout_index := 0
 var is_two_handed := false
 
@@ -82,7 +82,7 @@ var _dodge_recovery_extra := 0
 var _load_can_dodge := true
 var _load_can_run := true
 var _load_can_sprint := true
-var _load_max_speed := 999.0
+var _load_max_speed := INF
 
 # --- Magia --------------------------------------------------------------------
 var _cast_spell: Dictionary = {}
@@ -132,43 +132,45 @@ func _ready() -> void:
 		_run_casting_attack_self_test()
 
 
+func _reference_fps() -> float:
+	return float(GameData.combat["reference_fps"])
+
+
 func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> void:
 	class_id = p_class_id
 	_palette = palette
 	attrs = GameData.class_attributes(class_id).duplicate()
 
-	max_health = GameData.max_health_for(int(attrs.get("vida", 8)))
+	max_health = GameData.max_health_for(int(attrs["vida"]))
 	health = max_health
-	defense = GameData.defense_for(int(attrs.get("constituicao", 8)))
-	stamina.configure(GameData.section("stamina"), GameData.max_stamina_for(int(attrs.get("stamina", 8))))
+	defense = GameData.defense_for(int(attrs["constituicao"]))
+	stamina.configure(GameData.section("stamina"), GameData.max_stamina_for(int(attrs["stamina"])))
 	max_mana = GameData.max_mana_for(attrs)
 	mana = max_mana
 	var meditation: Dictionary = GameData.spells.get("_rules", {}).get("meditation", {}) as Dictionary
-	meditation_uses_max = int(meditation.get("uses_per_rest", 2))
+	meditation_uses_max = int(meditation["uses_per_rest"])
 	meditation_uses = meditation_uses_max
-	_meditation_frames_total = int(float(meditation.get("seconds", 40.0)) * 60.0)
+	_meditation_frames_total = int(float(meditation["seconds"]) * _reference_fps())
 	favorite_spells.clear()
 	var spell_rules: Dictionary = GameData.spells.get("_rules", {}) as Dictionary
 	for spell_id: Variant in spell_rules.get("default_favorites", []):
 		favorite_spells.append(String(spell_id))
 	if not selected_spell in favorite_spells and not favorite_spells.is_empty():
 		selected_spell = favorite_spells[0]
-	flask_max = int(GameData.section("flask").get("uses", 3))
+	flask_max = int(GameData.section("flask")["uses"])
 	flask_uses = flask_max
 	_ability = GameData.ability(class_id)
 	_ability_cd = 0.0
 	_fury_time = 0.0
 
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
-	main_weapon = equipment_weapon_id(loadout.get("main", "longsword"))
-	if main_weapon.is_empty():
-		main_weapon = "longsword"
+	main_weapon = equipment_weapon_id(loadout.get("main"))
 	offhand_weapon = equipment_weapon_id(loadout.get("offhand", ""))
 	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 
 	var buf := GameData.section("input_buffer")
-	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
-	_buffer_life_parry = int(float(buf.get("parry_life_ms", 80)) * 0.06)
+	_buffer_life = int(float(buf["life_ms"]) * _reference_fps() / 1000.0)
+	_buffer_life_parry = int(float(buf["parry_life_ms"]) * _reference_fps() / 1000.0)
 
 	_build_body(body_id)
 	_build_children()
@@ -177,8 +179,8 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 
 func _build_body(body_id: String) -> void:
 	var cfg := GameData.section("player")
-	var height: float = cfg.get("capsule_height", 1.8)
-	var radius: float = cfg.get("capsule_radius", 0.35)
+	var height := float(cfg["capsule_height"])
+	var radius := float(cfg["capsule_radius"])
 
 	var capsule := CapsuleShape3D.new()
 	capsule.height = height
@@ -400,7 +402,8 @@ func _tick_state(delta: float) -> void:
 		State.GRIP_SWITCH: _tick_grip_switch(delta)
 		State.HITSTUN:   _tick_locked(delta, _hitstun_frames)
 		State.GUARD_BREAK:
-			_tick_locked(delta, int(GameData.section("block").get("guard_break_duration", 1.5) * 60.0))
+			_tick_locked(delta, int(float(GameData.section("block")["guard_break_duration"]) \
+				* _reference_fps()))
 		State.DEAD:
 			velocity.x = 0.0
 			velocity.z = 0.0
@@ -427,7 +430,7 @@ func _tick_free(delta: float) -> void:
 
 
 func _tick_block(delta: float) -> void:
-	_move(delta, GameData.section("movement").get("walk_speed", 3.0))
+	_move(delta, float(GameData.section("movement")["walk_speed"]))
 	if not Input.is_action_pressed("block") or not _can_block():
 		_change_state(State.FREE)
 		return
@@ -455,13 +458,13 @@ func _tick_locked(delta: float, total_frames: int) -> void:
 func _speed_for_mode() -> float:
 	var m := GameData.section("movement")
 	if _sprinting and stamina.can_act() and _load_can_sprint:
-		return minf(float(m.get("sprint_speed", 7.0)), _load_max_speed)
+		return minf(float(m["sprint_speed"]), _load_max_speed)
 	if is_instance_valid(lock_on.target):
 		var input := _move_input()
 		# Andar de lado ou para tras com alvo engatado e mais lento — e o strafe da spec.
 		if absf(input.x) > 0.3 or input.y > 0.3:
-			return minf(float(m.get("strafe_speed", 4.0)), _load_max_speed)
-	var free_speed: float = m.get("run_speed", 5.0) if _load_can_run else m.get("walk_speed", 3.0)
+			return minf(float(m["strafe_speed"]), _load_max_speed)
+	var free_speed := float(m["run_speed"] if _load_can_run else m["walk_speed"])
 	return minf(free_speed, _load_max_speed)
 
 
@@ -481,7 +484,7 @@ func _move(delta: float, speed: float) -> void:
 
 	if dir.length() > 0.05:
 		if _sprinting and state == State.FREE:
-			stamina.spend(GameData.section("movement").get("sprint_stamina_per_second", 8.0) * delta)
+			stamina.spend(float(GameData.section("movement")["sprint_stamina_per_second"]) * delta)
 		velocity.x = dir.x * speed
 		velocity.z = dir.z * speed
 		_face(dir if not is_instance_valid(lock_on.target) else _to_target())
@@ -518,7 +521,7 @@ func _start_dodge() -> void:
 	var cfg := GameData.section("dodge")
 	if _fury_time > 0.0:
 		return   # Furia: sem esquiva — o preco da armadura
-	stamina.spend(cfg.get("stamina_cost", 25.0))
+	stamina.spend(float(cfg["stamina_cost"]))
 	Sfx.play("dodge", null, -6.0)
 
 	var input := _move_input()
@@ -533,8 +536,8 @@ func _start_dodge() -> void:
 
 func _tick_dodge(delta: float) -> void:
 	var cfg := GameData.section("dodge")
-	var total: int = int(cfg.get("duration_frames", 36))
-	var distance: float = cfg.get("distance", 3.5)
+	var total := int(cfg["duration_frames"])
+	var distance := float(cfg["distance"])
 
 	# Curva de saida: rapido no arranque, a morrer no fim. O integral da exactamente 3,5 m.
 	var t := clampf(float(state_frame) / float(total), 0.0, 1.0)
@@ -555,7 +558,7 @@ func _tick_dodge(delta: float) -> void:
 		return
 
 	# Cancelavel a partir de 0,45 s, em ataque leve / bloqueio / nova esquiva.
-	if state_frame >= int(cfg.get("cancel_from_frame", 27)):
+	if state_frame >= int(cfg["cancel_from_frame"]):
 		match _take_buffered():
 			"light": _start_attack("light")
 			"dodge": _start_dodge()
@@ -570,8 +573,8 @@ func has_iframes() -> bool:
 	if state != State.DODGE:
 		return false
 	var cfg := GameData.section("dodge")
-	return state_frame >= int(cfg.get("iframe_start_frame", 5)) \
-		and state_frame <= int(cfg.get("iframe_end_frame", 23))
+	return state_frame >= int(cfg["iframe_start_frame"]) \
+		and state_frame <= int(cfg["iframe_end_frame"])
 
 
 # --- Parry --------------------------------------------------------------------
@@ -584,7 +587,7 @@ func _can_parry() -> bool:
 func _start_parry() -> void:
 	if not _can_parry() or not stamina.can_act():
 		return
-	stamina.spend(GameData.section("parry").get("stamina_cost", 10.0))
+	stamina.spend(float(GameData.section("parry")["stamina_cost"]))
 	_change_state(State.PARRY)
 
 
@@ -592,8 +595,8 @@ func parry_window_open() -> bool:
 	if state != State.PARRY:
 		return false
 	var cfg := GameData.section("parry")
-	var start: int = cfg.get("startup_frames", 8)
-	return state_frame >= start and state_frame < start + int(cfg.get("active_frames", 8))
+	var start := int(cfg["startup_frames"])
+	return state_frame >= start and state_frame < start + int(cfg["active_frames"])
 
 
 func _tick_parry(delta: float) -> void:
@@ -602,15 +605,15 @@ func _tick_parry(delta: float) -> void:
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
 	var cfg := GameData.section("parry")
-	var total: int = int(cfg.get("startup_frames", 8)) + int(cfg.get("active_frames", 8)) \
-		+ int(cfg.get("whiff_recovery_frames", 40))
+	var total := int(cfg["startup_frames"]) + int(cfg["active_frames"]) \
+		+ int(cfg["whiff_recovery_frames"])
 	if state_frame >= total:
 		_change_state(State.FREE)
 
 
 func _start_riposte(target: Node3D) -> void:
 	var cfg := GameData.section("parry")
-	_atk_mv = cfg.get("riposte_mv", 2.5)
+	_atk_mv = float(cfg["riposte_mv"])
 	_atk_weapon = main_weapon
 	_atk_kind = "riposte"   # senao herdava o peso do golpe anterior no hit-stun
 	_atk = {}
@@ -625,7 +628,7 @@ func _start_riposte(target: Node3D) -> void:
 func _tick_riposte(delta: float) -> void:
 	velocity.x = 0.0
 	velocity.z = 0.0
-	var frames := int(GameData.section("parry").get("riposte_duration", 0.9) * 60.0)
+	var frames := int(float(GameData.section("parry")["riposte_duration"]) * _reference_fps())
 	if state_frame >= frames:
 		_change_state(State.FREE)
 
@@ -653,7 +656,7 @@ func _start_grip_switch() -> void:
 func _tick_grip_switch(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0.0, delta * 20.0)
 	velocity.z = move_toward(velocity.z, 0.0, delta * 20.0)
-	var frames := int(GameData.section("grip").get("switch_frames", 12))
+	var frames := int(GameData.section("grip")["switch_frames"])
 	if state_frame >= frames:
 		is_two_handed = not is_two_handed
 		_combo_index = 0
@@ -695,10 +698,10 @@ func _start_attack(kind: String, feedback := "") -> void:
 	_atk = data
 	_atk_kind = kind
 	_atk_weapon = weapon_id
-	_atk_startup = int(data.get("startup", 10))
-	_atk_active = int(data.get("active", 4))
-	_atk_recovery = int(data.get("recovery", 12))
-	_atk_mv = data.get("mv", 1.0)
+	_atk_startup = int(data["startup"])
+	_atk_active = int(data["active"])
+	_atk_recovery = int(data["recovery"])
+	_atk_mv = float(data["mv"])
 	Sfx.play("swing_heavy" if kind == "heavy" else "swing_light", null, -4.0)
 	_atk_hit = []
 	_charge_frames = 0
@@ -707,14 +710,14 @@ func _start_attack(kind: String, feedback := "") -> void:
 	# Combo: encadear leves aumenta o indice; o ultimo golpe tem MV proprio.
 	if kind == "light":
 		var combo: Dictionary = GameData.weapon(main_weapon).get("combo", {})
-		var max_combo: int = int(combo.get("max", 1))
+		var max_combo := int(combo["max"])
 		_combo_index = mini(_combo_index + 1, max_combo)
 		if _combo_index >= max_combo and combo.get("final_mv") != null:
 			_atk_mv = combo.get("final_mv")
 	else:
 		_combo_index = 0
 
-	stamina.spend(data.get("stamina", 10.0))
+	stamina.spend(float(data["stamina"]))
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
 	_change_state(State.ATTACK)
@@ -735,11 +738,11 @@ func _tick_attack(delta: float) -> void:
 
 	# Carregar o pesado do machadao: +20 f no maximo, MV sobe de 2,4 para 3,0.
 	if _charging and state_frame >= _atk_startup:
-		var max_charge := int(_atk.get("charge_max_frames", 20))
+		var max_charge := int(_atk["charge_max_frames"])
 		if _charge_frames < max_charge and Input.is_action_pressed("attack"):
 			_charge_frames += 1
 			var t := float(_charge_frames) / float(max_charge)
-			_atk_mv = lerpf(_atk.get("mv", 2.4), _atk.get("charge_max_mv", 3.0), t)
+			_atk_mv = lerpf(float(_atk["mv"]), float(_atk["charge_max_mv"]), t)
 			return
 		_charging = false
 
@@ -756,11 +759,13 @@ func _tick_attack(delta: float) -> void:
 	if state_frame > startup + _atk_active:
 		var into_recovery := state_frame - (startup + _atk_active)
 		var rules := GameData.section("attack_rules")
-		var combo_open := float(into_recovery) >= float(_atk_recovery) * (1.0 - float(rules.get("combo_window_fraction_of_recovery", 0.4)))
-		var cancel_open := float(into_recovery) >= float(_atk_recovery) * float(rules.get("cancel_threshold_fraction_of_recovery", 0.6))
+		var combo_open := float(into_recovery) >= float(_atk_recovery) * (1.0 \
+			- float(rules["combo_window_fraction_of_recovery"]))
+		var cancel_open := float(into_recovery) >= float(_atk_recovery) \
+			* float(rules["cancel_threshold_fraction_of_recovery"])
 
 		var combo: Dictionary = GameData.weapon(main_weapon).get("combo", {})
-		if combo_open and _atk_kind == "light" and _combo_index < int(combo.get("max", 1)):
+		if combo_open and _atk_kind == "light" and _combo_index < int(combo["max"]):
 			if _peek_buffer() == "light":
 				_take_buffered()
 				use_primary_attack()
@@ -794,14 +799,15 @@ func has_hyper_armor() -> bool:
 	if state != State.ATTACK or not bool(_atk.get("chargeable", false)):
 		return false
 	# Hiper-armadura do frame 30 ate ao fim dos frames activos (30-48 sem carga, e acompanha a carga).
-	var start := int(_atk.get("hyper_armor_start_frame", 30))
+	var start := int(_atk["hyper_armor_start_frame"])
 	var finish := _atk_startup + _charge_frames + _atk_active
 	return state_frame >= start and state_frame <= finish
 
 
 func _hit_query() -> void:
-	var reach: float = GameData.weapon(_atk_weapon).get("range", 2.0)
-	var arc := deg_to_rad(110.0)
+	var weapon := GameData.weapon(_atk_weapon)
+	var reach := float(weapon["range"])
+	var arc := deg_to_rad(float(weapon["arc_degrees"]))
 	for node in get_tree().get_nodes_in_group("enemies"):
 		var e := node as Node3D
 		if e == null or _atk_hit.has(e):
@@ -810,7 +816,7 @@ func _hit_query() -> void:
 			continue
 		var to := e.global_position - global_position
 		to.y = 0.0
-		var enemy_radius: float = e.get("body_radius") if e.get("body_radius") != null else 0.5
+		var enemy_radius := float(e.get("body_radius"))
 		if to.length() > reach + enemy_radius:
 			continue
 		if _facing().angle_to(to.normalized()) > arc * 0.5:
@@ -826,17 +832,17 @@ func _deal_damage_to(e: Node3D, mv: float, weapon_id: String, is_bash: bool) -> 
 	var target_def: float = e.get("defense") if e.get("defense") != null else 0.0
 	var info := DamageInfo.make(GameData.compute_damage(mv, weapon_id, attrs, target_def), self,
 		"heavy" if _atk_kind == "heavy" else "light")
-	var posture_mult := 1.0
+	var posture_mult := float(GameData.section("poise")["standard_posture_multiplier"])
 	if is_bash:
-		posture_mult = GameData.section("poise").get("shield_bash_posture_multiplier", 2.0)
+		posture_mult = float(GameData.section("poise")["shield_bash_posture_multiplier"])
 	info.posture_damage = GameData.posture_damage_from_mv(mv, posture_mult)
 	e.call("take_damage", info)
 
 	# Paragem de impacto: o peso do machadao vem daqui, nao do dano.
 	var hs := GameData.section("hit_stop")
-	var frames: int = hs.get("heavy_hit", 6) if info.weight == "heavy" else hs.get("light_hit", 3)
+	var frames := int(hs["heavy_hit"] if info.weight == "heavy" else hs["light_hit"])
 	if e.has_method("is_alive") and not e.call("is_alive"):
-		frames = hs.get("killing_blow", 8)
+		frames = int(hs["killing_blow"])
 	_freeze(frames)
 	if e.get("hitstop_frames") != null:
 		e.set("hitstop_frames", frames)
@@ -847,6 +853,7 @@ func _freeze(frames: int) -> void:
 
 
 func _broken_posture_target() -> Node3D:
+	var parry := GameData.section("parry")
 	for node in get_tree().get_nodes_in_group("enemies"):
 		var e := node as Node3D
 		if e == null or not e.has_method("is_posture_broken"):
@@ -855,7 +862,9 @@ func _broken_posture_target() -> Node3D:
 			continue
 		var to := e.global_position - global_position
 		to.y = 0.0
-		if to.length() <= 2.6 and _facing().angle_to(to.normalized()) < deg_to_rad(70):
+		if to.length() <= float(parry["riposte_range_m"]) \
+				and _facing().angle_to(to.normalized()) < deg_to_rad(float(
+					parry["riposte_half_angle_degrees"])):
 			return e
 	return null
 
@@ -939,9 +948,9 @@ func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> v
 	_load_can_dodge = bool(load_profile.get("can_dodge", true))
 	_load_can_run = bool(load_profile.get("can_run", true))
 	_load_can_sprint = bool(load_profile.get("can_sprint", true))
-	_load_max_speed = float(load_profile.get("max_speed", 999.0))
+	_load_max_speed = float(load_profile["max_speed"])
 	_load_fraction = float(load_profile.get("fraction", 0.0))
-	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
+	stamina.set_regen_multiplier(float(load_profile["regen_multiplier"]))
 
 
 ## A fronteira persistente guarda IDs. Alguns percursos antigos entregaram a
@@ -1162,7 +1171,8 @@ func _start_cast(spell: Dictionary = {}, instrument: Dictionary = {}) -> bool:
 
 func _tick_casting(delta: float) -> void:
 	# Conjurar trava o movimento a 40% — e a Ruina trava-o por completo (WP4: "1,6 s parado").
-	var mult: float = GameData.spells.get("_rules", {}).get("move_multiplier_while_casting", 0.4)
+	var mult := float((GameData.spells["_rules"] as Dictionary)[
+		"move_multiplier_while_casting"])
 	if bool(_cast_spell.get("movement_locked", false)):
 		mult = 0.0
 	_move(delta, _speed_for_mode() * mult)
@@ -1312,7 +1322,7 @@ func take_damage(info: DamageInfo) -> void:
 		if info.attacker != null and info.attacker.has_method("on_parried"):
 			info.attacker.call("on_parried")
 		# O momento-assinatura do jogo: 10 frames parados, o mais longo de todos.
-		var stop: int = GameData.section("hit_stop").get("parry_success", 10)
+		var stop := int(GameData.section("hit_stop")["parry_success"])
 		Sfx.play("parry", null, 2.0, 0.02)
 		_freeze(stop)
 		if info.attacker != null and info.attacker.get("hitstop_frames") != null:
@@ -1327,21 +1337,22 @@ func take_damage(info: DamageInfo) -> void:
 	if state == State.BLOCK and _is_in_front(info) and not info.is_aoe:
 		var b := GameData.section("block")
 		var source := _block_source()
-		var absorb: float = b.get("shield_magic_absorb", 0.0) if info.is_magic else b.get("shield_physical_absorb", 1.0)
+		var absorb := float(b["shield_magic_absorb"] if info.is_magic \
+			else b["shield_physical_absorb"])
 		var cost_mult := 1.0
 		if source == "onehand":
-			absorb = b.get("onehand_absorb", 0.5)
-			cost_mult = b.get("onehand_cost_multiplier", 1.5)
+			absorb = float(b["onehand_absorb"])
+			cost_mult = float(b["onehand_cost_multiplier"])
 
 		var weight_key := "blow_weight_heavy" if info.weight == "heavy" else "blow_weight_light"
 		if source == "shield" and not info.is_magic:
 			absorb *= 1.0 - clampf(info.shield_pierce_fraction, 0.0, 1.0)
-		var cost: float = float(b.get("stamina_per_blow", 15.0)) * float(b.get(weight_key, 1.0)) \
+		var cost: float = float(b["stamina_per_blow"]) * float(b[weight_key]) \
 			* cost_mult * maxf(info.guard_stamina_multiplier, 1.0)
 		stamina.spend(cost)
 		amount *= (1.0 - absorb)
 		Sfx.play("hit_block")
-		_freeze(GameData.section("hit_stop").get("blocked", 4))
+		_freeze(int(GameData.section("hit_stop")["blocked"]))
 
 		if stamina.current <= 0.0:
 			_apply_health_loss(amount)
@@ -1374,8 +1385,9 @@ func take_damage(info: DamageInfo) -> void:
 		return
 
 	Sfx.play("hit_flesh", null, -1.0, 0.1)
-	_freeze(GameData.section("hit_stop").get("player_hit", 4))
-	_hitstun_frames = int(info.hitstun_seconds(GameData.section("hitstun")) * 60.0)
+	_freeze(int(GameData.section("hit_stop")["player_hit"]))
+	_hitstun_frames = int(info.hitstun_seconds(GameData.section("hitstun")) \
+		* _reference_fps())
 	_change_state(State.HITSTUN)
 
 
@@ -1410,7 +1422,8 @@ func _is_in_front(info: DamageInfo) -> bool:
 	to.y = 0.0
 	if to.length_squared() < 0.001:
 		return true
-	return _facing().angle_to(to.normalized()) < deg_to_rad(100.0)
+	return _facing().angle_to(to.normalized()) < deg_to_rad(float(
+		GameData.section("block")["front_half_angle_degrees"]))
 
 
 func is_alive() -> bool:
@@ -1658,17 +1671,17 @@ func _start_ability() -> void:
 		"impeto":
 			if not stamina.can_act():
 				return
-			stamina.spend(float(_ability.get("stamina_cost", 30.0)))
-			_ability_cd = float(_ability.get("cooldown_s", 15.0))
+			stamina.spend(float(_ability["stamina_cost"]))
+			_ability_cd = float(_ability["cooldown_s"])
 			if is_instance_valid(lock_on.target):
 				_face(_to_target())
 			_change_state(State.ABILITY)
 		"furia":
-			_ability_cd = float(_ability.get("cooldown_s", 45.0))
-			_fury_time = float(_ability.get("duration_s", 8.0))
+			_ability_cd = float(_ability["cooldown_s"])
+			_fury_time = float(_ability["duration_s"])
 			Sfx.play("fury", null, 1.0)
 		"provocacao":
-			_ability_cd = float(_ability.get("cooldown_s", 30.0))
+			_ability_cd = float(_ability["cooldown_s"])
 			_taunt_all()
 		_:
 			pass  # por implementar — fica sem efeito em vez de fingir
@@ -1676,8 +1689,9 @@ func _start_ability() -> void:
 
 ## Impeto: avanco em linha que termina num golpe leve com MV proprio (1,2).
 func _tick_ability(_delta: float) -> void:
-	var dash_frames := int(float(_ability.get("dash_seconds", 0.35)) * 60.0)
-	var speed := float(_ability.get("dash_m", 6.0)) / maxf(float(_ability.get("dash_seconds", 0.35)), 0.05)
+	var dash_seconds := float(_ability["dash_seconds"])
+	var dash_frames := int(dash_seconds * _reference_fps())
+	var speed := float(_ability["dash_m"]) / dash_seconds
 	var dir := _facing()
 	velocity.x = dir.x * speed
 	velocity.z = dir.z * speed
@@ -1687,14 +1701,14 @@ func _tick_ability(_delta: float) -> void:
 		_change_state(State.FREE)
 		_start_attack("light")
 		if state == State.ATTACK:
-			_atk_mv = float(_ability.get("strike_mv", 1.2))
+			_atk_mv = float(_ability["strike_mv"])
 
 
 ## Provocacao: inimigos num raio ficam com atencao no Tanque (a ferramenta de
 ## co-op "segura o brutamontes"; a solo, acorda os que patrulham longe).
 func _taunt_all() -> void:
-	var radius := float(_ability.get("radius_m", 8.0))
-	var secs := float(_ability.get("duration_s", 4.0))
+	var radius := float(_ability["radius_m"])
+	var secs := float(_ability["duration_s"])
 	for node in get_tree().get_nodes_in_group("enemies"):
 		var e := node as Node3D
 		if e != null and e.global_position.distance_to(global_position) <= radius and e.has_method("taunt"):
@@ -1725,9 +1739,10 @@ func _start_flask() -> void:
 
 func _tick_flask(delta: float) -> void:
 	var fl := GameData.section("flask")
-	_move(delta, float(GameData.section("movement").get("walk_speed", 3.0)) * float(fl.get("move_factor", 0.5)))
-	if state_frame >= int(float(fl.get("use_seconds", 1.2)) * 60.0):
-		health = minf(max_health, health + max_health * float(fl.get("heal_fraction", 0.4)))
+	_move(delta, float(GameData.section("movement")["walk_speed"]) \
+		* float(fl["move_factor"]))
+	if state_frame >= int(float(fl["use_seconds"]) * _reference_fps()):
+		health = minf(max_health, health + max_health * float(fl["heal_fraction"]))
 		Sfx.play("flask")
 		_change_state(State.FREE)
 
