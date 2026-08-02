@@ -700,18 +700,12 @@ func _try_hit() -> void:
 	if raw <= 0.0:
 		return
 
-	var hit := false
-	if bool(_atk.get("is_aoe", false)):
-		hit = _distance_to_target() <= float(_atk.get("radius", 4.0))
-	else:
-		var to := target.global_position - global_position
-		to.y = 0.0
-		var reach := float(_atk.get("range", 2.5)) + body_radius
-		if to.length() <= reach:
-			var facing := -global_transform.basis.z
-			hit = facing.angle_to(to.normalized()) <= deg_to_rad(float(_atk.get("arc_degrees", 60)) * 0.5)
-
-	if not hit:
+	# A forma que o jogador vê é a única hitbox. Sem cue visível, ou fora do
+	# polígono exacto que o cue desenhou a partir da ficha, não existe contacto.
+	if not is_instance_valid(_active_gameplay_cue) \
+			or not _active_gameplay_cue.has_method("covers_world_point") \
+			or not bool(_active_gameplay_cue.call(
+				"covers_world_point", target.global_position)):
 		return
 	_atk_hit = true
 	_last_attack_hit_frame = _atk_frame
