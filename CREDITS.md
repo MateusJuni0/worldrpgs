@@ -7,7 +7,7 @@ Cada asset externo que entra no jogo tem uma linha aqui, **no mesmo PR em que en
 | **Universal Base Characters** (Standard) | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-base-characters) | corpo base das 6 classes — esqueleto partilhado (Lei 3) |
 | **Universal Animation Library** | Quaternius | CC0 1.0 | [quaternius.itch.io](https://quaternius.itch.io/universal-animation-library) | ⭐ ciclos de animação — é o que permite medir o risco do M1 |
 | **Ultimate Monsters** | Quaternius | CC0 1.0 | [quaternius.com](https://quaternius.com/packs/ultimatemonsters.html) | Orc, Orc Small e Orc Skull como corpos-base do lanceiro, brutamontes e Vorgar; máscaras sem rosto, armadura, lança, maça e cutelo são geometria sintetizada em `monster_visual.gd` |
-| **KayKit — Adventurers** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-adventurers) | seis silhuetas jogáveis: Ranger/Guerreiro, Mage/Feiticeiro, Knight/Tanque, Rogue Hooded/Assassino, Barbarian/Berserker e Rogue/Paladino; clips General + Movement Basic do rig Medium |
+| **KayKit — Adventurers** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-adventurers) | seis silhuetas jogáveis; clips General + Movement Basic do rig Medium; seis props de arma escolhidos individualmente: espada, adaga, machado de duas mãos, arco, besta de duas mãos e escudo redondo |
 | **KayKit — Dungeon Pack 1.1** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-dungeon-pack) | 25 módulos seleccionados para a entrada, três salas, dois atalhos e arena da Toca |
 | **KayKit — Skeletons** | Kay Lousberg | CC0 1.0 | [kaylousberg.itch.io](https://kaylousberg.itch.io/kaykit-skeletons) | raça esqueleto (Campas Cinzentas) |
 | **Nature Kit** | Kenney | CC0 1.0 | [kenney.nl](https://kenney.nl/assets/nature-kit) | floresta de Brumal |
@@ -29,6 +29,8 @@ No caso de **Ultimate Monsters**, a distribuição oficial é a pasta Google Dri
 O subconjunto do **KayKit — Dungeon Pack 1.1** usado pela Toca vive em `game/assets/models/dungeon/`, junto de `License.txt` e da textura original do pack. A selecção deliberada traz e usa 25 dos 211 modelos disponíveis, sem importar o pack inteiro para o jogo.
 
 Para **KayKit — Adventurers**, entraram deliberadamente apenas `Ranger.glb`, `Mage.glb`, `Knight.glb`, `Rogue_Hooded.glb`, `Barbarian.glb`, `Rogue.glb`, `Rig_Medium_General.glb`, `Rig_Medium_MovementBasic.glb` e o escudo paladino `shield_badge_color.gltf` com o seu `.bin`/`knight_texture.png`. Cada personagem é um GLB autocontido de um material; durante a importação o Godot extraiu os seis atlas embebidos com o prefixo do GLB (`Ranger_ranger_texture.png`, etc.) — não são cópias adicionais escolhidas do pack. O `License.txt` interno foi copiado com eles para `game/assets/models/characters/kaykit-adventurers/`.
+
+Para a geometria de equipamento, a selecção foi igualmente unitária: `sword_1handed`, `dagger`, `axe_2handed`, `bow`, `crossbow_2handed` e `shield_round_barbarian`, com os `.bin` e atlas de que dependem, vivem sob `game/assets/models/weapons/` com nomes derivados das famílias do catálogo. O cajado do pack foi testado em captura e deliberadamente rejeitado: a argola verde desproporcionada contrariava o conceito aprovado. Cajado, katana e armas de haste usam geometria procedural temporária, sem asset externo novo. A cópia de `License.txt` junto desse subconjunto mantém a prova CC0 no runtime.
 
 ## Onde vivem, e o que o Godot vê
 
