@@ -62,8 +62,13 @@
     "runtime": {
       "prototype_scope": "[PROTO] por_zona_ate_os_donos_responderem_a_pergunta_38",
       "zone_label": "BRUMAL",
-      "zone_bounds_m": { "min_x": -110.0, "min_z": -110.0, "size_x": 220.0, "size_z": 220.0 },
-      "cell_size_m": 4.0,
+      "zone_bounds_m": {
+        "min_x": -110.0,
+        "min_z": -110.0,
+        "size_x": 220.0,
+        "size_z": 220.0
+      },
+      "cell_size_m": 1.5,
       "reveal_radius_m": 7.0,
       "minimap_range_m": 40.0,
       "update_hz": 10.0,
@@ -71,7 +76,8 @@
       "projection_degrees": 40.0,
       "minimap_default": "roda_com_o_jogador",
       "minimap_can_disable": true,
-      "compass_equivalent": "cardinais_no_aro_do_minimapa_rodam_com_o_mundo"
+      "compass_equivalent": "cardinais_no_aro_do_minimapa_rodam_com_o_mundo",
+      "_porque_cell_size": "[CLAUDE] 02-08: era 4,0 m e o Mateus disse \"o mapa ta numa resolucao merda, nao se entende nem ve nada\". Com celulas de 4 m, Brumal (220 m) cabia em 55x55 quadrados — num minimapa de ~260 px isso da 4,7 px por celula, e le-se como um mosaico. A 1,5 m sao 147x147: o custo e um bitset de ~2,7 KB por zona, ou seja nada, e o desenho passa a ter forma."
     },
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false
@@ -86,8 +92,15 @@
       "brutamontes_no_arco",
       "descanso_e_bivaque"
     ],
-    "path_promises": ["desvio_para_descanso", "desvio_para_bivaque"],
-    "distant_landmarks": ["fumo_do_descanso", "arvore_morta_da_toca", "coroa_da_arena"]
+    "path_promises": [
+      "desvio_para_descanso",
+      "desvio_para_bivaque"
+    ],
+    "distant_landmarks": [
+      "fumo_do_descanso",
+      "arvore_morta_da_toca",
+      "coroa_da_arena"
+    ]
   },
   "world_scale": {
     "target_endpoint_minutes": 30,

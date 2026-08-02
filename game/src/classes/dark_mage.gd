@@ -19,7 +19,14 @@ var _health_budget: Dictionary = {}
 var _active_summons: Dictionary = {}
 var _spent_corpses: Dictionary = {}
 var _oath_layer_count := 0
-var _summon_order := ""
+## 🔴 02-08: isto era "" e o Mateus disse "quando invoco os inimigos mortos eles
+## nao me seguem, sao inuteis, fica parado bugado". Sem ordem, o
+## necromancy_runtime cai no ramo `else` e poe `summon.target = null` — o morto
+## levanta-se e fica especado. O primeiro estado tem de ser uma ordem VALIDA, e
+## seguir quem o levantou e o unico defeito que faz sentido: quem acabou de
+## gastar PV a levantar um cadaver quer ajuda, nao uma estatua.
+## As ordens validas vivem em abilities.json: follow_caster, hold_ground.
+var _summon_order := "follow_caster"
 var _contract_errors: PackedStringArray = []
 
 
