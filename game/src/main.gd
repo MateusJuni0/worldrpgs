@@ -877,7 +877,8 @@ func _process(delta: float) -> void:
 		return
 	_pilot_t += delta
 	var angle := _pilot_t * 0.35
-	var centre: Vector3 = world.path_points[2] if world.path_points.size() > 2 else Vector3.ZERO
+	var centre: Vector3 = world.arena_center if _scene_kind == "vorgar" \
+		else (world.path_points[2] if world.path_points.size() > 2 else Vector3.ZERO)
 	player.global_position = centre + Vector3(sin(angle) * 12.0, 0.6, cos(angle) * 12.0)
 	if player.camera != null:
 		player.camera.rotation.y = angle + PI
