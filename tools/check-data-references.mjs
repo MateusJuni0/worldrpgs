@@ -35,10 +35,10 @@ const slug = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").t
   .replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 
 // 01-08: 17 -> 18 (settings.json) -> 19 (status_effects.json) -> 20
-// (audio_catalog.json, da musica).
+// (audio_catalog.json) -> 21 (animations.json, do mapa estado->animacao).
 // Este numero e proposital: obriga a que um JSON novo em game/data seja um acto
 // deliberado, nao um ficheiro que alguem largou la sem ninguem reparar.
-check(files.length === 20, `game/data devia conter 20 JSON; contém ${files.length}`);
+check(files.length === 21, `game/data devia conter 21 JSON; contém ${files.length}`);
 
 const abilities = data.abilities;
 const attributes = data.attributes;

@@ -116,7 +116,13 @@ func _test_opening_context() -> void:
 	_check(main_source.contains("REST_SPAWN_OFFSET")
 		and main_source.contains("CLAREIRA DE BRUMAL"),
 		"despertar: o corpo nasce ao lado da fogueira identificada")
-	_check(player_source.contains("Sitting_Idle") and player_source.contains("_waking_up"),
+	# ⚠️ 02-08: este teste procurava o texto "Sitting_Idle" DENTRO do player.gd. O
+	# agente das animacoes fez o certo — tirou os nomes de clip do codigo e pos-os
+	# em game/data/animations.json — e o teste passou a falhar por ter razao a
+	# menos, nao a mais. Agora verifica o CATALOGO, que e onde a verdade vive.
+	var anim_sentado := CharacterVisual.animation_state_profile("player", "sitting_idle")
+	_check(String(anim_sentado.get("clip", "")) == "Sitting_Idle"
+		and player_source.contains("_waking_up"),
 		"despertar: a personagem acorda sentada antes de receber controlo")
 
 
