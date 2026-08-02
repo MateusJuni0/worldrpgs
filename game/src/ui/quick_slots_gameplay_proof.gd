@@ -198,6 +198,9 @@ func _prove_equipped_weapon_attack() -> void:
 	if boss == null or boss_bar == null:
 		_fail("a cena real nao forneceu boss e barra visivel para provar a arma")
 		return
+	if not boss is BossVorgar:
+		_fail("o marcador final continua a criar Enemy em vez de BossVorgar")
+		return
 	var attack_action := _configured_action("attack")
 	if attack_action == "":
 		_fail("controls.json nao declarou a accao de ataque")
@@ -207,9 +210,7 @@ func _prove_equipped_weapon_attack() -> void:
 	if weapon.is_empty() or light.is_empty():
 		_fail("a arma equipada nao tem ataque leve nos dados")
 		return
-	var boss_position_before := boss.global_position
 	var boss_health_before := boss.health
-	var boss_process_before := boss.is_physics_processing()
 	boss.set_physics_process(false)
 	boss.global_position = _player.global_position \
 		- _player.global_transform.basis.z * float(weapon.get("range")) / 2.0
@@ -224,12 +225,48 @@ func _prove_equipped_weapon_attack() -> void:
 			or boss_bar.size.x >= bar_width_before:
 		_fail("o ataque real nao usou a arma nova nem reduziu a barra visivel do boss")
 		return
-	boss.global_position = boss_position_before
-	boss.health = boss_health_before
-	boss.set_physics_process(boss_process_before)
+	var riposte_mv := float(GameData.section("parry").get("riposte_mv"))
+	var riposte_damage := GameData.compute_damage(
+		riposte_mv, _player.main_weapon, _player.attrs, boss.defense)
+	# A prova de necromancia que corre em paralelo exige exactamente o segundo
+	# corpo comum que ela propria cria. Confirmamos o fio do boss para o runtime,
+	# mas esta morte de fixture nao lhe acrescenta um terceiro corpo.
+	var corpse_callback := Callable(runtime, "_on_enemy_died")
+	if not boss.died.is_connected(corpse_callback):
+		_fail("BossVorgar nao estava ligado ao runtime de necromancia real")
+		return
+	boss.died.disconnect(corpse_callback)
+	boss.health = riposte_damage
+	boss.on_parried()
+	var attack_rules := GameData.section("attack_rules")
+	var combo_wait := ceili(float(light.get("recovery")) * (1.0 \
+		- float(attack_rules.get("combo_window_fraction_of_recovery"))))
+	for _frame: int in combo_wait:
+		await get_tree().physics_frame
+	_player.stamina.refill()
+	await _press_through_physics(attack_action)
+	for _frame: int in int(light.get("recovery")):
+		if not boss.is_alive():
+			break
+		await get_tree().physics_frame
+	for _frame: int in int(light.get("active")):
+		if not boss_bar.visible:
+			break
+		await get_tree().process_frame
+		await get_tree().physics_frame
+	if boss.is_alive() or boss_bar.visible:
+		_fail("o ataque do jogador nao matou BossVorgar nem retirou a barra do ecra " \
+			+ "(vivo=%s, barra=%s, estado=%s)" % [
+				str(boss.is_alive()), str(boss_bar.visible), _player.state_name()])
+		return
+	# A morte foi observada; termina o riposte de fixture para devolver o mesmo
+	# Player livre à prova de Levantar que continua nesta cena.
+	_player.call("_change_state", Player.State.FREE)
+	_player.set("_buffered", "")
 	_restore_save_and_player()
 	print("[repro] equipamento: %s chegou ao boneco, ao ataque e a barra do boss" % \
 		_weapon_key)
+	print("[repro] Vorgar: BossVorgar recebeu o ataque real, morreu e saiu do HUD")
 
 
 func _restore_save_and_player() -> void:

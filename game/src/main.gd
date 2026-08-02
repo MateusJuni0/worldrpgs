@@ -346,8 +346,8 @@ func _build_navigation() -> void:
 
 # --- Povoamento ---------------------------------------------------------------
 
-func _spawn(enemy_id: String, at: Vector3) -> Enemy:
-	var e := Enemy.new()
+func _spawn(enemy_id: String, at: Vector3, actor: Enemy = null) -> Enemy:
+	var e := actor if actor != null else Enemy.new()
 	add_child(e)
 	e.global_position = at
 	e.setup(enemy_id, _palette)
@@ -402,7 +402,7 @@ func _populate() -> void:
 			var c := _vorgar_spawn_position()
 			player.global_position = c + Vector3(0.0, 0.6, 8.0)
 			_respawn_point = player.global_position
-			_register_boss(_spawn("vorgar", c))
+			_register_boss(_spawn("vorgar", c, BossVorgar.new()))
 			_spawn("orc_spearman", c + Vector3(6.0, 0.5, 1.5))
 			_spawn("orc_brute", c + Vector3(-6.0, 0.5, -2.0))
 			var partner := Player.new()
@@ -455,7 +455,7 @@ func _populate_zone() -> void:
 	var defeated: Array = ((GameData.save_state.get("world", {}) as Dictionary).get(
 		"bosses_defeated", []) as Array)
 	if not "vorgar" in defeated:
-		_register_boss(_spawn("vorgar", _vorgar_spawn_position()))
+		_register_boss(_spawn("vorgar", _vorgar_spawn_position(), BossVorgar.new()))
 
 
 func _vorgar_spawn_position() -> Vector3:
