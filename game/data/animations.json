@@ -337,18 +337,102 @@
       },
       "casting_enter": {
         "clip": "Spell_Simple_Enter",
-        "phase_frames": 8
+        "phase_frames": 18,
+        "cast_phase": "prepare",
+        "vfx": {
+          "core_factor": 0.45,
+          "halo_factor": 0.32,
+          "opacity": 0.9,
+          "orbit_instances": 4,
+          "orbit_radius_m": 0.18,
+          "orbit_scale_factor": 0.12,
+          "orbit_turns": 0.5,
+          "pulse_cycles": 0.25,
+          "blood_visibility": 0.8,
+          "blood_mote_count": 6,
+          "blood_mote_scale_factor": 0.1,
+          "blood_body_core_scale_factor": 0.18,
+          "blood_body_height_m": 1.15,
+          "blood_body_drop_m": 0.9,
+          "blood_body_spread_m": 0.12,
+          "blood_flow_cycles": 1.0
+        }
       },
       "casting_idle": {
-        "clip": "Spell_Simple_Idle"
+        "clip": "Spell_Simple_Idle",
+        "cast_phase": "hold",
+        "vfx": {
+          "loop_frames": 12,
+          "core_factor": 0.5,
+          "halo_factor": 0.38,
+          "opacity": 1.0,
+          "orbit_instances": 6,
+          "orbit_radius_m": 0.22,
+          "orbit_scale_factor": 0.14,
+          "orbit_turns": 1.0,
+          "pulse_cycles": 1.0,
+          "blood_visibility": 1.0,
+          "blood_mote_count": 6,
+          "blood_mote_scale_factor": 0.11,
+          "blood_body_core_scale_factor": 0.2,
+          "blood_body_height_m": 1.15,
+          "blood_body_drop_m": 0.9,
+          "blood_body_spread_m": 0.15,
+          "blood_flow_cycles": 1.0
+        }
       },
       "casting_shoot": {
         "clip": "Spell_Simple_Shoot",
-        "phase_frames": 16
+        "phase_frames": 8,
+        "cast_phase": "release",
+        "vfx": {
+          "core_factor": 0.28,
+          "halo_factor": 0.55,
+          "opacity": 1.0,
+          "orbit_instances": 6,
+          "orbit_radius_m": 0.28,
+          "orbit_scale_factor": 0.12,
+          "orbit_turns": 0.75,
+          "pulse_cycles": 0.5,
+          "blood_visibility": 1.0,
+          "blood_mote_count": 8,
+          "blood_mote_scale_factor": 0.13,
+          "blood_body_core_scale_factor": 0.24,
+          "blood_body_height_m": 1.15,
+          "blood_body_drop_m": 0.9,
+          "blood_body_spread_m": 0.18,
+          "blood_flow_cycles": 1.5,
+          "delivery_core_factor": 0.35,
+          "delivery_halo_factor": 0.38,
+          "delivery_trail_factor": 0.22,
+          "delivery_spacing_factor": 0.22,
+          "impact_scale_factor": 0.22,
+          "impact_spacing_factor": 0.35,
+          "impact_expand_factor": 0.3
+        }
       },
       "casting_exit": {
         "clip": "Spell_Simple_Exit",
-        "phase_frames": 8
+        "phase_frames": 14,
+        "cast_phase": "recover",
+        "vfx": {
+          "core_factor": 0.0,
+          "halo_factor": 0.0,
+          "opacity": 0.0,
+          "orbit_instances": 3,
+          "orbit_radius_m": 0.35,
+          "orbit_scale_factor": 0.08,
+          "orbit_turns": 0.5,
+          "pulse_cycles": 0.25,
+          "blood_visibility": 0.0,
+          "blood_mote_count": 8,
+          "blood_mote_scale_factor": 0.07,
+          "blood_body_core_scale_factor": 0.0,
+          "blood_body_height_m": 1.1,
+          "blood_body_drop_m": 1.0,
+          "blood_body_spread_m": 0.22,
+          "blood_flow_cycles": 0.5
+        }
       },
       "sitting_enter": {
         "clip": "Sitting_Enter",

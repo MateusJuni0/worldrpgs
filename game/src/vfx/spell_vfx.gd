@@ -15,6 +15,7 @@ var _rendered_instances := 0
 var _rendered_trail_instances := 0
 var _audio_started := false
 var _audio_position := Vector3.ZERO
+var _launch_profile: Dictionary = {}
 
 
 func _ready() -> void:
@@ -24,6 +25,7 @@ func _ready() -> void:
 func configure(bundle: Dictionary, contract: Dictionary) -> void:
 	_bundle = bundle.duplicate()
 	_contract = contract.duplicate(true)
+	_launch_profile = SpellCastVfx.phase_vfx_profile("release")
 	top_level = true
 	name = "SpellVfx_%s" % String(bundle.get("spell_id", "unknown"))
 	add_to_group("spell_delivery_vfx")
@@ -79,16 +81,25 @@ func sync(snapshot: Dictionary) -> void:
 	var effect_visible := _contact_visible if has_contact else bool(snapshot.get("alive", false))
 	var transforms := _transforms_for(snapshot)
 	var trail_transforms := _trail_transforms_for(snapshot)
+	var moving_contact := String(snapshot.get("contact_type", "")) == "volume_movel"
+	var core_factor := float(_launch_profile.get("delivery_core_factor", 1.0)) \
+		if moving_contact else 1.0
+	var halo_factor := float(_launch_profile.get("delivery_halo_factor", 1.0)) \
+		if moving_contact else 1.0
+	var trail_factor := float(_launch_profile.get("delivery_trail_factor", 1.0)) \
+		if moving_contact else 1.0
 	_rendered_instances = transforms.size() if effect_visible else 0
 	_rendered_trail_instances = trail_transforms.size() if effect_visible else 0
 	_write_layer(_core, transforms, float((_bundle.get("render", {}) as Dictionary).get(
-		"core_scale", 0.0)), effect_visible)
+		"core_scale", 0.0)) * core_factor, effect_visible)
 	_write_layer(_halo, transforms, float((_bundle.get("render", {}) as Dictionary).get(
-		"halo_scale", 0.0)), effect_visible)
+		"halo_scale", 0.0)) * halo_factor, effect_visible)
 	_write_layer(_trail, trail_transforms, float((_bundle.get("render", {}) as Dictionary).get(
-		"core_scale", 0.0)), effect_visible and not trail_transforms.is_empty())
+		"core_scale", 0.0)) * trail_factor,
+		effect_visible and not trail_transforms.is_empty())
 	_write_layer(_veins, trail_transforms, float((_bundle.get("render", {}) as Dictionary).get(
-		"core_scale", 0.0)), effect_visible and not trail_transforms.is_empty() \
+		"core_scale", 0.0)) * trail_factor,
+		effect_visible and not trail_transforms.is_empty() \
 		and String(_bundle.get("school", "")) == "mal")
 	_play_audio_cue()
 
@@ -178,6 +189,7 @@ func _trail_transforms_for(snapshot: Dictionary) -> Array[Transform3D]:
 	var segment_count := maxi(int(render.get("rings", 0)), 1)
 	var spacing := maxf(float(render.get("shard_length_m",
 		render.get("base_diameter_m", 0.0))), 0.0)
+	spacing *= float(_launch_profile.get("delivery_spacing_factor", 1.0))
 	var diseased := String(_bundle.get("school", "")) == "mal"
 	var transforms: Array[Transform3D] = []
 	for raw_instance: Variant in snapshot.get("instances", []):

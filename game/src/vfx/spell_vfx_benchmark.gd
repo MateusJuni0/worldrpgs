@@ -4,6 +4,7 @@ extends SceneTree
 
 const SpellDeliveryFactory = preload("res://src/spells/spell_delivery_factory.gd")
 const SpellVfxResidency = preload("res://src/vfx/spell_vfx_residency.gd")
+const SpellCastVfx = preload("res://src/vfx/spell_cast_vfx.gd")
 
 var _catalog: Dictionary = {}
 var _benchmark: Dictionary = {}
@@ -11,6 +12,7 @@ var _residency: SpellVfxResidency
 var _stage := Node3D.new()
 var _camera: Camera3D
 var _deliveries: Dictionary = {}
+var _cast_flashes: Dictionary = {}
 var _casters: Dictionary = {}
 var _targets: Dictionary = {}
 var _has_spawned: Dictionary = {}
@@ -112,7 +114,23 @@ func _prepare_spell(spell_id: String, index: int) -> void:
 	target.position = _vector3_from(targets[index])
 	_stage.add_child(target)
 	_targets[spell_id] = target
+	_spawn_cast_flash(spell_id)
 	_spawn_spell(spell_id, index)
+
+
+func _spawn_cast_flash(spell_id: String) -> void:
+	var caster := _casters.get(spell_id) as Node3D
+	if caster == null:
+		return
+	var spell: Dictionary = _catalog.get(spell_id, {}) as Dictionary
+	var contact: Dictionary = ((_catalog.get("_contact_contracts", {}) as Dictionary).get(
+		String(spell.get("contact_type", "")), {}) as Dictionary)
+	var flash := SpellCastVfx.new() as Node3D
+	_stage.add_child(flash)
+	flash.call("configure", _residency.bundle_for(spell_id),
+		float(spell.get("cast_time", 0.0)), int(contact.get("active_frames", 0)),
+		caster.position + Vector3.UP)
+	_cast_flashes[spell_id] = flash
 
 
 func _spawn_spell(spell_id: String, index: int) -> void:
@@ -143,6 +161,10 @@ func _maintain_three_spells() -> void:
 	var benchmark_spells: Array = _benchmark.get("spells", []) as Array
 	for index: int in benchmark_spells.size():
 		var spell_id := String(benchmark_spells[index])
+		var flash_value: Variant = _cast_flashes.get(spell_id)
+		if not is_instance_valid(flash_value) \
+				or (flash_value as Node).is_queued_for_deletion():
+			_spawn_cast_flash(spell_id)
 		var delivery_value: Variant = _deliveries.get(spell_id)
 		if not is_instance_valid(delivery_value):
 			_spawn_spell(spell_id, index)
@@ -190,8 +212,10 @@ func _finish() -> void:
 		"static_memory_peak_bytes": OS.get_static_memory_peak_usage(),
 		"residency": _residency.stats(),
 		"visible_spell_count": visible_spell_count,
+		"visible_cast_instance_count": _visible_cast_instance_count(),
 		"capture_ok": capture_error == OK and visible_spell_count \
-			== (_benchmark.get("spells", []) as Array).size(),
+			== (_benchmark.get("spells", []) as Array).size() \
+			and _visible_cast_instance_count() > 0,
 	}
 	print("[vfx-benchmark] RESULT %s" % JSON.stringify(report))
 	print("[vfx-benchmark] CAPTURE %s" % ProjectSettings.globalize_path(capture_path))
@@ -199,6 +223,10 @@ func _finish() -> void:
 		if is_instance_valid(delivery_value):
 			(delivery_value as Node).queue_free()
 	_deliveries.clear()
+	for flash_value: Variant in _cast_flashes.values():
+		if is_instance_valid(flash_value):
+			(flash_value as Node).queue_free()
+	_cast_flashes.clear()
 	await process_frame
 	await process_frame
 	quit(0 if bool(report.get("capture_ok", false)) else 1)
@@ -217,6 +245,19 @@ func _visible_spell_count() -> int:
 		if bool(snapshot.get("alive", false)) and _camera.is_position_in_frustum(
 				snapshot.get("primary_position", Vector3.ZERO) as Vector3):
 			count += 1
+	return count
+
+
+func _visible_cast_instance_count() -> int:
+	var count := 0
+	for flash_value: Variant in _cast_flashes.values():
+		if not is_instance_valid(flash_value):
+			continue
+		var flash := flash_value as Node3D
+		if flash.is_queued_for_deletion() or not _camera.is_position_in_frustum(
+				flash.global_position):
+			continue
+		count += int(flash.call("visible_instance_count"))
 	return count
 
 

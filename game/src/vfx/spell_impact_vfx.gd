@@ -10,11 +10,13 @@ var _burst := MultiMeshInstance3D.new()
 var _veins := MultiMeshInstance3D.new()
 var _visible_instances := 0
 var _spawn_physics_frame := 0
+var _launch_profile: Dictionary = {}
 
 
 func configure(bundle: Dictionary, contract: Dictionary,
 		contact_position: Vector3, incoming_direction: Vector3) -> void:
 	_bundle = bundle.duplicate()
+	_launch_profile = SpellCastVfx.phase_vfx_profile("release")
 	top_level = true
 	name = "SpellImpactVfx_%s" % String(bundle.get("spell_id", "unknown"))
 	global_position = contact_position
@@ -55,7 +57,9 @@ func configure(bundle: Dictionary, contract: Dictionary,
 	var right := Vector3.UP.cross(forward).normalized()
 	if right.is_zero_approx():
 		right = Vector3.RIGHT
-	var spacing := float(render.get("base_diameter_m", 0.0))
+	var scale_factor := float(_launch_profile.get("impact_scale_factor", 1.0))
+	var spacing := float(render.get("base_diameter_m", 0.0)) * float(
+		_launch_profile.get("impact_spacing_factor", 1.0))
 	for index: int in count:
 		var amount := float(index + 1) / float(count + 1)
 		var angle := TAU * amount
@@ -63,13 +67,13 @@ func configure(bundle: Dictionary, contract: Dictionary,
 		var burst_direction := (radial - forward).normalized()
 		var basis := _basis_for_direction(burst_direction).scaled(
 			Vector3.ONE * lerpf(float(render.get("halo_scale", 0.0)),
-				float(render.get("core_scale", 0.0)), amount))
+				float(render.get("core_scale", 0.0)), amount) * scale_factor)
 		_burst.multimesh.set_instance_transform(index,
 			Transform3D(basis, radial * spacing * amount))
 		var sick_direction := (radial - Vector3.UP * amount).normalized()
 		_veins.multimesh.set_instance_transform(index, Transform3D(
 			_basis_for_direction(sick_direction).scaled(Vector3.ONE *
-			float(render.get("core_scale", 0.0))),
+			float(render.get("core_scale", 0.0)) * scale_factor),
 			(radial - Vector3.UP) * spacing * amount))
 	_visible_instances = count + (count if _veins.visible else 0)
 	_play_impact_audio()
@@ -79,7 +83,7 @@ func _process(delta: float) -> void:
 	_elapsed_s += delta
 	var amount := clampf(_elapsed_s / maxf(_lifetime_s, delta), 0.0, 1.0)
 	scale = Vector3.ONE * (1.0 + amount * float(
-		(_bundle.get("render", {}) as Dictionary).get("halo_scale", 0.0)))
+		_launch_profile.get("impact_expand_factor", 0.0)))
 	if _elapsed_s >= _lifetime_s:
 		queue_free()
 
