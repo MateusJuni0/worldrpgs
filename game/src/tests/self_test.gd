@@ -58,8 +58,14 @@ func _ready() -> void:
 # --- spec/64: menu inicial e criacao de personagem ---------------------------
 
 func _test_game_shell_and_character_creation() -> void:
-	_check(GameShell.CLASS_IDS.size() == 6,
-		"criacao: mostra exactamente as seis origens confirmadas")
+	# ⚠️ O numero vem dos DADOS, nunca escrito a mao: foi assim que a 7.a origem
+	# ficou invisivel no ecra de criacao durante horas (02-08).
+	var origens_no_catalogo: int = 0
+	for id: String in (GameData.attributes.get("classes", {}) as Dictionary):
+		if not id.begins_with("_"):
+			origens_no_catalogo += 1
+	_check(GameShell.CLASS_IDS.size() == origens_no_catalogo,
+		"criacao: mostra exactamente as origens que o catalogo declara")
 	for class_id: String in GameShell.CLASS_IDS:
 		_check(not GameData.class_attributes(class_id).is_empty(),
 			"criacao/%s: origem deriva atributos do catalogo" % class_id)

@@ -5,9 +5,19 @@ extends Node
 ## jogador no greybox e os menus nao pagam o custo do mundo em segundo plano.
 
 const GAMEPLAY_SCENE: PackedScene = preload("res://scenes/gameplay.tscn")
-const CLASS_IDS: Array[String] = [
-	"warrior", "sorcerer", "tank", "assassin", "berserker", "paladin",
-]
+## ⚠️ NAO voltar a escrever as origens a mao aqui.
+## 02-08: o Mago do Mal foi decidido, entrou em attributes.json, e NAO APARECIA
+## no ecra de criacao — porque esta lista era uma constante de seis, escrita a
+## mao. O jogador via seis origens e os dados tinham sete. E exactamente o que a
+## regra de ouro do game/CLAUDE.md existe para impedir: os catalogos mandam, o
+## codigo le. Agora le.
+static var CLASS_IDS: Array[String]:
+	get:
+		var ids: Array[String] = []
+		for id: String in (GameData.attributes.get("classes", {}) as Dictionary):
+			if not id.begins_with("_"):
+				ids.append(id)
+		return ids
 const STEP_TITLES: Array[String] = ["1  Classe", "2  Aspecto", "3  Nome", "4  Rever"]
 const SKIN_TINTS := {
 	"skin_01": Color("9a6048"),
