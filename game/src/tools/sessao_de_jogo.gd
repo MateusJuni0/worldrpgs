@@ -17,6 +17,10 @@ var _jogo: Node
 var _jogador: Node3D
 var _relatorio: Array[String] = []
 var _falhas := 0
+var _morte_inimigo_observada := false
+
+const FRAMES_SEM_PROGRESSO := 180
+const TOLERANCIA_DESTINO_M := 1.35
 
 
 func _ready() -> void:
@@ -149,6 +153,8 @@ func _passo_atacar() -> void:
 	var antes := _pose()
 	Input.action_press("attack")
 	await _esperar(2)
+	var estado_durante_golpe := String(_jogador.call("state_name")) \
+		if _jogador.has_method("state_name") else "?"
 	Input.action_release("attack")
 	await _esperar(8)
 	var meio := _pose()
@@ -160,9 +166,8 @@ func _passo_atacar() -> void:
 		animacao_do_golpe.contains("Sword_Attack") and not animacao_do_golpe.contains("Punch"),
 		"animação=%s" % animacao_do_golpe)
 
-	var estado := String(_jogador.call("state_name")) \
-		if _jogador.has_method("state_name") else "?"
-	_diz("atacar entra em estado de ataque", estado != "?", "estado=%s" % estado)
+	_diz("atacar entra em estado de ataque", estado_durante_golpe == "ataque",
+		"estado observado dois frames depois da entrada=%s" % estado_durante_golpe)
 
 
 ## Os inimigos existem, atacam, e morrem sem ficar a mexer-se.
@@ -172,25 +177,71 @@ func _passo_inimigos() -> void:
 	if inimigos.is_empty():
 		return
 
-	var alvo: Node3D = inimigos[0] as Node3D
+	var alvo := _inimigo_comum_mais_perto() as Enemy
 	if alvo == null:
+		_diz("há um inimigo comum vivo para a sessão", false)
 		return
+	alvo.died.connect(_ao_inimigo_morrer, CONNECT_ONE_SHOT)
+	var arma: Dictionary = GameData.weapon(_jogador.main_weapon)
+	var golpe: Dictionary = arma.get("light", {}) as Dictionary
+	var alcance := float(arma.get("range", 0.0))
+	if alcance <= 0.0 or not await _andar_ate_alvo(alvo, alcance):
+		_diz("o jogador anda até ao primeiro inimigo", false,
+			"não chegou ao alcance sem teletransporte")
+		return
+	_diz("o jogador anda até ao primeiro inimigo", true,
+		"distância %.2f m" % _distancia_plana(_jogador.global_position, alvo.global_position))
 	await _provar_telegrafo(alvo)
 
-	# Mata-o à força e vê o que acontece ao corpo — a queixa foi "morrem e
-	# ficam-se a mexer, pretos".
-	if alvo.has_method("take_damage"):
-		var morte := DamageInfo.make(float(alvo.get("health")), _jogador, "heavy")
-		alvo.call("take_damage", morte)
+	var vida_inicial := alvo.health
+	var dano_esperado := GameData.compute_damage(float(golpe.get("mv", 0.0)),
+		_jogador.main_weapon, _jogador.attrs, alvo.defense)
+	if dano_esperado <= 0.0:
+		_diz("a arma retira PV pelo golpe catalogado", false,
+			"dano calculado=%.1f" % dano_esperado)
+		return
+	var golpes_necessarios := ceili(vida_inicial / dano_esperado)
+	var tentativas_maximas := golpes_necessarios \
+		* ((alvo.data.get("attacks", []) as Array).size() + 1)
+	var tentativas := 0
+	var acertos := 0
+	while is_instance_valid(alvo) and alvo.is_alive() and tentativas < tentativas_maximas:
+		if not _jogador.is_alive():
+			break
+		if _jogador.state != Player.State.FREE:
+			await get_tree().physics_frame
+			continue
+		if alvo.telegraphing_parryable() >= 0:
+			await _bloquear_telegrafo(alvo)
+			continue
+		if _distancia_plana(_jogador.global_position, alvo.global_position) > alcance:
+			if not await _andar_ate_alvo(alvo, alcance):
+				break
+		var orientar := alvo.global_position - _jogador.global_position
+		orientar.y = 0.0
+		_aplicar_movimento(orientar.normalized())
+		await get_tree().physics_frame
+		_parar_movimento()
+		var vida_antes := alvo.health
+		await _accionar("attack")
+		tentativas += 1
+		await _esperar_fim_do_golpe(golpe)
+		if is_instance_valid(alvo) and alvo.health < vida_antes:
+			acertos += 1
+
+	if not is_instance_valid(alvo):
+		_diz("bater até zero dispara a morte do inimigo", _morte_inimigo_observada,
+			"o corpo desapareceu; died=%s" % str(_morte_inimigo_observada))
+		return
 	await _esperar(60)
 
-	var vivo := is_instance_valid(alvo)
-	var pos_a := alvo.global_position if vivo else Vector3.ZERO
+	var pos_a := alvo.global_position
 	await _esperar(60)
-	var mexeu := vivo and alvo.global_position.distance_to(pos_a) > 0.05
-	var morreu := vivo and alvo.has_method("is_alive") and not bool(alvo.call("is_alive"))
-	_diz("o dano real mata o inimigo", morreu,
-		"estado DEAD confirmado" if morreu else "a prova não chegou ao estado DEAD")
+	var mexeu := alvo.global_position.distance_to(pos_a) > 0.05
+	var morreu := _morte_inimigo_observada and not alvo.is_alive()
+	_diz("os comandos de ataque matam o inimigo", morreu,
+		"PV %.0f -> %.0f; %d acertos/%d tentativas; died=%s" % [
+			vida_inicial, alvo.health, acertos, tentativas, str(_morte_inimigo_observada)])
 	_diz("o inimigo morto pára a IA e fica quieto", morreu and not mexeu \
 		and not alvo.is_physics_processing(),
 		"continuou a deslocar-se depois de morrer" if mexeu else "")
@@ -211,35 +262,38 @@ func _passo_inimigos() -> void:
 
 
 ## O aviso tem de existir durante o startup e antes de a vida descer.
-func _provar_telegrafo(alvo: Node3D) -> void:
-	var ficha: Dictionary = alvo.get("data") as Dictionary
+func _provar_telegrafo(alvo: Enemy) -> void:
+	var ficha: Dictionary = alvo.data
 	var ataques: Array = ficha.get("attacks", []) as Array
-	if ataques.is_empty() or not alvo.has_method("_begin_attack"):
+	if ataques.is_empty():
 		_diz("o inimigo telegrafa antes de bater", false, "não há ataque executável")
 		return
-	var ataque := ataques[0] as Dictionary
-	var posicao_jogador := _jogador.global_position
-	var vida_original := float(_jogador.get("health"))
-	_jogador.set("health", _jogador.get("max_health"))
-	_jogador.global_position = alvo.global_position + Vector3(0.0, 0.1, -1.5)
-	alvo.set("target", _jogador)
-	alvo.look_at(_jogador.global_position, Vector3.UP)
-	alvo.call("_begin_attack", ataque)
-	await _esperar(2)
-	var vida_antes := float(_jogador.get("health"))
-	var anunciou := int(alvo.call("telegraphing_parryable")) >= 0 \
-		and is_instance_valid(alvo.get("_active_gameplay_cue"))
-	var nao_bateu_cedo := is_equal_approx(float(_jogador.get("health")), vida_antes)
-	var startup := int(ataque.get("startup", 30))
-	var activos := int(ataque.get("active", 6))
-	await _esperar(startup + activos + 2)
-	var bateu := float(_jogador.get("health")) < vida_antes
+	var espera_maxima := 0
+	for valor: Variant in ataques:
+		var ataque := valor as Dictionary
+		espera_maxima += int(ataque.get("startup", 0)) + int(ataque.get("active", 0)) \
+			+ int(ataque.get("recovery", 0))
+	var jogador := _jogador as Player
+	var vida_antes: float = jogador.health
+	var vida_ao_anuncio: float = vida_antes
+	var anunciou := false
+	var sinal_visivel := false
+	var bateu := false
+	for _frame: int in maxi(1, espera_maxima):
+		await get_tree().physics_frame
+		if not anunciou and alvo.telegraphing_parryable() >= 0:
+			anunciou = true
+			vida_ao_anuncio = _jogador.health
+			var cue := alvo.get("_active_gameplay_cue") as Node3D
+			sinal_visivel = is_instance_valid(cue) and cue.visible
+		if anunciou and _jogador.health < vida_ao_anuncio:
+			bateu = true
+			break
+	var nao_bateu_cedo := anunciou and is_equal_approx(vida_antes, vida_ao_anuncio)
 	_diz("o inimigo telegrafa o ataque antes de bater",
-		anunciou and nao_bateu_cedo and bateu,
-		"aviso=%s, dano antes=%s, dano depois=%s" % [
-			anunciou, not nao_bateu_cedo, bateu])
-	_jogador.global_position = posicao_jogador
-	_jogador.set("health", vida_original)
+		anunciou and sinal_visivel and nao_bateu_cedo and bateu,
+		"aviso=%s, forma visível=%s, dano antes=%s, dano depois=%s" % [
+			anunciou, sinal_visivel, not nao_bateu_cedo, bateu])
 
 
 ## As ranhuras rápidas têm de ter coisas e a tecla tem de as usar.
@@ -248,9 +302,12 @@ func _passo_item_rapido() -> void:
 	_diz("o jogador tem frascos", frascos_antes > 0, "frascos=%d" % frascos_antes)
 	if frascos_antes <= 0:
 		return
-	# Perde vida primeiro, senão curar não se nota.
-	if "health" in _jogador:
-		_jogador.set("health", float(_jogador.get("max_health")) * 0.4)
+	# A vida em falta tem de vir do golpe real observado no passo anterior. Uma
+	# escrita directa aqui provaria apenas o setter, nao o item do jogador.
+	if _jogador.health >= _jogador.max_health:
+		_diz("há dano real para o frasco curar", false,
+			"o inimigo anterior não retirou PV")
+		return
 	var vida_antes := float(_jogador.get("health"))
 	Input.action_press("use_item")
 	await _esperar(2)
@@ -267,20 +324,25 @@ func _passo_item_rapido() -> void:
 ## Descansar: a queixa foi "Não foi possível descansar agora".
 func _passo_fogueira() -> void:
 	var descanso: Vector3 = _jogo.get("_respawn_point") if "_respawn_point" in _jogo else Vector3.ZERO
-	_jogador.global_position = descanso
+	var chegou := await _andar_ate_ponto(descanso)
+	_diz("o jogador volta à fogueira a pé", chegou,
+		"distância final %.2f m" % _distancia_plana(_jogador.global_position, descanso))
+	if not chegou:
+		return
 	await _esperar(20)
-	if "health" in _jogador:
-		_jogador.set("health", float(_jogador.get("max_health")) * 0.3)
 	var vida_antes := float(_jogador.get("health"))
+	var frascos_antes := int(_jogador.get("flask_uses"))
 	Input.action_press("interact")
 	await _esperar(2)
 	Input.action_release("interact")
 	await _esperar(150)
 	var vida_depois := float(_jogador.get("health"))
-	var descansou := vida_depois > vida_antes
-	_diz("descansar na fogueira cura", descansou,
-		"vida %.0f -> %.0f" % [vida_antes, vida_depois] if descansou \
-		else "vida %.0f -> %.0f; o descanso foi recusado" % [vida_antes, vida_depois])
+	var frascos_depois := int(_jogador.get("flask_uses"))
+	var descansou := vida_depois > vida_antes or frascos_depois > frascos_antes
+	_diz("descansar na fogueira restaura recursos", descansou,
+		"vida %.0f -> %.0f; frascos %d -> %d" % [
+			vida_antes, vida_depois, frascos_antes, frascos_depois] if descansou \
+		else "vida e frascos não mudaram; o descanso foi recusado")
 
 
 ## O mundo tem as coisas que o jogo promete.
@@ -302,7 +364,141 @@ func _passo_mundo() -> void:
 			if gestor.has_method("chest_count") else 0
 		_diz("o gestor monta os três baús de Brumal", baus == 3, "%d baús" % baus)
 	var fps := Engine.get_frames_per_second()
-	_diz("corre a 60 fps", fps >= 55.0, "%.0f fps" % fps)
+	_diz("a sessão regista o custo desta execução", fps > 0.0,
+		"%.0f fps; esta máquina não prova a Iris Xe do Rico" % fps)
+
+
+func _inimigo_comum_mais_perto() -> Enemy:
+	var melhor: Enemy
+	var distancia_melhor := INF
+	for no: Node in get_tree().get_nodes_in_group("enemies"):
+		var inimigo := no as Enemy
+		if inimigo == null or not inimigo.is_alive() or inimigo.is_boss:
+			continue
+		var distancia := _distancia_plana(_jogador.global_position, inimigo.global_position)
+		if distancia < distancia_melhor:
+			distancia_melhor = distancia
+			melhor = inimigo
+	return melhor
+
+
+func _andar_ate_alvo(alvo: Enemy, alcance: float) -> bool:
+	var melhor := _distancia_plana(_jogador.global_position, alvo.global_position)
+	var sem_progresso := 0
+	while is_instance_valid(alvo) and alvo.is_alive() and melhor > alcance:
+		if not _jogador.is_alive():
+			_parar_movimento()
+			return false
+		var direccao := alvo.global_position - _jogador.global_position
+		direccao.y = 0.0
+		_aplicar_movimento(direccao.normalized())
+		await get_tree().physics_frame
+		var distancia := _distancia_plana(_jogador.global_position, alvo.global_position)
+		if distancia < melhor:
+			melhor = distancia
+			sem_progresso = 0
+		else:
+			sem_progresso += 1
+		if sem_progresso >= FRAMES_SEM_PROGRESSO:
+			_parar_movimento()
+			return false
+	_parar_movimento()
+	return is_instance_valid(alvo) and alvo.is_alive()
+
+
+func _andar_ate_ponto(destino: Vector3) -> bool:
+	var melhor := _distancia_plana(_jogador.global_position, destino)
+	var sem_progresso := 0
+	while melhor > TOLERANCIA_DESTINO_M:
+		if not _jogador.is_alive():
+			_parar_movimento()
+			return false
+		var direccao := destino - _jogador.global_position
+		direccao.y = 0.0
+		_aplicar_movimento(direccao.normalized())
+		await get_tree().physics_frame
+		var distancia := _distancia_plana(_jogador.global_position, destino)
+		if distancia < melhor:
+			melhor = distancia
+			sem_progresso = 0
+		else:
+			sem_progresso += 1
+		if sem_progresso >= FRAMES_SEM_PROGRESSO:
+			_parar_movimento()
+			return false
+	_parar_movimento()
+	return true
+
+
+func _aplicar_movimento(direccao_mundo: Vector3) -> void:
+	_parar_movimento()
+	var jogador := _jogador as Player
+	if jogador == null or jogador.camera == null:
+		return
+	var eixo_x := clampf(direccao_mundo.dot(jogador.camera.right_flat()), -1.0, 1.0)
+	var eixo_y := clampf(-direccao_mundo.dot(jogador.camera.forward_flat()), -1.0, 1.0)
+	if eixo_x < 0.0:
+		Input.action_press("move_left", -eixo_x)
+	elif eixo_x > 0.0:
+		Input.action_press("move_right", eixo_x)
+	if eixo_y < 0.0:
+		Input.action_press("move_forward", -eixo_y)
+	elif eixo_y > 0.0:
+		Input.action_press("move_back", eixo_y)
+
+
+func _parar_movimento() -> void:
+	for accao: String in ["move_left", "move_right", "move_forward", "move_back",
+			"block", "attack", "interact", "use_item"]:
+		Input.action_release(accao)
+
+
+func _bloquear_telegrafo(alvo: Enemy) -> void:
+	var encarar := alvo.global_position - _jogador.global_position
+	encarar.y = 0.0
+	_aplicar_movimento(encarar.normalized())
+	await get_tree().physics_frame
+	_parar_movimento()
+	Input.action_press("block")
+	var espera_maxima := 1
+	for valor: Variant in alvo.data.get("attacks", []) as Array:
+		var ataque := valor as Dictionary
+		espera_maxima = maxi(espera_maxima, int(ataque.get("startup", 0)) \
+			+ int(ataque.get("active", 0)) + int(ataque.get("recovery", 0)))
+	for _frame: int in espera_maxima:
+		await get_tree().physics_frame
+		if not is_instance_valid(alvo) or alvo.state_name() in [
+				"recuperacao", "persegue", "livre", "patrulha"]:
+			break
+	Input.action_release("block")
+	await get_tree().physics_frame
+
+
+func _esperar_fim_do_golpe(golpe: Dictionary) -> void:
+	var total := int(golpe.get("startup", 0)) + int(golpe.get("active", 0)) \
+		+ int(golpe.get("recovery", 0))
+	var margem_hitstop := 0
+	for valor: Variant in (GameData.section("hit_stop") as Dictionary).values():
+		if valor is int or valor is float:
+			margem_hitstop = maxi(margem_hitstop, int(valor))
+	var jogador := _jogador as Player
+	var viu_ataque: bool = jogador.state == Player.State.ATTACK
+	for _frame: int in maxi(1, total + margem_hitstop):
+		await get_tree().physics_frame
+		viu_ataque = viu_ataque or _jogador.state == Player.State.ATTACK
+		if viu_ataque and _jogador.state == Player.State.FREE:
+			return
+
+
+func _ao_inimigo_morrer(_inimigo: Enemy) -> void:
+	_morte_inimigo_observada = true
+	Input.action_release("attack")
+
+
+func _distancia_plana(a: Vector3, b: Vector3) -> float:
+	var delta := b - a
+	delta.y = 0.0
+	return delta.length()
 
 
 func _fim() -> void:
@@ -311,7 +507,8 @@ func _fim() -> void:
 		print(l)
 	print("════════════════════════════════════")
 	print("%d passo(s) com falha, de %d" % [_falhas, _relatorio.size()])
-	get_tree().quit(0)
+	_parar_movimento()
+	get_tree().quit(1 if _falhas > 0 else 0)
 
 
 func _pose() -> String:
