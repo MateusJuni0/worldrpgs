@@ -710,12 +710,7 @@ func take_damage(info: DamageInfo) -> void:
 
 	health = maxf(0.0, health - info.amount)
 	if health <= 0.0:
-		_cancel_attack_presentation()
-		_change_state(State.DEAD)
-		collision_layer = 0
-		remove_from_group("enemies")
-		Sfx.play("enemy_death", global_position)
-		died.emit(self)
+		_die()
 		return
 
 	# Postura: so cai quando o inimigo esta a agir ou de pe; o cambaleio devolve o turno.
@@ -724,6 +719,25 @@ func take_damage(info: DamageInfo) -> void:
 		Sfx.play("posture_break", global_position, -2.0)
 		_cancel_attack_presentation()
 		_change_state(State.STAGGER)
+
+
+func _die() -> void:
+	_cancel_attack_presentation()
+	_change_state(State.DEAD)
+	velocity = Vector3.ZERO
+	hitstop_frames = 0
+	collision_layer = 0
+	remove_from_group("enemies")
+
+	# O cadáver é um estado persistente para a necromancia. Aplica a pose e a
+	# apresentação uma vez antes de parar este CharacterBody: os filhos continuam
+	# a processar Death01 até ao fim, mas a IA, a gravidade e a navegação deixam de
+	# deslocar o corpo e a animação não volta a arrancar em ciclo.
+	_refresh_colour()
+	_refresh_animation()
+	set_physics_process(false)
+	Sfx.play("enemy_death", global_position)
+	died.emit(self)
 
 
 ## O parry acertou: postura quebrada 2,0 s, exposto ao riposte.
@@ -745,6 +759,7 @@ func is_alive() -> bool:
 
 func full_reset() -> void:
 	_cancel_attack_presentation()
+	set_physics_process(true)
 	health = max_health
 	posture = max_posture
 	_phase = 1
@@ -772,7 +787,9 @@ func _refresh_colour() -> void:
 
 	match state:
 		State.DEAD:
-			colour = colour.darkened(0.7)
+			# A textura já comunica o corpo. Escurecê-la 70% fazia a pele, couro e
+			# metal parecerem pretos, sobretudo fora da luz directa.
+			colour = Color.WHITE
 		State.BROKEN:
 			colour = Color(String(_palette.get("enemy_broken_posture", "#ffffff")))
 		State.STAGGER:
