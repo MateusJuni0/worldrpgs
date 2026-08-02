@@ -3,7 +3,6 @@ extends Node
 ## Usa a mochila, os botoes, InputMap, Player, inimigo e HUD reais; se falhar,
 ## delega a limpeza dos saves ao proprio repro antes de terminar o processo.
 
-const InventoryMenuScript = preload("res://src/ui/inventory_menu.gd")
 const EquipmentScreenScript = preload("res://src/ui/equipment_screen.gd")
 
 var _quick_slots: Node
@@ -27,6 +26,8 @@ func _run() -> void:
 	if not is_instance_valid(_player):
 		_fail("a prova de acesso rapido nao encontrou o Player real")
 		return
+	if not _prepare_catalogue_boss_target():
+		return
 	_state_before = GameData.save_state_snapshot()
 	if not _prove_starting_loadouts():
 		return
@@ -36,11 +37,53 @@ func _run() -> void:
 		return
 	if not _give_test_weapon():
 		return
-	if not _edit_from_real_backpack():
+	if not await _edit_from_real_backpack():
 		return
 	if not await _prove_selected_item_use():
 		return
 	await _prove_equipped_weapon_attack()
+
+
+func _prepare_catalogue_boss_target() -> bool:
+	var existing := _gameplay.get("boss") as Enemy
+	if is_instance_valid(existing):
+		if existing is BossVorgar:
+			return true
+		_fail("o guardiao ja materializado nao e BossVorgar")
+		return false
+	var population := _gameplay.get_node_or_null("SpawnPopulation")
+	if population == null or not population.has_method("plan_snapshot"):
+		_fail("a cena real nao publicou o plano virtualizado de inimigos")
+		return false
+	var guardian: Dictionary = {}
+	for placement: Dictionary in population.call("plan_snapshot") as Array[Dictionary]:
+		var placement_kind: String = placement.get("kind", "")
+		if placement_kind == "guardian":
+			guardian = placement
+			break
+	if guardian.is_empty():
+		_fail("o plano do mundo nao declarou um guardiao catalogado")
+		return false
+	var enemy_id: String = guardian.get("enemy_id", "")
+	var enemy_data := GameData.enemy(enemy_id)
+	if enemy_id == "" or not bool(enemy_data.get("is_boss", false)):
+		_fail("a colocacao de guardiao nao resolve para uma ficha de chefe")
+		return false
+	# A populacao de producao conserva o guardiao virtual ate o jogador chegar.
+	# O repro principal e esta prova correm em paralelo e partilham o mesmo alvo;
+	# materializamo-lo cedo, a partir da colocacao real, para ambos observarem o
+	# ataque sem duplicar um ID nem alterar o limite de streaming do jogo normal.
+	var boss := _gameplay.call("_spawn", enemy_id,
+		guardian.get("position", Vector3.ZERO) as Vector3, BossVorgar.new()) as Enemy
+	if boss == null:
+		_fail("a cena real nao conseguiu materializar o guardiao da prova")
+		return false
+	boss.set_meta("placement_id", guardian.get("placement_id", ""))
+	boss.set_meta("zone_id", guardian.get("zone_id", ""))
+	boss.set_meta("world_type_id", guardian.get("world_type_id", ""))
+	_gameplay.call("_register_boss", boss)
+	print("[repro] Vorgar: alvo catalogado materializado cedo para as provas paralelas")
+	return true
 
 
 func _prove_starting_loadouts() -> bool:
@@ -164,36 +207,39 @@ func _give_test_weapon() -> bool:
 
 func _edit_from_real_backpack() -> bool:
 	var input_before := bool(_player.input_enabled)
-	_player.input_enabled = false
-	var menu := InventoryMenuScript.new()
-	menu.name = "InventoryMenuProof"
-	get_tree().current_scene.add_child(menu)
-	menu.open(null, _gameplay)
-	# Forca o mesmo ponto de montagem que corre automaticamente no fim do frame;
-	# o clique e toda a edicao abaixo continuam a usar os controlos reais.
-	_quick_slots.call("_install_backpack_entry")
+	var shell := _find_game_shell()
+	if shell == null:
+		_fail("a prova nao encontrou o GameShell que recebe a tecla da mochila")
+		return false
+	# repro-inicio cria a casca e o gameplay reais como irmaos; no jogo normal a
+	# propria casca guarda esta referencia ao entrar no mundo.
+	if shell.get("_gameplay") != _gameplay:
+		shell.set("_gameplay", _gameplay)
+	var inventory_action := _configured_action("inventory_menu")
+	if inventory_action == "":
+		_fail("controls.json nao declarou a accao de abrir a mochila")
+		return false
+	await _send_action_event(inventory_action)
+	var menu := shell.get("_inventory_menu") as InventoryMenu
+	if menu == null or not menu.visible:
+		_fail("carregar na tecla da mochila nao abriu o InventoryMenu real")
+		return false
+	if not _prove_visible_weapon_detail(menu):
+		return false
 	var edit_button := menu.find_child(
 		EquipmentScreenScript.BACKPACK_BUTTON_NAME, true, false) as Button
 	if edit_button == null or not edit_button.visible:
-		menu.queue_free()
-		_player.input_enabled = input_before
 		_fail("a mochila real nao mostrou EDITAR ACESSO RAPIDO")
 		return false
 	edit_button.pressed.emit()
 	var screen := menu.get_parent().find_child("EquipmentScreen", false, false) \
 		as EquipmentScreen
 	if screen == null or not screen.visible:
-		menu.queue_free()
-		_player.input_enabled = input_before
 		_fail("o botao da mochila nao abriu o editor de equipamento")
 		return false
 	if not _choose(screen, "quick:1", QuickSlotsModel.FLASK_ITEM_KEY):
-		menu.queue_free()
-		_player.input_enabled = input_before
 		return false
 	if not _choose(screen, "main", _weapon_key):
-		menu.queue_free()
-		_player.input_enabled = input_before
 		return false
 	var state := GameData.save_state_snapshot()
 	var quick_slots: Array = _inventory(state).get("quick_slots", []) as Array
@@ -209,8 +255,39 @@ func _edit_from_real_backpack() -> bool:
 		_fail("o editor nao permite voltar a mochila")
 		return false
 	back.pressed.emit()
-	menu.queue_free()
-	_player.input_enabled = input_before
+	await get_tree().process_frame
+	await _send_action_event(inventory_action)
+	if shell.get("_inventory_menu") != null or bool(_player.input_enabled) != input_before:
+		_fail("a tecla da mochila nao fechou o ecrã nem devolveu o controlo ao jogador")
+		return false
+	return true
+
+
+func _prove_visible_weapon_detail(menu: InventoryMenu) -> bool:
+	var list := menu.get("_list") as ItemList
+	var detail := menu.get("_detail") as RichTextLabel
+	if list == null or detail == null:
+		_fail("a mochila real abriu sem lista ou detalhe visivel")
+		return false
+	var weapon_index := _metadata_index(list, _weapon_key)
+	if weapon_index < 0:
+		_fail("a mochila real nao mostrou %s na lista" % _weapon_key)
+		return false
+	list.select(weapon_index)
+	list.item_selected.emit(weapon_index)
+	var entry := InventorySystem.describe_item(_weapon_key)
+	var data: Dictionary = entry.get("data", {}) as Dictionary
+	var expected_name: String = entry.get("name", "")
+	var expected_hands := int(data.get("maos", data.get("hands")))
+	var expected_range := float(data.get("alcance_m", data.get("range")))
+	if not detail.is_visible_in_tree() or not detail.text.contains(expected_name) \
+			or not detail.text.contains("Mãos: %d" % expected_hands) \
+			or not detail.text.contains("Alcance: %.1f m" % expected_range):
+		_fail("seleccionar %s nao mostrou nome, maos e alcance catalogados no detalhe" % \
+			_weapon_key)
+		return false
+	print("[repro] mochila: seleccionar %s mostrou nome, maos e alcance no ecra" % \
+		_weapon_key)
 	return true
 
 
@@ -392,6 +469,17 @@ func _find_gameplay() -> Node:
 	return null
 
 
+func _find_game_shell() -> Node:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return null
+	for candidate: Node in scene.get_children():
+		var script := candidate.get_script() as Script
+		if script != null and script.resource_path == "res://src/ui/game_shell.gd":
+			return candidate
+	return null
+
+
 func _catalogue_test_weapon_key() -> String:
 	var ids: Array[String] = []
 	for id_value: Variant in GameData.weapons.keys():
@@ -436,6 +524,21 @@ func _press_through_physics(action: String) -> void:
 	# observado, independentemente da ordem do sinal physics_frame no runner.
 	await get_tree().process_frame
 	Input.action_release(action)
+
+
+func _send_action_event(action: String) -> void:
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+	await get_tree().process_frame
+	var release := InputEventAction.new()
+	release.action = action
+	release.pressed = false
+	Input.parse_input_event(release)
+	# Inclui o deferred de QuickSlots que instala o botao depois do GameShell
+	# construir a mochila a partir do mesmo evento.
+	await get_tree().process_frame
 
 
 func _inventory(state: Dictionary) -> Dictionary:

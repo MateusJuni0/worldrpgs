@@ -165,8 +165,8 @@ func _build() -> void:
 
 func _unhandled_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("inventory_menu") or Input.is_action_just_pressed("pause_menu"):
-		_close()
 		get_viewport().set_input_as_handled()
+		_close()
 
 
 func _set_filter(filter_name: String) -> void:
@@ -210,30 +210,60 @@ func _show_detail() -> void:
 		_favorite_button.disabled = true
 		return
 	var data: Dictionary = entry.data
-	var kind := String(entry.kind)
+	var kind := _text_value(entry.get("kind"), "")
 	var facts: Array[String] = []
 	match kind:
 		"arma":
-			facts.append("Família: %s" % String(data.get("familia", data.get("familia_escudo", "—"))).replace("_", " "))
-			facts.append("Mãos: %s" % String(data.get("maos", data.get("hands", "—"))))
-			facts.append("Alcance: %s m" % String(data.get("alcance_m", data.get("range", "—"))))
+			var family := _text_value(_catalog_field(data, "familia", "familia_escudo"), "—")
+			facts.append("Família: %s" % family.replace("_", " "))
+			facts.append("Mãos: %s" % _whole_number_text(
+				_catalog_field(data, "maos", "hands"), "—"))
+			facts.append("Alcance: %s m" % _decimal_number_text(
+				_catalog_field(data, "alcance_m", "range"), "—"))
 		"armadura":
-			facts.append("Casa: %s" % String(data.get("slot", "—")).replace("_", " "))
+			facts.append("Casa: %s" % _text_value(data.get("slot"), "—").replace("_", " "))
 			facts.append("Peso declarado: %.1f" % float(data.get("peso", 0.0)))
-		"anel": facts.append("Efeito: %s" % String(data.get("efeito", "—")))
+		"anel": facts.append("Efeito: %s" % _text_value(data.get("efeito"), "—"))
 		"magia":
-			facts.append("Escola: %s" % String(data.get("school", "—")))
+			facts.append("Escola: %s" % _text_value(data.get("school"), "—"))
 			facts.append("Mana: %d  ·  Conjuração: %.1f s" % [int(data.get("mana_cost", 0)), float(data.get("cast_time", 0.0))])
-		"material": facts.append("Refinação: %s" % String(data.get("refinement", "—")))
+		"material": facts.append("Refinação: %s" % _text_value(data.get("refinement"), "—"))
 		"consumivel": facts.append("Uso: %.1f s" % float(data.get("use_seconds", 0.0)))
-	var description := String(data.get("descricao_visual", data.get("visual", data.get("verb", "Sem descrição."))))
+	var description := _text_value(_catalog_field(data, "descricao_visual", "visual"), "")
+	if description == "":
+		description = _text_value(data.get("verb"), "Sem descrição.")
 	_detail.text = "[b]%s[/b]\n[color=#96a3a4]%s[/color]\n\n%s\n\n%s" % [
-		String(entry.name), kind.to_upper(), "\n".join(facts), description]
+		_text_value(entry.get("name"), _selected_key), kind.to_upper(),
+		"\n".join(facts), description]
 	_action_button.visible = kind in ["arma", "armadura", "anel"]
 	_action_button.disabled = not _action_button.visible
 	_action_button.text = "DESEQUIPAR" if bool(entry.equipped) else "EQUIPAR"
 	_favorite_button.disabled = false
 	_favorite_button.text = "★ RETIRAR FAVORITO" if bool(entry.favorite) else "☆ MARCAR FAVORITO"
+
+
+func _catalog_field(data: Dictionary, primary: String, fallback: String) -> Variant:
+	if data.has(primary):
+		return data[primary]
+	if data.has(fallback):
+		return data[fallback]
+	return null
+
+
+func _text_value(value: Variant, fallback: String) -> String:
+	return value if typeof(value) == TYPE_STRING else fallback
+
+
+func _whole_number_text(value: Variant, fallback: String) -> String:
+	if typeof(value) not in [TYPE_INT, TYPE_FLOAT]:
+		return fallback
+	return "%d" % int(value)
+
+
+func _decimal_number_text(value: Variant, fallback: String) -> String:
+	if typeof(value) not in [TYPE_INT, TYPE_FLOAT]:
+		return fallback
+	return "%.1f" % float(value)
 
 
 func _show_equipped() -> void:
@@ -294,4 +324,3 @@ func _favorite_action() -> void:
 
 func _close() -> void:
 	closed.emit()
-
