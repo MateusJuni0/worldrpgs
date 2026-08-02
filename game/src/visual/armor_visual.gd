@@ -130,36 +130,21 @@ func _build_piece(piece_id: String, data: Dictionary) -> void:
 func _build_cuirass(piece_id: String, material: Material, heavy: bool) -> void:
 	var root := Node3D.new()
 	root.name = "Armor_%s" % piece_id
-	var shell := _mesh_instance("CurvedCuirass", _torso_shell_mesh(material, heavy))
-	root.add_child(shell)
-	var trim := _accent_material("polished_iron" if heavy else "dark_leather")
-	var collar := _cylinder("RaisedCollar", 0.205 if heavy else 0.19,
-		0.19 if heavy else 0.175, 0.065, trim)
-	collar.scale.z = 0.74
-	collar.position.y = 0.275
-	root.add_child(collar)
-	if heavy:
-		var breast_plate := _mesh_instance("OverlappingBreastPlate", _breast_plate_mesh(trim))
-		breast_plate.position = Vector3(0.0, 0.04, 0.15)
-		root.add_child(breast_plate)
-		for rivet_position: Vector3 in [
-			Vector3(-0.205, 0.15, 0.17), Vector3(0.205, 0.15, 0.17),
-			Vector3(-0.175, -0.15, 0.155), Vector3(0.175, -0.15, 0.155),
-		]:
-			var rivet := _sphere("ForgedRivet", Vector3.ONE * 0.018, trim)
-			rivet.position = rivet_position
-			root.add_child(rivet)
-	else:
-		for strap_config: Array in [[-0.13, -0.28], [0.13, 0.28]]:
-			var strap := _capsule("ShoulderStrap", 0.022, 0.38, trim)
-			strap.position = Vector3(float(strap_config[0]), 0.08, 0.17)
-			strap.rotation.z = float(strap_config[1])
-			root.add_child(strap)
-		var seam := _capsule("StitchedCentreSeam", 0.012, 0.40, trim)
-		seam.position = Vector3(0.0, -0.035, 0.19)
-		root.add_child(seam)
+	# O rig Quaternius apresenta o peito para -Z; a casca e os pormenores sao
+	# construidos em +Z para manter a matematica legivel e rodam juntos aqui.
+	# Sem esta orientacao, a camara via as costas lisas e a correia atravessava-a.
+	root.rotation.y = PI
+	# Uma unica superficie conserva a silhueta curva, as placas sobrepostas, o
+	# volume principal. Um segundo material agrupa rebordo/rebites; continuam a
+	# ser duas chamadas no total, em vez de uma chamada por pormenor.
+	root.add_child(_mesh_instance("FittedCuirass", _cuirass_mesh(material, heavy)))
+	# No ferro, a segunda superficie e couro escuro (correia e fixacoes), como no
+	# conceito aprovado. No couro, os mesmos pormenores leem-se como ferragens.
+	var trim := _accent_material("dark_leather" if heavy else "polished_iron")
+	root.add_child(_mesh_instance("LayeredCuirassDetails",
+		_cuirass_detail_mesh(trim, heavy)))
 	_attach(root, "spine_02", Vector3(0.0, 1.25, 0.01))
-	_signatures["peito"] = "%s:layered_curved_%s" % [piece_id, "plate" if heavy else "leather"]
+	_signatures["peito"] = "%s:fitted_layered_%s" % [piece_id, "plate" if heavy else "leather"]
 
 
 func _build_helmet(piece_id: String, material: Material) -> void:
@@ -343,26 +328,133 @@ static func _capsule(node_name: String, radius: float, height: float,
 	return _mesh_instance(node_name, mesh)
 
 
-static func _torso_shell_mesh(material: Material, heavy: bool) -> ArrayMesh:
-	var width_scale := 1.08 if heavy else 1.0
-	var depth_scale := 1.08 if heavy else 1.0
-	var rings := [
-		{"y": -0.27, "x": 0.205 * width_scale, "z": 0.13 * depth_scale},
-		{"y": -0.09, "x": 0.245 * width_scale, "z": 0.155 * depth_scale},
-		{"y": 0.11, "x": 0.27 * width_scale, "z": 0.17 * depth_scale},
-		{"y": 0.23, "x": 0.245 * width_scale, "z": 0.155 * depth_scale},
-		{"y": 0.29, "x": 0.19 * width_scale, "z": 0.13 * depth_scale},
+static func _cuirass_mesh(material: Material, heavy: bool) -> ArrayMesh:
+	# Casca de torso feita por aneis de onze pontos. O centro avanca, os flancos
+	# recuam, a cintura afunila e o decote desce no meio: nao existe uma unica
+	# face rectangular nesta peca.
+	var width_scale := 1.03 if heavy else 1.0
+	var depth_scale := 1.03 if heavy else 1.0
+	var rows := [
+		{"y": -0.245, "width": 0.160 * width_scale, "depth": 0.105 * depth_scale},
+		{"y": -0.14, "width": 0.188 * width_scale, "depth": 0.124 * depth_scale},
+		{"y": 0.0, "width": 0.208 * width_scale, "depth": 0.140 * depth_scale},
+		{"y": 0.125, "width": 0.216 * width_scale, "depth": 0.148 * depth_scale},
+		{"y": 0.225, "width": 0.158 * width_scale, "depth": 0.116 * depth_scale},
 	]
-	return _elliptical_shell(rings, 16, material)
+	var columns := 10
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for row_index: int in rows.size() - 1:
+		for column: int in columns:
+			var u0 := lerpf(-1.0, 1.0, float(column) / float(columns))
+			var u1 := lerpf(-1.0, 1.0, float(column + 1) / float(columns))
+			var front_a := _cuirass_point(rows[row_index], u0, true, row_index)
+			var front_b := _cuirass_point(rows[row_index], u1, true, row_index)
+			var front_c := _cuirass_point(rows[row_index + 1], u0, true, row_index + 1)
+			var front_d := _cuirass_point(rows[row_index + 1], u1, true, row_index + 1)
+			_add_triangle(surface, front_a, front_b, front_c)
+			_add_triangle(surface, front_c, front_b, front_d)
+			var back_a := _cuirass_point(rows[row_index], u0, false, row_index)
+			var back_b := _cuirass_point(rows[row_index], u1, false, row_index)
+			var back_c := _cuirass_point(rows[row_index + 1], u0, false, row_index + 1)
+			var back_d := _cuirass_point(rows[row_index + 1], u1, false, row_index + 1)
+			_add_triangle(surface, back_a, back_c, back_b)
+			_add_triangle(surface, back_c, back_d, back_b)
+	# Fecha os flancos seguindo a curva do corpo, sem parede vertical de caixa.
+	for row_index: int in rows.size() - 1:
+		for side: float in [-1.0, 1.0]:
+			var front_lower := _cuirass_point(rows[row_index], side, true, row_index)
+			var back_lower := _cuirass_point(rows[row_index], side, false, row_index)
+			var front_upper := _cuirass_point(rows[row_index + 1], side, true, row_index + 1)
+			var back_upper := _cuirass_point(rows[row_index + 1], side, false, row_index + 1)
+			if side < 0.0:
+				_add_triangle(surface, back_lower, front_lower, back_upper)
+				_add_triangle(surface, back_upper, front_lower, front_upper)
+			else:
+				_add_triangle(surface, front_lower, back_lower, front_upper)
+				_add_triangle(surface, front_upper, back_lower, back_upper)
+	surface.set_material(material)
+	return surface.commit()
 
 
-static func _breast_plate_mesh(material: Material) -> ArrayMesh:
-	var rings := [
-		{"y": -0.16, "x": 0.205, "z": 0.035},
-		{"y": 0.0, "x": 0.245, "z": 0.055},
-		{"y": 0.17, "x": 0.19, "z": 0.035},
+static func _cuirass_detail_mesh(material: Material, heavy: bool) -> ArrayMesh:
+	var width_scale := 1.03 if heavy else 1.0
+	var depth_scale := 1.03 if heavy else 1.0
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# Uma bainha estreita acompanha a cintura; a faixa larga que fazia o torso
+	# parecer uma pilha de caixotes foi removida. A diagonal quebra a leitura de
+	# avental e segue a correia do alvo visual do guerreiro.
+	_add_cuirass_band(surface, -0.252, -0.222, 0.161 * width_scale,
+		0.127 * depth_scale)
+	_add_diagonal_cuirass_strap(surface, width_scale, depth_scale, heavy)
+	for rivet_x: float in [-0.142, 0.142]:
+		_add_low_poly_rivet(surface, Vector3(rivet_x * width_scale, 0.132,
+			0.169 * depth_scale), 0.011)
+		_add_low_poly_rivet(surface, Vector3(rivet_x * 0.82 * width_scale, -0.17,
+			0.151 * depth_scale), 0.010)
+	surface.set_material(material)
+	return surface.commit()
+
+
+static func _cuirass_point(row: Dictionary, u: float, front: bool,
+		row_index: int) -> Vector3:
+	var width := float(row["width"])
+	var depth := float(row["depth"])
+	var arch := (1.0 - u * u) * (0.026 if front else 0.012)
+	var z := depth + arch if front else -depth - arch * 0.5
+	var y := float(row["y"])
+	# Decote em U e bainha central curta: a silhueta segue o torso e as pernas.
+	if row_index == 4:
+		y -= (1.0 - absf(u)) * 0.065
+	elif row_index == 0:
+		y += (1.0 - absf(u)) * 0.025
+	return Vector3(u * width, y, z)
+
+
+static func _add_diagonal_cuirass_strap(surface: SurfaceTool, width_scale: float,
+		depth_scale: float, heavy: bool) -> void:
+	var start := Vector2(-0.145 * width_scale, 0.185)
+	var finish := Vector2(0.125 * width_scale, -0.145)
+	var direction := (finish - start).normalized()
+	var side := Vector2(-direction.y, direction.x) * (0.016 if heavy else 0.009)
+	var z_start := 0.166 * depth_scale
+	var z_finish := 0.151 * depth_scale
+	var a := Vector3(start.x + side.x, start.y + side.y, z_start)
+	var b := Vector3(start.x - side.x, start.y - side.y, z_start)
+	var c := Vector3(finish.x + side.x, finish.y + side.y, z_finish)
+	var d := Vector3(finish.x - side.x, finish.y - side.y, z_finish)
+	_add_triangle(surface, a, b, c)
+	_add_triangle(surface, c, b, d)
+
+
+static func _add_cuirass_band(surface: SurfaceTool, lower_y: float, upper_y: float,
+		half_width: float, depth: float) -> void:
+	var segments := 6
+	for segment: int in segments:
+		var u0 := lerpf(-1.0, 1.0, float(segment) / float(segments))
+		var u1 := lerpf(-1.0, 1.0, float(segment + 1) / float(segments))
+		var z0 := depth + (1.0 - u0 * u0) * 0.025
+		var z1 := depth + (1.0 - u1 * u1) * 0.025
+		var a := Vector3(u0 * half_width, lower_y, z0)
+		var b := Vector3(u1 * half_width, lower_y, z1)
+		var c := Vector3(u0 * half_width * 0.96, upper_y, z0 + 0.006)
+		var d := Vector3(u1 * half_width * 0.96, upper_y, z1 + 0.006)
+		_add_triangle(surface, a, b, c)
+		_add_triangle(surface, c, b, d)
+
+
+static func _add_low_poly_rivet(surface: SurfaceTool, centre: Vector3,
+		radius: float) -> void:
+	var peak := centre + Vector3(0.0, 0.0, radius)
+	var ring := [
+		centre + Vector3(-radius, 0.0, 0.0),
+		centre + Vector3(0.0, radius, 0.0),
+		centre + Vector3(radius, 0.0, 0.0),
+		centre + Vector3(0.0, -radius, 0.0),
 	]
-	return _elliptical_arc(rings, 10, material)
+	for index: int in ring.size():
+		_add_triangle(surface, ring[index], ring[(index + 1) % ring.size()], peak)
 
 
 static func _elliptical_shell(rings: Array, segments: int, material: Material) -> ArrayMesh:
@@ -472,20 +564,20 @@ static func _source_material(profile: String) -> StandardMaterial3D:
 	if _material_cache.has(profile):
 		return _material_cache[profile] as StandardMaterial3D
 	var colors := {
-		"leather": Color("4a3022"), "fur_leather": Color("5a4936"),
+		"leather": Color("69452f"), "fur_leather": Color("6e5a43"),
 		"dark_leather": Color("281a13"),
-		"rough_iron": Color("65686a"), "polished_iron": Color("aab1b2"),
+		"rough_iron": Color("8a8e8e"), "polished_iron": Color("bec3c2"),
 		"dark_cloth": Color("24282a"), "waxed_wool": Color("30383b"),
 		"light_cloth": Color("aaa48f"), "iron_visor": Color("16191a"),
 		"fur": Color("625b50"),
 	}
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colors.get(profile, Color("4a3022")) as Color
-	material.roughness = 0.28 if profile == "polished_iron" else 0.66 \
+	material.roughness = 0.42 if profile == "polished_iron" else 0.72 \
 		if profile == "rough_iron" else 0.9
 	# Sem um cubemap de reflexão, metal a 0.9 lia-se como carvão no renderer
 	# Mobile. Estes valores conservam o brilho sem apagar a geometria.
-	material.metallic = 0.45 if profile == "polished_iron" else 0.20 \
+	material.metallic = 0.10 if profile == "polished_iron" else 0.06 \
 		if profile == "rough_iron" else 0.0
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_material_cache[profile] = material
