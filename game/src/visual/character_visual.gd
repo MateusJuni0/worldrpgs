@@ -192,11 +192,32 @@ void fragment() {
 		base_colour *= texture(albedo_texture, UV).rgb;
 	}
 	base_colour *= actor_tint.rgb * mix(vec3(1.0), class_tint.rgb, 0.35);
-	base_colour *= mix(vec3(1.0), equipment_tint.rgb, equipment_tint_strength);
+	// A tinta de equipamento existe para dar COR a geometria gerada sem textura.
+	// Aplicada com forca total sobre um modelo que JA TRAZ textura, multiplica
+	// escuro por escuro e o boneco fica preto — foi o que o Mateus viu em
+	// 02-08 ("o personagem ta preto total"), com o inimigo iluminado ao lado.
+	// Onde ha textura, a tinta passa a ser um toque, nao uma segunda camada.
+	float equip = equipment_tint_strength * (use_albedo_texture ? 0.22 : 1.0);
+	base_colour *= mix(vec3(1.0), equipment_tint.rgb, equip);
 	// A luz clara do pack entra no mundo frio e humido por material, nunca por
 	// uma segunda textura. Assim a mesma regra cobre modelos e pecas geradas.
+	// ⚠️ O escurecimento global tambem se acumulava: sobre textura fica mais
+	// leve, senao dessatura duas vezes o que ja vinha dessaturado.
 	float luminance = dot(base_colour, vec3(0.2126, 0.7152, 0.0722));
-	ALBEDO = mix(base_colour, vec3(luminance), 0.32) * 0.78;
+	float dessatura = use_albedo_texture ? 0.18 : 0.32;
+	// ⭐ 02-08, medido: T_Ranger_BaseColor tem luminancia media 63/255 e a do
+	// Peasant 57 — sao texturas JA escuras de origem. Multiplica-las ainda por
+	// um escurecimento global dava o "personagem preto total" que o Mateus viu,
+	// com o inimigo iluminado ao lado. Onde ha textura, LEVANTA-SE em vez de se
+	// escurecer, e o mundo frio continua a vir do nevoeiro e da gradacao.
+	// ⚠️ Sem isto nao ha material nem luz que salve: a cor de partida ja e preta.
+	vec3 saida = mix(base_colour, vec3(luminance), dessatura);
+	if (use_albedo_texture) {
+		saida = pow(saida, vec3(0.62)) * 1.18;
+	} else {
+		saida *= 0.78;
+	}
+	ALBEDO = saida;
 	ROUGHNESS = mix(material_roughness, equipment_roughness, equipment_material_strength);
 	METALLIC = mix(material_metallic, equipment_metallic, equipment_material_strength);
 	if (use_roughness_texture) {
@@ -206,6 +227,17 @@ void fragment() {
 		NORMAL_MAP = texture(normal_texture, UV).rgb;
 		NORMAL_MAP_DEPTH = normal_scale;
 	}
+	// ⭐ 02-08 — LUZ DE RECORTE. O Mateus: "o personagem ta preto total". Nao era
+	// so o material: em Brumal a luz vem de cima e de tras, e o jogador fica em
+	// contraluz enquanto o inimigo a sua frente apanha a luz toda. Sem isto a
+	// silhueta desaparece exactamente quando e mais precisa — a olhar para a
+	// frente, que e o que se faz o jogo inteiro.
+	// E o que os souls-like fazem: a personagem le-se SEMPRE, mesmo contra a luz.
+	// ⚠️ Custa uma multiplicacao por pixel e nada de memoria. Lei 4 intacta.
+	float rim = pow(1.0 - clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0), 2.6);
+	RIM = 0.55;
+	RIM_TINT = 0.35;
+	EMISSION = ALBEDO * rim * 0.30;
 }
 """
 
