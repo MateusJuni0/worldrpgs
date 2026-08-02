@@ -3,17 +3,43 @@ extends Greybox
 ## entrega a atmosfera e a Toca aos modulos finais que ja existiam.
 
 var _lair_script: Script
+var _atmosphere_script: Script
 var _integrated_lair: Lair
 var _lair_origin := Vector3.ZERO
 var _lair_route_prepared := false
 
 
-func configure_integrations(lair_script: Script) -> void:
+func configure_integrations(lair_script: Script, atmosphere_script: Script) -> void:
 	_lair_script = lair_script
+	_atmosphere_script = atmosphere_script
 
 
 func integrated_lair() -> Lair:
 	return _integrated_lair
+
+
+func _build_environment() -> void:
+	if _atmosphere_script == null:
+		super._build_environment()
+		return
+	var world_environment := _atmosphere_script.call(
+		"build_world_environment", preset, palette, biome) as WorldEnvironment
+	if world_environment == null:
+		super._build_environment()
+		return
+	world_environment.set_meta("environment_atmosphere", true)
+	add_child(world_environment)
+
+
+func _build_light() -> void:
+	if _atmosphere_script == null:
+		super._build_light()
+		return
+	var sun := _atmosphere_script.call("build_sun", preset, biome) as DirectionalLight3D
+	if sun == null:
+		super._build_light()
+		return
+	add_child(sun)
 
 
 func _scatter_forest() -> void:

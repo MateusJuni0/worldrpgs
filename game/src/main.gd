@@ -12,6 +12,7 @@ const NAVIGATION_HUD_SCRIPT = preload("res://src/ui/navigation_hud.gd")
 const NECROMANCY_RUNTIME_SCRIPT = preload("res://src/summons/necromancy_runtime.gd")
 const INTEGRATED_WORLD_SCRIPT = preload("res://scenes/integrated_world.gd")
 const LAIR_SCRIPT = preload("res://src/world/lair.gd")
+const ENVIRONMENT_ATMOSPHERE_SCRIPT = preload("res://src/visual/environment_atmosphere.gd")
 
 var world: Greybox
 var lair: Lair
@@ -121,7 +122,7 @@ func _build_world() -> void:
 	world = INTEGRATED_WORLD_SCRIPT.new() as Greybox
 	world.name = "World"
 	add_child(world)
-	world.call("configure_integrations", LAIR_SCRIPT)
+	world.call("configure_integrations", LAIR_SCRIPT, ENVIRONMENT_ATMOSPHERE_SCRIPT)
 	world.build(_preset, _palette, "arena" if _scene_kind == "combat" else "brumal")
 	lair = world.call("integrated_lair") as Lair
 

@@ -45,6 +45,13 @@ func _test_integrations_in_real_game() -> void:
 	_check(lair != null and int(lair_audit.get("module_instances", 0)) > 0 \
 			and int(lair_audit.get("collision_shapes", 0)) > 0,
 		"jogo real: a Toca modular aparece no mundo e e navegavel")
+	var world_environment := world.get_node_or_null("WorldEnvironment") as WorldEnvironment \
+			if world != null else null
+	_check(world_environment != null and world_environment.environment != null \
+			and world_environment.environment.fog_enabled \
+			and world_environment.environment.sky != null \
+			and world_environment.has_meta("environment_atmosphere"),
+		"jogo real: Brumal mostra a atmosfera integrada")
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.
