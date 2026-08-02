@@ -155,8 +155,10 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 	_fury_time = 0.0
 
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
-	main_weapon = loadout.get("main", "longsword")
-	offhand_weapon = loadout.get("offhand", "") if loadout.get("offhand") != null else ""
+	main_weapon = equipment_weapon_id(loadout.get("main", "longsword"))
+	if main_weapon.is_empty():
+		main_weapon = "longsword"
+	offhand_weapon = equipment_weapon_id(loadout.get("offhand", ""))
 	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
 
 	var buf := GameData.section("input_buffer")
@@ -711,6 +713,13 @@ func _start_attack(kind: String, feedback := "") -> void:
 	if is_instance_valid(lock_on.target):
 		_face(_to_target())
 	_change_state(State.ATTACK)
+	# Ha um unico escritor da pose durante o golpe. O controlador UAL recebe a
+	# ficha agora (nao um frame de render depois) e sincroniza-a pelo state_frame;
+	# os tres tempos continuam a vir exclusivamente de weapons.json.
+	var attack_animation := _attack_animation_controller()
+	if attack_animation != null:
+		attack_animation.call("play_attack", _atk_weapon, _atk_kind,
+			_combo_index, _sprinting, _atk)
 
 
 func _tick_attack(delta: float) -> void:
@@ -899,8 +908,8 @@ func set_waking_up(enabled: bool) -> void:
 
 
 func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
-	main_weapon = String(equipment.get("main", ""))
-	offhand_weapon = String(equipment.get("offhand", ""))
+	main_weapon = equipment_weapon_id(equipment.get("main", ""))
+	offhand_weapon = equipment_weapon_id(equipment.get("offhand", ""))
 	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
 	favorite_spells.clear()
 	for spell_value: Variant in equipment.get("spell_favorites", []):
@@ -914,6 +923,25 @@ func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> v
 	_load_max_speed = float(load_profile.get("max_speed", 999.0))
 	_load_fraction = float(load_profile.get("fraction", 0.0))
 	stamina.set_regen_multiplier(float(load_profile.get("regen_multiplier", 1.0)))
+
+
+## A fronteira persistente guarda IDs. Alguns percursos antigos entregaram a
+## carta inteira; normaliza-a uma vez sem converter Dictionary/null em texto.
+static func equipment_weapon_id(value: Variant) -> String:
+	if value == null:
+		return ""
+	if value is Dictionary:
+		var card := value as Dictionary
+		for field: String in ["id", "weapon_id", "catalogue_id", "item_id", "key"]:
+			var candidate := String(card.get(field, ""))
+			if candidate.begins_with("arma:"):
+				candidate = candidate.trim_prefix("arma:")
+			if not candidate.is_empty():
+				return candidate
+		return ""
+	var candidate := String(value)
+	return candidate.trim_prefix("arma:") if candidate.begins_with("arma:") \
+		else candidate
 
 
 ## O ataque primario usa o instrumento activo, como uma arma usa o seu golpe leve.
@@ -1367,8 +1395,8 @@ func _cycle_loadout(direction: int) -> void:
 		return
 	_loadout_index = wrapi(_loadout_index + direction, 0, order.size())
 	var l: Dictionary = order[_loadout_index]
-	main_weapon = l.get("main", "longsword")
-	offhand_weapon = l.get("offhand", "") if l.get("offhand") != null else ""
+	main_weapon = equipment_weapon_id(l.get("main", "longsword"))
+	offhand_weapon = equipment_weapon_id(l.get("offhand", ""))
 	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
 	_combo_index = 0
 
@@ -1412,7 +1440,12 @@ func _refresh_animation() -> void:
 			_visual.play_animation("Death01")
 		State.DODGE:
 			_visual.play_animation("Roll")
-		State.ATTACK, State.RIPOSTE:
+		State.ATTACK:
+			# AttackAnimationController e o escritor unico desta pose e procura o
+			# clip pelo frame autoritativo. A chamada generica aqui apagava o arco.
+			if _attack_animation_controller() == null:
+				_visual.play_animation("Sword_Attack")
+		State.RIPOSTE:
 			_visual.play_animation("Sword_Attack")
 		State.CASTING:
 			_visual.play_animation("Spell_Simple_Shoot")
@@ -1430,6 +1463,14 @@ func _refresh_animation() -> void:
 				_visual.play_animation("Sprint" if _sprinting else "Jog_Fwd")
 			else:
 				_visual.play_animation("Idle")
+
+
+func _attack_animation_controller() -> Node:
+	for child: Node in get_children():
+		if child.has_method("play_attack") \
+				and child.has_method("declared_family_animations"):
+			return child
+	return null
 
 
 func state_name() -> String:
