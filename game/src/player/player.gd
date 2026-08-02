@@ -945,7 +945,12 @@ func use_primary_attack() -> String:
 ## O instrumento secundario tem prioridade. Enquanto os kits reais ainda trazem
 ## apenas um cajado `can_cast`, o mesmo catalogo tambem o reconhece na mao principal.
 func _secondary_instrument_for(spell: Dictionary) -> Dictionary:
-	if offhand_weapon == "" or is_two_handed or spell.is_empty():
+	# O catalogo define o instrumento secundario como metade do par
+	# cajado + instrumento. Se o jogador trocar o cajado por uma arma, o clique
+	# volta imediatamente a usar essa arma; o talisma/sino sozinho nao pode
+	# continuar a desviar o ataque para a magia que estava equipada antes.
+	if offhand_weapon == "" or is_two_handed or spell.is_empty() \
+			or not bool(GameData.weapon(main_weapon).get("can_cast", false)):
 		return {}
 	return _instrument_for_weapon(offhand_weapon, spell)
 
