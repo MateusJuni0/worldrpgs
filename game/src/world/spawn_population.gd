@@ -264,6 +264,7 @@ func _refresh_active_set() -> void:
 	var external_enemies := _external_enemy_count()
 	var reserved := _reserved_actor_count() + external_enemies
 	var eligible: Array[Dictionary] = []
+	var engaged: Array[Dictionary] = []
 	for placement: Dictionary in _plan:
 		var placement_id := String(placement.get("placement_id", ""))
 		var actor := _active.get(placement_id) as Node
@@ -276,10 +277,31 @@ func _refresh_active_set() -> void:
 		if distance <= _activation_distance_m \
 				or (is_instance_valid(actor) and distance <= _deactivation_distance_m):
 			eligible.append(placement)
-	var desired := select_for_activation(eligible, _player.global_position,
+			if is_instance_valid(actor) and _actor_is_engaged(actor):
+				engaged.append(placement)
+
+	# Um corpo que ja respondeu ao jogador nao pode desaparecer so porque outra
+	# colocacao ficou momentaneamente mais perto. Reserva primeiro esses lugares;
+	# proximidade continua a preencher apenas a capacidade que sobra.
+	var desired := select_for_activation(engaged, _player.global_position,
 		reserved, _animated_actor_limit,
 		maxi(0, _active_enemy_limit - external_enemies),
 		_deactivation_distance_m)
+	var remaining: Array[Dictionary] = []
+	for placement: Dictionary in eligible:
+		var placement_id := String(placement.get("placement_id", ""))
+		if desired.has(placement_id):
+			continue
+		# Durante um confronto conservam-se os corpos que o jogador ja podia ver,
+		# mas uma colocacao nova espera pela resolucao da batida actual.
+		if not desired.is_empty() and not _active.has(placement_id):
+			continue
+		remaining.append(placement)
+	var nearby := select_for_activation(remaining, _player.global_position,
+		reserved + desired.size(), _animated_actor_limit,
+		maxi(0, _active_enemy_limit - external_enemies - desired.size()),
+		_deactivation_distance_m)
+	desired.append_array(nearby)
 
 	for placement_id_value: Variant in _active.keys().duplicate():
 		var placement_id := String(placement_id_value)
@@ -368,6 +390,12 @@ func _prune_invalid_actors() -> void:
 
 func _is_actor_dead(actor: Node) -> bool:
 	return actor.has_method("is_alive") and not bool(actor.call("is_alive"))
+
+
+func _actor_is_engaged(actor: Node) -> bool:
+	if not actor.has_method("state_name"):
+		return false
+	return String(actor.call("state_name")) not in ["livre", "patrulha", "morto"]
 
 
 func _reserved_actor_count() -> int:
