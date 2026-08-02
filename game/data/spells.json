@@ -61,9 +61,16 @@
     "onda_sem_dano",
     "isco"
   ],
+  "_contact_contracts": {
+    "_decision": "[CODEX] instantaneo usa 6 frames, o topo do intervalo decidido de 3-6; razao: conserva a leitura do golpe magico sem exceder a janela honesta. Alternativa descartada: 3 frames, que aumentava falhas de amostragem a 60 Hz sem criar uma escolha nova.",
+    "instantaneo": {"active_frames": 6, "hit_policy": "once_per_target"},
+    "volume_movel": {"active_while": "visible_and_moving", "hit_policy": "once_per_target_per_passage"},
+    "volume_persistente": {"active_while": "visible", "hit_policy": "declared_pulse_interval"},
+    "nenhum": {"active_frames": 0, "hit_policy": "no_contact"}
+  },
   "_delivery_contracts": {
     "projectil_simples": {"speed_m_s": 18.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.18, "lifetime_s": 1.5, "hit_policy": "first_body_or_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
-    "perfurante": {"speed_m_s": 20.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.16, "lifetime_s": 1.4, "hit_policy": "up_to_3_bodies_then_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
+    "perfurante": {"speed_m_s": 20.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.16, "lifetime_s": 1.4, "hit_policy": "up_to_3_bodies_then_solid", "max_target_hits": 3, "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
     "perseguidor": {"speed_m_s": 10.0, "turn_deg_s": 120.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.22, "lifetime_s": 2.0, "hit_policy": "first_body_or_solid_los_breaks", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
     "orbitante": {"speed_m_s": 0.0, "turn_deg_s": 180.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.28, "lifetime_s": 2.5, "hit_policy": "once_per_target", "count": 3, "cadence_s": 0.0, "pulse_s": 0.20},
     "feixe": {"speed_m_s": 0.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.20, "lifetime_s": 0.60, "hit_policy": "pulse_visible_line_until_solid", "count": 1, "cadence_s": 0.0, "pulse_s": 0.20},
@@ -74,6 +81,81 @@
     "portador": {"speed_m_s": 8.0, "turn_deg_s": 90.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.30, "lifetime_s": 2.0, "hit_policy": "first_body_or_solid_each", "count": 3, "cadence_s": 0.50, "pulse_s": 0.0},
     "onda_sem_dano": {"speed_m_s": 9.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.15, "lifetime_s": 0.80, "hit_policy": "once_per_target_no_damage", "count": 1, "cadence_s": 0.0, "pulse_s": 0.0},
     "isco": {"speed_m_s": 0.0, "turn_deg_s": 0.0, "gravity_m_s2": 0.0, "collision_radius_m": 0.35, "lifetime_s": 8.0, "hit_policy": "no_damage_periodic_lure", "count": 1, "cadence_s": 0.0, "pulse_s": 1.0}
+  },
+  "_vfx": {
+    "_decision": "[CODEX] os VFX usam geometria e emissao sintetizadas em codigo, sem texturas, luzes ou particulas; so os feiticos equipados podem residir. Razao: tres silhuetas fortes e partilhadas custam menos na Iris Xe. Alternativa descartada: pre-carregar os 53 perfis, porque aumenta residencia sem melhorar o frame corrente.",
+    "residency": {
+      "policy": "equipped_only",
+      "max_spells": 8,
+      "reject_catalog_preload": true,
+      "share_mesh_by": "shape",
+      "share_material_by": "school",
+      "source": "synthesized_in_code"
+    },
+    "render": {
+      "radial_segments": 12,
+      "rings": 6,
+      "base_diameter_m": 1.0,
+      "shard_width_m": 0.22,
+      "shard_length_m": 1.0,
+      "plate_height_m": 0.16,
+      "beam_width_m": 0.20,
+      "beam_height_m": 0.12,
+      "blade_width_m": 0.18,
+      "blade_length_m": 1.0,
+      "ring_inner_radius_m": 0.42,
+      "ring_outer_radius_m": 0.50,
+      "core_scale": 0.55,
+      "halo_scale": 1.0,
+      "emission_energy": 2.4,
+      "halo_alpha": 0.28,
+      "cast_shadow": false
+    },
+    "school_colors": {
+      "feiticaria": "#63C7FF",
+      "milagre": "#FFD86A",
+      "piromancia": "#FF6A24",
+      "mal": "#D31F36"
+    },
+    "form_shapes": {
+      "projectil_simples": "shard",
+      "perfurante": "shard",
+      "perseguidor": "orb",
+      "orbitante": "plate",
+      "feixe": "beam",
+      "feixe_rasteiro": "beam",
+      "barragem_cone": "orb",
+      "chuva": "shard",
+      "forma_arma": "blade",
+      "portador": "orb",
+      "onda_sem_dano": "ring",
+      "isco": "orb"
+    },
+    "audio_profiles": {
+      "feiticaria": "attack_parry",
+      "milagre": "attack_dodge",
+      "piromancia": "attack_area",
+      "mal": "attack_hunter"
+    },
+    "benchmark": {
+      "spells": ["dardo", "ruina", "egide"],
+      "width": 1920,
+      "height": 1080,
+      "warmup_s": 6.0,
+      "sample_s": 12.0,
+      "target_fps": 60.0,
+      "target_frame_ms": 16.67,
+      "capture_frame": 90,
+      "background_color": "#07101F",
+      "ground_color": "#132844",
+      "floor_size_m": 30.0,
+      "camera_position": [0.0, 7.0, 13.0],
+      "camera_target": [0.0, 1.0, 0.0],
+      "origins": [[-3.2, 1.2, 2.0], [0.0, 1.4, 1.0], [3.2, 1.2, 2.0]],
+      "directions": [[0.10, 0.05, -1.0], [0.0, 0.0, -1.0], [-0.10, 0.05, -1.0]],
+      "targets": [[-2.4, 1.4, -7.0], [0.0, 1.4, -6.0], [2.4, 1.4, -7.0]],
+      "visible_cycle_s": [0.25, 0.65, 1.50]
+    }
   },
   "_escape_vectors": [
     "sair_da_linha",
