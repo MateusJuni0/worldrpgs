@@ -22,6 +22,7 @@ var hud: Hud
 var boss: Enemy
 var navigation: CanvasLayer
 var necromancy_runtime: NecromancyRuntime
+var net_menu: NetMenu
 var net_hud: NetHud
 
 var _preset: Dictionary = {}
@@ -36,6 +37,9 @@ var _nearest_rest_id := ""
 var _learning_points: Dictionary = {}
 var _learning_elapsed := 0.0
 var _wake_layer: CanvasLayer
+var _net_launcher: Button
+var _net_close: Button
+var _net_menu_was_visible := false
 
 const REST_SPAWN_OFFSET := Vector3(1.8, 0.6, 0.8)
 
@@ -52,7 +56,7 @@ func _ready() -> void:
 	_build_rest_points()
 	_build_player()
 	_build_hud()
-	_build_network_hud()
+	_build_network_ui()
 	_build_necromancy_runtime()
 	_populate()
 	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
@@ -204,10 +208,50 @@ func _build_hud() -> void:
 			SettingsSystem.binding_label("toggle_help"), _preset.get("_name", "?")], 6.0)
 
 
-func _build_network_hud() -> void:
+func _build_network_ui() -> void:
 	net_hud = NetHud.new()
 	net_hud.name = "NetHud"
 	add_child(net_hud)
+
+	net_menu = NetMenu.new()
+	net_menu.name = "NetMenu"
+	add_child(net_menu)
+
+	_net_launcher = Button.new()
+	_net_launcher.name = "JogarADois"
+	_net_launcher.text = "JOGAR A DOIS"
+	_net_launcher.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_net_launcher.offset_left = -188.0
+	_net_launcher.offset_top = 318.0
+	_net_launcher.offset_right = -24.0
+	_net_launcher.offset_bottom = 362.0
+	_net_launcher.pressed.connect(_toggle_network_menu)
+	hud.add_child(_net_launcher)
+
+	_net_close = Button.new()
+	_net_close.name = "Fechar"
+	_net_close.text = "Fechar"
+	_net_close.set_anchors_preset(Control.PRESET_CENTER)
+	_net_close.offset_left = -210.0
+	_net_close.offset_top = 166.0
+	_net_close.offset_right = 210.0
+	_net_close.offset_bottom = 208.0
+	_net_close.pressed.connect(_toggle_network_menu)
+	net_menu.add_child(_net_close)
+
+
+func _toggle_network_menu() -> void:
+	if not is_instance_valid(net_menu):
+		return
+	net_menu.toggle()
+	_sync_network_focus()
+
+
+func _sync_network_focus() -> void:
+	_net_menu_was_visible = is_instance_valid(net_menu) and net_menu.visible
+	set_local_input_enabled(not _net_menu_was_visible)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if _net_menu_was_visible \
+		else Input.MOUSE_MODE_CAPTURED
 
 
 func _build_necromancy_runtime() -> void:
@@ -820,6 +864,8 @@ var _pilot_t := 0.0
 
 func _process(delta: float) -> void:
 	if not Bench.is_benchmarking():
+		if is_instance_valid(net_menu) and net_menu.visible != _net_menu_was_visible:
+			_sync_network_focus()
 		_tick_rest_points()
 		_tick_learning(delta)
 		return

@@ -68,6 +68,7 @@ func _test_integrations_in_real_game() -> void:
 	_prove_monsters(gameplay)
 	await _prove_first_boss_defeat(gameplay, actor)
 	await _prove_network_hud(gameplay)
+	await _prove_network_menu(gameplay, actor)
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.
@@ -155,3 +156,44 @@ func _prove_network_hud(gameplay: Node) -> void:
 	_check(label != null and label.visible and label.text == message,
 		"jogo real: o aviso de rede aparece visivel no ecra")
 	NetSession.link_warning.emit("")
+
+
+func _prove_network_menu(gameplay: Node, actor: Player) -> void:
+	var menu := gameplay.get_node_or_null("NetMenu") as NetMenu
+	var hud := gameplay.get("hud") as Hud
+	var launcher := hud.get_node_or_null("JogarADois") as Button if hud != null else null
+	_check(menu != null and launcher != null and launcher.visible,
+		"jogo real: o HUD mostra a entrada Jogar a dois")
+	if menu == null or launcher == null or actor == null:
+		return
+	launcher.grab_focus()
+	await _activate_focused_control()
+	for _frame: int in 2:
+		await get_tree().process_frame
+	var host_button := menu.get("_host_button") as Button
+	var join_button := menu.get("_join_button") as Button
+	var close_button := menu.get_node_or_null("Fechar") as Button
+	_check(menu.visible and host_button != null and host_button.visible \
+			and join_button != null and join_button.visible \
+			and not actor.input_enabled,
+		"jogo real: confirmar Jogar a dois abre Hospedar e Entrar")
+	if close_button != null:
+		close_button.grab_focus()
+		await _activate_focused_control()
+		for _frame: int in 2:
+			await get_tree().process_frame
+	_check(not menu.visible and actor.input_enabled,
+		"jogo real: Fechar devolve o controlo ao jogador")
+
+
+func _activate_focused_control() -> void:
+	await get_tree().process_frame
+	var pressed := InputEventAction.new()
+	pressed.action = "ui_accept"
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventAction.new()
+	released.action = "ui_accept"
+	released.pressed = false
+	Input.parse_input_event(released)
