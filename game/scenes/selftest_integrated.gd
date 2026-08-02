@@ -66,6 +66,7 @@ func _test_integrations_in_real_game() -> void:
 			and world_environment.has_meta("environment_atmosphere"),
 		"jogo real: Brumal mostra a atmosfera integrada")
 	_prove_monsters(gameplay)
+	await _prove_first_boss_defeat(gameplay, actor)
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.
@@ -92,3 +93,49 @@ func _prove_monsters(gameplay: Node) -> void:
 	_check(visible_monsters == enemies.filter(func(node: Node) -> bool:
 		return node is Enemy and gameplay.is_ancestor_of(node)).size(),
 		"jogo real: todos os inimigos usam MonsterVisual visivel")
+
+
+func _prove_first_boss_defeat(gameplay: Node, actor: Player) -> void:
+	var vorgar := gameplay.get("boss") as Enemy
+	_check(vorgar != null and vorgar.is_inside_tree() and vorgar.is_alive(),
+		"jogo real: o primeiro chefe entra vivo na arena da Toca")
+	if vorgar == null or actor == null:
+		return
+	var persistence_handler := Callable(gameplay, "_on_boss_died")
+	if vorgar.died.is_connected(persistence_handler):
+		vorgar.died.disconnect(persistence_handler)
+	for node: Node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy != null and gameplay.is_ancestor_of(enemy):
+			enemy.target = null
+			enemy.set_physics_process(false)
+
+	var weapon: Dictionary = GameData.weapon(actor.main_weapon)
+	var light_attack: Dictionary = weapon.get("light", {}) as Dictionary
+	var strike_damage := GameData.compute_damage(
+		float(light_attack.get("mv")), actor.main_weapon, actor.attrs, vorgar.defense)
+	vorgar.health = strike_damage
+	var reach := float(weapon.get("range"))
+	actor.global_position = vorgar.global_position + Vector3.BACK * reach * 0.5
+	actor.rotation.y = 0.0
+	var hud := gameplay.get("hud") as Hud
+	var boss_bar := hud.get("_boss_bar") as ColorRect if hud != null else null
+	for _frame: int in 2:
+		await get_tree().process_frame
+	var bar_was_visible := boss_bar != null and boss_bar.visible
+
+	Input.action_press("attack")
+	await get_tree().physics_frame
+	Input.action_release("attack")
+	var attack_frames := int(light_attack.get("startup")) + int(light_attack.get("active")) \
+		+ int(light_attack.get("recovery"))
+	for _frame: int in attack_frames * 2:
+		await get_tree().physics_frame
+		if not vorgar.is_alive():
+			break
+	Input.action_release("attack")
+	for _frame: int in 2:
+		await get_tree().process_frame
+	_check(bar_was_visible and not vorgar.is_alive() and boss_bar != null \
+			and not boss_bar.visible,
+		"jogo real: carregar em ataque mata Vorgar e esconde a barra visivel")

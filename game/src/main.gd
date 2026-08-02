@@ -347,11 +347,10 @@ func _populate() -> void:
 		"vorgar":
 			# Prova repetível dentro da arena final, não numa arena cinzenta que
 			# omite as paredes, tochas e os detritos que o jogador vê.
-			var c := world.arena_center
+			var c := _vorgar_spawn_position()
 			player.global_position = c + Vector3(0.0, 0.6, 8.0)
 			_respawn_point = player.global_position
-			boss = _spawn("vorgar", c)
-			hud.boss = boss
+			_register_boss(_spawn("vorgar", c))
 			_spawn("orc_spearman", c + Vector3(6.0, 0.5, 1.5))
 			_spawn("orc_brute", c + Vector3(-6.0, 0.5, -2.0))
 			var partner := Player.new()
@@ -404,8 +403,21 @@ func _populate_zone() -> void:
 	var defeated: Array = ((GameData.save_state.get("world", {}) as Dictionary).get(
 		"bosses_defeated", []) as Array)
 	if not "vorgar" in defeated:
-		boss = _spawn("vorgar", world.arena_center)
-		hud.boss = boss
+		_register_boss(_spawn("vorgar", _vorgar_spawn_position()))
+
+
+func _vorgar_spawn_position() -> Vector3:
+	if is_instance_valid(lair):
+		var marker := lair.get_node_or_null("Boss_Vorgar") as Marker3D
+		if marker != null:
+			return marker.global_position
+	return world.arena_center
+
+
+func _register_boss(spawned: Enemy) -> void:
+	boss = spawned
+	hud.boss = boss
+	if not boss.died.is_connected(_on_boss_died):
 		boss.died.connect(_on_boss_died)
 
 
