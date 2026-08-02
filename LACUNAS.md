@@ -1225,3 +1225,13 @@ respeitou o teto de **5 inimigos / 8 atores**. Isto ainda não fecha a prova ped
 | 🔴 | O percurso contínuo Brumal → arena **não está provado**: seguindo os pontos da própria `Lair.MAIN_ROUTE`, o jogador morre no desnível entre a descida e a primeira sala, antes de chegar à arena, mesmo no cenário `perf` sem inimigos dentro da Toca. A fase `vorgar` prova que a coroa funciona quando o jogador está na arena; não mascara que a travessia desde a entrada falhou. | Execuções falhadas: 75,02 s, 509,8 m acumulados com respawn, 11/19 pontos e `stayed_alive:false`. Dono de `game/src/world/lair.gd`/locomoção deve reproduzir a descida com input real e fechar colisão/queda; estes ficheiros não pertencem a esta árvore. |
 | 🟠 | O custo determinístico observado foi **+19 draw calls, +736 primitivas e +1,6 MiB VRAM**. O tempo não ficou causal: A/B/B/A deu ligado 74,5/99,8 fps e desligado 76,0/84,4 fps; todos superaram 60 em média, mas p99 variou entre 19,841 e 26,133 ms. | Mobile/Vulkan, Iris Xe, 1920×1080, VSync off, quatro amostras de 4 s de aquecimento + 8 s. A deriva entre passagens foi maior do que o efeito; Lei 4 temporal ainda não certificada. |
 | 🟠 | A sequência de prova terminou com **6 instâncias ObjectDB vivas** após recarregar a cena; três das quatro amostras A/B também reportaram 6–10. Os PNGs e os contadores passaram, mas o fecho não é limpo. | Localizar o dono do ciclo de vida em `main.gd`/áudio/visuais; não silenciar o aviso a partir do HUD. |
+
+## 🟠 Variedade de Brumal — o limite é a lei, não a densidade (02-08)
+
+⚠️ O percurso encontra **3 tipos** e o catálogo tem **34**. Parecia falta de trabalho; não é.
+
+⭐ **Só 4 inimigos declaram `brumal` nos `biome_ids`** — `orc_spearman`, `orc_brute`, `goblin_mist_scout` e o `vorgar`. A lei da coerência bioma-raça-item ([`spec/46`](spec/46-coerencia-bioma-raca-item.md)) proíbe pôr um inimigo de outro bioma aqui, e essa lei é o que faz o mundo parecer um sítio em vez de uma lista.
+
+⚠️ **Logo a conclusão é outra, e é mais importante:** o problema não é a densidade de Brumal — é que **o jogo tem uma zona só**. Encher mais Brumal com os mesmos três não resolve a sensação de mundo vazio que o Mateus descreve; **construir a segunda zona resolve**.
+
+⏳ **Isto é decisão do dono:** ou (a) desenhar mais tipos nativos de Brumal, ou (b) construir a zona seguinte e deixar Brumal como está — que é o que a spec já previa, uma travessia de 8–12 minutos por zona.
