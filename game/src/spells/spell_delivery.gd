@@ -4,9 +4,11 @@ extends Node3D
 ## movimento, alcance, contacto, contagem e duração vêm de spells.json.
 
 signal contacted(target: Node3D, payload: Dictionary)
+signal impact_shown(target: Node3D, contact_position: Vector3)
 signal delivery_expired(spell_id: String)
 
 const SpellVfxScript = preload("res://src/vfx/spell_vfx.gd")
+const SpellImpactVfxScript = preload("res://src/vfx/spell_impact_vfx.gd")
 
 var _spell_id := ""
 var _spell: Dictionary = {}
@@ -22,6 +24,7 @@ var _alive := false
 var _hitbox_active := false
 var _contact_visual_visible := false
 var _vfx: Node3D
+var _vfx_bundle: Dictionary = {}
 
 
 func configure(spell_id: String, spell: Dictionary, contract: Dictionary,
@@ -155,7 +158,8 @@ func _spawn_carrier_seeker() -> void:
 	var direction := carrier.get("direction", Vector3.FORWARD) as Vector3
 	var target := _context.get("target") as Node3D
 	if target != null and is_instance_valid(target):
-		direction = (target.global_position - (carrier.get("position", position) as Vector3)).normalized()
+		direction = (_target_position(target) \
+			- (carrier.get("position", position) as Vector3)).normalized()
 	_instances.append(_new_instance(carrier.get("position", position) as Vector3,
 		direction, "seeker"))
 	_emitted_count += 1
@@ -242,7 +246,7 @@ func _evaluate_instant_contacts(targets: Array) -> void:
 		var target := target_value as Node3D
 		if target == null or not is_instance_valid(target) or hits.has(target.get_instance_id()):
 			continue
-		if _distance_to_segment(target.global_position, origin, endpoint) \
+		if _distance_to_segment(_target_position(target), origin, endpoint) \
 				> radius + _target_radius(target):
 			continue
 		hits[target.get_instance_id()] = true
@@ -258,7 +262,7 @@ func _update_hunter_direction(instance: Dictionary, delta: float) -> void:
 		return
 	var current_position := instance.get("position", Vector3.ZERO) as Vector3
 	var current_direction := (instance.get("direction", Vector3.FORWARD) as Vector3).normalized()
-	var desired_direction := (target.global_position - current_position).normalized()
+	var desired_direction := (_target_position(target) - current_position).normalized()
 	var angle := current_direction.angle_to(desired_direction)
 	if is_zero_approx(angle):
 		return
@@ -286,7 +290,7 @@ func _update_carrier_seeker_direction(instance: Dictionary, delta: float) -> voi
 		return
 	var current_position := instance.get("position", Vector3.ZERO) as Vector3
 	var current_direction := (instance.get("direction", Vector3.FORWARD) as Vector3).normalized()
-	var desired_direction := (target.global_position - current_position).normalized()
+	var desired_direction := (_target_position(target) - current_position).normalized()
 	var angle := current_direction.angle_to(desired_direction)
 	if is_zero_approx(angle):
 		return
@@ -302,12 +306,12 @@ func _persistent_contains(target: Node3D) -> bool:
 		var origin := _context.get("origin", global_position) as Vector3
 		var direction := _primary_direction()
 		var endpoint := origin + direction * float(_contract.get("max_range_m", 0.0))
-		return _distance_to_segment(target.global_position, origin, endpoint) \
+		return _distance_to_segment(_target_position(target), origin, endpoint) \
 			<= float(_contract.get("collision_radius_m", 0.0)) + _target_radius(target)
 	var centre := _context.get("target_point", global_position) as Vector3
 	var radius := float(_contract.get("area_radius_m",
 		_contract.get("collision_radius_m", 0.0)))
-	return target.global_position.distance_to(centre) <= radius + _target_radius(target)
+	return _target_position(target).distance_to(centre) <= radius + _target_radius(target)
 
 
 func _primary_direction() -> Vector3:
@@ -326,7 +330,7 @@ func _evaluate_moving_contacts(instance: Dictionary, from: Vector3, to: Vector3,
 		var target := target_value as Node3D
 		if target == null or not is_instance_valid(target) or hits.has(target.get_instance_id()):
 			continue
-		if _distance_to_segment(target.global_position, from, to) \
+		if _distance_to_segment(_target_position(target), from, to) \
 				> collision_radius + _target_radius(target):
 			continue
 		hits[target.get_instance_id()] = true
@@ -354,7 +358,7 @@ func _evaluate_wave_contacts(instance: Dictionary, from_radius: float,
 		var target := target_value as Node3D
 		if target == null or not is_instance_valid(target) or hits.has(target.get_instance_id()):
 			continue
-		var distance := target.global_position.distance_to(centre)
+		var distance := _target_position(target).distance_to(centre)
 		var target_radius := _target_radius(target)
 		if distance + target_radius < from_radius - thickness \
 				or distance - target_radius > to_radius + thickness:
@@ -365,16 +369,34 @@ func _evaluate_wave_contacts(instance: Dictionary, from_radius: float,
 
 
 func _emit_contact(target: Node3D) -> void:
+	var contact_position := _target_position(target)
 	var payload := {
 		"spell_id": _spell_id,
 		"delivery_form": String(_contract.get("delivery_form", "")),
 		"contact_type": String(_contract.get("contact_type", "")),
 		"damage_enabled": float(_spell.get("base_damage", 0.0)) > 0.0,
 		"spell": _spell.duplicate(true),
+		"contact_position": contact_position,
 	}
+	_show_impact(target, contact_position)
 	contacted.emit(target, payload)
 	if target.has_method("receive_spell_contact"):
 		target.call("receive_spell_contact", payload)
+
+
+func _show_impact(target: Node3D, contact_position: Vector3) -> void:
+	if _vfx_bundle.is_empty() or not is_inside_tree():
+		return
+	var impact := SpellImpactVfxScript.new()
+	var host := get_tree().current_scene
+	if host == null:
+		host = get_parent()
+	if host == null:
+		impact.free()
+		return
+	host.add_child(impact)
+	impact.configure(_vfx_bundle, _contract, contact_position, _primary_direction())
+	impact_shown.emit(target, contact_position)
 
 
 func _target_radius(target: Node3D) -> float:
@@ -384,6 +406,10 @@ func _target_radius(target: Node3D) -> float:
 		if String(property.get("name", "")) == "body_radius":
 			return float(target.get("body_radius"))
 	return 0.0
+
+
+func _target_position(target: Node3D) -> Vector3:
+	return target.global_position + Vector3.UP * _target_radius(target)
 
 
 func _distance_to_segment(point: Vector3, from: Vector3, to: Vector3) -> float:
@@ -467,6 +493,7 @@ func attach_vfx(bundle: Dictionary) -> Node3D:
 	if _vfx != null and is_instance_valid(_vfx):
 		_vfx.queue_free()
 	_vfx = SpellVfxScript.new()
+	_vfx_bundle = bundle.duplicate()
 	add_child(_vfx)
 	_vfx.configure(bundle, _contract)
 	_sync_vfx()
