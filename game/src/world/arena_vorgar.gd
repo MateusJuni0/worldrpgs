@@ -26,22 +26,6 @@ signal revive_channel_cancelled(reason: String)
 signal player_revived(player: Node3D)
 signal revive_window_expired(player: Node3D)
 
-const WALL_HEIGHT_M := 4.0
-
-const DUNGEON := "res://assets/models/dungeon/"
-const ASSET_FLOOR := DUNGEON + "floor_tile_large.gltf"
-const ASSET_FLOOR_ROCKS := DUNGEON + "floor_tile_large_rocks.gltf"
-const ASSET_WALL := DUNGEON + "wall.gltf"
-const ASSET_WALL_BROKEN := DUNGEON + "wall_broken.gltf"
-const ASSET_WALL_CRACKED := DUNGEON + "wall_cracked.gltf"
-const ASSET_WALL_GATED := DUNGEON + "wall_gated.gltf"
-const ASSET_WALL_PILLAR := DUNGEON + "wall_pillar.gltf"
-const ASSET_PILLAR_DECORATED := DUNGEON + "pillar_decorated.gltf"
-const ASSET_RUBBLE_LARGE := DUNGEON + "rubble_large.gltf"
-const ASSET_RUBBLE_HALF := DUNGEON + "rubble_half.gltf"
-const ASSET_BANNER := DUNGEON + "banner_patternC_brown.gltf"
-const ASSET_TORCH := DUNGEON + "torch_mounted.gltf"
-const ASSET_BROKEN_ARMS := DUNGEON + "sword_shield_broken.gltf"
 var arena_id := StringName()
 var _arena_contract: Dictionary = {}
 var _marker_positions: Dictionary = {}
@@ -73,10 +57,6 @@ var _config: Dictionary = {}
 var _resurrection_contract: Dictionary = {}
 var _local_player: Node3D
 var _players: Array[Node3D] = []
-
-var _active_sequence: Dictionary = {}
-var _sequence_frame := 0
-var _static_guides: Array[Node3D] = []
 var _runtime_guides: Node3D
 
 var _active_sequence: Dictionary = {}
@@ -86,7 +66,6 @@ var _sequence_markers: Dictionary = {}
 var _sequence_hits: Dictionary = {}
 var _safe_zone_local := Vector3.ZERO
 var _solo_origin_global := Vector3.ZERO
-var _sequence_committed := false
 var _sequence_was_committed := false
 
 var _downed_elapsed: Dictionary = {}
@@ -97,26 +76,21 @@ var _reviver: Node3D
 var _revived: Node3D
 var _revive_progress := 0.0
 var _reviver_last_health := 0.0
-var _resurrection_used := false
-
-
-func _ready() -> void:
-	if _config.is_empty():
-		_config = (GameData.enemy("vorgar").get("vorgar_encounter", {}) as Dictionary) \
-			.duplicate(true)
-	if _config.is_empty():
-		push_error("Vorgar: ficha vorgar_encounter em falta")
-		return
-	# A Toca integrada ja possui chão, paredes, pilares, tochas e detritos. Quando
-	# BossVorgar instala este nó, ele só deve acrescentar as perguntas espaciais;
-	# repetir aqui a sala inteira sobre a sala real custa render e cria colisões
-	# duplicadas. A cena arena_vorgar.tscn conserva a construção visual completa.
-	if controller_only:
 var _resurrection_was_used := false
 
 
 func _ready() -> void:
 	if not _load_arena_contract():
+		return
+	_runtime_guides = Node3D.new()
+	_runtime_guides.name = "RuntimeGuides"
+	add_child(_runtime_guides)
+	# A Toca integrada ja fornece chao, paredes, porta e obstaculos. O controlador
+	# instalado pelo BossVorgar acrescenta apenas os guias e volumes das sequencias;
+	# construir a sala outra vez criaria colisao e custo de render duplicados.
+	if controller_only:
+		_arena_is_ready = true
+		_arena_block_reason = ""
 		return
 	_build_floor()
 	_build_floor_reading()
@@ -125,9 +99,6 @@ func _ready() -> void:
 	_build_covers()
 	_build_dressing()
 	_build_markers()
-	_runtime_guides = Node3D.new()
-	_runtime_guides.name = "RuntimeGuides"
-	add_child(_runtime_guides)
 	_finish_arena_loading()
 	if get_tree().current_scene == self:
 		_build_preview_environment()
@@ -268,7 +239,11 @@ func set_cover_broken(cover_id: StringName, broken: bool) -> void:
 
 func marker_position(marker_id: StringName) -> Vector3:
 	var marker := get_node_or_null("Markers/%s" % marker_id) as Marker3D
-	return marker.global_position if marker != null else global_position
+	if marker != null:
+		return marker.global_position
+	if _marker_positions.has(marker_id):
+		return to_global(_marker_positions[marker_id] as Vector3)
+	return global_position
 
 
 func setup(p_boss: Node3D, p_config: Dictionary, p_local_player: Node3D = null) -> void:
@@ -278,16 +253,6 @@ func setup(p_boss: Node3D, p_config: Dictionary, p_local_player: Node3D = null) 
 	_boss = p_boss
 	_config = p_config.duplicate(true)
 	_local_player = p_local_player
-	_resurrection_contract = GameData.progression.get(
-		"coop_resurrection", {}) as Dictionary
-	_sync_players()
-	# Os flancos, refugios e o anel de reuniao ja fazem parte do chao/pilares
-	# construidos em _ready(). Criar aqui mais quatro discos e quatro etiquetas
-	# duplicava a mesma leitura em cada frame; os volumes de ataque continuam a
-	# nascer apenas durante SEPARAR/JUNTAR.
-	_boss = p_boss
-	_config = p_config
-	_local_player = p_local_player
 	_resurrection_contract = GameData.progression.get("coop_resurrection", {}) as Dictionary
 	if StringName(String(_config.get("arena_id", ""))) != arena_id:
 		_block_arena("vorgar_encounter.arena_id")
@@ -296,6 +261,8 @@ func setup(p_boss: Node3D, p_config: Dictionary, p_local_player: Node3D = null) 
 	_expected_player_count = maxi(_players.size(), 1)
 	_boss_physics_before_gate = _boss.is_physics_processing()
 	_build_static_guides()
+	if controller_only:
+		return
 	_publish_local_readiness()
 	_register_players_already_inside()
 	if _committed_players.size() >= _expected_player_count:
@@ -309,23 +276,11 @@ func set_local_player(player: Node3D) -> void:
 	_local_player = player
 
 
-## Fronteira para a camada de rede: cada peer publica a sua interaccao; o
-## controlador autoritativo nao tenta adivinhar input remoto.
 func set_revive_intent(player: Node3D, pressed: bool) -> void:
 	if is_instance_valid(player):
 		_revive_intents[player.get_instance_id()] = pressed
 
 
-func begin_sequence(sequence: Dictionary) -> void:
-	end_sequence()
-	if sequence.is_empty() or not is_instance_valid(_boss):
-		push_error("Vorgar: sequencia ou chefe em falta na arena")
-		return
-	_active_sequence = sequence.duplicate(true)
-	_sequence_frame = 0
-	_sequence_committed = false
-	_sequence_hits.clear()
-	_sync_players()
 func _register_players_already_inside() -> void:
 	var gate_z := _gate_local_z()
 	for player: Node3D in _players:
@@ -407,6 +362,9 @@ func _gate_local_z() -> float:
 
 func begin_sequence(sequence: Dictionary) -> void:
 	end_sequence()
+	if sequence.is_empty() or not is_instance_valid(_boss):
+		push_error("Vorgar: sequencia ou chefe em falta na arena")
+		return
 	_active_sequence = sequence.duplicate(true)
 	_sequence_frame = 0
 	_sequence_was_committed = false
@@ -422,23 +380,17 @@ func begin_sequence(sequence: Dictionary) -> void:
 			push_error("Vorgar: objectivo co-op desconhecido '%s'" % objective)
 			end_sequence()
 			return
-			return
 	var sound := sequence.get("som_anuncio", {}) as Dictionary
 	Sfx.play(String(sound.get("profile", "")), _boss.global_position)
 	sequence_started.emit(objective)
 
 
-## Chamado por BossVorgar no mesmo frame de fisica que governa compromisso e
-## hitbox. O marcador nunca sobrevive ao efeito nem desaparece antes dele.
 func tick_sequence(frame: int) -> void:
 	if _active_sequence.is_empty():
 		return
 	_sequence_frame = frame
 	_sync_players()
 	var commitment := int(_active_sequence.get("momento_compromisso_frame"))
-	if not _sequence_committed and frame >= commitment:
-		_sequence_committed = true
-		sequence_committed.emit(String(_active_sequence.get("objectivo_coop", "")))
 	if not _sequence_was_committed and frame >= commitment:
 		_sequence_was_committed = true
 		sequence_committed.emit(String(_active_sequence.get("objectivo_coop", "")))
@@ -472,35 +424,12 @@ func end_sequence() -> void:
 	_sequence_hits.clear()
 	_active_sequence = {}
 	_sequence_frame = 0
-	_sequence_committed = false
-
-
-func reset_attempt() -> void:
-	end_sequence()
-	_cancel_revive_channel("reset_tentativa", false)
-	_resurrection_used = false
-	_downed_elapsed.clear()
-	_downed_expired.clear()
-	_revive_intents.clear()
-	for marker_value: Variant in _revive_markers.values():
-		var marker_data := marker_value as Dictionary
-		var marker_root := marker_data.get("root") as Node3D
-		if is_instance_valid(marker_root):
-			marker_root.queue_free()
-	_revive_markers.clear()
 	_sequence_was_committed = false
 
 
 func join_safe_center_global() -> Vector3:
 	return to_global(_safe_zone_local)
 
-
-func resurrection_used() -> bool:
-	return _resurrection_used
-
-
-func resurrection_progress_seconds() -> float:
-	return _revive_progress
 
 func sequence_visuals_visible() -> bool:
 	for visual: Node3D in _sequence_visuals:
@@ -510,11 +439,6 @@ func sequence_visuals_visible() -> bool:
 
 
 func join_reach_budget() -> Dictionary:
-	var width := _usable_width_m()
-	var depth := _usable_depth_m()
-	var sequence := _active_or_named_sequence("juntar")
-	var clearance := float(sequence.get("safe_zone_min_boss_distance_m"))
-	var half_diagonal := Vector2(width, depth).length() * 0.5
 	var sequence := _active_or_named_sequence("juntar")
 	var clearance := float(sequence.get("safe_zone_min_boss_distance_m"))
 	var half_diagonal := Vector2(_width_m, _depth_m).length() * 0.5
@@ -528,18 +452,6 @@ func join_reach_budget() -> Dictionary:
 
 
 func visual_cost_snapshot() -> Dictionary:
-	var counts := Vector2i.ZERO
-	for root: Node3D in _static_guides:
-		if is_instance_valid(root):
-			counts += _count_visual_descendants(root)
-	for root: Node3D in _sequence_visuals:
-		if is_instance_valid(root):
-			counts += _count_visual_descendants(root)
-	for marker_value: Variant in _revive_markers.values():
-		var marker_data := marker_value as Dictionary
-		var marker_root := marker_data.get("root") as Node3D
-		if is_instance_valid(marker_root):
-			counts += _count_visual_descendants(marker_root)
 	var counts := _count_visual_descendants(_runtime_guides)
 	return {
 		"meshes": counts.x,
@@ -548,12 +460,6 @@ func visual_cost_snapshot() -> Dictionary:
 		"label_budget": int(_config.get("max_visual_labels")),
 	}
 
-
-func _physics_process(delta: float) -> void:
-	if _config.is_empty() or not is_instance_valid(_boss):
-		return
-	_sync_players()
-	_tick_resurrection(delta)
 
 func _sync_players() -> void:
 	_players.clear()
@@ -568,13 +474,6 @@ func _sync_players() -> void:
 
 
 func _build_static_guides() -> void:
-	for existing: Node3D in _static_guides:
-		if is_instance_valid(existing):
-			existing.queue_free()
-	_static_guides.clear()
-	var colors := _config.get("colors", {}) as Dictionary
-	var labels := _config.get("labels", {}) as Dictionary
-	for value: Variant in _config.get("flank_offsets_m", []):
 	if not is_instance_valid(_runtime_guides):
 		return
 	for existing: Node in _runtime_guides.get_children():
@@ -589,11 +488,6 @@ func _build_static_guides() -> void:
 			Color(String(colors.get("flank"))),
 			float(_config.get("guide_alpha")),
 			String(labels.get("flank")))
-		marker.position = _vector_from_array(value as Array)
-		marker.set_meta("vorgar_static_guide", true)
-		add_child(marker)
-		_static_guides.append(marker)
-	for value: Variant in _config.get("refuge_offsets_m", []):
 		marker.position = _marker_positions[StringName(String(marker_value))]
 		marker.set_meta("vorgar_static_guide", true)
 		_runtime_guides.add_child(marker)
@@ -603,10 +497,6 @@ func _build_static_guides() -> void:
 			Color(String(colors.get("refuge"))),
 			float(_config.get("guide_alpha")),
 			String(labels.get("refuge")))
-		marker.position = _vector_from_array(value as Array)
-		marker.set_meta("vorgar_static_guide", true)
-		add_child(marker)
-		_static_guides.append(marker)
 		marker.position = _marker_positions[StringName(String(marker_value))]
 		marker.set_meta("vorgar_static_guide", true)
 		_runtime_guides.add_child(marker)
@@ -622,7 +512,6 @@ func _build_separate_markers() -> void:
 			Color(String(colors.get("danger"))),
 			float(_config.get("danger_alpha")),
 			String(labels.get("separate")))
-		add_child(marker)
 		_runtime_guides.add_child(marker)
 		marker.global_position = player.global_position
 		_sequence_visuals.append(marker)
@@ -649,21 +538,6 @@ func _build_join_markers() -> void:
 	_safe_zone_local = to_local(_choose_join_safe_center())
 	var colors := _config.get("colors", {}) as Dictionary
 	var labels := _config.get("labels", {}) as Dictionary
-	var danger := _make_rectangle(
-		Vector2(_usable_width_m(), _usable_depth_m()),
-		Color(String(colors.get("danger"))),
-		float(_config.get("danger_alpha")),
-		String(labels.get("join")))
-	danger.position = Vector3.ZERO
-	add_child(danger)
-	_sequence_visuals.append(danger)
-	var safe := _make_disc(
-		float(_active_sequence.get("safe_zone_radius_m")),
-		Color(String(colors.get("safe"))),
-		float(_config.get("safe_alpha")),
-		String(labels.get("join")))
-	safe.position = _safe_zone_local
-	add_child(safe)
 	var danger := _make_rectangle(Vector2(_width_m, _depth_m),
 		Color(String(colors.get("danger"))), float(_config.get("danger_alpha")),
 		String(labels.get("join")))
@@ -680,10 +554,6 @@ func _build_join_markers() -> void:
 func _choose_join_safe_center() -> Vector3:
 	var alive := _alive_players()
 	var desired := _boss.global_position
-	if alive.size() == 1:
-		var nearest_distance := INF
-		for value: Variant in _config.get("flank_offsets_m", []):
-			var candidate := to_global(_vector_from_array(value as Array))
 	var coop_space := _arena_contract.get("coop_space", {}) as Dictionary
 	if alive.size() == 1:
 		var nearest_distance: float = INF
@@ -705,13 +575,6 @@ func _choose_join_safe_center() -> Vector3:
 	if from_boss.length() < clearance or boss_forward.dot(from_boss.normalized()) < 0.0:
 		from_boss = boss_forward * clearance
 	desired = _boss.global_position + from_boss
-
-	var local := to_local(desired)
-	var radius := float(_active_sequence.get("safe_zone_radius_m"))
-	var half_width := _usable_width_m() * 0.5 - radius
-	var half_depth := _usable_depth_m() * 0.5 - radius
-	local.x = clampf(local.x, -half_width, half_width)
-	local.z = clampf(local.z, -half_depth, half_depth)
 	var local := to_local(desired)
 	var radius := float(_active_sequence.get("safe_zone_radius_m"))
 	local.x = clampf(local.x, -_width_m * 0.5 + radius, _width_m * 0.5 - radius)
@@ -752,7 +615,6 @@ func _resolve_join(active_frame: int) -> void:
 
 func _damage_tick_due(active_frame: int) -> bool:
 	var interval := int(_active_sequence.get("damage_interval_frames"))
-	return interval > 0 and (active_frame == 1 or (active_frame - 1) % interval == 0)
 	return active_frame == 1 or (active_frame - 1) % interval == 0
 
 
@@ -774,18 +636,6 @@ func _apply_sequence_damage(player: Node3D) -> void:
 	_sequence_hits[player.get_instance_id()] = _sequence_frame
 
 
-func audit_layout() -> PackedStringArray:
-	var failures := PackedStringArray()
-	_check(_usable_width_m() >= 20.0 and _usable_depth_m() >= 16.0,
-		"dimensao minima 20 x 16 m", failures)
-	_check(float(_config.get("threshold_depth_m")) >= 4.0,
-		"limiar com pelo menos 4 m", failures)
-	_check(float(_config.get("flank_clearance_m")) >= 3.0,
-		"dois flancos com pelo menos 3 m", failures)
-	var positions := _marker_offsets()
-	var left := _vector_from_array(positions.get("separate_left", []) as Array)
-	var right := _vector_from_array(positions.get("separate_right", []) as Array)
-	var boss := _vector_from_array(positions.get("boss", []) as Array)
 func reset_attempt() -> void:
 	end_sequence()
 	_cancel_revive_channel("reset_tentativa", false)
@@ -799,6 +649,8 @@ func reset_attempt() -> void:
 		if is_instance_valid(root):
 			root.queue_free()
 	_revive_markers.clear()
+	if controller_only:
+		return
 	_approach_players.clear()
 	_committed_players.clear()
 	_sync_players()
@@ -1033,8 +885,6 @@ func audit_layout() -> PackedStringArray:
 		"andar ate ao patamar emite o pedido de entrada", failures)
 	_check(get_node_or_null("Boundaries") != null,
 		"o limite visivel tem colisao coincidente", failures)
-	for marker_value: Variant in positions:
-		var marker_id := String(marker_value)
 	for marker_id: StringName in _marker_positions:
 		_check(get_node_or_null("Markers/%s" % marker_id) != null,
 			"marcador %s existe" % marker_id, failures)
@@ -1058,10 +908,6 @@ func _build_floor() -> void:
 				rocky_tiles.append(transform)
 			else:
 				clean_tiles.append(transform)
-	_add_multimesh(floor_root, ASSET_FLOOR, clean_tiles, "FloorTiles")
-	_add_multimesh(floor_root, ASSET_FLOOR_ROCKS, rocky_tiles, "RockyFloorTiles")
-	_add_static_box(floor_root, "FloorCollision",
-		Vector3(_usable_width_m(), 0.4, _usable_depth_m()),
 	_add_multimesh(floor_root, _asset_path(&"floor"), clean_tiles, "FloorTiles")
 	_add_multimesh(floor_root, _asset_path(&"floor_rocks"), rocky_tiles, "RockyFloorTiles")
 	_add_static_box(floor_root, "FloorCollision", Vector3(_width_m, 0.4, _depth_m),
@@ -1074,10 +920,9 @@ func _build_floor_reading() -> void:
 	add_child(reading)
 	var flank_material := _material(Color("#4b3432"), 0.97)
 	var flank_marks: Array[Transform3D] = []
-	for value: Variant in _config.get("flank_offsets_m", []):
-		var flank := _vector_from_array(value as Array)
+	for x: float in [-8.0, 8.0]:
 		for z: float in [-4.4, -1.1, 2.2, 5.5]:
-			flank_marks.append(Transform3D(Basis.IDENTITY, Vector3(flank.x, 0.065, z)))
+			flank_marks.append(Transform3D(Basis.IDENTITY, Vector3(x, 0.065, z)))
 	_add_box_multimesh(reading, Vector3(3.0, 0.035, 2.45), flank_marks,
 		flank_material, "BrokenFlankInlays")
 	var join_material := _material(Color("#82765d"), 0.96)
@@ -1090,15 +935,11 @@ func _build_floor_reading() -> void:
 	torus.ring_segments = 8
 	join_ring.mesh = torus
 	join_ring.material_override = join_material
-	var join_offset := _vector_from_array(
-		_marker_offsets().get("join", []) as Array)
-	join_ring.position = Vector3(join_offset.x, 0.055, join_offset.z)
+	join_ring.position = Vector3(0.0, 0.055, 2.0)
 	join_ring.scale = Vector3(1.0, 0.16, 1.0)
 	join_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	reading.add_child(join_ring)
 	var threshold_material := _material(Color("#5d4e3d"), 0.96)
-	_add_visual_box(reading, "Threshold",
-		Vector3(4.0, 0.045, float(_config.get("threshold_depth_m"))),
 	_add_visual_box(reading, "Threshold", Vector3(4.0, 0.045, _threshold_depth_m),
 		Vector3(0.0, 0.08, 8.75), threshold_material)
 
@@ -1108,34 +949,6 @@ func _build_boundaries() -> void:
 	boundaries.name = "Boundaries"
 	add_child(boundaries)
 	var stone := _material(Color("#292d31"), 0.98)
-	_add_visual_box(boundaries, "NorthLeftFoundation", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(-7.25, WALL_HEIGHT_M * 0.5, -11.5), stone)
-	_add_visual_box(boundaries, "NorthRightFoundation", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(7.25, WALL_HEIGHT_M * 0.5, -11.5), stone)
-	_add_visual_box(boundaries, "WestFoundation",
-		Vector3(1.0, WALL_HEIGHT_M, _usable_depth_m()),
-		Vector3(-12.5, WALL_HEIGHT_M * 0.5, 0.0), stone)
-	_add_visual_box(boundaries, "EastFoundation",
-		Vector3(1.0, WALL_HEIGHT_M, _usable_depth_m()),
-		Vector3(12.5, WALL_HEIGHT_M * 0.5, 0.0), stone)
-	_add_visual_box(boundaries, "SouthLeftFoundation", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(-7.25, WALL_HEIGHT_M * 0.5, 11.5), stone)
-	_add_visual_box(boundaries, "SouthRightFoundation", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(7.25, WALL_HEIGHT_M * 0.5, 11.5), stone)
-	_add_static_box(boundaries, "NorthLeftCollision", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(-7.25, WALL_HEIGHT_M * 0.5, -11.5))
-	_add_static_box(boundaries, "NorthRightCollision", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(7.25, WALL_HEIGHT_M * 0.5, -11.5))
-	_add_static_box(boundaries, "WestCollision",
-		Vector3(1.0, WALL_HEIGHT_M, _usable_depth_m()),
-		Vector3(-12.5, WALL_HEIGHT_M * 0.5, 0.0))
-	_add_static_box(boundaries, "EastCollision",
-		Vector3(1.0, WALL_HEIGHT_M, _usable_depth_m()),
-		Vector3(12.5, WALL_HEIGHT_M * 0.5, 0.0))
-	_add_static_box(boundaries, "SouthLeftCollision", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(-7.25, WALL_HEIGHT_M * 0.5, 11.5))
-	_add_static_box(boundaries, "SouthRightCollision", Vector3(10.5, WALL_HEIGHT_M, 1.0),
-		Vector3(7.25, WALL_HEIGHT_M * 0.5, 11.5))
 	var entrance := _arena_contract.get("entrance", {}) as Dictionary
 	var gate_size := _vector_from_array(entrance.get("collision_size_m", []) as Array)
 	var boundary_thickness := 1.0
@@ -1326,12 +1139,6 @@ func _build_markers() -> void:
 	var markers := Node3D.new()
 	markers.name = "Markers"
 	add_child(markers)
-	for marker_value: Variant in _marker_offsets():
-		var marker_id := String(marker_value)
-		var marker := Marker3D.new()
-		marker.name = marker_id
-		marker.position = _vector_from_array(
-			_marker_offsets().get(marker_id, []) as Array)
 	for marker_id: StringName in _marker_positions:
 		var marker := Marker3D.new()
 		marker.name = String(marker_id)
@@ -1556,193 +1363,6 @@ func _synthesise_wind() -> AudioStreamWAV:
 	return stream
 
 
-func _tick_resurrection(delta: float) -> void:
-	_refresh_downed_players(delta)
-	if _resurrection_used:
-		_cancel_revive_channel("utilizacao_consumida", false)
-		return
-	var downed := _first_revivable_player()
-	if downed == null:
-		_cancel_revive_channel("sem_corpo_valido", false)
-		return
-	var reviver := _find_reviver_for(downed)
-	if reviver == null:
-		_cancel_revive_channel("interaccao_ou_distancia", true)
-		return
-	if _reviver != reviver or _revived != downed:
-		_start_revive_channel(reviver, downed)
-		return
-	var current_health := float(reviver.get("health"))
-	if bool(_resurrection_contract.get("damage_interrupts")) \
-			and current_health < _reviver_last_health:
-		_cancel_revive_channel("dano", true)
-		return
-	_reviver_last_health = current_health
-	_revive_progress += delta
-	_refresh_revive_marker(downed)
-	if _revive_progress >= float((_config.get("resurrection", {}) as Dictionary).get(
-			"channel_seconds")):
-		_complete_revive()
-
-
-func _refresh_downed_players(delta: float) -> void:
-	var window := float(_resurrection_contract.get("window_seconds"))
-	for player: Node3D in _players:
-		var id := player.get_instance_id()
-		if _is_alive(player):
-			if _downed_elapsed.has(id):
-				_remove_revive_marker(id)
-				_downed_elapsed.erase(id)
-				_downed_expired.erase(id)
-			continue
-		if not _downed_elapsed.has(id):
-			_downed_elapsed[id] = 0.0
-			_downed_expired[id] = false
-			_build_revive_marker(player)
-		else:
-			_downed_elapsed[id] = float(_downed_elapsed[id]) + delta
-		if not bool(_downed_expired[id]) and float(_downed_elapsed[id]) >= window:
-			_downed_expired[id] = true
-			_remove_revive_marker(id)
-			revive_window_expired.emit(player)
-		elif not bool(_downed_expired[id]):
-			_refresh_revive_marker(player)
-
-
-func _first_revivable_player() -> Node3D:
-	for player: Node3D in _players:
-		var id := player.get_instance_id()
-		if not _is_alive(player) and _downed_elapsed.has(id) \
-				and not bool(_downed_expired[id]):
-			return player
-	return null
-
-
-func _find_reviver_for(downed: Node3D) -> Node3D:
-	var radius := float(_config.get("revive_radius_m"))
-	var closest: Node3D
-	var closest_distance := INF
-	for player: Node3D in _players:
-		if player == downed or not _is_alive(player) or not _revive_intent_for(player):
-			continue
-		var distance := player.global_position.distance_to(downed.global_position)
-		if distance <= radius and distance < closest_distance:
-			closest = player
-			closest_distance = distance
-	return closest
-
-
-func _revive_intent_for(player: Node3D) -> bool:
-	var id := player.get_instance_id()
-	if _revive_intents.has(id):
-		return bool(_revive_intents[id])
-	var action := String((_config.get("resurrection", {}) as Dictionary).get(
-		"input_action"))
-	return player == _local_player and Input.is_action_pressed(action)
-
-
-func _start_revive_channel(reviver: Node3D, downed: Node3D) -> void:
-	_reviver = reviver
-	_revived = downed
-	_revive_progress = 0.0
-	_reviver_last_health = float(reviver.get("health"))
-	var resurrection := _config.get("resurrection", {}) as Dictionary
-	if bool(resurrection.get("boss_targets_reviver")) and _boss.has_method("taunt"):
-		_boss.call("taunt", reviver, float(resurrection.get("channel_seconds")))
-	var sounds := resurrection.get("sound_profiles", {}) as Dictionary
-	Sfx.play(String(sounds.get("begin")), downed.global_position)
-	revive_channel_started.emit(reviver, downed)
-
-
-func _cancel_revive_channel(reason: String, announce: bool) -> void:
-	if _reviver == null and _revived == null:
-		return
-	if announce and is_instance_valid(_revived):
-		var sounds := ((_config.get("resurrection", {}) as Dictionary).get(
-			"sound_profiles", {}) as Dictionary)
-		Sfx.play(String(sounds.get("cancel")), _revived.global_position)
-	_reviver = null
-	_revived = null
-	_revive_progress = 0.0
-	_reviver_last_health = 0.0
-	revive_channel_cancelled.emit(reason)
-
-
-func _complete_revive() -> void:
-	if not is_instance_valid(_revived) or not _revived.has_method("respawn_at"):
-		_cancel_revive_channel("interface_de_jogador_em_falta", true)
-		return
-	var player := _revived
-	var mana_before: Variant = player.get("mana")
-	var meditation_before: Variant = player.get("meditation_uses")
-	var stamina: Object = player.get("stamina") as Object
-	var stamina_before: Variant = stamina.get("current") if stamina != null else null
-	player.call("respawn_at", player.global_position)
-	player.set("health", float(player.get("max_health")) * float(
-		_resurrection_contract.get("revived_health_fraction")))
-	if mana_before != null:
-		player.set("mana", mana_before)
-	if meditation_before != null:
-		player.set("meditation_uses", meditation_before)
-	if stamina != null and stamina_before != null:
-		stamina.set("current", stamina_before)
-	_resurrection_used = true
-	var id := player.get_instance_id()
-	_downed_elapsed.erase(id)
-	_downed_expired.erase(id)
-	_remove_revive_marker(id)
-	var sounds := ((_config.get("resurrection", {}) as Dictionary).get(
-		"sound_profiles", {}) as Dictionary)
-	Sfx.play(String(sounds.get("success")), player.global_position)
-	_reviver = null
-	_revived = null
-	_revive_progress = 0.0
-	_reviver_last_health = 0.0
-	player_revived.emit(player)
-
-
-func _build_revive_marker(player: Node3D) -> void:
-	var colors := _config.get("colors", {}) as Dictionary
-	var labels := _config.get("labels", {}) as Dictionary
-	var root := _make_disc(
-		float(_config.get("revive_radius_m")),
-		Color(String(colors.get("revive"))),
-		float(_config.get("guide_alpha")),
-		String(labels.get("revive")))
-	add_child(root)
-	root.global_position = player.global_position
-	var label := _first_label(root)
-	_revive_markers[player.get_instance_id()] = {"root": root, "label": label}
-
-
-func _refresh_revive_marker(player: Node3D) -> void:
-	var marker_data := _revive_markers.get(player.get_instance_id(), {}) as Dictionary
-	if marker_data.is_empty():
-		return
-	var root := marker_data.get("root") as Node3D
-	var label := marker_data.get("label") as Label3D
-	if is_instance_valid(root):
-		root.global_position = player.global_position
-	if is_instance_valid(label):
-		var action := String((_config.get("resurrection", {}) as Dictionary).get(
-			"input_action"))
-		var channel := float((_config.get("resurrection", {}) as Dictionary).get(
-			"channel_seconds"))
-		label.text = "%s · %s %.1f/%.1f s" % [
-			SettingsSystem.binding_label(action),
-			String((_config.get("labels", {}) as Dictionary).get("revive")),
-			_revive_progress,
-			channel,
-		]
-
-
-func _remove_revive_marker(id: int) -> void:
-	var marker_data := _revive_markers.get(id, {}) as Dictionary
-	var root := marker_data.get("root") as Node3D
-	if is_instance_valid(root):
-		root.queue_free()
-	_revive_markers.erase(id)
-
 func _make_disc(radius: float, colour: Color, alpha: float, text: String) -> Node3D:
 	var root := Node3D.new()
 	var mesh_instance := MeshInstance3D.new()
@@ -1812,8 +1432,6 @@ func _alive_players() -> Array[Node3D]:
 
 
 func _is_alive(player: Node3D) -> bool:
-	return is_instance_valid(player) and player.has_method("is_alive") \
-		and bool(player.call("is_alive"))
 	return is_instance_valid(player) and player.has_method("is_alive") and bool(
 		player.call("is_alive"))
 
@@ -1821,25 +1439,6 @@ func _is_alive(player: Node3D) -> bool:
 func _active_or_named_sequence(id: String) -> Dictionary:
 	if String(_active_sequence.get("id", "")) == id:
 		return _active_sequence
-	return ((_config.get("coop_sequences", {}) as Dictionary).get(
-		id, {}) as Dictionary)
-
-
-func _usable_width_m() -> float:
-	return float(_config.get("usable_width_m"))
-
-
-func _usable_depth_m() -> float:
-	return float(_config.get("usable_depth_m"))
-
-
-func _marker_offsets() -> Dictionary:
-	return _config.get("marker_offsets_m", {}) as Dictionary
-
-
-func _vector_from_array(value: Array) -> Vector3:
-	if value.size() < 3:
-		push_error("Vorgar: vector de arena incompleto na ficha")
 	return ((_config.get("coop_sequences", {}) as Dictionary).get(id, {}) as Dictionary)
 
 
@@ -1966,7 +1565,6 @@ func _run_command_line_audit() -> void:
 		and not (_cover_collisions[&"left"] as CollisionShape3D).disabled,
 		"refugio restaura os dois estados pre-feitos", failures)
 	print("=== ARENA: %d passaram, %d falharam ===" % [
-		_marker_offsets().size() + 15 - failures.size(), failures.size()])
 		_marker_positions.size() + 18 - failures.size(), failures.size()])
 	get_tree().quit(0 if failures.is_empty() else 1)
 
