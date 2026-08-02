@@ -626,15 +626,189 @@
     "descricao_visual": "chefe orc de três metros com cabeça descoberta, armadura serrada de ferro negro, troféus de osso e cutelo largo de 210 cm diante de um portão rachado", "fatia_1": true,
     "phase_2_at_health_fraction": 0.5,
     "attacks": [
-      {"id":"cleave","display_name":"Talho","template":"recto_aparavel","phase_1_frames":28,"phase_2_frames":12,"active":8,"recovery":34,"weight":"light","actor":"machado largo de ferro negro","tell":"recua junto ao ombro e expõe a lâmina inteira","impact":"a lâmina corta 3,2 m num arco frontal de 70 graus","sound":"ferro pesado desliza na ombreira e o chefe rosna","anchor":"gume do machado","range":3.2,"arc_degrees":70,"damage":113},
-      {"id":"wide_sweep","display_name":"Varrimento largo","template":"varrimento_aparavel","phase_1_frames":30,"phase_2_frames":14,"active":10,"recovery":38,"weight":"light","actor":"machado largo de 210 cm","tell":"roda a cintura e deixa o gume atrás do corpo","impact":"o gume desenha 3,4 m e 180 graus, sem acertar para lá do arco visível","sound":"ponta do machado risca o chão antes do assobio circular","anchor":"ponta exterior do gume","range":3.4,"arc_degrees":180,"damage":126},
-      {"id":"overhead_crush","display_name":"Esmagamento","template":"pancada_curta","phase_1_frames":40,"phase_2_frames":16,"active":8,"recovery":46,"weight":"heavy","actor":"machado seguro com as duas mãos","tell":"sobe sobre os chifres e deixa o peito aberto","impact":"a cabeça do machado cai 3 m numa faixa de 60 graus","sound":"cabo de madeira estala sob as mãos e o ar fica grave","anchor":"cabeça do machado","range":3.0,"arc_degrees":60,"gramatica":["DUAS_LARGADAS"],"release_variants_frames":[56,72],"release_variant_weights_pct":[80,20],"late_release_signal":{"frame":64,"visual":"gume sobe mais um palmo","sound":"segundo estalo seco do cabo"},"release_choice_reads_input":false,"damage":196},
+      {"id":"cleave","display_name":"Talho","template":"recto_aparavel","phase_1_frames":28,"phase_2_frames":12,"active":5,"recovery":34,"weight":"light","actor":"machado largo de ferro negro","tell":"recua junto ao ombro e expõe a lâmina inteira","impact":"a lâmina corta 3,2 m num arco frontal de 70 graus","sound":"ferro pesado desliza na ombreira e o chefe rosna","anchor":"gume do machado","range":3.2,"arc_degrees":70,"damage":113},
+      {"id":"wide_sweep","display_name":"Varrimento largo","template":"varrimento_aparavel","phase_1_frames":30,"phase_2_frames":14,"active":6,"recovery":38,"weight":"light","actor":"machado largo de 210 cm","tell":"roda a cintura e deixa o gume atrás do corpo","impact":"o gume desenha 3,4 m e 180 graus, sem acertar para lá do arco visível","sound":"ponta do machado risca o chão antes do assobio circular","anchor":"ponta exterior do gume","range":3.4,"arc_degrees":180,"damage":126},
+      {"id":"overhead_crush","display_name":"Esmagamento","template":"pancada_curta","phase_1_frames":40,"phase_2_frames":16,"active":6,"recovery":46,"weight":"heavy","actor":"machado seguro com as duas mãos","tell":"sobe sobre os chifres e deixa o peito aberto","impact":"a cabeça do machado cai 3 m numa faixa de 60 graus","sound":"cabo de madeira estala sob as mãos e o ar fica grave","anchor":"cabeça do machado","range":3.0,"arc_degrees":60,"gramatica":["DUAS_LARGADAS"],"release_variants_frames":[56,72],"release_variant_weights_pct":[80,20],"late_release_signal":{"frame":64,"visual":"gume sobe mais um palmo","sound":"segundo estalo seco do cabo"},"release_choice_reads_input":false,"damage":196},
       {"id":"shoulder_charge","display_name":"Investida de ombro","template":"investida","phase_1_frames":24,"phase_2_frames":12,"active":8,"recovery":40,"weight":"light","actor":"ombreira esquerda de ferro negro","tell":"bate a bota e baixa o corpo até o chifre apontar em frente","impact":"a massa de Vorgar percorre 6,5 m e só acerta uma vez por passagem","sound":"patada seca seguida de placas a bater","anchor":"ombreira e vector de 6,5 m no chão","range":2.8,"arc_degrees":50,"lunge_distance":6.5,"damage":137},
-      {"id":"ground_pound","display_name":"Pancada de chão","template":"area_instantanea","phase_1_frames":36,"phase_2_frames":16,"active":12,"recovery":48,"weight":"heavy","actor":"punho fechado e joelho no chão","tell":"ergue o punho enquanto a poeira forma um círculo completo","impact":"onda de terra ocupa o círculo visível de raio 5 m uma única vez","sound":"carga grave sobe e cala no impacto","anchor":"círculo de 5 m centrado no punho","radius":5.0,"is_aoe":true,"damage":184}
+      {"id":"ground_pound","display_name":"Pancada de chão","template":"area_instantanea","phase_1_frames":36,"phase_2_frames":16,"active":6,"recovery":48,"weight":"heavy","actor":"punho fechado e joelho no chão","tell":"ergue o punho enquanto a poeira forma um círculo completo","impact":"onda de terra ocupa o círculo visível de raio 5 m uma única vez","sound":"carga grave sobe e cala no impacto","anchor":"círculo de 5 m centrado no punho","radius":5.0,"is_aoe":true,"damage":184}
     ],
     "phases": {
       "1": {"patterns": [["cleave"],["wide_sweep"],["overhead_crush"],["shoulder_charge"],["cleave","cleave"],["ground_pound"]], "gap_between_patterns": 1.7},
       "2": {"patterns": [["cleave","wide_sweep","overhead_crush"],["shoulder_charge","cleave","cleave"],["wide_sweep","wide_sweep"],["overhead_crush","shoulder_charge"],["cleave","ground_pound"],["shoulder_charge","wide_sweep","cleave"]], "gap_between_patterns": 1.0}
+    },
+    "coop_health_status": "[TENSÃO] pergunta 24: o multiplicador 1,8 continua apenas [PROTO] herdado; SEPARAR/JUNTAR não aumentam PV nem dano e não o promovem a decisão.",
+    "vorgar_encounter": {
+      "_codex": {
+        "status": "[CODEX]",
+        "reason": "as duas fases fazem perguntas espaciais diferentes e a ressurreição é uma jogada limitada, interrompível e legível, sem alterar os cinco ataques existentes; a sala usa 24 × 22 m porque conserva duas rotas de fuga com Vorgar e dois jogadores",
+        "alternative_discarded": "aumentar PV/dano a dois, deixar a ressurreição automática ou conservar 20 × 16 m; as duas primeiras removem habilidade/custo e a última comprime os flancos quando o maior volume está activo"
+      },
+      "arena_id": "arena_vorgar",
+      "usable_width_m": 24.0,
+      "usable_depth_m": 22.0,
+      "threshold_depth_m": 4.0,
+      "flank_clearance_m": 4.75,
+      "marker_offsets_m": {
+        "entry": [0.0, 0.55, 7.0],
+        "partner_entry": [2.5, 0.55, 7.0],
+        "boss": [0.0, 0.55, -5.0],
+        "separate_left": [-8.0, 0.05, 1.0],
+        "separate_right": [8.0, 0.05, 1.0],
+        "join": [0.0, 0.05, 2.0],
+        "refuge_left": [-6.0, 0.05, 2.2],
+        "refuge_right": [6.0, 0.05, 2.2]
+      },
+      "flank_offsets_m": [[-8.0, 0.0, 1.0], [8.0, 0.0, 1.0]],
+      "refuge_offsets_m": [[-6.0, 0.0, 2.2], [6.0, 0.0, 2.2]],
+      "flank_marker_radius_m": 1.1,
+      "refuge_marker_radius_m": 1.4,
+      "revive_radius_m": 1.8,
+      "marker_height_m": 0.025,
+      "marker_y_offset_m": 0.045,
+      "marker_radial_segments": 32,
+      "label_height_m": 0.22,
+      "label_font_size": 72,
+      "guide_alpha": 0.22,
+      "danger_alpha": 0.38,
+      "safe_alpha": 0.52,
+      "emission_energy": 0.8,
+      "max_visual_meshes": 7,
+      "max_visual_labels": 7,
+      "colors": {
+        "flank": "#6bb8d6",
+        "refuge": "#d6b96b",
+        "danger": "#d64545",
+        "safe": "#78c985",
+        "revive": "#eee2b2"
+      },
+      "labels": {
+        "flank": "↔ FLANCO",
+        "refuge": "+ REFÚGIO",
+        "separate": "SEPARAR",
+        "join": "JUNTAR",
+        "revive": "LEVANTAR"
+      },
+      "honesty_contract": {
+        "minimum_warning_frames": 30,
+        "instant_active_frames_range": [3, 6],
+        "escape_vector_count_range": [1, 2],
+        "visual_cue_fields": ["ancora", "forma", "inicio", "compromisso", "fim", "fora_ecra"]
+      },
+      "coop_phase_plan": {
+        "1": {"sequence_id": "separar", "normal_patterns_before": 2},
+        "2": {"sequence_id": "juntar", "normal_patterns_before": 1}
+      },
+      "coop_sequences": {
+        "separar": {
+          "id": "separar",
+          "display_name": "Marcas divergentes",
+          "objectivo_coop": "separar",
+          "phase_1_frames": 48,
+          "phase_2_frames": 12,
+          "startup": 60,
+          "active": 30,
+          "recovery": 42,
+          "phase_4_frames": 12,
+          "phase_5_frames": 30,
+          "aviso_total_frames": 60,
+          "fase_1": "48 f — Vorgar finca o machado e grava uma aura completa sob cada jogador",
+          "fase_2": "12 f — as duas auras pulsam três vezes; a intersecção fica branca antes de ferir",
+          "fase_3": "30 f — apenas a intersecção visível fica activa, uma aplicação por jogador",
+          "fase_4": "12 f — as auras apagam-se de fora para dentro",
+          "fase_5": "30 f — Vorgar arranca o machado e devolve a vez",
+          "tipo_contacto": "volume_persistente",
+          "damage_interval_frames": 30,
+          "weight": "light",
+          "parryable": false,
+          "is_aoe": true,
+          "vectores_fuga": ["afastar_se"],
+          "pergunta": "separar_os_corpos_sem_perder_os_flancos",
+          "momento_compromisso_frame": 48,
+          "curva_seguimento": {"fase_1_deg_s": 0.0, "fase_2_deg_s": 0.0, "fase_3_deg_s": 0.0},
+          "seguimento_alvos": "as auras ficam presas aos jogadores; o chefe não roda e a intersecção visível é a hitbox",
+          "marker_radius_m": 3.0,
+          "minimum_player_separation_m": 6.0,
+          "solo_rule": "a aura fixa-se no chão no compromisso; sair dela por qualquer flanco resolve",
+          "solo_marker_freeze_frame": 48,
+          "som_anuncio": {
+            "cue_id": "attack.vorgar.separar",
+            "descricao": "duas pancadas graves alternadas, uma por marca, seguidas de um silêncio no compromisso",
+            "profile": "attack_area",
+            "alcance_informativo_m": 24.0
+          },
+          "sinal_visual_equivalente": {
+            "ancora": "círculo completo preso aos pés de cada jogador",
+            "forma": "dois discos vermelhos; a sobreposição pulsa a branco",
+            "inicio": "surge no frame 1 em ambos, nunca apenas no alvo actual",
+            "compromisso": "os alvos ficam escolhidos no frame 48; o pulso final fecha no frame 60",
+            "fim": "os discos existem exactamente durante os 30 frames activos e depois apagam-se",
+            "fora_ecra": "cunha dupla ↔ aponta para o parceiro e mostra três bandas de distância"
+          }
+        },
+        "juntar": {
+          "id": "juntar",
+          "display_name": "Cerco convergente",
+          "objectivo_coop": "juntar",
+          "phase_1_frames": 216,
+          "phase_2_frames": 30,
+          "startup": 246,
+          "active": 90,
+          "recovery": 60,
+          "phase_4_frames": 12,
+          "phase_5_frames": 48,
+          "aviso_total_frames": 246,
+          "fase_1": "216 f — Vorgar raspa o machado em círculo e o exterior da arena acende por quadrantes",
+          "fase_2": "30 f — a zona comum verde pulsa três vezes entre os jogadores e o chefe deixa de seguir",
+          "fase_3": "90 f — o exterior vermelho fica activo por pulsos de 30 f; a zona comum nunca fere",
+          "fase_4": "12 f — o vermelho recua até ao bordo",
+          "fase_5": "48 f — Vorgar fica ajoelhado junto ao machado e devolve a vez",
+          "tipo_contacto": "volume_persistente",
+          "damage_interval_frames": 30,
+          "weight": "light",
+          "parryable": false,
+          "is_aoe": true,
+          "vectores_fuga": ["aproximar_se"],
+          "pergunta": "alcançar_a_mesma_zona_sem_atravessar_o_chefe",
+          "momento_compromisso_frame": 216,
+          "curva_seguimento": {"fase_1_deg_s": 180.0, "fase_2_deg_s": 30.0, "fase_3_deg_s": 0.0},
+          "safe_zone_radius_m": 3.0,
+          "safe_zone_min_boss_distance_m": 4.0,
+          "solo_rule": "a zona nasce no flanco mais próximo e continua a exigir atravessar espaço antes do compromisso",
+          "som_anuncio": {
+            "cue_id": "attack.vorgar.juntar",
+            "descricao": "raspagem circular grave que fecha para uma única nota limpa no centro seguro",
+            "profile": "attack_area",
+            "alcance_informativo_m": 24.0
+          },
+          "sinal_visual_equivalente": {
+            "ancora": "chão exterior vermelho e disco verde comum, ambos completos",
+            "forma": "quatro quadrantes fecham para um círculo verde alcançável pelos dois",
+            "inicio": "o exterior começa a acender no frame 1 sem tapar a zona comum",
+            "compromisso": "a zona fixa-se no frame 216 e o terceiro pulso fecha no frame 246",
+            "fim": "o vermelho existe exactamente durante os 90 frames activos e recua no frame seguinte",
+            "fora_ecra": "cunha ↔ aponta para o centro da zona comum e conserva as três bandas de distância"
+          }
+        }
+      },
+      "resurrection": {
+        "input_action": "interact",
+        "channel_seconds": 6.0,
+        "shared_use_consumed": "on_success",
+        "boss_targets_reviver": true,
+        "cost": "consome a única ressurreição partilhada desta tentativa quando conclui",
+        "risk": "dano, sair do raio ou largar a interacção apagam todo o progresso enquanto Vorgar fixa o ressuscitador",
+        "art_source": "corpo existente + um anel e etiqueta sintetizados por ArenaVorgar; sem asset novo",
+        "sound_source": "perfis sintetizados existentes em Sfx",
+        "sound_profiles": {"begin": "telegraph", "cancel": "posture_break", "success": "parry"}
+      },
+      "performance_budget": {
+        "target_hardware": "Intel Iris Xe integrada, 8 GB, 1920 × 1080",
+        "p99_frame_ms_max": 16.67,
+        "worst_frame_ms_max": 20.0,
+        "working_set_mb_max": 2500.0,
+        "static_obstacles_max": 4,
+        "persistent_rigid_bodies_max": 0
+      }
     }
   }
 }

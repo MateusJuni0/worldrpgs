@@ -24,12 +24,17 @@ func arena_controller() -> ArenaVorgar:
 func _install_vorgar_arena() -> void:
 	if is_instance_valid(_arena_vorgar) or not is_inside_tree() or get_parent() == null:
 		return
+	# O harness de Lei 4 usa exactamente a mesma cena com e sem este controlador.
+	# A flag existe apenas na linha de comandos e nunca altera uma sessão jogada.
+	if "--vorgar-controller=off" in OS.get_cmdline_user_args():
+		return
 	var encounter := data.get("vorgar_encounter", {}) as Dictionary
 	if encounter.is_empty():
 		push_error("Vorgar: ficha vorgar_encounter em falta")
 		return
 	_arena_vorgar = ArenaVorgarScript.new()
 	_arena_vorgar.name = "ArenaVorgar"
+	_arena_vorgar.controller_only = true
 	get_parent().add_child(_arena_vorgar)
 	_arena_vorgar.global_position = home
 	var local_player: Node3D
