@@ -53,19 +53,44 @@ func _test_integrations_in_real_game() -> void:
 	_check(lair != null and int(lair_audit.get("module_instances", 0)) > 0 \
 			and int(lair_audit.get("collision_shapes", 0)) > 0,
 		"jogo real: a Toca modular aparece no mundo e e navegavel")
-	var occupied_markers := 0
+	# ⚠️ 02-08: isto exigia um CORPO em cada marcador da Toca ao frame zero. A
+	# populacao passou a ser virtualizada — todas as colocacoes existem no plano
+	# e so as proximas do jogador recebem corpo, por causa do tecto de oito
+	# actores animados (Lei 4). A Toca fica longe do arranque, logo os corpos
+	# ainda nao existem, e o teste falhava por descrever o mundo antigo.
+	#
+	# ⭐ A garantia que interessa NAO mudou: cada marcador tem de ter uma
+	# colocacao PLANEADA — e isso que se verifica agora, que ninguem se perdeu
+	# no caminho.
+	# ⛔ Nao voltar a exigir corpos aqui: obrigaria a instanciar a Toca inteira a
+	# distancia e partia a Lei 4 so para pintar um teste de verde.
+	# Ha DUAS maneiras legitimas de um marcador estar servido, e as duas contam:
+	# o inimigo ja tem corpo no mundo, ou tem colocacao no plano da populacao
+	# virtualizada. Exigir so uma delas era o que fazia este teste mentir.
+	var populacao := gameplay.get_node_or_null("SpawnPopulation")
+	var plano: Array = []
+	if populacao != null:
+		plano = populacao.call("plan_snapshot")
+	var servidos := 0
 	if lair != null:
 		for marker: Marker3D in lair.get_enemy_markers():
+			var alvo := Vector2(marker.global_position.x, marker.global_position.z)
+			var servido := false
 			for node: Node in get_tree().get_nodes_in_group("enemies"):
 				var enemy := node as Enemy
-				if enemy != null and gameplay.is_ancestor_of(enemy) \
-						and Vector2(enemy.global_position.x, enemy.global_position.z).distance_to(
-							Vector2(marker.global_position.x, marker.global_position.z)) \
-						< enemy.body_radius * 2.0:
-					occupied_markers += 1
+				if enemy != null and gameplay.is_ancestor_of(enemy) 						and Vector2(enemy.global_position.x, enemy.global_position.z)							.distance_to(alvo) < maxf(enemy.body_radius * 2.0, 2.5):
+					servido = true
 					break
-	_check(lair != null and occupied_markers == lair.get_enemy_markers().size(),
-		"jogo real: os encontros ocupam os marcadores da Toca")
+			if not servido:
+				for colocacao: Dictionary in plano:
+					var pos := colocacao.get("position", Vector3.ZERO) as Vector3
+					if Vector2(pos.x, pos.z).distance_to(alvo) < 2.5:
+						servido = true
+						break
+			if servido:
+				servidos += 1
+	_check(lair != null and servidos == lair.get_enemy_markers().size(),
+		"jogo real: os marcadores da Toca tem encontro (com corpo ou planeado)")
 	var world_environment := world.get_node_or_null("WorldEnvironment") as WorldEnvironment \
 			if world != null else null
 	_check(world_environment != null and world_environment.environment != null \
@@ -106,9 +131,23 @@ func _prove_monsters(gameplay: Node) -> void:
 
 
 func _prove_first_boss_defeat(gameplay: Node, actor: Player) -> void:
+	# ⚠️ 02-08: isto exigia o chefe carregado ao frame zero. Com a populacao
+	# virtualizada, o Vorgar so ganha corpo quando o jogador se aproxima — que e
+	# o que respeita o tecto de oito actores animados (Lei 4).
+	# ⭐ A garantia continua a mesma e passa a ser provada como o jogador a prova:
+	# ANDA-SE ATE LA e o chefe tem de estar vivo. Se nao aparecer, o teste falha
+	# na mesma — e por boa razao, porque o jogador tambem nao o encontraria.
 	var vorgar := gameplay.get("boss") as Enemy
+	if vorgar == null and actor != null:
+		var mundo := gameplay.get("world") as Greybox
+		if mundo != null:
+			actor.global_position = mundo.arena_center + Vector3(0.0, 0.6, 6.0)
+			# Tempo para o produtor de populacao materializar o guardiao.
+			for _f: int in 90:
+				await get_tree().process_frame
+			vorgar = gameplay.get("boss") as Enemy
 	_check(vorgar != null and vorgar.is_inside_tree() and vorgar.is_alive(),
-		"jogo real: o primeiro chefe entra vivo na arena da Toca")
+		"jogo real: chega-se a arena e o primeiro chefe esta la vivo")
 	if vorgar == null or actor == null:
 		return
 	var persistence_handler := Callable(gameplay, "_on_boss_died")

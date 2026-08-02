@@ -1097,3 +1097,16 @@ Relatório completo: [`docs/REVISAO-CODIGO.md`](docs/REVISAO-CODIGO.md). Nenhuma
 | 🟠 | **Dois renderers fazem o mesmo trabalho.** `Enemy.setup()` cria `EnemyVisualRenderer`; `_spawn()` remove-o imediatamente e instala `MonsterVisual`. Jogo, galeria e testes podem observar caminhos diferentes. | `game/src/enemies/enemy.gd:299-320` · `game/src/main.gd:379-410` |
 | 🟠 | **Lei 1 continua sem prova jogada:** as fórmulas contam 45–70 golpes, mas o percurso não combate Vorgar e o teste integrado prepara a vida para uma morte injectada. | `game/src/autoload/game_data.gd:699-706` · `game/src/tools/percurso.gd:104-115` · `game/scenes/selftest_integrated.gd:109-151` |
 | 🟠 | **Testes sem chão no jogo:** rede não liga duas máquinas; efeitos de magia sem dano só têm `receive_spell_contact` no duplo do teste. | `game/src/net/net_selftest.gd:8-13` · `game/src/spells/spell_delivery.gd:371-384` · `game/src/spells/spell_delivery_self_test.gd:16-23` |
+
+## 🔴 Regressão apanhada por um teste que se recusou a ficar verde — 02-08
+
+⚠️ **`_populate_zone()` está definida em `game/src/main.gd:470` e nunca é chamada.** Foi substituída pelo produtor de população virtualizada — e levou com ela duas coisas que estavam lá dentro:
+
+- ⭐ **os inimigos dos marcadores da Toca** (`lair.get_enemy_markers()` → `_spawn`)
+- ⭐ **o registo do chefe** (`_register_boss`, que liga a barra de vida do Vorgar ao HUD)
+
+⚠️ **Como isto se apanhou, e porque interessa:** dois testes começaram a falhar depois do merge. A tentação era relaxá-los — *"agora a população é virtualizada, os corpos não existem ao frame zero"*. **Relaxei um** (o do chefe passou a **andar até à arena** em vez de o exigir carregado, e isso é mais honesto). **O segundo recusou-se a passar mesmo depois de aceitar as duas formas legítimas** — corpo no mundo *ou* colocação no plano.
+
+⭐ **Era o teste a ter razão.** O orçamento de Brumal declara `orc_spearman: 4 · orc_brute: 2 · goblin_mist_scout: 2` e **nenhum guardião**; os marcadores da Toca não entram no plano, e o Vorgar deixou de ser registado. **O caminho antigo morreu e o novo não assumiu o que ele fazia.**
+
+⛔ **Não fechar isto baixando o teste.** O que falta é o produtor de população passar a cobrir os marcadores da Toca e o guardião, ou `_populate_zone` voltar a ser chamada para essa parte.
