@@ -26,6 +26,7 @@ var _paused_before_map := false
 var _exploration_dirty := false
 var _save_clock := 0.0
 var _persistence_disabled := false
+var _map_proof_requested := false
 
 
 func _ready() -> void:
@@ -48,6 +49,8 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 	for argument: String in OS.get_cmdline_user_args():
 		if argument == "--minimap=off":
 			minimap_enabled = false
+		elif argument == "--map-proof":
+			_map_proof_requested = true
 	var bounds_data: Dictionary = _config.get("zone_bounds_m", {}) as Dictionary
 	var bounds := Rect2(
 		Vector2(float(bounds_data.get("min_x", -110.0)), float(bounds_data.get("min_z", -110.0))),
@@ -63,12 +66,16 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 	_build_minimap(bounds)
 	_build_full_map(bounds)
 	set_minimap_enabled(minimap_enabled)
+	if _map_proof_requested:
+		_run_gameplay_map_proof.call_deferred()
 
 
 func set_minimap_enabled(enabled: bool) -> void:
 	minimap_enabled = enabled
 	if _minimap_panel != null:
 		_minimap_panel.visible = enabled and not _map_open
+	if _minimap_surface != null:
+		_minimap_surface.set_process(enabled and not _map_open)
 
 
 func set_north_up(enabled: bool) -> void:
@@ -95,6 +102,8 @@ func show_full_map() -> void:
 	get_tree().paused = true
 	_full_overlay.visible = true
 	_minimap_panel.visible = false
+	_minimap_surface.set_process(false)
+	_full_surface.set_process(true)
 	_refresh_full_map_labels()
 	_full_surface.call("rebuild_texture")
 	_full_surface.queue_redraw()
@@ -106,6 +115,8 @@ func hide_full_map() -> void:
 	_map_open = false
 	_full_overlay.visible = false
 	_minimap_panel.visible = minimap_enabled
+	_full_surface.set_process(false)
+	_minimap_surface.set_process(minimap_enabled)
 	get_tree().paused = _paused_before_map
 
 
@@ -134,14 +145,168 @@ func reveal_route_for_capture() -> void:
 	_refresh_surfaces(true, true)
 
 
+## Prova jogavel: a cena real cria mundo/jogador/HUD; este piloto carrega nas
+## mesmas acoes do jogador durante 30 s e valida os pixels finais do minimapa.
+## So corre com --map-proof e nunca persiste porque o corredor usa Bench.
+func _run_gameplay_map_proof() -> void:
+	var cartography := _config.get("cartography", {}) as Dictionary
+	var proof := cartography.get("proof", {}) as Dictionary
+	var route := _map_proof_route()
+	if route.is_empty() or not is_instance_valid(player):
+		_finish_map_proof(false, {"reason": "rota ou jogador em falta"})
+		return
+	var walk_seconds := float(proof.get("walk_seconds", 30.0))
+	var arrival_radius := float(proof.get("arrival_radius_m", 2.0))
+	var elapsed := 0.0
+	var walked_distance := 0.0
+	var waypoint := 0
+	var previous_position := player.global_position
+	var stayed_alive := true
+	Input.action_press("move_forward")
+	Input.action_press("dodge_sprint")
+	while elapsed < walk_seconds:
+		while waypoint < route.size() \
+				and _planar_distance(player.global_position, route[waypoint]) <= arrival_radius:
+			waypoint += 1
+		if waypoint < route.size():
+			var direction := route[waypoint] - player.global_position
+			direction.y = 0.0
+			var camera_value: Variant = player.get("camera")
+			if direction.length_squared() > 0.001 and is_instance_valid(camera_value):
+				camera_value.set("_yaw", atan2(-direction.x, -direction.z))
+		await get_tree().physics_frame
+		var current_position := player.global_position
+		walked_distance += _planar_distance(previous_position, current_position)
+		previous_position = current_position
+		elapsed += get_physics_process_delta_time()
+		if player.has_method("is_alive") and not bool(player.call("is_alive")):
+			stayed_alive = false
+	Input.action_release("move_forward")
+	Input.action_release("dodge_sprint")
+	var visible_result := await _capture_map_proof(proof, cartography)
+	visible_result["walked_seconds"] = snappedf(elapsed, 0.01)
+	visible_result["walked_distance_m"] = snappedf(walked_distance, 0.1)
+	visible_result["stayed_alive"] = stayed_alive
+	visible_result["waypoints_reached"] = waypoint
+	visible_result["waypoints_total"] = route.size()
+	var passed := bool(visible_result.get("capture_ok", false)) \
+		and walked_distance >= float(proof.get("min_walk_distance_m", 90.0)) \
+		and stayed_alive \
+		and int(visible_result.get("route_pixels", 0)) >= int(proof.get("min_route_pixels", 80)) \
+		and int(visible_result.get("landmark_pixels", 0)) >= int(proof.get("min_landmark_pixels", 12)) \
+		and int(visible_result.get("scale_pixels", 0)) >= int(proof.get("min_scale_pixels", 30))
+	_finish_map_proof(passed, visible_result)
+
+
+func _map_proof_route() -> Array[Vector3]:
+	var result: Array[Vector3] = []
+	if not is_instance_valid(world):
+		return result
+	var segments: Array = world.get("map_path_segments")
+	if segments.is_empty():
+		return result
+	var spine := segments[0] as PackedVector3Array
+	if spine.is_empty():
+		return result
+	var nearest_rest := Vector3.ZERO
+	var nearest_rest_distance := INF
+	for landmark: Dictionary in world.get("map_landmarks"):
+		if String(landmark.get("type", "")) != "rest":
+			continue
+		var at: Vector3 = landmark.get("position", Vector3.ZERO)
+		var distance := _planar_distance(player.global_position, at)
+		if distance < nearest_rest_distance:
+			nearest_rest = at
+			nearest_rest_distance = distance
+	var branch_index := -1
+	if nearest_rest_distance < INF:
+		var branch_distance := INF
+		for index: int in spine.size():
+			var distance := _planar_distance(spine[index], nearest_rest)
+			if distance < branch_distance:
+				branch_distance = distance
+				branch_index = index
+	for index: int in spine.size():
+		result.append(spine[index])
+		if index == branch_index:
+			result.append(nearest_rest)
+			result.append(spine[index])
+	return result
+
+
+func _capture_map_proof(proof: Dictionary, cartography: Dictionary) -> Dictionary:
+	_minimap_surface.queue_redraw()
+	await RenderingServer.frame_post_draw
+	var frame := get_viewport().get_texture().get_image()
+	var global_rect := _minimap_panel.get_global_rect()
+	var requested := Rect2i(Vector2i(floori(global_rect.position.x),
+		floori(global_rect.position.y)), Vector2i(ceili(global_rect.size.x),
+		ceili(global_rect.size.y)))
+	var available := Rect2i(Vector2i.ZERO, frame.get_size())
+	var crop_rect := requested.intersection(available)
+	if crop_rect.size.x <= 0 or crop_rect.size.y <= 0:
+		return {"capture_ok": false, "reason": "rectangulo do minimapa vazio"}
+	var minimap := frame.get_region(crop_rect)
+	var capture_path := String(proof.get("capture_file",
+		"res://captures/minimapa-30s.png"))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://captures"))
+	var capture_error := minimap.save_png(capture_path)
+	var tolerance := float(proof.get("color_tolerance", 0.16))
+	var route_colour := Color.from_string(String(cartography.get("route_color", "#e3b868")),
+		Color("#e3b868"))
+	var landmark_styles := cartography.get("landmark_styles", {}) as Dictionary
+	var rest_style := landmark_styles.get("rest", {}) as Dictionary
+	var rest_colour := Color.from_string(String(rest_style.get("color", "#ffb44f")),
+		Color("#ffb44f"))
+	var text_colour := Color.from_string(String(cartography.get("text_color", "#f0ead9")),
+		Color("#f0ead9"))
+	var scale_region := Rect2i(0, maxi(0, minimap.get_height() - 42),
+		mini(120, minimap.get_width()), mini(42, minimap.get_height()))
+	return {
+		"capture_ok": capture_error == OK,
+		"capture": capture_path,
+		"route_pixels": _count_colour_pixels(minimap, route_colour, tolerance),
+		"landmark_pixels": _count_colour_pixels(minimap, rest_colour, tolerance),
+		"scale_pixels": _count_colour_pixels(minimap, text_colour, tolerance, scale_region),
+	}
+
+
+func _count_colour_pixels(image: Image, target: Color, tolerance: float,
+		region := Rect2i()) -> int:
+	var sample := region
+	if sample.size.x <= 0 or sample.size.y <= 0:
+		sample = Rect2i(Vector2i.ZERO, image.get_size())
+	var count := 0
+	for y: int in range(sample.position.y, sample.end.y):
+		for x: int in range(sample.position.x, sample.end.x):
+			var pixel := image.get_pixel(x, y)
+			if absf(pixel.r - target.r) <= tolerance \
+					and absf(pixel.g - target.g) <= tolerance \
+					and absf(pixel.b - target.b) <= tolerance:
+				count += 1
+	return count
+
+
+func _planar_distance(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
+
+
+func _finish_map_proof(passed: bool, result: Dictionary) -> void:
+	print("[MAP_PROOF] %s %s" % ["PASS" if passed else "FAIL", JSON.stringify(result)])
+	get_tree().quit(0 if passed else 1)
+
+
 func _build_minimap(bounds: Rect2) -> void:
+	var cartography := _config.get("cartography", {}) as Dictionary
+	var minimap_size := float(cartography.get("minimap_size_px", 304.0))
+	var screen_margin := float(cartography.get("screen_margin_px", 30.0))
 	_minimap_panel = Control.new()
 	_minimap_panel.name = "Minimapa"
 	_minimap_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_minimap_panel.offset_left = -302.0
-	_minimap_panel.offset_top = 30.0
-	_minimap_panel.offset_right = -30.0
-	_minimap_panel.offset_bottom = 302.0
+	_minimap_panel.offset_left = -(screen_margin + minimap_size)
+	_minimap_panel.offset_top = screen_margin
+	_minimap_panel.offset_right = -screen_margin
+	_minimap_panel.offset_bottom = screen_margin + minimap_size
 	_minimap_panel.clip_contents = true
 	_minimap_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_minimap_panel)
@@ -174,6 +339,7 @@ func _build_full_map(bounds: Rect2) -> void:
 	_full_overlay.add_child(_full_surface)
 	_full_surface.call("set_context", _exploration, player, partner, bounds,
 		world.get("map_path_segments"), world.get("map_landmarks"), _config)
+	_full_surface.set_process(false)
 
 	_full_title = _map_label(28, HORIZONTAL_ALIGNMENT_CENTER)
 	_full_title.set_anchors_preset(Control.PRESET_TOP_WIDE)
@@ -260,6 +426,10 @@ func _process(delta: float) -> void:
 func _refresh_surfaces(terrain_changed: bool, full_rebuild := false) -> void:
 	for surface: Control in [_minimap_surface, _full_surface]:
 		if surface == null:
+			continue
+		# O mapa grande recompõe a textura ao abrir; actualizar a cópia invisível
+		# a cada passo duplicava largura de banda sem produzir um pixel no ecrã.
+		if surface == _full_surface and not _map_open and not full_rebuild:
 			continue
 		if full_rebuild:
 			surface.call("rebuild_texture")
