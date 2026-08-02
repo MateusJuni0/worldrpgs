@@ -134,8 +134,7 @@ func _run_child() -> void:
 		if host_button == null:
 			await _finish_child(false, "o ecra nao mostrou o botao Hospedar")
 			return
-		host_button.grab_focus()
-		await _press_action("ui_accept")
+		await _click_button(host_button)
 		if not NetSession.is_host():
 			await _finish_child(false, _visible_status(menu, "Hospedar nao arrancou"))
 			return
@@ -144,13 +143,22 @@ func _run_child() -> void:
 		if not await _wait_for_marker("host-ready", BODY_TIMEOUT_SECONDS):
 			await _finish_child(false, "o anfitriao nao ficou pronto a tempo")
 			return
+		var host_button := menu.get("_host_button") as Button
 		var address := menu.get("_address") as LineEdit
 		var join_button := menu.get("_join_button") as Button
-		if address == null or join_button == null:
+		if host_button == null or address == null or join_button == null:
 			await _finish_child(false, "o ecra nao mostrou endereco e Entrar")
 			return
-		join_button.grab_focus()
-		await _press_action("ui_accept")
+		# O anfitriao ja ocupa esta porta. Tentar hospedar pelo botao real prova
+		# que uma falha comum nao fica silenciosa nem mostra um codigo ao jogador.
+		await _click_button(host_button)
+		var port_failure := _visible_status(menu, "")
+		if port_failure.is_empty() or not port_failure.to_lower().contains("porta") \
+				or port_failure.contains("ERR_"):
+			await _finish_child(false,
+				"a porta ocupada nao foi explicada em portugues no ecra")
+			return
+		await _click_button(join_button)
 		var missing_address := _visible_status(menu, "")
 		if not missing_address.contains("Falta o endereço"):
 			await _finish_child(false,
@@ -158,8 +166,7 @@ func _run_child() -> void:
 			return
 		address.grab_focus()
 		await _type_text(address, "127.0.0.1")
-		join_button.grab_focus()
-		await _press_action("ui_accept")
+		await _click_button(join_button)
 
 	if not await _wait_until(func() -> bool: return NetSession.partner_id() != 0,
 			BODY_TIMEOUT_SECONDS):
@@ -230,8 +237,9 @@ func _run_child() -> void:
 		await _finish_child(false, "a sessão gastou %.0f bps, acima do tecto da spec" % measured_bps)
 		return
 	await _finish_child(true,
-		"%s: dois corpos/origens visiveis, movimento remoto em %.2f s, %.0f bps" % [
-			_role_label(), join_elapsed, measured_bps])
+		"%s: dois corpos/origens visiveis, movimento remoto em %.2f s, %.0f bps%s" % [
+			_role_label(), join_elapsed, measured_bps,
+			", falhas explicadas no ecra" if _role == ROLE_GUEST else ""])
 
 
 func _wait_for_remote_body() -> Node3D:
@@ -273,6 +281,25 @@ func _press_action(action_name: String) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await get_tree().process_frame
+
+
+func _click_button(button: Button) -> void:
+	# Percurso do Mateus: mover o ponteiro e carregar no botao esquerdo. Chamar
+	# `pressed.emit()` ou dar foco por codigo voltaria a provar apenas o motor.
+	var position := button.get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = position
+	# No driver headless nao ha janela do sistema para receber o rato global.
+	# O Viewport e a mesma fronteira por onde a GUI real recebe a coordenada.
+	get_viewport().push_input(motion, true)
+	await get_tree().process_frame
+	for is_pressed: bool in [true, false]:
+		var click := InputEventMouseButton.new()
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.position = position
+		click.pressed = is_pressed
+		get_viewport().push_input(click, true)
+		await get_tree().process_frame
 
 
 func _type_text(field: LineEdit, value: String) -> void:
