@@ -58,7 +58,7 @@ func _expanded_extra_attack(declared: Dictionary) -> Dictionary:
 	if not vector.is_empty():
 		attack["vector"] = vector
 		attack["vectores_fuga"] = [vector]
-	var startup := int(attack.get("startup", 30))
+	var startup := int(attack["startup"])
 	attack["aviso_total_frames"] = startup
 	attack["momento_compromisso_frame"] = mini(
 		int(attack.get("momento_compromisso_frame", startup)), startup)

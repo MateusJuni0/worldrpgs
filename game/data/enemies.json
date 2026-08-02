@@ -35,6 +35,8 @@
     "leash_range": 34.0,
     "attack_range": 2.8,
     "preferred_distance": 2.4,
+    "attack_entry_padding_m": 0.4,
+    "anti_kite_reach_padding_m": 0.5,
     "color_idle": "#777777",
     "crowd": {
       "separation_radius_multiplier": 1.35,
@@ -129,6 +131,18 @@
     "distancia": {"role": "distancia", "speed_m_s": 3.8, "reason": "reposiciona para alcance e LOS; nao ganha corrida a curta distancia"},
     "armadilha": {"role": "armadilha", "speed_m_s": 3.4, "reason": "defende a bolsa preparada em vez de perseguir para fora dela"},
     "pesado": {"role": "pesado", "speed_m_s": 3.2, "reason": "massa e alcance trocam velocidade por compromisso legivel"}
+  },
+  "_attack_defaults": {
+    "lunge_distance": 0.0,
+    "lunge_velocity_multiplier": 0.5,
+    "shield_pierce_fraction": 0.0,
+    "guard_stamina_multiplier": 1.0,
+    "informative_range_m": 18.0,
+    "tracking_curve_deg_s": {
+      "phase_1": 180.0,
+      "phase_2": 30.0,
+      "phase_3": 0.0
+    }
   },
   "_attack_templates": {
     "recto_aparavel": {

@@ -18,20 +18,21 @@ static var CLASS_IDS: Array[String]:
 			if not id.begins_with("_"):
 				ids.append(id)
 		return ids
+
+static func _catalogue_strings(values: Variant) -> Array[String]:
+	var result: Array[String] = []
+	if not values is Array:
+		return result
+	for value: Variant in values as Array:
+		result.append(String(value))
+	return result
+
 const STEP_TITLES: Array[String] = ["1  Classe", "2  Aspecto", "3  Nome", "4  Rever"]
 const SKIN_TINTS := {
 	"skin_01": Color("9a6048"),
 	"skin_02": Color("c88768"),
 	"skin_03": Color("e1ad86"),
 	"skin_04": Color("f0c9aa"),
-}
-const CLASS_ROLES := {
-	"warrior": ["Equilibrado — a régua dos outros.", "Adapta-se a qualquer abertura.", "Nunca é o especialista da situação."],
-	"sorcerer": ["Precisão azul, controlo e maior reserva de mana.", "Lê a distância e escolhe a forma certa.", "Sofre quando fica encostado."],
-	"tank": ["Absorve, controla espaço e protege a dupla.", "Segura a atenção e mede o bloqueio.", "Mata devagar e sente o peso."],
-	"assassin": ["Rápido, posicional e de parry arriscado.", "Conquista costas e encadeia golpes curtos.", "Sofre de frente contra armadura."],
-	"berserker": ["Pressão bruta sem escudo.", "Troca segurança por avanço.", "Cada erro deixa uma recuperação longa."],
-	"paladin": ["Ferro e magia de raio.", "Muda o tipo de resposta sem ganhar dano grátis.", "Divide os atributos no arranque."],
 }
 const ACTION_LABELS := {
 	"move_forward": "Mover para a frente", "move_back": "Mover para trás",
@@ -69,14 +70,10 @@ const INSTRUCTION_GROUPS := [
 		"toggle_help", "toggle_mouse", "reset_arena", "debug_class_next",
 		"pause_menu", "inventory_menu", "open_map"]},
 ]
-const LEARNING_TIP_IDS := ["movement", "attack", "dodge", "parry", "flask"]
-const OPENING_LINES := [
-	"Brumal não foi sempre assim.",
-	"A bruma chegou. Com ela, vieram os orcs.",
-	"A Toca é uma passagem antiga que eles tomaram.",
-	"No fundo, Vorgar guarda o portão.",
-	"És um forasteiro. Entras onde ninguém entra.",
-]
+static var LEARNING_TIP_IDS: Array[String]:
+	get:
+		return _catalogue_strings((GameData.ui_strings.get("intro", {}) as Dictionary).get(
+			"tip_ids", []))
 
 var _layer: CanvasLayer
 var _screen: Control
@@ -336,7 +333,8 @@ func show_opening() -> void:
 	story.add_theme_font_size_override("normal_font_size", 25)
 	story.add_theme_font_size_override("bold_font_size", 25)
 	story.add_theme_color_override("default_color", Color("aeb7b5"))
-	story.text = "%s\n\n%s\n\n%s\n%s\n\n[color=#eadbb9]%s[/color]" % OPENING_LINES
+	story.text = String((GameData.ui_strings.get("opening", {}) as Dictionary)[
+		"story_bbcode"])
 	_screen.add_child(story)
 	var enter := Button.new()
 	enter.text = "ENTRAR EM BRUMAL"
@@ -576,7 +574,8 @@ func _update_class_detail() -> void:
 	var attrs := GameData.class_attributes(class_id)
 	var loadout: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(class_id, {})
 	var ability := GameData.ability(class_id)
-	var role: Array = CLASS_ROLES.get(class_id, ["", "", ""])
+	var roles := GameData.ui_strings.get("class_roles", {}) as Dictionary
+	var role := roles[class_id] as Array
 	_detail.text = "[b]%s[/b]\n%s\n\n[b]Começa com[/b]\n%s\n\n[b]É forte quando[/b]\n%s\n\n[b]Sofre quando[/b]\n%s\n\n[b]Verbo de assinatura[/b]\n%s\n\n[b]Atributos[/b]\n%s\n\n[color=#d4b36f]Podes mudar de arma e subir qualquer atributo.[/color]" % [
 		String(attrs.get("display_name", class_id)), String(role[0]),
 		_loadout_line(loadout), String(role[1]), String(role[2]),

@@ -30,6 +30,7 @@ func _ready() -> void:
 	top_level = true
 	_sync_to_source()
 	_danger_end_frame = int(_attack.get("startup")) + int(_attack.get("active"))
+	_danger_end_frame = int(_attack["startup"]) + int(_attack["active"])
 	_build_world_mark()
 	_build_edge_mark()
 	var sound: Dictionary = _attack.get("som_anuncio", {}) as Dictionary
@@ -88,6 +89,22 @@ func _build_world_mark() -> void:
 	_footprint = _build_footprint()
 	_world_mark.mesh = _mesh_from_footprint(_footprint)
 	_world_mark.position.y = 0.035
+	var contact := String(_attack.get("tipo_contacto", "instantaneo"))
+	if bool(_attack.get("is_aoe", false)) or contact == "volume_persistente":
+		var disc := CylinderMesh.new()
+		var radius := float(_attack["radius"])
+		disc.top_radius = radius
+		disc.bottom_radius = radius
+		disc.height = 0.025
+		disc.radial_segments = 32
+		_world_mark.mesh = disc
+		_world_mark.position.y = 0.035
+	else:
+		var lane := BoxMesh.new()
+		var reach := maxf(float(_attack["range"]), float(_attack.get("lunge_distance", 0.0)))
+		lane.size = Vector3(0.12 if contact == "instantaneo" else 0.34, 0.025, reach)
+		_world_mark.mesh = lane
+		_world_mark.position = Vector3(0.0, 0.035, -reach * 0.5)
 	_world_mark.material_override = _material
 	add_child(_world_mark)
 
@@ -172,6 +189,7 @@ func _build_edge_mark() -> void:
 
 func _update_pulse() -> void:
 	var startup := maxi(int(_attack.get("startup")), 1)
+	var startup := maxi(int(_attack["startup"]), 1)
 	var t := clampf(float(_frame) / float(startup), 0.0, 1.0)
 	var pulse := 0.35 + 0.65 * t
 	_material.albedo_color.a = pulse * 0.42
@@ -180,6 +198,7 @@ func _update_pulse() -> void:
 	_world_glyph.scale = Vector3.ONE * scale_value
 	if String(_attack.get("tipo_contacto", "")) == "volume_persistente" and _frame > startup:
 		var interval := maxi(int(_attack.get("damage_interval_frames")), 1)
+		var interval := maxi(int(_attack["damage_interval_frames"]), 1)
 		var tick_t := float((_frame - startup) % interval) / float(interval)
 		_material.albedo_color.a = 0.20 + tick_t * 0.30
 

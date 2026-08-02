@@ -36,13 +36,13 @@ var enemy_id := "orc_spearman"
 var data: Dictionary = {}
 var is_boss := false
 
-var health := 100.0
-var max_health := 100.0
+var health := 0.0
+var max_health := 0.0
 var defense := 0.0
-var posture := 40.0
-var max_posture := 40.0
-var posture_mult := 1.0
-var body_radius := 0.45
+var posture := 0.0
+var max_posture := 0.0
+var posture_mult := 0.0
+var body_radius := 0.0
 var hitstop_frames := 0
 
 var target: Node3D
@@ -82,6 +82,10 @@ static var _presentation_catalogue_validated := false
 static var _attack_grammar_catalogue_validated := false
 
 
+func _reference_fps() -> float:
+	return float(GameData.combat["reference_fps"])
+
+
 func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed := 0) -> void:
 	enemy_id = p_enemy_id
 	_rng.seed = pattern_seed if pattern_seed != 0 else hash(enemy_id)
@@ -94,15 +98,15 @@ func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed 
 	if not _validate_attack_grammar_catalogue():
 		return
 
-	max_health = float(data.get("health", 100.0))
+	max_health = float(data["health"])
 	if is_boss and coop:
-		max_health *= float(data.get("coop_health_multiplier", 1.8))
+		max_health *= float(data["coop_health_multiplier"])
 	health = max_health
-	defense = float(data.get("defense", 0.0))
-	max_posture = float(data.get("posture", 40.0))
+	defense = float(data["defense"])
+	max_posture = float(data["posture"])
 	posture = max_posture
-	posture_mult = float(data.get("posture_damage_taken_multiplier", 1.0))
-	body_radius = float(_visual_profile.get("collision_radius_m", 0.0))
+	posture_mult = float(data["posture_damage_taken_multiplier"])
+	body_radius = float(_visual_profile["collision_radius_m"])
 
 	for a: Variant in data.get("attacks", []):
 		var d := a as Dictionary
@@ -421,7 +425,7 @@ func _refresh_target_actionability() -> void:
 
 func _distance_to_target() -> float:
 	if not _target_valid():
-		return 9999.0
+		return INF
 	var d := target.global_position - global_position
 	d.y = 0.0
 	return d.length()
@@ -429,12 +433,12 @@ func _distance_to_target() -> float:
 
 func _tick_idle(delta: float) -> void:
 	_brake(delta)
-	if _target_valid() and _distance_to_target() <= float(data.get("aggro_range", 16.0)):
+	if _target_valid() and _distance_to_target() <= float(data["aggro_range"]):
 		_change_state(State.CHASE)
 
 
 func _tick_patrol(delta: float) -> void:
-	if _target_valid() and _distance_to_target() <= float(data.get("aggro_range", 16.0)):
+	if _target_valid() and _distance_to_target() <= float(data["aggro_range"]):
 		_change_state(State.CHASE)
 		return
 	if _patrol_points.is_empty():
@@ -443,7 +447,7 @@ func _tick_patrol(delta: float) -> void:
 	var goal := _patrol_points[_patrol_index]
 	if global_position.distance_to(goal) < 1.2:
 		_patrol_index = (_patrol_index + 1) % _patrol_points.size()
-	_walk_towards(goal, float(data.get("patrol_speed", 1.5)))
+	_walk_towards(goal, float(data["patrol_speed"]))
 
 
 func _tick_chase(delta: float) -> void:
@@ -452,30 +456,31 @@ func _tick_chase(delta: float) -> void:
 		return
 
 	var dist := _distance_to_target()
-	if dist > float(data.get("leash_range", 30.0)):
+	if dist > float(data["leash_range"]):
 		_change_state(State.PATROL if not _patrol_points.is_empty() else State.IDLE)
 		return
 
 	_face_target(delta)
 	_gap_timer -= delta
 
-	var preferred := float(data.get("preferred_distance", 2.3))
+	var preferred := float(data["preferred_distance"])
 	if dist > preferred:
-		_walk_towards(target.global_position, float(data.get("chase_speed", 3.0)))
+		_walk_towards(target.global_position, float(data["chase_speed"]))
 	else:
 		_brake(delta)
 
-	if _gap_timer <= 0.0 and dist <= float(data.get("attack_range", 2.6)) + 0.4:
+	if _gap_timer <= 0.0 and dist <= float(data["attack_range"]) \
+			+ float(data["attack_entry_padding_m"]):
 		_begin_pattern()
 
 
 func _tick_downed(delta: float) -> void:
 	_brake(delta)
-	var seconds := 1.2
+	var seconds: float
 	if state == State.BROKEN:
-		seconds = float(GameData.section("parry").get("broken_posture_duration", 2.0))
+		seconds = float(GameData.section("parry")["broken_posture_duration"])
 	else:
-		seconds = float(GameData.section("poise").get("stagger_duration", 1.2))
+		seconds = float(GameData.section("poise")["stagger_duration"])
 	if _state_time >= seconds:
 		posture = max_posture      # a postura volta ao maximo (spec)
 		_change_state(State.CHASE)
@@ -514,14 +519,15 @@ func _tick_anti_kite(delta: float) -> void:
 	if state != State.CHASE and state != State.ATTACK:
 		_no_reach_time = 0.0
 		return
-	if _distance_to_target() <= float(data.get("attack_range", 2.6)) + 0.5:
+	if _distance_to_target() <= float(data["attack_range"]) \
+			+ float(data["anti_kite_reach_padding_m"]):
 		_no_reach_time = 0.0
 	else:
 		_no_reach_time += delta
 
 
 func _anti_kite_ready() -> bool:
-	var limit: float = GameData.section("anti_kite").get("seconds_without_reaching", 4.0)
+	var limit := float(GameData.section("anti_kite")["seconds_without_reaching"])
 	return _no_reach_time >= limit
 
 
@@ -537,7 +543,7 @@ func _current_phase_data() -> Dictionary:
 func _tick_boss_phase() -> void:
 	if not is_boss or _phase >= 2:
 		return
-	var threshold := float(data.get("phase_2_at_health_fraction", 0.5))
+	var threshold := float(data["phase_2_at_health_fraction"])
 	if health / maxf(max_health, 1.0) <= threshold:
 		_phase = 2
 		_queue.clear()   # a fase 2 muda PADROES, nao numeros
@@ -569,7 +575,7 @@ func _begin_pattern() -> void:
 func _start_next_attack() -> void:
 	if _queue.is_empty():
 		var phase := _current_phase_data()
-		_gap_timer = float(phase.get("gap_between_patterns", 1.2))
+		_gap_timer = float(phase["gap_between_patterns"])
 		_change_state(State.CHASE)
 		return
 	var id: String = _queue.pop_front()
@@ -612,9 +618,9 @@ func _cancel_attack_presentation() -> void:
 
 func _tick_attack(delta: float) -> void:
 	_atk_frame += 1
-	var startup := int(_atk.get("startup", 30))
-	var active := int(_atk.get("active", 6))
-	var recovery := int(_atk.get("recovery", 24))
+	var startup := int(_atk["startup"])
+	var active := int(_atk["active"])
+	var recovery := int(_atk["recovery"])
 
 	if _atk_frame <= startup:
 		_set_attack_phase(AttackPhase.PREPARATION,
@@ -640,15 +646,17 @@ func _tick_attack(delta: float) -> void:
 	if _atk_frame <= startup + active:
 		_set_attack_phase(AttackPhase.STRIKE,
 			float(_atk_frame - startup) / float(maxi(active, 1)))
-		var lunge := float(_atk.get("lunge_distance", 0.0))
+		var lunge := float(_atk["lunge_distance"])
 		if lunge > 0.0:
 			var f := -global_transform.basis.z
-			velocity.x = f.x * (lunge / (float(active) / 60.0)) * 0.5
-			velocity.z = f.z * (lunge / (float(active) / 60.0)) * 0.5
+			var lunge_speed := lunge / (float(active) / _reference_fps()) \
+				* float(_atk["lunge_velocity_multiplier"])
+			velocity.x = f.x * lunge_speed
+			velocity.z = f.z * lunge_speed
 		else:
 			_brake(delta)
 		var persistent := String(_atk.get("tipo_contacto", "")) == "volume_persistente"
-		var interval := maxi(int(_atk.get("damage_interval_frames", 30)), 1)
+		var interval := int(_atk["damage_interval_frames"]) if persistent else 1
 		if not _atk_hit or (persistent and _atk_frame - _last_attack_hit_frame >= interval):
 			_try_hit()
 		return
@@ -706,6 +714,19 @@ func _try_hit() -> void:
 			or not _active_gameplay_cue.has_method("covers_world_point") \
 			or not bool(_active_gameplay_cue.call(
 				"covers_world_point", target.global_position)):
+	var hit := false
+	if bool(_atk.get("is_aoe", false)):
+		hit = _distance_to_target() <= float(_atk["radius"])
+	else:
+		var to := target.global_position - global_position
+		to.y = 0.0
+		var reach := float(_atk["range"]) + body_radius
+		if to.length() <= reach:
+			var facing := -global_transform.basis.z
+			hit = facing.angle_to(to.normalized()) <= deg_to_rad(float(
+				_atk["arc_degrees"]) * 0.5)
+
+	if not hit:
 		return
 	_atk_hit = true
 	_last_attack_hit_frame = _atk_frame
@@ -713,8 +734,8 @@ func _try_hit() -> void:
 	var info := DamageInfo.make(raw, self, weight)
 	info.parryable = bool(_atk.get("parryable", false))
 	info.is_aoe = bool(_atk.get("is_aoe", false))
-	info.shield_pierce_fraction = clampf(float(_atk.get("shield_pierce_fraction", 0.0)), 0.0, 1.0)
-	info.guard_stamina_multiplier = maxf(float(_atk.get("guard_stamina_multiplier", 1.0)), 1.0)
+	info.shield_pierce_fraction = clampf(float(_atk["shield_pierce_fraction"]), 0.0, 1.0)
+	info.guard_stamina_multiplier = maxf(float(_atk["guard_stamina_multiplier"]), 1.0)
 	info.attack_id = String(_atk.get("id", ""))
 	if target.has_method("take_damage"):
 		var health_before := float(target.get("health")) if target.get("health") != null else -1.0
@@ -724,7 +745,7 @@ func _try_hit() -> void:
 			hit_landed.emit(target, health_before - health_after, global_position)
 		_refresh_target_actionability()
 		if target.has_method("state_name") and String(target.call("state_name")) == "hit-stun":
-			var reference_fps := float(GameData.combat.get("reference_fps", 0.0))
+			var reference_fps := _reference_fps()
 			var hitstun_frames := ceili(info.hitstun_seconds(GameData.section("hitstun")) * reference_fps)
 			AttackCoordinator.record_hitstun(target, hitstun_frames,
 				data.get("attack_coordination", {}) as Dictionary, reference_fps)
@@ -827,12 +848,12 @@ func _refresh_colour() -> void:
 		State.STAGGER:
 			colour = Color(String(_palette.get("enemy_stagger", "#f2f2f2")))
 		State.ATTACK:
-			var startup := int(_atk.get("startup", 30))
+			var startup := int(_atk["startup"])
 			if _atk_frame <= startup:
 				# Amarelo a crescer: quanto mais perto do golpe, mais forte o aviso.
 				var t := clampf(float(_atk_frame) / float(maxi(startup, 1)), 0.0, 1.0)
 				colour = colour.lerp(Color(String(_palette.get("enemy_telegraph", "#e8c33a"))), 0.35 + 0.65 * t)
-			elif _atk_frame <= startup + int(_atk.get("active", 6)):
+			elif _atk_frame <= startup + int(_atk["active"]):
 				colour = Color(String(_palette.get("enemy_attacking", "#d64545")))
 	_visual.call("set_tint", colour)
 
@@ -844,8 +865,8 @@ func _refresh_animation() -> void:
 		State.DEAD:
 			_play_state_animation("death")
 		State.ATTACK:
-			var attack_frames := int(_atk.get("startup", 0)) \
-				+ int(_atk.get("active", 0)) + int(_atk.get("recovery", 0))
+			var attack_frames := int(_atk["startup"]) \
+				+ int(_atk["active"]) + int(_atk["recovery"])
 			_play_state_animation("attack", attack_frames, String(_atk.get("id", "")))
 		State.STAGGER, State.BROKEN:
 			_play_state_animation("hit", 0, str(state))
@@ -874,7 +895,7 @@ func _play_state_animation(state_key: String, target_frames := 0,
 
 ## Para o HUD: o golpe em preparacao da-se para aparar?
 func telegraphing_parryable() -> int:
-	if state != State.ATTACK or _atk_frame > int(_atk.get("startup", 30)):
+	if state != State.ATTACK or _atk_frame > int(_atk["startup"]):
 		return -1
 	return 1 if bool(_atk.get("parryable", false)) else 0
 

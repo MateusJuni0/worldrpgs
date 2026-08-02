@@ -4,6 +4,103 @@
   "source_library": "res://assets/models/animations/quaternius/UAL1_Standard.glb",
   "reference_fps": 60,
   "fallback_clip": "Idle",
+  "weapon_attacks": {
+    "_source": "spec/41 + spec/68 + UAL1_Standard.glb; a lista vive no catalogo para uma familia nova nao depender de GDScript",
+    "families": {
+      "espada_recta": {
+        "leve_1": {"source_clip": "Sword_Attack", "motion": "corte_direita", "shape": "slash_right"},
+        "leve_2": {"source_clip": "Sword_Attack", "motion": "corte_retorno", "shape": "slash_left"},
+        "pesado": {"source_clip": "Sword_Attack", "motion": "vertical_duas_maos", "shape": "overhead"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "estocada_avanco", "shape": "thrust"}
+      },
+      "adaga": {
+        "leve_1": {"source_clip": "Punch_Jab", "motion": "estocada_curta", "shape": "jab"},
+        "leve_2": {"source_clip": "Punch_Cross", "motion": "corte_cruzado", "shape": "cross"},
+        "pesado": {"source_clip": "Punch_Cross", "motion": "apunhalar_duas_maos", "shape": "double_thrust"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "entrada_baixa", "shape": "low_lunge"}
+      },
+      "pesada_corte": {
+        "leve_1": {"source_clip": "Sword_Attack", "motion": "diagonal_com_peso", "shape": "diagonal_heavy"},
+        "leve_2": {"source_clip": "Sword_Attack", "motion": "retorno_da_anca", "shape": "hip_return"},
+        "pesado": {"source_clip": "Sword_Attack", "motion": "vertical_esmagador", "shape": "overhead_heavy"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "varrimento_em_corrida", "shape": "running_sweep"}
+      },
+      "katana": {
+        "leve_1": {"source_clip": "Sword_Attack", "motion": "saque_horizontal", "shape": "draw_cut"},
+        "leve_2": {"source_clip": "Sword_Attack", "motion": "corte_de_retorno_alto", "shape": "rising_return"},
+        "pesado": {"source_clip": "Sword_Attack", "motion": "corte_vertical_controlado", "shape": "overhead_narrow"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "iai_em_corrida", "shape": "running_draw"}
+      },
+      "haste": {
+        "leve_1": {"source_clip": "Sword_Attack", "motion": "estocada_longa", "shape": "long_thrust"},
+        "leve_2": {"source_clip": "Sword_Attack", "motion": "estocada_recolhida", "shape": "retract_thrust"},
+        "pesado": {"source_clip": "Sword_Attack", "motion": "varrimento_baixo", "shape": "low_sweep"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "carga_de_haste", "shape": "lance_charge"}
+      },
+      "cajado": {
+        "leve_1": {"source_clip": "Sword_Attack", "motion": "bastao_lateral", "shape": "staff_sweep"},
+        "leve_2": {"source_clip": "Sword_Attack", "motion": "bastao_de_retorno", "shape": "staff_return"},
+        "pesado": {"source_clip": "Sword_Attack", "motion": "pancada_firmada", "shape": "staff_slam"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "empurrao_de_bastao", "shape": "staff_shove"}
+      },
+      "arco": {
+        "leve_1": {"source_clip": "Pistol_Shoot", "motion": "soltar_flecha", "shape": "bow_release"},
+        "leve_2": {"source_clip": "Pistol_Reload", "motion": "rearmar_do_lado", "shape": "bow_nock"},
+        "pesado": {"source_clip": "Pistol_Aim_Neutral", "motion": "tiro_firmado", "shape": "bow_aim"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "disparo_em_corrida", "shape": "bow_running"}
+      },
+      "besta": {
+        "leve_1": {"source_clip": "Pistol_Shoot", "motion": "gatilho_e_recuo", "shape": "crossbow_recoil"},
+        "leve_2": {"source_clip": "Pistol_Reload", "motion": "baixar_e_rearmar", "shape": "crossbow_reload"},
+        "pesado": {"source_clip": "Pistol_Aim_Neutral", "motion": "mira_ampliada", "shape": "crossbow_aim"},
+        "em_corrida": {"source_clip": "Sprint", "motion": "tiro_da_anca", "shape": "crossbow_running"}
+      }
+    },
+    "shape_poses_degrees": {
+      "slash_right": {"windup": [-8, -48, -12], "strike": [6, 55, 14]},
+      "slash_left": {"windup": [-4, 42, 10], "strike": [8, -58, -16]},
+      "overhead": {"windup": [-42, -8, -5], "strike": [54, 6, 4]},
+      "thrust": {"windup": [8, -24, 18], "strike": [-18, 12, -8]},
+      "jab": {"windup": [12, -34, 24], "strike": [-12, 18, -16]},
+      "cross": {"windup": [8, 38, -22], "strike": [-8, -26, 18]},
+      "double_thrust": {"windup": [-16, -12, 28], "strike": [22, 10, -24]},
+      "low_lunge": {"windup": [26, -28, 12], "strike": [-28, 16, -10]},
+      "diagonal_heavy": {"windup": [-36, -46, -26], "strike": [46, 48, 28]},
+      "hip_return": {"windup": [24, 52, 32], "strike": [-20, -58, -30]},
+      "overhead_heavy": {"windup": [-58, 0, -12], "strike": [66, 0, 10]},
+      "running_sweep": {"windup": [4, -62, -20], "strike": [10, 70, 22]},
+      "draw_cut": {"windup": [20, -58, 30], "strike": [-8, 66, -18]},
+      "rising_return": {"windup": [28, 46, -34], "strike": [-30, -54, 24]},
+      "overhead_narrow": {"windup": [-48, -12, 8], "strike": [58, 14, -6]},
+      "running_draw": {"windup": [18, -68, 24], "strike": [-18, 72, -20]},
+      "long_thrust": {"windup": [4, -32, 8], "strike": [-8, 20, -4]},
+      "retract_thrust": {"windup": [-6, 28, -10], "strike": [12, -18, 8]},
+      "low_sweep": {"windup": [34, -52, -18], "strike": [22, 58, 20]},
+      "lance_charge": {"windup": [18, -18, 2], "strike": [-32, 8, -2]},
+      "staff_sweep": {"windup": [12, -46, -28], "strike": [18, 52, 32]},
+      "staff_return": {"windup": [10, 48, 30], "strike": [16, -54, -34]},
+      "staff_slam": {"windup": [-46, 6, -20], "strike": [58, -4, 18]},
+      "staff_shove": {"windup": [6, -24, 30], "strike": [-14, 18, -28]},
+      "bow_release": {"windup": [-6, -38, 36], "strike": [4, 20, -28]},
+      "bow_nock": {"windup": [22, 28, -18], "strike": [-12, -34, 24]},
+      "bow_aim": {"windup": [-18, -8, 42], "strike": [-4, 10, -36]},
+      "bow_running": {"windup": [18, -44, 22], "strike": [-24, 30, -18]},
+      "crossbow_recoil": {"windup": [-8, -18, 18], "strike": [16, 14, -14]},
+      "crossbow_reload": {"windup": [30, 16, -26], "strike": [-22, -18, 30]},
+      "crossbow_aim": {"windup": [-22, -4, 28], "strike": [12, 6, -22]},
+      "crossbow_running": {"windup": [16, -30, 12], "strike": [-20, 24, -10]}
+    },
+    "family_arm_bias_degrees": {
+      "espada_recta": [0, 0, 0],
+      "adaga": [18, 0, -20],
+      "pesada_corte": [-24, 0, 26],
+      "katana": [12, -12, -8],
+      "haste": [-8, 18, 10],
+      "cajado": [-16, -10, 18],
+      "arco": [8, 26, -18],
+      "besta": [-4, 18, 12]
+    }
+  },
   "clips": {
     "A_TPose": {
       "source_frames": 150,
