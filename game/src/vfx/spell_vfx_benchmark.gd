@@ -30,8 +30,9 @@ func _initialize() -> void:
 func _start() -> void:
 	_catalog = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/spells.json")) as Dictionary
-	_benchmark = (_catalog.get("_vfx", {}) as Dictionary).get(
-		"benchmark", {}) as Dictionary
+	_benchmark = ((_catalog.get("_vfx", {}) as Dictionary).get(
+		"benchmark", {}) as Dictionary).duplicate(true)
+	_include_catalogued_red_spell()
 	DisplayServer.window_set_size(Vector2i(
 		int(_benchmark.get("width", 0)), int(_benchmark.get("height", 0))))
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -213,6 +214,7 @@ func _finish() -> void:
 		"residency": _residency.stats(),
 		"visible_spell_count": visible_spell_count,
 		"visible_cast_instance_count": _visible_cast_instance_count(),
+		"spells_on_screen": (_benchmark.get("spells", []) as Array).duplicate(),
 		"capture_ok": capture_error == OK and visible_spell_count \
 			== (_benchmark.get("spells", []) as Array).size() \
 			and _visible_cast_instance_count() > 0,
@@ -230,6 +232,29 @@ func _finish() -> void:
 	await process_frame
 	await process_frame
 	quit(0 if bool(report.get("capture_ok", false)) else 1)
+
+
+func _include_catalogued_red_spell() -> void:
+	var benchmark_spells := (_benchmark.get("spells", []) as Array).duplicate()
+	for spell_value: Variant in benchmark_spells:
+		if String((_catalog.get(String(spell_value), {}) as Dictionary).get(
+				"school", "")) == "mal":
+			return
+	var catalogue_ids := _catalog.keys()
+	catalogue_ids.sort()
+	for raw_id: Variant in catalogue_ids:
+		var spell_id := String(raw_id)
+		if spell_id.begins_with("_"):
+			continue
+		var spell := _catalog.get(spell_id, {}) as Dictionary
+		if String(spell.get("school", "")) != "mal":
+			continue
+		if benchmark_spells.is_empty():
+			benchmark_spells.append(spell_id)
+		else:
+			benchmark_spells[benchmark_spells.size() - 1] = spell_id
+		_benchmark["spells"] = benchmark_spells
+		return
 
 
 func _visible_spell_count() -> int:

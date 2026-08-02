@@ -1,14 +1,25 @@
 extends Node
 ## Prova visual do fio completo: cena real, Player real, mundo real e a accao
-## remapeavel `cast`. Com --capture-cast-film grava o lancamento amostrado de
-## dois em dois frames em res://captures/filme-magia/.
+## remapeavel `cast`. Com --capture-cast-film grava cada frame do lancamento em
+## res://captures/filme-magia/.
 
 const GAMEPLAY_SCENE := preload("res://scenes/gameplay.tscn")
 const CAPTURE_ARG := "--capture-cast-film"
+const CAPTURE_DIR_ENV := "WORLDRPGS_PROOF_CAPTURE_DIR"
 const TEST_PROFILE_ID := "filme-magia-custo-visivel"
 const TEST_SLOT_MIN := 13000
 const TEST_SLOT_MAX := 13999
-const SAMPLE_INTERVAL_FRAMES := 2
+const CAPTURE_INTERVAL_FRAMES := 1
+const PIXEL_ANALYSIS_INTERVAL_FRAMES := 2
+const WALK_INPUT_FRAMES := 6
+const POST_RECOVERY_FRAMES := 8
+const TIP_SAMPLE_RADIUS_PX := 86.0
+const BODY_SAMPLE_RADIUS_PX := 118.0
+const FLIGHT_SAMPLE_RADIUS_PX := 34.0
+const PIXEL_SAMPLE_STEP := 4
+const MIN_TIP_RED_DELTA_PIXELS := 100
+const MIN_BODY_RED_DELTA_PIXELS := 50
+const MIN_FLIGHT_RED_DELTA_PIXELS := 40
 
 var _previous_state: Dictionary = {}
 var _previous_scene_arg := ""
@@ -23,6 +34,10 @@ var _capture_index := 0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Engine.max_physics_steps_per_frame = 1
+	if DisplayServer.get_name().to_lower() == "headless":
+		printerr("[filme-magia] FALHOU: a prova por pixels exige o renderer Mobile real")
+		get_tree().quit(1)
+		return
 	call_deferred("_run")
 
 
@@ -77,7 +92,7 @@ func _run() -> void:
 
 	# Primeiro faz o que o jogador faria ao chegar: anda e so depois carrega C.
 	Input.action_press("move_forward")
-	for _frame: int in SAMPLE_INTERVAL_FRAMES * 3:
+	for _frame: int in WALK_INPUT_FRAMES:
 		await get_tree().physics_frame
 	Input.action_release("move_forward")
 	await get_tree().physics_frame
@@ -92,12 +107,17 @@ func _run() -> void:
 	_camera.make_current()
 	_look_at_cast(player)
 	await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var baseline_image := get_viewport().get_texture().get_image()
 
 	var expected_clips := _casting_phase_clips()
 	var seen_clips: Dictionary = {}
-	var saw_pre_release_light := false
-	var saw_body_price := false
-	var saw_delivery := false
+	var rendered_phase_frames: Dictionary = {}
+	var best_pre_release_tip_red_delta := 0
+	var best_pre_release_body_red_delta := 0
+	var best_flight_red_delta := 0
+	var cast_tip_screen := Vector2.ZERO
+	var has_cast_tip_screen := false
 	var health_before := player.health
 	Input.action_press("cast")
 	await get_tree().physics_frame
@@ -108,7 +128,7 @@ func _run() -> void:
 
 	var recover_frames := int((_phase_profile("recover")).get("phase_frames", 0))
 	var film_frames := int(float(spell.get("cast_time", 0.0)) * float(
-		Engine.physics_ticks_per_second)) + recover_frames + SAMPLE_INTERVAL_FRAMES * 4
+		Engine.physics_ticks_per_second)) + recover_frames + POST_RECOVERY_FRAMES
 	for film_frame: int in film_frames:
 		await get_tree().physics_frame
 		var visual := player.get("_visual") as CharacterVisual
@@ -118,37 +138,75 @@ func _run() -> void:
 				seen_clips[role] = true
 		var flash := _latest_group_node("spell_cast_vfx")
 		var delivery := _latest_group_node("spell_deliveries")
+		var flash_phase := String(flash.call("cast_phase")) \
+			if is_instance_valid(flash) else "voo"
 		if is_instance_valid(flash):
-			var flash_phase := String(flash.call("cast_phase"))
-			if flash_phase in ["prepare", "hold"] and not is_instance_valid(delivery):
-				saw_pre_release_light = saw_pre_release_light \
-					or bool(flash.call("is_instrument_lit"))
-			saw_body_price = saw_body_price \
-				or bool(flash.call("is_body_price_visible"))
-		if is_instance_valid(delivery):
-			var delivery_vfx := delivery.get_node_or_null(
-				NodePath("SpellVfx_%s" % spell_id))
-			if delivery_vfx != null and delivery_vfx.has_method("rendered_instance_count"):
-				saw_delivery = saw_delivery \
-					or int(delivery_vfx.call("rendered_instance_count")) > 0
-		if CAPTURE_ARG in OS.get_cmdline_user_args() \
-				and film_frame % SAMPLE_INTERVAL_FRAMES == 0:
-			await _capture(player, film_frame, current_clip,
-				String(flash.call("cast_phase")) if is_instance_valid(flash) else "voo")
+			cast_tip_screen = _camera.unproject_position(
+				flash.call("tip_position") as Vector3)
+			has_cast_tip_screen = true
+		var should_capture := CAPTURE_ARG in OS.get_cmdline_user_args() \
+			and film_frame % CAPTURE_INTERVAL_FRAMES == 0
+		var should_analyse := film_frame % PIXEL_ANALYSIS_INTERVAL_FRAMES == 0
+		if should_capture or should_analyse:
+			var frame_image: Image
+			if should_capture:
+				frame_image = await _capture(player, film_frame, current_clip, flash_phase)
+			else:
+				await RenderingServer.frame_post_draw
+				frame_image = get_viewport().get_texture().get_image()
+			if frame_image != null and not frame_image.is_empty():
+				for role: String in expected_clips:
+					if current_clip == String(expected_clips[role]):
+						rendered_phase_frames[role] = true
+				if should_analyse:
+					var body_screen := _camera.unproject_position(
+						player.global_position + Vector3.UP * 1.15)
+					if flash_phase in ["prepare", "hold"] \
+							and not is_instance_valid(delivery):
+						best_pre_release_body_red_delta = maxi(
+							best_pre_release_body_red_delta,
+							_red_circle_score(frame_image, body_screen, BODY_SAMPLE_RADIUS_PX)
+							- _red_circle_score(baseline_image, body_screen,
+								BODY_SAMPLE_RADIUS_PX))
+					if has_cast_tip_screen:
+						if flash_phase in ["prepare", "hold"] \
+								and not is_instance_valid(delivery):
+							best_pre_release_tip_red_delta = maxi(
+								best_pre_release_tip_red_delta,
+								_red_circle_score(frame_image, cast_tip_screen,
+									TIP_SAMPLE_RADIUS_PX)
+								- _red_circle_score(baseline_image, cast_tip_screen,
+									TIP_SAMPLE_RADIUS_PX))
+						if is_instance_valid(delivery):
+							var enemy_screen := _camera.unproject_position(
+								enemy.global_position + Vector3.UP * 1.0)
+							var flight_start := cast_tip_screen.lerp(enemy_screen, 0.2)
+							var flight_end := cast_tip_screen.lerp(enemy_screen, 0.8)
+							best_flight_red_delta = maxi(best_flight_red_delta,
+								_red_capsule_score(frame_image, flight_start, flight_end,
+									FLIGHT_SAMPLE_RADIUS_PX)
+								- _red_capsule_score(baseline_image, flight_start, flight_end,
+									FLIGHT_SAMPLE_RADIUS_PX))
 
 	for role: String in expected_clips:
 		if not seen_clips.has(role):
 			_fail("o filme nao mostrou a fase %s (%s)" % [role, expected_clips[role]])
-	if not saw_pre_release_light:
-		_fail("o instrumento nao acendeu antes de existir disparo")
-	if not saw_body_price:
-		_fail("a escola vermelha nao mostrou o preco a sair do corpo")
-	if not saw_delivery:
-		_fail("a magia nao saiu do instrumento para o mundo")
+		elif not rendered_phase_frames.has(role):
+			_fail("a fase %s existiu internamente mas nao chegou a um frame renderizado" % role)
+	if best_pre_release_tip_red_delta < MIN_TIP_RED_DELTA_PIXELS:
+		_fail("os pixels do instrumento nao acenderam antes do disparo (%d < %d)" % [
+			best_pre_release_tip_red_delta, MIN_TIP_RED_DELTA_PIXELS])
+	if best_pre_release_body_red_delta < MIN_BODY_RED_DELTA_PIXELS:
+		_fail("os pixels vermelhos nao mostraram o preco antes do disparo (%d < %d)" % [
+			best_pre_release_body_red_delta, MIN_BODY_RED_DELTA_PIXELS])
+	if best_flight_red_delta < MIN_FLIGHT_RED_DELTA_PIXELS:
+		_fail("nenhum disparo vermelho ficou visivel entre instrumento e alvo (%d < %d)" % [
+			best_flight_red_delta, MIN_FLIGHT_RED_DELTA_PIXELS])
 
 	print("[filme-magia] fases vistas: %s" % JSON.stringify(seen_clips))
-	print("[filme-magia] instrumento antes do disparo=%s; corpo vermelho=%s; voo=%s" % [
-		str(saw_pre_release_light), str(saw_body_price), str(saw_delivery)])
+	print("[filme-magia] pixels vermelhos novos: instrumento=%d; corpo=%d; voo=%d" % [
+		best_pre_release_tip_red_delta, best_pre_release_body_red_delta,
+		best_flight_red_delta])
 	if player.health >= health_before:
 		print("[filme-magia] LACUNA: o sinal corporal apareceu, mas esta ficha nao descontou PV")
 	else:
@@ -156,19 +214,74 @@ func _run() -> void:
 	await _finish()
 
 
-func _capture(player: Player, film_frame: int, clip: String, phase: String) -> void:
+func _capture(player: Player, film_frame: int, clip: String, phase: String) -> Image:
 	_look_at_cast(player)
 	get_tree().paused = true
 	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
-	var directory := ProjectSettings.globalize_path("res://captures/filme-magia/")
+	var directory := OS.get_environment(CAPTURE_DIR_ENV)
+	if directory.is_empty():
+		directory = ProjectSettings.globalize_path("res://captures/filme-magia")
 	DirAccess.make_dir_recursive_absolute(directory)
-	var path := "%smagia-%02d.png" % [directory, _capture_index]
-	var error := get_viewport().get_texture().get_image().save_png(path)
+	var path := directory.path_join("magia-%02d.png" % _capture_index)
+	var frame_image := get_viewport().get_texture().get_image()
+	var error := frame_image.save_png(path)
 	print("[filme-magia] %02d frame=%d fase=%s clip=%s captura=%s" % [
 		_capture_index, film_frame, phase, clip, "OK" if error == OK else error_string(error)])
 	_capture_index += 1
 	get_tree().paused = false
+	return frame_image
+
+
+func _red_circle_score(image: Image, centre: Vector2, radius: float) -> int:
+	var min_x := clampi(floori(centre.x - radius), 0, image.get_width() - 1)
+	var max_x := clampi(ceili(centre.x + radius), 0, image.get_width() - 1)
+	var min_y := clampi(floori(centre.y - radius), 0, image.get_height() - 1)
+	var max_y := clampi(ceili(centre.y + radius), 0, image.get_height() - 1)
+	var radius_squared := radius * radius
+	var score := 0
+	for y: int in range(min_y, max_y + 1, PIXEL_SAMPLE_STEP):
+		for x: int in range(min_x, max_x + 1, PIXEL_SAMPLE_STEP):
+			if Vector2(float(x), float(y)).distance_squared_to(centre) > radius_squared:
+				continue
+			if _is_red_energy(image.get_pixel(x, y)):
+				score += 1
+	return score
+
+
+func _red_capsule_score(image: Image, from: Vector2, to: Vector2,
+		radius: float) -> int:
+	var min_x := clampi(floori(minf(from.x, to.x) - radius), 0,
+		image.get_width() - 1)
+	var max_x := clampi(ceili(maxf(from.x, to.x) + radius), 0,
+		image.get_width() - 1)
+	var min_y := clampi(floori(minf(from.y, to.y) - radius), 0,
+		image.get_height() - 1)
+	var max_y := clampi(ceili(maxf(from.y, to.y) + radius), 0,
+		image.get_height() - 1)
+	var radius_squared := radius * radius
+	var score := 0
+	for y: int in range(min_y, max_y + 1, PIXEL_SAMPLE_STEP):
+		for x: int in range(min_x, max_x + 1, PIXEL_SAMPLE_STEP):
+			var point := Vector2(float(x), float(y))
+			if _distance_squared_to_segment(point, from, to) > radius_squared:
+				continue
+			if _is_red_energy(image.get_pixel(x, y)):
+				score += 1
+	return score
+
+
+func _distance_squared_to_segment(point: Vector2, from: Vector2, to: Vector2) -> float:
+	var segment := to - from
+	var length_squared := segment.length_squared()
+	if length_squared <= 0.0:
+		return point.distance_squared_to(from)
+	var amount := clampf((point - from).dot(segment) / length_squared, 0.0, 1.0)
+	return point.distance_squared_to(from + segment * amount)
+
+
+func _is_red_energy(color: Color) -> bool:
+	return color.r >= 0.18 and color.r - maxf(color.g, color.b) >= 0.07
 
 
 func _look_at_cast(player: Player) -> void:

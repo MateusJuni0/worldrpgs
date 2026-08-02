@@ -82,6 +82,7 @@ func sync(snapshot: Dictionary) -> void:
 	var transforms := _transforms_for(snapshot)
 	var trail_transforms := _trail_transforms_for(snapshot)
 	var moving_contact := String(snapshot.get("contact_type", "")) == "volume_movel"
+	var diseased := String(_bundle.get("school", "")) == "mal"
 	var core_factor := float(_launch_profile.get("delivery_core_factor", 1.0)) \
 		if moving_contact else 1.0
 	var halo_factor := float(_launch_profile.get("delivery_halo_factor", 1.0)) \
@@ -96,11 +97,10 @@ func sync(snapshot: Dictionary) -> void:
 		"halo_scale", 0.0)) * halo_factor, effect_visible)
 	_write_layer(_trail, trail_transforms, float((_bundle.get("render", {}) as Dictionary).get(
 		"core_scale", 0.0)) * trail_factor,
-		effect_visible and not trail_transforms.is_empty())
+		effect_visible and not trail_transforms.is_empty() and not diseased)
 	_write_layer(_veins, trail_transforms, float((_bundle.get("render", {}) as Dictionary).get(
 		"core_scale", 0.0)) * trail_factor,
-		effect_visible and not trail_transforms.is_empty() \
-		and String(_bundle.get("school", "")) == "mal")
+		effect_visible and not trail_transforms.is_empty() and diseased)
 	_play_audio_cue()
 
 
@@ -117,7 +117,7 @@ func rendered_trail_instance_count() -> int:
 
 
 func has_visible_trail() -> bool:
-	return _trail.visible and _rendered_trail_instances > 0
+	return (_trail.visible or _veins.visible) and _rendered_trail_instances > 0
 
 
 func is_diseased_style_visible() -> bool:

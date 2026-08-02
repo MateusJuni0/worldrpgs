@@ -8,6 +8,7 @@ const ANIMATION_CATALOGUE_PATH := "res://data/animations.json"
 
 static var _phase_profiles_cache: Dictionary = {}
 static var _focus_mesh_cache: SphereMesh
+static var _blood_stream_mesh_cache: BoxMesh
 
 var _bundle: Dictionary = {}
 var _cast_duration_s := 0.0
@@ -22,7 +23,7 @@ var _core := MeshInstance3D.new()
 var _halo := MeshInstance3D.new()
 var _orbit := MultiMeshInstance3D.new()
 var _blood_motes := MultiMeshInstance3D.new()
-var _blood_body_core := MeshInstance3D.new()
+var _blood_streams := MultiMeshInstance3D.new()
 var _core_material: StandardMaterial3D
 var _halo_material: StandardMaterial3D
 var _orbit_material: StandardMaterial3D
@@ -32,6 +33,7 @@ var _halo_color := Color.WHITE
 var _blood_color := Color.WHITE
 var _visible_orbit_instances := 0
 var _visible_blood_instances := 0
+var _visible_blood_stream_instances := 0
 
 
 func configure(bundle: Dictionary, cast_duration_s: float,
@@ -88,10 +90,12 @@ func configure(bundle: Dictionary, cast_duration_s: float,
 	_blood_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(_blood_motes)
 
-	_blood_body_core.mesh = mesh
-	_blood_body_core.material_override = _blood_material
-	_blood_body_core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(_blood_body_core)
+	_blood_streams.material_override = _blood_material
+	_blood_streams.multimesh = _new_multimesh(_blood_stream_mesh(),
+		_maximum_profile_product("blood_stream_count", "blood_stream_segments"))
+	_blood_streams.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(_blood_streams)
+
 	_update_visuals()
 
 
@@ -135,8 +139,8 @@ func is_instrument_lit() -> bool:
 
 
 func is_body_price_visible() -> bool:
-	return visible and _blood_body_core.visible and _blood_motes.visible \
-		and _visible_blood_instances > 0
+	return visible and (_visible_blood_instances > 0 \
+		or _visible_blood_stream_instances > 0)
 
 
 func cast_phase() -> String:
@@ -144,8 +148,9 @@ func cast_phase() -> String:
 
 
 func visible_instance_count() -> int:
-	var fixed := int(_core.visible) + int(_halo.visible) + int(_blood_body_core.visible)
-	return fixed + _visible_orbit_instances + _visible_blood_instances
+	var fixed := int(_core.visible) + int(_halo.visible)
+	return fixed + _visible_orbit_instances + _visible_blood_instances \
+		+ _visible_blood_stream_instances
 
 
 func tip_position() -> Vector3:
@@ -260,14 +265,65 @@ func _update_blood_price(previous: Dictionary, target: Dictionary,
 	_blood_motes.multimesh.visible_instance_count = count
 	_visible_blood_instances = count if visibility > 0.0 else 0
 	_blood_motes.visible = _visible_blood_instances > 0
-	var body_core_factor := _interpolated(previous, target,
-		"blood_body_core_scale_factor", progress)
-	_blood_body_core.position = body_anchor
-	_blood_body_core.scale = Vector3.ONE * float((
-		_bundle.get("render", {}) as Dictionary).get("core_scale", 0.0)) \
-		* body_core_factor
-	_blood_body_core.visible = visibility > 0.0 and body_core_factor > 0.0
+	_update_blood_streams(previous, target, progress, visibility, body_anchor)
 	_set_material_opacity(_blood_material, _blood_color, visibility)
+
+
+func _update_blood_streams(previous: Dictionary, target: Dictionary,
+		progress: float, visibility: float, body_anchor: Vector3) -> void:
+	var stream_count := roundi(_interpolated(previous, target,
+		"blood_stream_count", progress))
+	var segments := roundi(_interpolated(previous, target,
+		"blood_stream_segments", progress))
+	stream_count = maxi(stream_count, 0)
+	segments = maxi(segments, 0)
+	var total := mini(stream_count * segments, _blood_streams.multimesh.instance_count)
+	var width := float((_bundle.get("render", {}) as Dictionary).get(
+		"core_scale", 0.0)) * _interpolated(previous, target,
+		"blood_stream_width_factor", progress)
+	var curve := _interpolated(previous, target, "blood_stream_curve_m", progress)
+	var flow_cycles := _interpolated(previous, target, "blood_flow_cycles", progress)
+	var axis := -body_anchor.normalized()
+	var reference := axis.cross(Vector3.UP).normalized()
+	if reference.is_zero_approx():
+		reference = axis.cross(Vector3.RIGHT).normalized()
+	var written := 0
+	for stream_index: int in stream_count:
+		var angle := TAU * (float(stream_index) / float(maxi(stream_count, 1)) \
+			+ progress * flow_cycles)
+		var side := reference.rotated(axis, angle)
+		for segment_index: int in segments:
+			if written >= total:
+				break
+			var from_t := float(segment_index) / float(maxi(segments, 1))
+			var to_t := float(segment_index + 1) / float(maxi(segments, 1))
+			var from := _blood_stream_point(body_anchor, side, curve, from_t)
+			var to := _blood_stream_point(body_anchor, side, curve, to_t)
+			_blood_streams.multimesh.set_instance_transform(written,
+				_line_transform(from, to, width))
+			written += 1
+	_blood_streams.multimesh.visible_instance_count = total
+	_visible_blood_stream_instances = total if visibility > 0.0 and width > 0.0 else 0
+	_blood_streams.visible = _visible_blood_stream_instances > 0
+
+
+func _blood_stream_point(body_anchor: Vector3, side: Vector3,
+		curve: float, amount: float) -> Vector3:
+	return body_anchor.lerp(Vector3.ZERO, amount) \
+		+ side * sin(amount * PI) * curve
+
+
+func _line_transform(from: Vector3, to: Vector3, width: float) -> Transform3D:
+	var direction := to - from
+	var length := direction.length()
+	if length <= 0.0:
+		return Transform3D(Basis.IDENTITY, from)
+	var up := Vector3.UP
+	if absf(direction.normalized().dot(up)) > 0.95:
+		up = Vector3.RIGHT
+	var basis := Basis.looking_at(direction.normalized(), up) \
+		* Basis.from_scale(Vector3(width, width, length))
+	return Transform3D(basis, from.lerp(to, 0.5))
 
 
 func _previous_vfx_profile(role: String) -> Dictionary:
@@ -297,6 +353,17 @@ func _maximum_profile_count(field: String) -> int:
 		if role.begins_with("_"):
 			continue
 		maximum = maxi(maximum, int(_vfx_profile(role).get(field, 0)))
+	return maximum
+
+
+func _maximum_profile_product(first_field: String, second_field: String) -> int:
+	var maximum := 0
+	for role: String in _phase_profiles:
+		if role.begins_with("_"):
+			continue
+		var profile := _vfx_profile(role)
+		maximum = maxi(maximum, int(profile.get(first_field, 0)) \
+			* int(profile.get(second_field, 0)))
 	return maximum
 
 
@@ -351,6 +418,14 @@ static func _focus_mesh(render: Dictionary) -> SphereMesh:
 	mesh.rings = int(render.get("rings", 0))
 	_focus_mesh_cache = mesh
 	return _focus_mesh_cache
+
+
+static func _blood_stream_mesh() -> BoxMesh:
+	if _blood_stream_mesh_cache != null:
+		return _blood_stream_mesh_cache
+	_blood_stream_mesh_cache = BoxMesh.new()
+	_blood_stream_mesh_cache.size = Vector3.ONE
+	return _blood_stream_mesh_cache
 
 
 static func _cast_phase_profiles() -> Dictionary:
