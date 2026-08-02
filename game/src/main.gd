@@ -392,10 +392,14 @@ func _populate_zone() -> void:
 		"flask": p[4],
 	}
 
-	# A Toca: um em cada sala.
-	var e := world.lair_entrance
-	_spawn("orc_spearman", e + Vector3(0, 0.5, -10))
-	_spawn("orc_brute", e + Vector3(2, 0.5, -21))
+	# A arquitectura da Toca e a autoridade sobre encontros. O primeiro termo do
+	# papel (lanceiro/brutamontes) resolve o inimigo pelo nome do catalogo, sem uma
+	# segunda lista de IDs que possa ficar para tras.
+	if is_instance_valid(lair):
+		for marker: Marker3D in lair.get_enemy_markers():
+			var enemy_id := _enemy_id_for_lair_marker(marker)
+			if not enemy_id.is_empty():
+				_spawn(enemy_id, marker.global_position)
 
 	var defeated: Array = ((GameData.save_state.get("world", {}) as Dictionary).get(
 		"bosses_defeated", []) as Array)
@@ -403,6 +407,25 @@ func _populate_zone() -> void:
 		boss = _spawn("vorgar", world.arena_center)
 		hud.boss = boss
 		boss.died.connect(_on_boss_died)
+
+
+func _enemy_id_for_lair_marker(marker: Marker3D) -> String:
+	var architecture_role := String(marker.get_meta("architecture_role", ""))
+	var archetype := architecture_role.get_slice("_", 0).to_lower()
+	if archetype.is_empty():
+		return ""
+	var enemy_ids: Array[String] = []
+	for value: Variant in GameData.enemies.keys():
+		var enemy_id := String(value)
+		if not enemy_id.begins_with("_"):
+			enemy_ids.append(enemy_id)
+	enemy_ids.sort()
+	for enemy_id: String in enemy_ids:
+		var display_name := String(GameData.enemy(enemy_id).get("display_name", "")).to_lower()
+		if display_name.contains(archetype):
+			return enemy_id
+	push_warning("A Toca nao encontrou no catalogo o papel '%s'" % architecture_role)
+	return ""
 
 
 func _face_enemy_towards(enemy: Enemy, point: Vector3) -> void:

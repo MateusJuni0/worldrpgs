@@ -45,6 +45,19 @@ func _test_integrations_in_real_game() -> void:
 	_check(lair != null and int(lair_audit.get("module_instances", 0)) > 0 \
 			and int(lair_audit.get("collision_shapes", 0)) > 0,
 		"jogo real: a Toca modular aparece no mundo e e navegavel")
+	var occupied_markers := 0
+	if lair != null:
+		for marker: Marker3D in lair.get_enemy_markers():
+			for node: Node in get_tree().get_nodes_in_group("enemies"):
+				var enemy := node as Enemy
+				if enemy != null and gameplay.is_ancestor_of(enemy) \
+						and Vector2(enemy.global_position.x, enemy.global_position.z).distance_to(
+							Vector2(marker.global_position.x, marker.global_position.z)) \
+						< enemy.body_radius * 2.0:
+					occupied_markers += 1
+					break
+	_check(lair != null and occupied_markers == lair.get_enemy_markers().size(),
+		"jogo real: os encontros ocupam os marcadores da Toca")
 	var world_environment := world.get_node_or_null("WorldEnvironment") as WorldEnvironment \
 			if world != null else null
 	_check(world_environment != null and world_environment.environment != null \
