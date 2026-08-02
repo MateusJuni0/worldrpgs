@@ -2551,12 +2551,13 @@
     },
     "sorcerer": {
       "main": "staff",
-      "offhand": null,
+      "offhand": "sino",
       "pecas": [
         "la_capa",
         "couro_cinto"
       ],
-      "carga": "leve"
+      "carga": "leve",
+      "_porque_offhand": "[CODEX] 02-08: sem instrumento na secundaria o Feiticeiro NAO CONJURA — era a causa medida de Vorgar parecer imatavel (201,1 s vs 85,8 s). O sino da-lhe controlo, que e a identidade declarada da origem."
     },
     "tank": {
       "main": "espada_recta_brumal_espada_de_vigilia",
@@ -2596,13 +2597,14 @@
     },
     "evil_mage": {
       "main": "staff",
-      "offhand": null,
+      "offhand": "talisma",
       "pecas": [
         "couro_peitoral",
         "couro_cinto"
       ],
       "carga": "leve",
-      "_porque": "[CODEX] 01-08: couro no peito em vez de la porque o Mago do Mal luta perto (spec/52 §5); carga leve porque a mobilidade e o que o mantem vivo. Instrumento proprio fica em aberto — ver LACUNAS.md"
+      "_porque_offhand": "[DECIDIDO] (Mateus, 01-08): \"quero um talisma\". O Talisma de Ferro Morto so faz rito de cadaver — ganha a necromancia inteira e perde as outras formas de lancar. Sem ele na secundaria o Mago do Mal nao conjurava nada.",
+      "_porque": "[CODEX] 01-08: couro no peito em vez de la porque o Mago do Mal luta perto (spec/52 §5); carga leve porque a mobilidade e o que o mantem vivo."
     }
   },
   "test_loadouts": {
