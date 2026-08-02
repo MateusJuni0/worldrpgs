@@ -11,6 +11,7 @@ var simulation_authority_id := &""
 var summoner: Node3D
 var order := ""
 var _raised_animation_speed := 1.0
+var _expects_source_visual := false
 
 const ROTTEN_TINT := Color("695c52")
 const ALLY_RED := Color("b91f3d")
@@ -24,7 +25,10 @@ func setup_raised(p_enemy_id: String, palette: Dictionary,
 	simulation_authority_id = authority_id
 	summon_id = String(summon_data.get("summon_id", ""))
 	order = String(summon_data.get("order", ""))
+	_expects_source_visual = summon_data.has("corpse_id")
 	super.setup(p_enemy_id, palette, false, hash(summon_id))
+	_inherit_original_visual()
+	var visual_identity_preserved := _original_visual_identity_is_preserved()
 	max_health = float(summon_data.get("max_health", max_health))
 	health = max_health
 	data = data.duplicate(true)
@@ -34,10 +38,48 @@ func setup_raised(p_enemy_id: String, palette: Dictionary,
 		_raised_animation_speed = float(data.get("patrol_speed", 0.0)) \
 			/ original_chase_speed
 	remove_from_group("enemies")
-	add_to_group("summons")
-	add_to_group("summons_owned_by:%s" % String(caster_owner_id))
-	_apply_wrong_posture()
+	if visual_identity_preserved:
+		add_to_group("summons")
+		add_to_group("summons_owned_by:%s" % String(caster_owner_id))
+	_apply_dead_posture()
 	_build_ally_marker()
+
+
+func _inherit_original_visual() -> void:
+	for node: Node in get_tree().get_nodes_in_group("necromancy_corpses"):
+		var corpse := node as RaisedCorpse
+		if corpse == null or corpse.corpse_id != summon_id:
+			continue
+		var generated_visual := _visual
+		var inherited_visual := corpse.take_source_visual(self)
+		if inherited_visual == null:
+			push_error("o cadáver não entregou o visual original ao levantado")
+			return
+		if generated_visual != inherited_visual and is_instance_valid(generated_visual):
+			generated_visual.visible = false
+			generated_visual.queue_free()
+		_visual = inherited_visual
+		_visual_animation_request = ""
+		# MonsterVisual ligou-se ao inimigo antigo quando nasceu. Depois de mudar
+		# de pai, passa a ouvir ataques, vida e estado do mesmo corpo levantado.
+		if _visual.has_method("_connect_enemy_signals"):
+			_visual.call("_connect_enemy_signals")
+		return
+
+
+func _original_visual_identity_is_preserved() -> bool:
+	for node: Node in get_tree().get_nodes_in_group("necromancy_corpses"):
+		var corpse := node as RaisedCorpse
+		if corpse == null or corpse.corpse_id != summon_id:
+			continue
+		if _visual != corpse.source_visual:
+			push_error("o levantado trocou o visual do inimigo que morreu")
+			return false
+		return true
+	if _expects_source_visual:
+		push_error("o levantado perdeu o cadáver visual antes da transferência")
+		return false
+	return true
 
 
 func set_order(next_order: String) -> void:
@@ -116,11 +158,11 @@ func dismiss() -> void:
 	queue_free()
 
 
-func _apply_wrong_posture() -> void:
+func _apply_dead_posture() -> void:
 	if _visual == null:
 		return
-	# O conceito aprovado do Peregrino Caído pede peso frontal e assimetria; a
-	# colisão continua direita para a pose nunca mudar alcance nem passagem.
+	# O estado morto lê-se no peso frontal e na assimetria; a colisão continua
+	# direita para a pose nunca mudar alcance nem passagem.
 	_visual.rotation_degrees.x = -11.0
 	_visual.rotation_degrees.z = -5.0 if hash(summon_id) % 2 == 0 else 5.0
 	_visual.position.y = -0.08

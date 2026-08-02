@@ -10,11 +10,13 @@ var is_boss := false
 var caster_owner_id := &""
 var simulation_authority_id := &""
 var source_body: Node3D
+var source_visual: Node3D
 var _claimed := false
 
 
 func setup_from_enemy(defeated: Node3D, stable_corpse_id: String = "") -> void:
 	source_body = defeated
+	source_visual = defeated.get("_visual") as Node3D
 	corpse_id = stable_corpse_id if not stable_corpse_id.is_empty() else \
 		"%s:%s" % [String(defeated.get("enemy_id")),
 			str(defeated.get_instance_id())]
@@ -27,7 +29,8 @@ func setup_from_enemy(defeated: Node3D, stable_corpse_id: String = "") -> void:
 
 
 func is_visible_corpse() -> bool:
-	return is_instance_valid(source_body) and source_body.is_visible_in_tree()
+	return is_instance_valid(source_body) and is_instance_valid(source_visual) \
+		and source_body.is_visible_in_tree() and source_visual.is_visible_in_tree()
 
 
 func is_available() -> bool:
@@ -49,8 +52,22 @@ func release_claim() -> void:
 	simulation_authority_id = &""
 
 
+func take_source_visual(next_parent: Node3D) -> Node3D:
+	if not is_instance_valid(next_parent) or not is_instance_valid(source_body) \
+			or not is_instance_valid(source_visual):
+		return null
+	# Transferir o próprio nó preserva modelo, escala, arma, materiais e variante.
+	# Recriá-lo a partir do enemy_id foi precisamente o que trocou a skin.
+	# O novo corpo físico herda também a orientação da morte; conservar depois o
+	# transform local mantém arte e hitbox viradas para o mesmo lado ao atacar.
+	next_parent.global_rotation = source_body.global_rotation
+	source_visual.reparent(next_parent, false)
+	return source_visual
+
+
 func consume() -> void:
 	if is_instance_valid(source_body):
 		source_body.queue_free()
 		source_body = null
+	source_visual = null
 	queue_free()
