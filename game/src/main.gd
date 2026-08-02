@@ -26,6 +26,7 @@ var _scene_kind := "zone"
 var _respawn_point := Vector3.ZERO
 var _respawning := false
 var _rest_points: Dictionary = {}
+var _bonfires: Dictionary = {}
 var _nearest_rest_id := ""
 var _learning_points: Dictionary = {}
 var _learning_elapsed := 0.0
@@ -438,6 +439,7 @@ func _build_rest_points() -> void:
 		"brumal_clareira": world.spawn_point,
 		"toca_entrada": world.lair_entrance + Vector3(0, 0.0, 7.0),
 	}
+	_bonfires.clear()
 	for rest_id: String in _rest_points:
 		_build_bonfire(rest_id, _rest_points[rest_id])
 
@@ -477,6 +479,13 @@ func _build_bonfire(rest_id: String, at: Vector3) -> void:
 	light.omni_range = 7.0
 	light.shadow_enabled = false
 	root.add_child(light)
+	var controller := Bonfire.new()
+	controller.name = "BonfireController"
+	root.add_child(controller)
+	controller.configure("brumal", rest_id)
+	controller.rest_completed.connect(_on_bonfire_rest_completed.bind(rest_id))
+	controller.operation_failed.connect(_on_bonfire_operation_failed)
+	_bonfires[rest_id] = controller
 
 
 func _tick_rest_points() -> void:
@@ -493,27 +502,33 @@ func _tick_rest_points() -> void:
 	if _nearest_rest_id == "":
 		hud.set_prompt("")
 		return
-	hud.set_prompt("%s — descansar" % _binding_label("interact"))
-	if Input.is_action_just_pressed("interact"):
-		_rest_at(_nearest_rest_id)
-
-
-func _rest_at(rest_id: String) -> void:
-	if not SaveSystem.commit_checkpoint("brumal", rest_id):
-		hud.toast("Não foi possível guardar este descanso.", 3.0)
+	var controller := _bonfires.get(_nearest_rest_id) as Bonfire
+	if controller == null:
+		hud.set_prompt("")
 		return
+	var action := controller.input_action()
+	hud.set_prompt("%s — descansar" % _binding_label(action))
+	controller.process_input(player, _enemies_for_rest())
+
+
+func _enemies_for_rest() -> Array:
+	var enemies: Array = []
+	for child: Node in get_children():
+		var enemy := child as Enemy
+		if enemy != null:
+			enemies.append(enemy)
+	return enemies
+
+
+func _on_bonfire_rest_completed(_result: Dictionary, rest_id: String) -> void:
 	_respawn_point = (_rest_points[rest_id] as Vector3) + REST_SPAWN_OFFSET
 	if is_instance_valid(necromancy_runtime):
 		necromancy_runtime.rest()
-	player.health = player.max_health
-	player.stamina.current = player.stamina.maximum
-	player.mana = player.max_mana
-	player.flask_refill()
-	for node: Node in get_children():
-		var enemy := node as Enemy
-		if enemy != null and not enemy.is_boss:
-			enemy.full_reset()
 	hud.toast("Descansaste. Este é agora o teu ponto de regresso.", 3.0)
+
+
+func _on_bonfire_operation_failed(_result: Dictionary) -> void:
+	hud.toast("Não foi possível descansar agora.", 3.0)
 
 
 func _binding_label(action_name: String) -> String:
