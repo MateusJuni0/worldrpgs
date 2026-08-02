@@ -7,8 +7,16 @@ const GAMEPLAY := preload("res://scenes/gameplay.tscn")
 
 
 func _ready() -> void:
+	_test_world_bounds_suite()
 	await _test_integrations_in_real_game()
 	super._ready()
+
+
+func _test_world_bounds_suite() -> void:
+	var result := BoundsSelfTest.run_suite()
+	var failures: Array = result.get("failures", []) as Array
+	_check(failures.is_empty(),
+		"VERIFICAR inclui as faixas segura, dano e mortal dos limites verticais")
 
 
 func _test_integrations_in_real_game() -> void:
