@@ -67,6 +67,7 @@ func _test_integrations_in_real_game() -> void:
 		"jogo real: Brumal mostra a atmosfera integrada")
 	_prove_monsters(gameplay)
 	await _prove_first_boss_defeat(gameplay, actor)
+	await _prove_network_hud(gameplay)
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.
@@ -139,3 +140,18 @@ func _prove_first_boss_defeat(gameplay: Node, actor: Player) -> void:
 	_check(bar_was_visible and not vorgar.is_alive() and boss_bar != null \
 			and not boss_bar.visible,
 		"jogo real: carregar em ataque mata Vorgar e esconde a barra visivel")
+
+
+func _prove_network_hud(gameplay: Node) -> void:
+	var net_hud := gameplay.get_node_or_null("NetHud") as NetHud
+	_check(net_hud != null, "jogo real: o HUD de rede entra na cena jogavel")
+	if net_hud == null:
+		return
+	var message := "Ligacao instavel na prova integrada"
+	NetSession.link_warning.emit(message)
+	for _frame: int in 2:
+		await get_tree().process_frame
+	var label := net_hud.get("_label") as Label
+	_check(label != null and label.visible and label.text == message,
+		"jogo real: o aviso de rede aparece visivel no ecra")
+	NetSession.link_warning.emit("")

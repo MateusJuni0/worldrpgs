@@ -22,6 +22,7 @@ var hud: Hud
 var boss: Enemy
 var navigation: CanvasLayer
 var necromancy_runtime: NecromancyRuntime
+var net_hud: NetHud
 
 var _preset: Dictionary = {}
 var _palette: Dictionary = {}
@@ -51,6 +52,7 @@ func _ready() -> void:
 	_build_rest_points()
 	_build_player()
 	_build_hud()
+	_build_network_hud()
 	_build_necromancy_runtime()
 	_populate()
 	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
@@ -200,6 +202,12 @@ func _build_hud() -> void:
 	if not Bench.is_benchmarking():
 		hud.toast(GameData.ui_text("toast.start") % [
 			SettingsSystem.binding_label("toggle_help"), _preset.get("_name", "?")], 6.0)
+
+
+func _build_network_hud() -> void:
+	net_hud = NetHud.new()
+	net_hud.name = "NetHud"
+	add_child(net_hud)
 
 
 func _build_necromancy_runtime() -> void:
