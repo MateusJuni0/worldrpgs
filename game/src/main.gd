@@ -24,6 +24,7 @@ var navigation: CanvasLayer
 var necromancy_runtime: NecromancyRuntime
 var net_menu: NetMenu
 var net_hud: NetHud
+var pickup_manager: WorldPickupManager
 var starting_loadout_contract_errors: Array[String] = []
 
 var _preset: Dictionary = {}
@@ -59,6 +60,7 @@ func _ready() -> void:
 	_build_player()
 	_build_hud()
 	_build_network_ui()
+	_build_pickup_manager()
 	_build_necromancy_runtime()
 	_populate()
 	SettingsSystem.graphics_changed.connect(_apply_graphics_live)
@@ -74,7 +76,10 @@ func _ready() -> void:
 		return
 
 	if not Bench.is_benchmarking():
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		# À entrada o jogador pode escolher co-op com o rato. Um clique no mundo
+		# captura-o; depois a tecla indicada no HUD abre directamente o mesmo menu.
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		_sync_network_launcher()
 	else:
 		_run_benchmark_pilot()
 
@@ -254,6 +259,29 @@ func _sync_network_focus() -> void:
 	set_local_input_enabled(not _net_menu_was_visible)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if _net_menu_was_visible \
 		else Input.MOUSE_MODE_CAPTURED
+	_sync_network_launcher()
+
+
+func _sync_network_launcher() -> void:
+	if not is_instance_valid(_net_launcher):
+		return
+	var menu_aberto := is_instance_valid(net_menu) and net_menu.visible
+	var rato_livre := Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+	_net_launcher.visible = rato_livre and not menu_aberto
+	if is_instance_valid(hud):
+		var dica := "" if rato_livre or menu_aberto else "%s — JOGAR A DOIS" % \
+			_binding_label("toggle_mouse")
+		hud.set_network_hint(dica)
+
+
+func _build_pickup_manager() -> void:
+	pickup_manager = WorldPickupManager.new()
+	pickup_manager.name = "WorldPickupManager"
+	add_child(pickup_manager)
+	if not pickup_manager.setup(world, player, hud, "brumal"):
+		push_error("[espólio] WorldPickupManager recusou a cena jogável")
+		pickup_manager.queue_free()
+		pickup_manager = null
 
 
 func _build_necromancy_runtime() -> void:
@@ -352,6 +380,7 @@ func _spawn(enemy_id: String, at: Vector3, actor: Enemy = null) -> Enemy:
 	var e := actor if actor != null else Enemy.new()
 	add_child(e)
 	e.global_position = at
+	e.set_meta("placement_id", _placement_id(enemy_id, at))
 	e.setup(enemy_id, _palette)
 	_attach_monster_visual(e)
 	e.target = player
@@ -359,6 +388,12 @@ func _spawn(enemy_id: String, at: Vector3, actor: Enemy = null) -> Enemy:
 	e.died.connect(_on_enemy_died)
 	_watch_enemy_for_necromancy(e)
 	return e
+
+
+func _placement_id(enemy_id: String, at: Vector3) -> String:
+	# A posição de autoria é estável entre sessões e não depende da ordem em que
+	# o povoamento cria os corpos. É a mesma identidade usada por descanso/loot.
+	return "brumal:%s:%.3f:%.3f:%.3f" % [enemy_id, at.x, at.y, at.z]
 
 
 func _attach_monster_visual(enemy: Enemy) -> void:
@@ -552,6 +587,9 @@ func _on_enemy_died(defeated: Enemy) -> void:
 	match String(receipt.get("status", "")):
 		"awarded":
 			var card := String(receipt.get("resolved_card", ""))
+			if is_instance_valid(pickup_manager):
+				pickup_manager.present_enemy_reward(
+					receipt, defeated.global_position, snapshot)
 			hud.toast(GameData.ui_text("toast.reward") % [int(receipt.get("souls_awarded", 0)), card], 3.0)
 		"exhausted":
 			hud.toast(GameData.ui_text("toast.loot_exhausted"), 2.5)
@@ -575,6 +613,8 @@ func _on_player_died() -> void:
 func _respawn() -> void:
 	player.respawn_at(_respawn_point)
 	player.flask_refill()
+	if is_instance_valid(pickup_manager):
+		pickup_manager.set_player(player)
 	for node in get_children():
 		var e := node as Enemy
 		if e != null:
@@ -777,6 +817,7 @@ func _end_wake_sequence() -> void:
 	if is_instance_valid(hud):
 		hud.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_sync_network_launcher()
 
 
 func refresh_inventory_state() -> void:
@@ -868,12 +909,17 @@ func _show_learning_tip(tip_id: String) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_pressed():
 		return
+	if event is InputEventMouseButton and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE \
+			and (not is_instance_valid(net_menu) or not net_menu.visible):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		_sync_network_launcher()
+		return
 	if InputMap.has_action("debug_class_next") and Input.is_action_just_pressed("debug_class_next"):
 		_cycle_class()
 		return
 	if InputMap.has_action("toggle_mouse") and Input.is_action_just_pressed("toggle_mouse"):
-		Input.mouse_mode = (Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
-			else Input.MOUSE_MODE_CAPTURED)
+		_toggle_network_menu()
+		return
 	elif InputMap.has_action("reset_arena") and Input.is_action_just_pressed("reset_arena"):
 		_respawn()
 		hud.toast(GameData.ui_text("toast.arena_reset"), 2.0)
@@ -894,6 +940,8 @@ func _process(delta: float) -> void:
 	if not Bench.is_benchmarking():
 		if is_instance_valid(net_menu) and net_menu.visible != _net_menu_was_visible:
 			_sync_network_focus()
+		else:
+			_sync_network_launcher()
 		_tick_rest_points()
 		_tick_learning(delta)
 		return
@@ -951,6 +999,8 @@ func _cycle_class() -> void:
 	cam.target = player
 	player.died.connect(_on_player_died)
 	hud.player = player
+	if is_instance_valid(pickup_manager):
+		pickup_manager.set_player(player)
 	_build_necromancy_runtime()
 	if is_instance_valid(navigation):
 		navigation.set("player", player)
