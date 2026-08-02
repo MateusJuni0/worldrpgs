@@ -64,20 +64,73 @@
       "zone_label": "BRUMAL",
       "zone_bounds_m": {
         "min_x": -110.0,
-        "min_z": -110.0,
+        "min_z": -180.0,
         "size_x": 220.0,
-        "size_z": 220.0
+        "size_z": 290.0
       },
       "cell_size_m": 1.5,
       "reveal_radius_m": 7.0,
       "minimap_range_m": 40.0,
-      "update_hz": 10.0,
+      "update_hz": 5.0,
       "save_debounce_s": 4.0,
       "projection_degrees": 40.0,
       "minimap_default": "roda_com_o_jogador",
       "minimap_can_disable": true,
       "compass_equivalent": "cardinais_no_aro_do_minimapa_rodam_com_o_mundo",
-      "_porque_cell_size": "[CLAUDE] 02-08: era 4,0 m e o Mateus disse \"o mapa ta numa resolucao merda, nao se entende nem ve nada\". Com celulas de 4 m, Brumal (220 m) cabia em 55x55 quadrados — num minimapa de ~260 px isso da 4,7 px por celula, e le-se como um mosaico. A 1,5 m sao 147x147: o custo e um bitset de ~2,7 KB por zona, ou seja nada, e o desenho passa a ter forma."
+      "cartography": {
+        "minimap_size_px": 304.0,
+        "screen_margin_px": 30.0,
+        "map_padding_px": 22.0,
+        "raster_scale": 2,
+        "redraw_hz": 15.0,
+        "route_line_width_m": 1.5,
+        "route_outline_width_m": 2.5,
+        "distance_ring_m": 20.0,
+        "scale_bar_m": 10.0,
+        "landmark_icon_size_px": 10.0,
+        "landmark_label_range_m": 24.0,
+        "background_color": "#080c0e",
+        "explored_ground_color": "#777a72",
+        "route_color": "#e3b868",
+        "route_outline_color": "#35291c",
+        "grid_color": "#d9d0b81f",
+        "frame_color": "#b7a47a",
+        "text_color": "#f0ead9",
+        "proof": {
+          "walk_seconds": 30.0,
+          "arrival_radius_m": 2.0,
+          "min_walk_distance_m": 90.0,
+          "color_tolerance": 0.16,
+          "capture_file": "res://captures/minimapa-30s.png",
+          "min_route_pixels": 80,
+          "min_landmark_pixels": 12,
+          "min_scale_pixels": 30
+        },
+        "landmark_styles": {
+          "rest": {
+            "icon": "flame",
+            "color": "#ffb44f",
+            "short_label": "FOGUEIRA"
+          },
+          "lair": {
+            "icon": "gate",
+            "color": "#bca6e2",
+            "short_label": "TOCA"
+          },
+          "arena": {
+            "icon": "crown",
+            "color": "#e27662",
+            "short_label": "ARENA"
+          },
+          "place": {
+            "icon": "tent",
+            "color": "#d8c58f",
+            "short_label": "LOCAL"
+          }
+        }
+      },
+      "_porque_cell_size": "[CLAUDE] 02-08: era 4,0 m e o Mateus disse \"o mapa ta numa resolucao merda, nao se entende nem ve nada\". Com celulas de 4 m, Brumal (220 m) cabia em 55x55 quadrados — num minimapa de ~260 px isso da 4,7 px por celula, e le-se como um mosaico. A 1,5 m a celula deixa de esconder curvas; a apresentacao continua a precisar de filtragem e linha cartografica.",
+      "_porque_cartography": "[CODEX] 02-08: o raster em nearest continuava a parecer mosaico e os marcos partilhavam o mesmo losango. A linha cartografica so percorre celulas descobertas, os quatro tipos leem estilos do catalogo e a escala de 10 m ancora distancia. Alternativa descartada: baixar outra vez a celula; aumentava estado e nao corrigia forma, hierarquia nem marcos. Os limites incluem agora a arena real em z=-162 m, antes cortada aos -110 m. O raster 2x e a descoberta a 5 Hz conservam a forma a velocidade de sprint sem actualizar a textura duas vezes por celula."
     },
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false
