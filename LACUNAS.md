@@ -915,3 +915,11 @@ Havia dezenas de processos Godot de árvores paralelas na máquina. Uma primeira
 | 🔵 | Repetir o benchmark no hardware físico final e com modelos/efeitos finais. Não transformar variação de FPS em limite de desenho; se a Lei 4 falhar, degradar apresentação pelos presets declarados e publicar o número medido | `res://src/summons/necromancy_benchmark.tscn -- --summons=N` |
 
 O orçamento continua puramente data-driven: chefe erguido (50%) + Voto de Sangue ×3 (60%) já excedem 100%, e qualquer invocação comum aumenta ainda mais. `_fits_budget()` exige que o necromante permaneça vivo, logo as combinações incompatíveis são rejeitadas pela mesma matemática, independentemente da ordem, sem travão adicional nem máximo de criaturas.
+
+## 🔧 Defeito de processo — 02-08
+
+⚠️ **Eu proibi os agentes de tocar em `game/src/main.gd` para evitar colisões, e `main.gd` é exactamente onde o fio se liga.** Resultado: três agentes seguidos entregaram o motor perfeito e pararam à porta — necromancia, fogueira, recolha. Cada um foi honesto e escreveu aqui que faltava a ligação; nenhum podia fazê-la.
+
+⭐ **A correcção:** `main.gd` passa a ter um **integrador** — um agente por lote, que corre depois dos outros e só liga fios. É o papel que fez a necromancia chegar ao jogo.
+
+⚠️ **A regra que fica:** um sistema novo nomeia no seu commit **qual é a linha de `main.gd` que falta**, para o integrador não ter de a descobrir.
