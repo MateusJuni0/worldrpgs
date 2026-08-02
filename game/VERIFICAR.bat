@@ -27,23 +27,23 @@ if not defined GODOT (
 set FALHOU=0
 
 echo.
-echo == 1/8  auto-teste principal (contra a spec e os catalogos) ==
+echo == 1/9  auto-teste principal (contra a spec e os catalogos) ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/selftest.tscn || set FALHOU=1
 
 echo.
-echo == 2/8  audio e icones das familias de armas ==
+echo == 2/9  audio e icones das familias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/audio/delivery_self_test.gd || set FALHOU=1
 
 echo.
-echo == 3/8  abertura jogavel ==
+echo == 3/9  abertura jogavel ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/ui/intro_selftest.gd || set FALHOU=1
 
 echo.
-echo == 4/8  arranque real: criar personagem e entrar no jogo ==
+echo == 4/9  arranque real: criar personagem e entrar no jogo ==
 "%GODOT%" --headless --audio-driver Dummy --path . scenes/repro-inicio.tscn || set FALHOU=1
 
 echo.
-echo == 5/8  descanso real na fogueira (save isolado) ==
+echo == 5/9  descanso real na fogueira (save isolado) ==
 set "ORIGINAL_APPDATA=%APPDATA%"
 set "ORIGINAL_WORLDRPGS_TEST_USER_ROOT=%WORLDRPGS_TEST_USER_ROOT%"
 set "BONFIRE_TEST_PARENT=%TEMP%\worldrpgs-verificar"
@@ -64,11 +64,11 @@ if errorlevel 1 (
 )
 
 echo.
-echo == 6/8  melhorias de armas ==
+echo == 6/9  melhorias de armas ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/weapons/weapon_progression_selftest.gd || set FALHOU=1
 
 echo.
-echo == 7/8  camada de rede (protocolo, interpolacao, latencia) ==
+echo == 7/9  camada de rede (protocolo, interpolacao, latencia) ==
 "%GODOT%" --headless --audio-driver Dummy --path . --script src/net/net_selftest.gd || set FALHOU=1
 
 echo.
