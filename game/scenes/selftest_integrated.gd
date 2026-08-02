@@ -7,11 +7,11 @@ const GAMEPLAY := preload("res://scenes/gameplay.tscn")
 
 
 func _ready() -> void:
-	await _test_player_equipment_visual_in_real_game()
+	await _test_integrations_in_real_game()
 	super._ready()
 
 
-func _test_player_equipment_visual_in_real_game() -> void:
+func _test_integrations_in_real_game() -> void:
 	var previous_state := GameData.save_state_snapshot()
 	var previous_slot := SaveSystem.active_slot
 	var previous_scene := Bench.scene_arg
@@ -38,6 +38,13 @@ func _test_player_equipment_visual_in_real_game() -> void:
 	_check(weapon != null and weapon.has_visible_weapon("longsword") \
 			and weapon.visible_mesh_count() > 0,
 		"jogo real: Guerreiro aparece com espada na mao")
+
+	var world := gameplay.get("world") as Greybox
+	var lair := world.get_node_or_null("Lair") as Lair if world != null else null
+	var lair_audit := lair.audit() if lair != null else {}
+	_check(lair != null and int(lair_audit.get("module_instances", 0)) > 0 \
+			and int(lair_audit.get("collision_shapes", 0)) > 0,
+		"jogo real: a Toca modular aparece no mundo e e navegavel")
 
 	# main.gd grava ao sair se existir estado. Esvaziar antes de remover o nó é
 	# o que torna esta prova incapaz de ocupar ou alterar um slot real.

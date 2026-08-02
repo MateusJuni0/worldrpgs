@@ -10,8 +10,11 @@ extends Node3D
 
 const NAVIGATION_HUD_SCRIPT = preload("res://src/ui/navigation_hud.gd")
 const NECROMANCY_RUNTIME_SCRIPT = preload("res://src/summons/necromancy_runtime.gd")
+const INTEGRATED_WORLD_SCRIPT = preload("res://scenes/integrated_world.gd")
+const LAIR_SCRIPT = preload("res://src/world/lair.gd")
 
 var world: Greybox
+var lair: Lair
 var player: Player
 var partner: Player
 var hud: Hud
@@ -115,10 +118,12 @@ func _apply_graphics_live(preset_name: String) -> void:
 
 
 func _build_world() -> void:
-	world = Greybox.new()
+	world = INTEGRATED_WORLD_SCRIPT.new() as Greybox
 	world.name = "World"
 	add_child(world)
+	world.call("configure_integrations", LAIR_SCRIPT)
 	world.build(_preset, _palette, "arena" if _scene_kind == "combat" else "brumal")
+	lair = world.call("integrated_lair") as Lair
 
 	var scale := float(_preset.get("render_scale", 1.0))
 	if scale < 1.0:
