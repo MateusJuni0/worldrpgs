@@ -1035,3 +1035,14 @@ O scan inicial encontrou **8 órfãos / 1744 linhas**. Depois da segunda volta e
 | 🟠 | Menu/HUD de rede só foram provados numa máquina | Abrir anfitrião + convidado reais, confirmar entrada em menos de dois minutos, corpo remoto e aviso de latência. O menu existe e é utilizável; a sessão entre duas máquinas não é declarada provada. |
 | 🔴 | A arena final mediu p99 31,899/32,982 ms e 9,9%/28,4% de frames tardios em duas passagens | Fazer A/B e localizar a regressão antes de cortar qualidade/conteúdo. Médias de 97,2/82,2 fps não contam como 60 estáveis. |
 | 🟠 | `repro-inicio.tscn` passa, mas a consola não está limpa | A prova funcional termina `ARRANQUE + NECROMANCIA OK` e apaga seis ficheiros; continuam os dois erros de instrumentos, o erro do controlador Vorgar, a conversão de `adaga` e o aviso de modelo de talismã no preview. |
+
+## 🔴 Sessão jogada por mim — 02-08
+
+| | Achado | Prova |
+|---|---|---|
+| 🔴 | ⭐ **A única animação de ataque do jogo chama-se `Punch_Cross` — um murro.** Não é o encaixe da espada que está mal: o jogo toca uma animação de soco porque é a única que a Quaternius Universal Animation Library `[Standard]` traz. As palavras do Mateus, *"ele bate com a mão e a espada fica na mão"*, descrevem exactamente o que o código manda fazer | `grep '"Punch_Cross"' game/src/` |
+| 🔴 | ⭐ **Brumal tem 3 tipos de inimigo de 34 no catálogo, e 1 chefe de 36 nomeados.** Nascem 10 lanceiros, 5 brutamontes e o Vorgar. O resto do bestiário existe em ficha e nunca no mundo | `_spawn()` em `main.gd` |
+| 🔴 | **O inimigo morto continua a deslocar-se** | sessão-de-jogo, passo 8 |
+| 🔴 | **O `WorldPickupManager` não está na cena** — sem ele não há baús nem nada no chão | sessão-de-jogo, passo 13 |
+| 🟠 | **52 fps, não 60** | sessão-de-jogo, passo 14 |
+| ⏳ | ⭐ **DECISÃO DO MATEUS:** os packs CC0 que temos (Quaternius, KayKit, Kenney) são **estilizados-fofos por desenho**. Não há, no mundo CC0, um pack de personagens sombrio e realista. As saídas: **(a)** o Mixamo dá **centenas de animações de espada grátis** e resolve o problema maior, mas a licença não permite redistribuir os ficheiros — teriam de viver em `_local/`, fora do repositório público; **(b)** comprar um pack (Synty POLYGON Dark Fantasy, ~20–60 €); **(c)** ficar com o que há e ganhar tudo na **luz, no nevoeiro e no impacto**, que é o que faz o Dark Souls parecer o Dark Souls | `spec/22-assets.md` |
