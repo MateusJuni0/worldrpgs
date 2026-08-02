@@ -159,7 +159,7 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 	if main_weapon.is_empty():
 		main_weapon = "longsword"
 	offhand_weapon = equipment_weapon_id(loadout.get("offhand", ""))
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 
 	var buf := GameData.section("input_buffer")
 	_buffer_life = int(float(buf.get("life_ms", 400)) * 0.06)          # ms -> frames a 60 fps
@@ -910,7 +910,7 @@ func set_waking_up(enabled: bool) -> void:
 func apply_inventory_state(equipment: Dictionary, load_profile: Dictionary) -> void:
 	main_weapon = equipment_weapon_id(equipment.get("main", ""))
 	offhand_weapon = equipment_weapon_id(equipment.get("offhand", ""))
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 	favorite_spells.clear()
 	for spell_value: Variant in equipment.get("spell_favorites", []):
 		favorite_spells.append(String(spell_value))
@@ -973,9 +973,36 @@ func use_primary_attack() -> String:
 ## O instrumento secundario tem prioridade. Enquanto os kits reais ainda trazem
 ## apenas um cajado `can_cast`, o mesmo catalogo tambem o reconhece na mao principal.
 func _secondary_instrument_for(spell: Dictionary) -> Dictionary:
-	if offhand_weapon == "" or is_two_handed or spell.is_empty():
+	# O catalogo define o instrumento secundario como metade do par
+	# cajado + instrumento. Se o jogador trocar o cajado por uma arma, o clique
+	# volta imediatamente a usar essa arma; o talisma/sino sozinho nao pode
+	# continuar a desviar o ataque para a magia que estava equipada antes.
+	if offhand_weapon == "" or is_two_handed or spell.is_empty() \
+			or not bool(GameData.weapon(main_weapon).get("can_cast", false)):
 		return {}
 	return _instrument_for_weapon(offhand_weapon, spell)
+
+
+func _loadout_uses_two_hands(main_id: String, offhand_id: String) -> bool:
+	# A decisao mais recente emparelha o cajado principal com um instrumento na
+	# secundaria. O `hands` historico do cajado continua a valer quando ele esta
+	# sozinho, mas nao pode esconder a segunda metade do par decidido.
+	if bool(GameData.weapon(main_id).get("can_cast", false)) \
+			and _is_magic_instrument(offhand_id):
+		return false
+	return int(GameData.weapon(main_id).get("hands", 1)) >= 2
+
+
+func _is_magic_instrument(weapon_id: String) -> bool:
+	if weapon_id.is_empty():
+		return false
+	var instruments: Dictionary = GameData.equipment.get("magic_instruments", {}) as Dictionary
+	for instrument_id: String in instruments:
+		var instrument := instruments.get(instrument_id, {}) as Dictionary
+		if weapon_id == instrument_id \
+				or weapon_id == String(instrument.get("weapon_id", instrument_id)):
+			return true
+	return false
 
 
 func _casting_instrument_for(spell: Dictionary) -> Dictionary:
@@ -1397,7 +1424,7 @@ func _cycle_loadout(direction: int) -> void:
 	var l: Dictionary = order[_loadout_index]
 	main_weapon = equipment_weapon_id(l.get("main", "longsword"))
 	offhand_weapon = equipment_weapon_id(l.get("offhand", ""))
-	is_two_handed = int(GameData.weapon(main_weapon).get("hands", 1)) >= 2
+	is_two_handed = _loadout_uses_two_hands(main_weapon, offhand_weapon)
 	_combo_index = 0
 
 
