@@ -104,6 +104,9 @@ func _prove_starting_loadouts() -> bool:
 		if not weapon_visual.has_visible_weapon(main_id, true) \
 				or (offhand_id != "" and not weapon_visual.has_visible_weapon(offhand_id, false)):
 			return _loadout_failure("%s guardou o kit, mas nao o mostrou nas maos" % origin_id)
+		if offhand_id == "" and not _player.is_two_handed:
+			return _loadout_failure("%s nao mostrou a empunhadura catalogada a duas maos" % \
+				origin_id)
 		var visible_slots: Array = surface.get("slots") as Array
 		var right := _slot_by_name(visible_slots, "right_hand")
 		var left := _slot_by_name(visible_slots, "left_hand")
@@ -121,8 +124,8 @@ func _prove_starting_loadouts() -> bool:
 	InventorySystem.emit_signal("inventory_changed")
 	weapon_visual.sync_from_actor()
 	_quick_slots.call("_refresh")
-	print("[repro] kits iniciais: %d origens com armas, armadura, frasco, caixa e boneco" % \
-		origin_ids.size())
+	print(("[repro] kits iniciais: %d origens com arma, armadura, frasco, " \
+		+ "offhand ou duas maos, caixa e boneco") % origin_ids.size())
 	return true
 
 
