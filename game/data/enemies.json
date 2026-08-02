@@ -202,7 +202,7 @@
     }
   },
   "_zone_budgets": {
-    "brumal": {"population": {"orc_spearman": 4, "orc_brute": 2, "goblin_mist_scout": 2}, "souls_first_clear": 390, "souls_ten_rewarded_clears": 3900},
+    "brumal": {"population": {"orc_spearman": 4, "orc_brute": 2, "goblin_mist_scout": 2}, "animated_actor_limit": 8, "active_enemy_limit": 5, "souls_first_clear": 390, "souls_ten_rewarded_clears": 3900},
     "selva_funda": {"population": {"goblin_canopy_raider": 4, "goblin_canopy_slinger": 3, "kobold_bell_trapper": 2, "weaver_canopy_snarer": 2}, "souls_first_clear": 635, "souls_ten_rewarded_clears": 6350},
     "campas_cinzentas": {"population": {"skeleton_swordsman": 4, "skeleton_archer": 3, "mire_zombie": 4, "bloated_zombie": 2}, "souls_first_clear": 825, "souls_ten_rewarded_clears": 8250},
     "fojo": {"population": {"kobold_mine_trapper": 5, "minotaur_quarry_bull": 1, "mine_mimic": 2}, "souls_first_clear": 745, "souls_ten_rewarded_clears": 7450},

@@ -448,7 +448,23 @@ func _populate() -> void:
 			partner.setup("sorcerer", _palette)
 			partner.global_position = c + Vector3(2.5, 0.6, 6.5)
 		_:
-			_populate_zone()
+			# O catalogo descreve a zona inteira; o produtor materializa apenas
+			# as colocacoes proximas para respeitar o tecto global de actores.
+			var population_script := load("res://src/world/spawn_population.gd") as Script
+			var population := population_script.new() as Node
+			population.name = "SpawnPopulation"
+			add_child(population)
+			population.call("initialize", self, player, world, lair, _palette, "brumal")
+
+			# O tutorial continua ancorado no mesmo percurso, sem possuir uma
+			# segunda lista de inimigos que possa divergir do budget da zona.
+			var p := world.path_points
+			_learning_points = {
+				"attack": p[1],
+				"dodge": p[2],
+				"parry": p[3],
+				"flask": p[4],
+			}
 
 
 func _populate_zone() -> void:
