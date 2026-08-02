@@ -4,6 +4,8 @@ extends CanvasLayer
 const ExplorationMapScript = preload("res://src/world/exploration_map.gd")
 const MapSurfaceScript = preload("res://src/ui/map_surface.gd")
 
+static var _map_proof_sequence_results := {}
+
 var player: Node3D
 var partner: Node3D
 var world: Node3D
@@ -27,6 +29,7 @@ var _exploration_dirty := false
 var _save_clock := 0.0
 var _persistence_disabled := false
 var _map_proof_requested := false
+var _map_proof_source_scene := ""
 
 
 func _ready() -> void:
@@ -51,6 +54,7 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 			minimap_enabled = false
 		elif argument == "--map-proof":
 			_map_proof_requested = true
+	_map_proof_source_scene = Bench.scene_arg
 	var bounds_data: Dictionary = _config.get("zone_bounds_m", {}) as Dictionary
 	var bounds := Rect2(
 		Vector2(float(bounds_data.get("min_x", -110.0)), float(bounds_data.get("min_z", -110.0))),
@@ -67,6 +71,12 @@ func initialize(p_player: Node3D, p_partner: Node3D, p_world: Node3D,
 	_build_full_map(bounds)
 	set_minimap_enabled(minimap_enabled)
 	if _map_proof_requested:
+		var proof := _effective_map_proof()
+		var pilot_scene_arg := String(proof.get("pilot_scene_arg", ""))
+		if not pilot_scene_arg.is_empty():
+			# Main ja montou o cenario pedido. A partir daqui o piloto do mapa
+			# possui o jogador; o piloto de benchmark deixaria de ser input real.
+			Bench.scene_arg = pilot_scene_arg
 		_run_gameplay_map_proof.call_deferred()
 
 
@@ -150,21 +160,37 @@ func reveal_route_for_capture() -> void:
 ## So corre com --map-proof e nunca persiste porque o corredor usa Bench.
 func _run_gameplay_map_proof() -> void:
 	var cartography := _config.get("cartography", {}) as Dictionary
-	var proof := cartography.get("proof", {}) as Dictionary
-	var route := _map_proof_route()
+	var proof := _effective_map_proof()
+	var source_scenes := proof.get("source_scenes", []) as Array
+	if not source_scenes.is_empty() and not source_scenes.has(_map_proof_source_scene):
+		_finish_map_proof(false, {
+			"reason": "cenario %s fora da sequencia %s" % [
+				_map_proof_source_scene, str(source_scenes)],
+		})
+		return
+	if source_scenes.find(_map_proof_source_scene) == 0:
+		_map_proof_sequence_results.clear()
+	var route := _map_proof_route(proof)
 	if route.is_empty() or not is_instance_valid(player):
 		_finish_map_proof(false, {"reason": "rota ou jogador em falta"})
 		return
-	var walk_seconds := float(proof.get("walk_seconds", 30.0))
+	var capture_seconds := float(proof.get("walk_seconds", 30.0))
+	var max_walk_seconds := maxf(capture_seconds,
+		float(proof.get("max_walk_seconds", capture_seconds)))
 	var arrival_radius := float(proof.get("arrival_radius_m", 2.0))
+	var required_landmark_types := proof.get("required_landmark_types", []) as Array
+	var landmark_capture_files := proof.get("landmark_capture_files", {}) as Dictionary
+	var landmark_results := {}
 	var elapsed := 0.0
 	var walked_distance := 0.0
+	var capture_walked_distance := 0.0
 	var waypoint := 0
 	var previous_position := player.global_position
 	var stayed_alive := true
+	var visible_result := {}
 	Input.action_press("move_forward")
 	Input.action_press("dodge_sprint")
-	while elapsed < walk_seconds:
+	while elapsed < max_walk_seconds:
 		while waypoint < route.size() \
 				and _planar_distance(player.global_position, route[waypoint]) <= arrival_radius:
 			waypoint += 1
@@ -181,24 +207,75 @@ func _run_gameplay_map_proof() -> void:
 		elapsed += get_physics_process_delta_time()
 		if player.has_method("is_alive") and not bool(player.call("is_alive")):
 			stayed_alive = false
+		if visible_result.is_empty() and elapsed >= capture_seconds:
+			visible_result = await _capture_map_proof(proof, cartography)
+			capture_walked_distance = walked_distance
+		for landmark_type_value: Variant in required_landmark_types:
+			var landmark_type := String(landmark_type_value)
+			if landmark_results.has(landmark_type) \
+					or not _has_discovered_landmark_type(landmark_type):
+				continue
+			var capture_file := String(landmark_capture_files.get(landmark_type, ""))
+			landmark_results[landmark_type] = await _capture_landmark_proof(
+				landmark_type, capture_file, proof, cartography)
+		if not visible_result.is_empty() \
+				and _all_landmark_proofs_captured(required_landmark_types, landmark_results):
+			break
 	Input.action_release("move_forward")
 	Input.action_release("dodge_sprint")
-	var visible_result := await _capture_map_proof(proof, cartography)
+	if visible_result.is_empty():
+		visible_result = await _capture_map_proof(proof, cartography)
+		capture_walked_distance = walked_distance
 	visible_result["walked_seconds"] = snappedf(elapsed, 0.01)
 	visible_result["walked_distance_m"] = snappedf(walked_distance, 0.1)
+	visible_result["capture_seconds"] = snappedf(minf(elapsed, capture_seconds), 0.01)
+	visible_result["capture_walked_distance_m"] = snappedf(capture_walked_distance, 0.1)
 	visible_result["stayed_alive"] = stayed_alive
 	visible_result["waypoints_reached"] = waypoint
 	visible_result["waypoints_total"] = route.size()
+	visible_result["landmark_proofs"] = landmark_results
+	var landmark_proofs_passed := _landmark_proofs_pass(
+		required_landmark_types, landmark_results, proof)
 	var passed := bool(visible_result.get("capture_ok", false)) \
-		and walked_distance >= float(proof.get("min_walk_distance_m", 90.0)) \
+		and capture_walked_distance >= float(proof.get("min_walk_distance_m", 90.0)) \
 		and stayed_alive \
 		and int(visible_result.get("route_pixels", 0)) >= int(proof.get("min_route_pixels", 80)) \
 		and int(visible_result.get("landmark_pixels", 0)) >= int(proof.get("min_landmark_pixels", 12)) \
-		and int(visible_result.get("scale_pixels", 0)) >= int(proof.get("min_scale_pixels", 30))
-	_finish_map_proof(passed, visible_result)
+		and int(visible_result.get("scale_pixels", 0)) >= int(proof.get("min_scale_pixels", 30)) \
+		and landmark_proofs_passed
+	_complete_map_proof_phase(passed, visible_result, proof)
 
 
-func _map_proof_route() -> Array[Vector3]:
+func _effective_map_proof() -> Dictionary:
+	var cartography := _config.get("cartography", {}) as Dictionary
+	var proof := (cartography.get("proof", {}) as Dictionary).duplicate(true)
+	var scene_overrides := proof.get("scene_overrides", {}) as Dictionary
+	var override := scene_overrides.get(_map_proof_source_scene, {}) as Dictionary
+	for key: Variant in override:
+		proof[key] = override[key]
+	return proof
+
+
+func _complete_map_proof_phase(passed: bool, result: Dictionary,
+		proof: Dictionary) -> void:
+	var source_scenes := proof.get("source_scenes", []) as Array
+	var source_index := source_scenes.find(_map_proof_source_scene)
+	if not passed or source_index < 0:
+		_finish_map_proof(false, result)
+		return
+	_map_proof_sequence_results[_map_proof_source_scene] = result
+	if source_index < source_scenes.size() - 1:
+		var next_scene := String(source_scenes[source_index + 1])
+		print("[MAP_PROOF] PHASE PASS %s -> %s" % [
+			_map_proof_source_scene, next_scene])
+		Bench.scene_arg = next_scene
+		get_tree().reload_current_scene()
+		return
+	result["sequence_results"] = _map_proof_sequence_results.duplicate(true)
+	_finish_map_proof(true, result)
+
+
+func _map_proof_route(proof: Dictionary) -> Array[Vector3]:
 	var result: Array[Vector3] = []
 	if not is_instance_valid(world):
 		return result
@@ -208,33 +285,167 @@ func _map_proof_route() -> Array[Vector3]:
 	var spine := segments[0] as PackedVector3Array
 	if spine.is_empty():
 		return result
-	var nearest_rest := Vector3.ZERO
-	var nearest_rest_distance := INF
-	for landmark: Dictionary in world.get("map_landmarks"):
-		if String(landmark.get("type", "")) != "rest":
+	var detours_by_spine_index := {}
+	var route_landmark_types := proof.get("route_landmark_types", []) as Array
+	for route_type_index: int in route_landmark_types.size():
+		var route_type_value: Variant = route_landmark_types[route_type_index]
+		var route_type := String(route_type_value)
+		var nearest_position := Vector3.ZERO
+		var nearest_player_distance := INF
+		for landmark: Dictionary in world.get("map_landmarks"):
+			if String(landmark.get("type", "")) != route_type:
+				continue
+			var at: Vector3 = landmark.get("position", Vector3.ZERO)
+			var player_distance := _planar_distance(player.global_position, at)
+			if player_distance < nearest_player_distance:
+				nearest_position = at
+				nearest_player_distance = player_distance
+		if nearest_player_distance == INF:
 			continue
-		var at: Vector3 = landmark.get("position", Vector3.ZERO)
-		var distance := _planar_distance(player.global_position, at)
-		if distance < nearest_rest_distance:
-			nearest_rest = at
-			nearest_rest_distance = distance
-	var branch_index := -1
-	if nearest_rest_distance < INF:
-		var branch_distance := INF
-		for index: int in spine.size():
-			var distance := _planar_distance(spine[index], nearest_rest)
-			if distance < branch_distance:
-				branch_distance = distance
-				branch_index = index
+		var routed := _route_segment_to_landmark(segments, spine, nearest_position)
+		if routed.is_empty():
+			continue
+		var branch_index := int(routed.get("branch_index", 0))
+		if not detours_by_spine_index.has(branch_index):
+			detours_by_spine_index[branch_index] = []
+		(detours_by_spine_index[branch_index] as Array).append({
+			"points": routed.get("points", PackedVector3Array()),
+			"return_to_spine": route_type_index < route_landmark_types.size() - 1,
+		})
 	for index: int in spine.size():
 		result.append(spine[index])
-		if index == branch_index:
-			result.append(nearest_rest)
-			result.append(spine[index])
+		for detour_value: Variant in detours_by_spine_index.get(index, []) as Array:
+			var detour := detour_value as Dictionary
+			var points := detour.get("points", PackedVector3Array()) as PackedVector3Array
+			for point_index: int in points.size():
+				if point_index == 0 and _planar_distance(result[result.size() - 1],
+						points[point_index]) <= 0.1:
+					continue
+				result.append(points[point_index])
+			if bool(detour.get("return_to_spine", false)):
+				for point_index: int in range(points.size() - 2, -1, -1):
+					result.append(points[point_index])
 	return result
 
 
+func _route_segment_to_landmark(segments: Array, spine: PackedVector3Array,
+		landmark_position: Vector3) -> Dictionary:
+	var best_score := INF
+	var best_points := PackedVector3Array()
+	var best_branch_index := -1
+	for segment_value: Variant in segments:
+		var segment := segment_value as PackedVector3Array
+		if segment.size() < 2:
+			continue
+		var target_distance := INF
+		for point: Vector3 in segment:
+			target_distance = minf(target_distance,
+				_planar_distance(point, landmark_position))
+		var start_branch := _nearest_spine_index(spine, segment[0])
+		var end_branch := _nearest_spine_index(spine, segment[segment.size() - 1])
+		var start_distance := _planar_distance(spine[start_branch], segment[0])
+		var end_distance := _planar_distance(spine[end_branch], segment[segment.size() - 1])
+		var connection_distance := minf(start_distance, end_distance)
+		# O alvo pesa mais do que a ligacao: escolhe a polilinha que realmente
+		# chega ao marco e, entre empates, a que se encaixa na espinha exterior.
+		var score := target_distance * 1000.0 + connection_distance
+		if score >= best_score:
+			continue
+		best_score = score
+		best_points = segment.duplicate()
+		if end_distance < start_distance:
+			best_points.reverse()
+			best_branch_index = end_branch
+		else:
+			best_branch_index = start_branch
+	if best_branch_index < 0:
+		return {}
+	return {"branch_index": best_branch_index, "points": best_points}
+
+
+func _nearest_spine_index(spine: PackedVector3Array, point: Vector3) -> int:
+	var result := 0
+	var nearest_distance := INF
+	for index: int in spine.size():
+		var distance := _planar_distance(spine[index], point)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			result = index
+	return result
+
+
+func _has_discovered_landmark_type(landmark_type: String) -> bool:
+	for landmark: Dictionary in world.get("map_landmarks"):
+		if String(landmark.get("type", "")) == landmark_type \
+				and _exploration.call("is_landmark_discovered",
+					String(landmark.get("id", ""))):
+			return true
+	return false
+
+
+func _all_landmark_proofs_captured(required_types: Array, results: Dictionary) -> bool:
+	for landmark_type_value: Variant in required_types:
+		if not results.has(String(landmark_type_value)):
+			return false
+	return true
+
+
+func _landmark_proofs_pass(required_types: Array, results: Dictionary,
+		proof: Dictionary) -> bool:
+	var minimum_pixels := int(proof.get("min_landmark_type_pixels", 12))
+	for landmark_type_value: Variant in required_types:
+		var landmark_type := String(landmark_type_value)
+		var result := results.get(landmark_type, {}) as Dictionary
+		if not bool(result.get("capture_ok", false)) \
+				or int(result.get("pixels", 0)) < minimum_pixels:
+			return false
+	return true
+
+
 func _capture_map_proof(proof: Dictionary, cartography: Dictionary) -> Dictionary:
+	var captured := await _capture_minimap(String(proof.get("capture_file",
+		"res://captures/minimapa-30s.png")))
+	if not bool(captured.get("capture_ok", false)):
+		return captured
+	var minimap := captured.get("image") as Image
+	captured.erase("image")
+	var tolerance := float(proof.get("color_tolerance", 0.16))
+	var route_colour := Color.from_string(String(cartography.get("route_color", "#e3b868")),
+		Color("#e3b868"))
+	var landmark_styles := cartography.get("landmark_styles", {}) as Dictionary
+	var rest_style := landmark_styles.get("rest", {}) as Dictionary
+	var rest_colour := Color.from_string(String(rest_style.get("color", "#ffb44f")),
+		Color("#ffb44f"))
+	var text_colour := Color.from_string(String(cartography.get("text_color", "#f0ead9")),
+		Color("#f0ead9"))
+	var scale_region := Rect2i(0, maxi(0, minimap.get_height() - 42),
+		mini(120, minimap.get_width()), mini(42, minimap.get_height()))
+	captured["route_pixels"] = _count_colour_pixels(minimap, route_colour, tolerance)
+	captured["landmark_pixels"] = _count_colour_pixels(minimap, rest_colour, tolerance)
+	captured["scale_pixels"] = _count_colour_pixels(
+		minimap, text_colour, tolerance, scale_region)
+	return captured
+
+
+func _capture_landmark_proof(landmark_type: String, capture_file: String,
+		proof: Dictionary, cartography: Dictionary) -> Dictionary:
+	if capture_file.is_empty():
+		return {"capture_ok": false, "reason": "captura em falta para %s" % landmark_type}
+	var captured := await _capture_minimap(capture_file)
+	if not bool(captured.get("capture_ok", false)):
+		return captured
+	var minimap := captured.get("image") as Image
+	captured.erase("image")
+	var styles := cartography.get("landmark_styles", {}) as Dictionary
+	var style := styles.get(landmark_type, {}) as Dictionary
+	var colour := Color.from_string(String(style.get("color", "#d7c49a")),
+		Color("#d7c49a"))
+	captured["pixels"] = _count_colour_pixels(minimap, colour,
+		float(proof.get("color_tolerance", 0.16)))
+	return captured
+
+
+func _capture_minimap(capture_path: String) -> Dictionary:
 	_minimap_surface.queue_redraw()
 	await RenderingServer.frame_post_draw
 	var frame := get_viewport().get_texture().get_image()
@@ -247,27 +458,12 @@ func _capture_map_proof(proof: Dictionary, cartography: Dictionary) -> Dictionar
 	if crop_rect.size.x <= 0 or crop_rect.size.y <= 0:
 		return {"capture_ok": false, "reason": "rectangulo do minimapa vazio"}
 	var minimap := frame.get_region(crop_rect)
-	var capture_path := String(proof.get("capture_file",
-		"res://captures/minimapa-30s.png"))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://captures"))
 	var capture_error := minimap.save_png(capture_path)
-	var tolerance := float(proof.get("color_tolerance", 0.16))
-	var route_colour := Color.from_string(String(cartography.get("route_color", "#e3b868")),
-		Color("#e3b868"))
-	var landmark_styles := cartography.get("landmark_styles", {}) as Dictionary
-	var rest_style := landmark_styles.get("rest", {}) as Dictionary
-	var rest_colour := Color.from_string(String(rest_style.get("color", "#ffb44f")),
-		Color("#ffb44f"))
-	var text_colour := Color.from_string(String(cartography.get("text_color", "#f0ead9")),
-		Color("#f0ead9"))
-	var scale_region := Rect2i(0, maxi(0, minimap.get_height() - 42),
-		mini(120, minimap.get_width()), mini(42, minimap.get_height()))
 	return {
 		"capture_ok": capture_error == OK,
 		"capture": capture_path,
-		"route_pixels": _count_colour_pixels(minimap, route_colour, tolerance),
-		"landmark_pixels": _count_colour_pixels(minimap, rest_colour, tolerance),
-		"scale_pixels": _count_colour_pixels(minimap, text_colour, tolerance, scale_region),
+		"image": minimap,
 	}
 
 
@@ -293,6 +489,7 @@ func _planar_distance(a: Vector3, b: Vector3) -> float:
 
 func _finish_map_proof(passed: bool, result: Dictionary) -> void:
 	print("[MAP_PROOF] %s %s" % ["PASS" if passed else "FAIL", JSON.stringify(result)])
+	_map_proof_sequence_results.clear()
 	get_tree().quit(0 if passed else 1)
 
 

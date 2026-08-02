@@ -97,13 +97,50 @@
         "frame_color": "#b7a47a",
         "text_color": "#f0ead9",
         "proof": {
+          "source_scenes": [
+            "perf",
+            "vorgar"
+          ],
+          "pilot_scene_arg": "ui-map-proof-driver",
           "walk_seconds": 30.0,
+          "max_walk_seconds": 75.0,
           "arrival_radius_m": 2.0,
           "min_walk_distance_m": 90.0,
           "color_tolerance": 0.16,
           "capture_file": "res://captures/minimapa-30s.png",
+          "route_landmark_types": [
+            "rest",
+            "arena"
+          ],
+          "required_landmark_types": [
+            "rest",
+            "lair"
+          ],
+          "landmark_capture_files": {
+            "rest": "res://captures/minimapa-fogueira.png",
+            "lair": "res://captures/minimapa-toca.png",
+            "arena": "res://captures/minimapa-arena.png"
+          },
+          "scene_overrides": {
+            "vorgar": {
+              "walk_seconds": 1.0,
+              "max_walk_seconds": 3.0,
+              "min_walk_distance_m": 0.5,
+              "capture_file": "res://captures/minimapa-arena.png",
+              "route_landmark_types": [],
+              "required_landmark_types": [
+                "arena"
+              ],
+              "landmark_capture_files": {
+                "arena": "res://captures/minimapa-arena.png"
+              },
+              "min_route_pixels": 0,
+              "min_landmark_pixels": 0
+            }
+          },
           "min_route_pixels": 80,
           "min_landmark_pixels": 12,
+          "min_landmark_type_pixels": 12,
           "min_scale_pixels": 30
         },
         "landmark_styles": {
@@ -130,7 +167,8 @@
         }
       },
       "_porque_cell_size": "[CLAUDE] 02-08: era 4,0 m e o Mateus disse \"o mapa ta numa resolucao merda, nao se entende nem ve nada\". Com celulas de 4 m, Brumal (220 m) cabia em 55x55 quadrados — num minimapa de ~260 px isso da 4,7 px por celula, e le-se como um mosaico. A 1,5 m a celula deixa de esconder curvas; a apresentacao continua a precisar de filtragem e linha cartografica.",
-      "_porque_cartography": "[CODEX] 02-08: o raster em nearest continuava a parecer mosaico e os marcos partilhavam o mesmo losango. A linha cartografica so percorre celulas descobertas, os quatro tipos leem estilos do catalogo e a escala de 10 m ancora distancia. Alternativa descartada: baixar outra vez a celula; aumentava estado e nao corrigia forma, hierarquia nem marcos. Os limites incluem agora a arena real em z=-162 m, antes cortada aos -110 m. O raster 2x e a descoberta a 5 Hz conservam a forma a velocidade de sprint sem actualizar a textura duas vezes por celula."
+      "_porque_cartography": "[CODEX] 02-08: o raster em nearest continuava a parecer mosaico e os marcos partilhavam o mesmo losango. A linha cartografica so percorre celulas descobertas, os quatro tipos leem estilos do catalogo e a escala de 10 m ancora distancia. Alternativa descartada: baixar outra vez a celula; aumentava estado e nao corrigia forma, hierarquia nem marcos. Os limites incluem agora a arena real em z=-162 m, antes cortada aos -110 m. O raster 2x e a descoberta a 5 Hz conservam a forma a velocidade de sprint sem actualizar a textura duas vezes por celula.",
+      "_porque_proof": "[CODEX] 02-08: a prova conserva a fotografia aos 30 s em Brumal e exige depois chama, portao e coroa em pixels renderizados. A descida integrada mata o piloto linear antes da primeira sala; por isso a coroa e provada numa segunda fase que reinicia o jogo no cenario real de Vorgar e faz o jogador andar, sem revelar o marco por API. Alternativa descartada: marcar a arena como descoberta no teste, porque voltaria a provar estado interno em vez do resultado que o jogador ve."
     },
     "descricao_visual": "mapa inclinado a quarenta graus em pergaminho cinzento, percurso já pisado a tinta âmbar, andar actual nítido e alturas vizinhas esbatidas",
     "fatia_1": false
