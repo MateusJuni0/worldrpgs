@@ -1068,3 +1068,14 @@ O scan inicial encontrou **8 órfãos / 1744 linhas**. Depois da segunda volta e
 | 🔴 | **Levar dano não se vê.** 442 → 410 → 378 sem clarão, sem número, sem recuo — só o texto `[hit-stun]` no canto | ecrã pisca, o corpo recua, o som muda | o jogador não sabe que levou, nem de onde |
 | 🟠 | ⚠️ **A dica de tutorial tapa o meio do ecrã durante o combate:** uma caixa preta com *"Left Mouse Button — ataque leve"* por cima da luta | | |
 | 🟠 | ⭐ **A luta está fácil demais.** Medido: o inimigo tira 32 PV de 442 — **13 golpes até morrer**. E morre em 4 | um inimigo comum mata em 4–6 e morre em 3–5 | 13 golpes de margem transforma um souls-like num jogo de acção |
+
+## 🔴 Percurso jogado de ponta a ponta — 02-08
+
+> `scenes/percurso.tscn`: anda os 7 pontos do caminho, ataca o que encontra, e vai à arena. **É a única ferramenta que responde a *"tem como ir até ao chefe?"***.
+
+| | Achado | Prova |
+|---|---|---|
+| ✅ | ⭐ **O chefe existe e chega-se lá.** *"Vorgar, o Guarda-Portão — fase 1"*, com barra nomeada e fases | `percurso-chefe.png` |
+| 🔴 | ⭐ **Zero inimigos mortos em 40 rondas de ataque.** O percurso encostou-se e bateu 6 vezes por inimigo, 40 vezes seguidas, e **não matou um único**. No filme de combate o dano entra (135→98→60), portanto não é o dano — é alguma coisa entre encostar e matar: alcance, orientação, ou o inimigo a curar-se entre encontros | `[percurso] inimigos mortos: 0` |
+| 🔴 | ⭐ **Dois tipos de inimigo no caminho inteiro:** 35 lanceiros e 5 brutamontes. O catálogo tem 34 tipos e 36 encontros nomeados | `tipos encontrados: 2` |
+| 🟠 | **O caminho tem 7 pontos** para uma travessia que a spec quer de 8–12 minutos | `[percurso] caminho com 7 pontos` |
