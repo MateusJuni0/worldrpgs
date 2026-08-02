@@ -1068,12 +1068,40 @@ O scan inicial encontrou **8 órfãos / 1744 linhas**. Depois da segunda volta e
 
 > Filmado com `scenes/filme-de-combate.tscn`. **A `sessao-de-jogo` verifica se as coisas existem; isto filma o que o jogador vê.** Foi o Mateus que apontou a diferença: *"tu tá a ver poucos erros, eu tô a ver muita coisa"*.
 
+### Tabela ELES / NÓS / DIFERENÇA — repetida no jogo antes desta intervenção
+
+| Mecanismo | ELES | NÓS, visto no jogo a 02-08 | DIFERENÇA a fechar nesta árvore |
+|---|---|---|---|
+| Silhueta a 20–30 m e em contraluz | Corpo, arma e papel continuam identificáveis contra um fundo escuro | `combate-00.png` mostra uma massa quase rectangular, com dois olhos emissivos soltos e a lança parcialmente confundida com a árvore; no percurso, o corpo desaparece no verde/cinzento até o HUD o denunciar | Separar pele, armadura e arma por valor; dar frente anatómica (focinho/testa/mandíbula), ombros e pernas com espaço negativo; manter preenchimento barato em contraluz |
+| Preparação antes do golpe | A postura inteira muda: peso recua, tronco fecha e arma arma o golpe antes da hitbox | A barra escreve `PREPARA` e a lança roda, mas `combate-00`, `08` e `16` conservam quase o mesmo bloco corporal; sem ler o texto, o instante de compromisso não é claro | Fazer o corpo antecipar por família, com recuo/lateralização e arma afastada da silhueta; golpe avança e recupera de forma distinta, conduzido pelo sinal real de fase |
+| Vida do inimigo engatado | A barra aparece para o alvo relevante e permite decidir se se arrisca outro golpe | A barra superior existe, traz nome/PV e acompanha 135 → 98 → 60 → 14 no filme | Mecanismo já ligado; conservar e provar que a melhoria visual não o parte |
+| Impacto ao levar dano | Ecrã e corpo reagem no mesmo acontecimento; a direção e a interrupção lêem-se | `combate-04.png` e `12` mostram vinheta vermelha, número e pose de hit-stun do jogador; o inimigo clareia por um instante, mas o recuo visual dele é pequeno dentro da massa | Mecanismo do jogador já ligado; ampliar no inimigo a torção/recuo visível que consome `health_changed`, sem alterar dano ou hit-stun |
+
+**Diferença nomeada:** a base atual já comunica o combate por HUD, mas o adversário ainda não o comunica suficientemente pelo próprio corpo. Não é intencional: obriga a ler texto durante a luta e enfraquece a Lei 1. A nossa versão usa os modelos CC0 já importados, geometria procedural de baixo custo e os sinais reais de `Enemy`; não copia nomes, assets ou animações comerciais.
+
+### Resultado visto dentro do jogo nesta árvore
+
+| Pergunta do fio | Resposta provada |
+|---|---|
+| Como é que o jogador usa isto? | Não ganhou uma tecla artificial: engata com `TAB`, aproxima-se, ataca e esquiva como antes. `filme-de-combate.tscn` repetiu essas ações no jogo real; os sinais reais de fase, vida e estado conduziram o corpo. |
+| Como se prova? | `combate-00..04.png` mostra preparação → golpe → recuperação com corpo e arma em poses diferentes; `combate-09.png` mostra flash e recuo do inimigo; `combate-26..29.png` mostra o corpo inteiro cair. `percurso-25.png` e `30.png` mostram o goblin já ligado pelo catálogo durante combate real. A auditoria abriu `enemy-art-20m.png` e mediu as quatro famílias entre 62,7 e 132,4 px a 20 m, com os pés no chão. |
+| De onde vêm arte e som? | Corpo e animações são os assets CC0 Quaternius/UAL já creditados no projeto; rosto, armadura e armas são geometria simples composta pelo catálogo JSON. Não foi copiado asset, nome ou animação comercial. O som continua a vir dos efeitos existentes; esta intervenção não acrescentou sons. |
+| Quanto custa na máquina do Rico? | A/B Mobile/Vulkan, Iris Xe, 1920×1080, cinco atores, duas repetições em ordem inversa: proposta 383,7 fps médios e p99 6,011 ms; anterior 454,2 fps e p99 4,209 ms. Custo p99 +1,802 ms, 17 draw calls a mais, 3 224 primitivas e 6,9 MB VRAM a menos. A máquina medida tem 15,7 GB, não os 8 GB-alvo; resultado completo em `game/assets/models/enemies/monster_visual_benchmark_2026-08-02.json`. |
+
+| Estado | Lacuna que continua fora dos ficheiros desta árvore | Prova |
+|---|---|---|
+| 🔴 | A prova visual e o percurso **não estão ligados a `game/VERIFICAR.bat`**. Não alterei o batch nem as cenas porque não pertencem à lista de ficheiros autorizada; portanto, há prova jogada e inspecionada, mas ainda não há gate automático desta funcionalidade no comando canónico. | `VERIFICAR.bat` só chama `scenes/selftest.tscn` e selftests por script; não contém `filme-de-combate`, `percurso` nem `monster_visual_audit`. |
+| 🟠 | O auto-teste canónico desta árvore terminou com **9 763 a passar e 1 a falhar**. Não caiu abaixo dos 9 750 verdes e os testes reais de `MonsterVisual`, arena e combate passaram, mas a suite não ficou toda verde. A única falha é a regressão já registada dos marcadores da Toca, em ficheiros proibidos nesta tarefa. | `FALHA jogo real: os marcadores da Toca tem encontro (com corpo ou planeado)`; causa documentada abaixo em `_populate_zone()`/`spawn_population.gd`. |
+| 🟠 | A câmara de `percurso.tscn` ainda atravessa terreno/objetos e acaba com Vorgar fora do enquadramento, embora as duas barras e o log provem que o chefe foi encontrado. | `percurso-35.png`, `percurso-chefe.png`; avisos `Target and up vectors are colinear` em `src/tools/percurso.gd`. |
+| 🟠 | A legibilidade e os mecanismos de apresentação ficaram comparáveis à referência, mas **o acabamento artístico ainda não é AAA**: o corpo humanoide é reutilizado e rosto, roupa e armas continuam low-poly/procedurais. Não se deve confundir “já não é uma mancha e já avisa o golpe” com “tem a qualidade final de um inimigo Dark Souls”. | `combate-00.png`, `percurso-25.png` e `enemy-art-20m.png`; falta modelação/textura/animação autoral ou CC0 dedicada a cada família. |
+| 🟠 | As cenas de prova podem tocar em `user://` se forem corridas normalmente. Todas as execuções desta árvore usaram `GODOT_USER_HOME` temporário, validado e removido no fim; o isolamento deve passar para a própria ferramenta antes de entrar no gate comum. | Diretório temporário removido após cada execução; nenhum slot de save desta intervenção ficou no perfil partilhado. |
+
 | | O que se vê | O que o DS3 faz | Porque dói |
 |---|---|---|---|
-| 🔴 | ⭐ **O inimigo é uma mancha preta sem forma.** Não se percebe o que é, nem para onde está virado, nem o que está a fazer | cada inimigo lê-se pela silhueta e pela cor, mesmo em contraluz | é a raiz de *"não consigo ver nem prever nem nada"*, e do *"morrem e ficam se mexendo bugado preto"* |
-| 🔴 | ⭐ **O inimigo não tem estado legível.** Filmei 3,5 s de luta: o estado dele foi `3` do princípio ao fim, e o jogador perdeu 64 PV sem que nada mudasse no ecrã | cada ataque tem preparação visível, golpe e recuperação — três fases que se leem | **sem preparação não há esquiva justa.** É a Lei 1 quebrada |
-| 🔴 | **O inimigo não tem barra de vida.** Bati 4 vezes e nunca soube o quanto faltava | barra por cima do alvo engatado | sem ela não há decisão de arriscar mais um golpe |
-| 🔴 | **Levar dano não se vê.** 442 → 410 → 378 sem clarão, sem número, sem recuo — só o texto `[hit-stun]` no canto | ecrã pisca, o corpo recua, o som muda | o jogador não sabe que levou, nem de onde |
+| ✅ | ~~**O inimigo era uma mancha preta sem forma.**~~ Agora pele, roupa, cabeça, membros e arma têm valores separados; as quatro silhuetas medem pelo menos 62,7 px a 20 m | cada inimigo lê-se pela silhueta e pela cor, mesmo em contraluz | fechado visualmente em `enemy-art-20m.png`, `combate-00.png` e no percurso |
+| ✅ | ~~**O inimigo não tinha estado legível.**~~ Preparação recua o corpo e arma, golpe avança e recuperação abre a postura, tudo alimentado por `attack_phase_changed` | cada ataque tem preparação visível, golpe e recuperação — três fases que se leem | fechado no filme `combate-00..04.png`, sem depender apenas do texto do HUD |
+| ✅ | **A barra de vida já existia e foi preservada.** Nome, PV e fase acompanham o alvo engatado durante o filme e o percurso | barra por cima do alvo engatado | fechado em `combate-00..29.png`, `percurso-15.png`, `25.png` e `30.png` |
+| ✅ | ~~**Levar dano não se via suficientemente no corpo inimigo.**~~ O jogador conserva vinheta/recuo; o adversário agora dá flash claro e recua na direção do impacto | ecrã pisca, o corpo recua, o som muda | fechado em `combate-03.png` (jogador) e `combate-09.png` (inimigo) |
 | 🟠 | ⚠️ **A dica de tutorial tapa o meio do ecrã durante o combate:** uma caixa preta com *"Left Mouse Button — ataque leve"* por cima da luta | | |
 | 🟠 | ⭐ **A luta está fácil demais.** Medido: o inimigo tira 32 PV de 442 — **13 golpes até morrer**. E morre em 4 | um inimigo comum mata em 4–6 e morre em 3–5 | 13 golpes de margem transforma um souls-like num jogo de acção |
 
@@ -1085,7 +1113,7 @@ O scan inicial encontrou **8 órfãos / 1744 linhas**. Depois da segunda volta e
 |---|---|---|
 | ✅ | ⭐ **O chefe existe e chega-se lá.** *"Vorgar, o Guarda-Portão — fase 1"*, com barra nomeada e fases | `percurso-chefe.png` |
 | ✅ | ~~⭐ **Zero inimigos mortos em 40 rondas de ataque.**~~ **DIAGNOSTICADO NA REVISÃO DE CÓDIGO 02-08:** os inimigos morrem; `percurso-20.png` mostra cadáver + recompensa e `percurso-25.png` mostra `0/135 PV · DERROTADO`. O contador só aceita `not is_instance_valid(inimigo)`, mas a morte conserva deliberadamente o nó em `DEAD` para necromancia. A lacuna real é a prova: observar `is_alive()`/`died`, nunca libertar o cadáver para fazer o contador passar | `game/src/tools/percurso.gd:88-95` · `game/src/enemies/enemy.gd:760-776,792-793` |
-| 🔴 | ⭐ **Dois tipos de inimigo no caminho inteiro:** na revisão de 02-08 foram 37 lanceiros e 3 brutamontes. O catálogo tem 34 tipos e 36 encontros nomeados | `tipos encontrados: 2 -> { "orc_spearman": 37, "orc_brute": 3 }` |
+| 🟠 | ~~**Só dois tipos de inimigo no caminho inteiro.**~~ O percurso desta árvore encontrou e combateu três tipos regulares, incluindo o batedor goblin que a primeira passagem revelou ainda estar no visual antigo. A pouca variedade global continua a ser conteúdo fora deste trabalho visual. | `tipos encontrados: 3 -> { "orc_spearman": 13, "orc_brute": 6, "goblin_mist_scout": 6 }`; `percurso-25.png` e `30.png` |
 | 🟠 | **O caminho tem 7 pontos** para uma travessia que a spec quer de 8–12 minutos | `[percurso] caminho com 7 pontos` |
 
 ## 🔎 Revisão de código jogada — 02-08-2026
