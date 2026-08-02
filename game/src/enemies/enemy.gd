@@ -13,6 +13,10 @@ extends CharacterBody3D
 ##  - perseguicao sempre abaixo dos 5,0 m/s do correr do jogador (fugir e sempre possivel)
 
 signal died(enemy: Enemy)
+signal state_changed(current: int, previous: int)
+signal attack_phase_changed(phase: int, progress: float, parryable: bool, attack_id: String)
+signal health_changed(current: float, maximum: float, delta: float, source: Node3D)
+signal hit_landed(victim: Node3D, damage: float, origin: Vector3)
 
 const GameplayCueRenderer = preload("res://src/combat/gameplay_cue.gd")
 const EnemyVisualRenderer = preload("res://src/enemies/enemy_visual.gd")
@@ -26,6 +30,7 @@ const ATTACK_ESCAPE_VECTORS: Array[String] = [
 ]
 
 enum State { IDLE, PATROL, CHASE, ATTACK, STAGGER, BROKEN, DEAD }
+enum AttackPhase { NONE, PREPARATION, STRIKE, RECOVERY }
 
 var enemy_id := "orc_spearman"
 var data: Dictionary = {}
@@ -55,6 +60,8 @@ var _queue: Array = []
 var _atk: Dictionary = {}
 var _atk_frame := 0
 var _atk_hit := false
+var _attack_phase := AttackPhase.NONE
+var _attack_phase_progress := 0.0
 var _planned_false_recovery: Dictionary = {}
 var _gap_timer := 0.0
 var _no_reach_time := 0.0
@@ -111,7 +118,8 @@ func setup(p_enemy_id: String, palette: Dictionary, coop := false, pattern_seed 
 	_spawn_offset = global_position - requested_home
 	home = requested_home
 	_make_patrol_route()
-	state = State.PATROL if float(data.get("patrol_speed", 0.0)) > 0.0 else State.IDLE
+	_change_state(State.PATROL if float(data.get("patrol_speed", 0.0)) > 0.0 else State.IDLE)
+	health_changed.emit(health, max_health, 0.0, null)
 
 
 func _profile_for_enemy(id: String, enemy_data: Dictionary,
@@ -375,9 +383,24 @@ func _physics_process(delta: float) -> void:
 
 
 func _change_state(next: int) -> void:
+	var previous := state
 	state = next
 	_state_frame = 0
 	_state_time = 0.0
+	if next != State.ATTACK:
+		_set_attack_phase(AttackPhase.NONE, 0.0)
+	if previous != next:
+		state_changed.emit(next, previous)
+
+
+func _set_attack_phase(next: int, progress: float) -> void:
+	var clamped_progress := clampf(progress, 0.0, 1.0)
+	if _attack_phase == next and is_equal_approx(_attack_phase_progress, clamped_progress):
+		return
+	_attack_phase = next
+	_attack_phase_progress = clamped_progress
+	attack_phase_changed.emit(_attack_phase, _attack_phase_progress,
+		bool(_atk.get("parryable", false)), String(_atk.get("id", "")))
 
 
 func _target_valid() -> bool:
@@ -576,6 +599,7 @@ func _begin_attack(attack: Dictionary) -> void:
 	if is_instance_valid(_attack_audio):
 		_attack_audio.call("announce", _atk)
 	_change_state(State.ATTACK)
+	_set_attack_phase(AttackPhase.PREPARATION, 0.0)
 
 
 func _cancel_attack_presentation() -> void:
@@ -593,6 +617,8 @@ func _tick_attack(delta: float) -> void:
 	var recovery := int(_atk.get("recovery", 24))
 
 	if _atk_frame <= startup:
+		_set_attack_phase(AttackPhase.PREPARATION,
+			float(_atk_frame) / float(maxi(startup, 1)))
 		_brake(delta)
 		var commitment_frame := int(_atk.get("momento_compromisso_frame"))
 		var tracking_curve: Dictionary = _atk.get("curva_seguimento") as Dictionary
@@ -612,6 +638,8 @@ func _tick_attack(delta: float) -> void:
 		return
 
 	if _atk_frame <= startup + active:
+		_set_attack_phase(AttackPhase.STRIKE,
+			float(_atk_frame - startup) / float(maxi(active, 1)))
 		var lunge := float(_atk.get("lunge_distance", 0.0))
 		if lunge > 0.0:
 			var f := -global_transform.basis.z
@@ -625,6 +653,8 @@ func _tick_attack(delta: float) -> void:
 			_try_hit()
 		return
 
+	_set_attack_phase(AttackPhase.RECOVERY,
+		float(_atk_frame - startup - active) / float(maxi(recovery, 1)))
 	_brake(delta)
 	if _atk_frame >= startup + active + recovery:
 		if _try_begin_false_recovery_followup():
@@ -693,7 +723,11 @@ func _try_hit() -> void:
 	info.guard_stamina_multiplier = maxf(float(_atk.get("guard_stamina_multiplier", 1.0)), 1.0)
 	info.attack_id = String(_atk.get("id", ""))
 	if target.has_method("take_damage"):
+		var health_before := float(target.get("health")) if target.get("health") != null else -1.0
 		target.call("take_damage", info)
+		var health_after := float(target.get("health")) if target.get("health") != null else -1.0
+		if health_before >= 0.0 and health_after < health_before:
+			hit_landed.emit(target, health_before - health_after, global_position)
 		_refresh_target_actionability()
 		if target.has_method("state_name") and String(target.call("state_name")) == "hit-stun":
 			var reference_fps := float(GameData.combat.get("reference_fps", 0.0))
@@ -708,7 +742,9 @@ func take_damage(info: DamageInfo) -> void:
 	if state == State.DEAD:
 		return
 
+	var previous_health := health
 	health = maxf(0.0, health - info.amount)
+	health_changed.emit(health, max_health, health - previous_health, info.attacker)
 	if health <= 0.0:
 		_die()
 		return
@@ -760,7 +796,9 @@ func is_alive() -> bool:
 func full_reset() -> void:
 	_cancel_attack_presentation()
 	set_physics_process(true)
+	var previous_health := health
 	health = max_health
+	health_changed.emit(health, max_health, health - previous_health, null)
 	posture = max_posture
 	_phase = 1
 	_queue.clear()
@@ -847,6 +885,23 @@ func telegraphing_parryable() -> int:
 	return 1 if bool(_atk.get("parryable", false)) else 0
 
 
+func state_name() -> String:
+	match state:
+		State.IDLE: return "livre"
+		State.PATROL: return "patrulha"
+		State.CHASE: return "persegue"
+		State.ATTACK:
+			match _attack_phase:
+				AttackPhase.PREPARATION: return "preparacao"
+				AttackPhase.STRIKE: return "golpe"
+				AttackPhase.RECOVERY: return "recuperacao"
+			return "ataque"
+		State.STAGGER: return "cambaleio"
+		State.BROKEN: return "postura quebrada"
+		State.DEAD: return "morto"
+	return "?"
+
+
 func display_name() -> String:
 	return String(data.get("display_name", enemy_id))
 
@@ -858,4 +913,4 @@ func taunt(by: Node3D, _seconds: float) -> void:
 		return
 	target = by
 	if state == State.IDLE or state == State.PATROL:
-		state = State.CHASE
+		_change_state(State.CHASE)
