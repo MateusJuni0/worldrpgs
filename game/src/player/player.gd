@@ -926,9 +926,7 @@ func set_waking_up(enabled: bool) -> void:
 
 
 func set_resting(enabled: bool) -> void:
-	if enabled and not _resting:
-		_sitting_visual_started_at = _frame
-	elif not enabled and _resting:
+	if not enabled and _resting:
 		_start_visual_transition("sitting_exit")
 	_resting = enabled
 	input_enabled = not enabled and not _waking_up
@@ -1492,7 +1490,13 @@ func _refresh_animation() -> void:
 	if _visual == null:
 		return
 	_update_visual_transition()
-	if _waking_up or _resting:
+	# Descansar ja e o resultado da interaccao com a fogueira: a pose tem de
+	# ficar sentada no proprio acto. Sitting_Enter continua reservado ao despertar,
+	# onde existe uma sequencia temporal que o deixa terminar antes de dar controlo.
+	if _resting:
+		_play_visual_state("sitting_idle")
+		return
+	if _waking_up:
 		var sitting_enter_frames := _visual.state_animation_frames(
 			"player", "sitting_enter")
 		var sitting_elapsed := maxi(0, _frame - _sitting_visual_started_at)
