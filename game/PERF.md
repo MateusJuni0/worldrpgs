@@ -6,6 +6,101 @@
 >
 > A spec pedia que se decidisse **com dados, não por palpite**. Aqui estão os dados.
 
+## Estado corrente — 02-08-2026: a Lei 4 continua vermelha
+
+O fio quente existe agora dentro do jogo: `animation_benchmark.gd` abre
+`scenes/gameplay.tscn`, deixa a cena criar mundo, jogador, parceiro e três
+inimigos, completa o encontro até **2 jogadores + 5 inimigos** usando os IDs já
+instanciados e conduz o jogador pelas ações reais de `controls.json`. Antes de
+medir, confirma os sete actores com geometria no enquadramento; o gate também
+exige deslocamento produzido por input. Recusa arrancar sem `user://` isolado.
+
+A captura quente foi aberta e vista: apresenta os dois jogadores, cinco orcs,
+HUD, lock-on e sinais de ataque no mundo completo. O próprio overlay mostrou
+**49 fps / 20,24 ms** nesse frame. Portanto a integração está provada, mas o
+resultado visível é uma reprovação — não se pinta a lei de verde.
+
+As quatro perguntas do fio ficam fechadas assim:
+
+1. **Como usa o jogador:** pelas acções remapeáveis normais; a prova carrega em
+   `move_right`, `lock_on` e `dodge_sprint`, sem criar uma tecla de benchmark.
+2. **Como se prova:** arranca a cena jogável, exige 2+5 com geometria visível,
+   mede deslocamento causado pelo input e reprova pelo p99/pior frame.
+3. **Arte e som:** vêm da cena, modelos, VFX e síntese SFX de produção; a sonda
+   não acrescenta substitutos. O som correu com driver Dummy, por isso aqui se
+   prova o seu custo/ligação, não a audição subjectiva.
+4. **Custo na máquina do Rico:** ainda não medido; os números abaixo são da Iris
+   Xe do Mateus e não autorizam verde no alvo i5/8 GiB.
+
+### A pista do VSync, confirmada sem o falso limitador
+
+O benchmark isolado aplicava `Engine.max_fps=0` em `SceneTree._initialize()`;
+depois o `SettingsSystem` arrancava e voltava a impor 60. Assim
+`--vsync=off` não desligava o segundo limitador. A ferramenta passa agora a
+aplicar apresentação depois dos autoloads e publica cap/VSync no JSON.
+
+| Cinco UAL isolados, 1080p/Mobile | Média | p95 | p99 | Pior | Resultado |
+|---|---:|---:|---:|---:|---|
+| Antes, pedido `off` mas cap 60 reposto | 60,0 fps | 25,734 ms | **29,705 ms** | 31,025 ms | medição inválida de “sem VSync” |
+| Antes, FIFO e cap 60 reposto | 59,4 fps | 18,937 ms | **28,707 ms** | 49,998 ms | reprova |
+| Depois, VSync off + cap 0 real | **291,9 fps** | 5,272 ms | **6,717 ms** | 9,669 ms | passa |
+| Depois, FIFO + cap 120 | **60,0 fps** | 16,666 ms | **16,666 ms** | 16,666 ms | passa |
+
+Isto confirma a pista antiga de **5,7 ms**: nesta sessão concorrida repetiu-se
+como 6,717 ms. A apresentação e cinco esqueletos isolados não são o travão.
+
+### Antes do caso 2+5: a arena final já falha
+
+Baseline de 30 s, preset médio, dois jogadores + Vorgar + dois orcs:
+
+| Arena final real | Média | p95 | p99 | 1% low | Pior |
+|---|---:|---:|---:|---:|---:|
+| VSync off, cap 0 | 84,3 fps | 20,433 ms | **25,081 ms** | 29,7 | 96,62 ms |
+| FIFO, cap 0 | 59,0 fps | 19,479 ms | **26,397 ms** | 29,9 | 59,30 ms |
+
+FIFO+cap120, em 20 s, continuou vermelho: **60,1 fps médios, p99 21,074 ms**.
+Logo o pacing melhora a sonda isolada, mas não cura o conteúdo integrado.
+
+### Prova quente 2+5 — 20 minutos
+
+Mobile/Vulkan, preset médio, 1920×1080, FIFO+cap120, **30 s de aquecimento +
+1200 s úteis**. O jogador moveu-se 72,257 m por `InputMap`; no fim continuavam
+instanciados dois jogadores e cinco inimigos. A primeira versão da prova deixou
+o parceiro estático sair do enquadramento durante o aquecimento; o harness foi
+corrigido para reenquadrar a vaga uma única vez antes da janela útil, e uma
+repetição visível confirmou **2/2 jogadores + 5/5 inimigos**.
+
+| Média | p95 | p99 | 1% low | Pior | >16,67 ms | >20 ms | Draws | Primitivas | VRAM |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **58,2 fps** | 20,604 ms | **31,371 ms** | 25,3 | 129,287 ms | 5 830 | 3 793 | 177 | 368 493 | 162,8 MiB |
+
+**Gate: FALHOU.** Não se repetiram mais 20 minutos depois do ajuste de
+enquadramento porque a composição já existia durante toda a amostra e os dois
+limites temporais falharam por larga margem; a repetição curta com os sete
+actores visíveis também reprovou p99 (**36,986 ms**).
+
+### Não se baixou qualidade para esconder o resultado
+
+| A/B | Resultado | Decisão |
+|---|---|---|
+| Arena 2+3, preset baixo, VSync off | 93,2 fps, p99 **18,627 ms** | rejeitado: falha e perde 15% de escala, distância e densidade |
+| Hot 2+5 sem as seis camadas de chão | p99 **30,042 ms** contra 29,941 ms completo | não cortar floresta/erva; p99 não melhora |
+| Hot 2+5 com escala 0,85 | p99 **35,426 ms** | não reduzir nitidez; o sinal piorou sob a mesma contenção |
+
+`[CODEX]` Mantém-se o preset médio. Razão: nenhum corte medido fechou p99 e as
+camadas visuais não são a causa isolável. Alternativa descartada: tornar o
+preset baixo o defeito só porque a média subiu.
+
+### Limites desta consolidação
+
+Esta sessão correu na **Iris Xe do Mateus: i7-1255U e 16 GiB**, com doze
+processos Godot de outras árvores presentes; não é o i5-1334U/8 GiB do Rico.
+Os picos não podem ser atribuídos a um renderer específico sob essa contenção,
+mas uma passagem que falha também na máquina mais forte não certifica a mais
+fraca. Falta ao dono de render reduzir o custo integrado sem cortar informação,
+ao dono de settings consumir cap120 com FIFO, ao dono de `VERIFICAR.bat` ligar
+este gate com APPDATA temporário e, depois, repetir no aparelho físico do Rico.
+
 ## A máquina medida
 
 É a **máquina-chão do projeto** — a mais fraca das duas, e portanto a que manda.

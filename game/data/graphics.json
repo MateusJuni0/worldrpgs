@@ -11,6 +11,7 @@
   "presentation": {
     "_why": "[CODEX] No Iris Xe medido, cinco e dez esqueletos têm custo semelhante mas o modo janela acrescenta jitter de apresentação; ecrã inteiro reduziu os picos do caso de cinco actores, sem fazer passar ainda o p99. Validar de novo no M2 e em cada máquina-alvo.",
     "_pacing_medido": "[CODEX] Zona completa limpa: FIFO+cap60 deu p99 29,691 ms; sem cap deu 19,469 ms; FIFO+cap120 deu p99 16,666 ms e 1% low 56,6, com um pico isolado de 33,33 ms. Recomenda-se cap interno 120 quando FIFO esta activo. Razao: e a unica variante que fez passar o p99 sem cortar imagem. Alternativas cap60 e sem cap rejeitadas pelos p99; falta o consumidor em settings_system.gd, registado no LACUNAS.md.",
+    "_hot_2p5_medido": "[CODEX] 02-08: o fio real 2 jogadores + 5 inimigos foi apresentado e conduzido por InputMap. Na maquina local i7-1255U/16 GiB com Iris Xe, nao no i5-1334U/8 GiB do Rico, 30 s de aquecimento + 1200 s com FIFO+cap120 deram 58,2 fps, p99 31,371 ms, pior 129,287 ms, 177 draws e 368 493 primitivas. O gate falhou. Razao: nao declarar verde uma media proxima de 60 quando o percentil que magoa duplica o orcamento. Alternativa descartada: preset baixo/render scale 0,85; o A/B nao fez passar o p99 e perdeu nitidez/distancia/densidade.",
     "recommended_engine_cap_with_fifo": 120,
     "default_mode": "fullscreen",
     "windowed_supported": true,
@@ -20,7 +21,29 @@
     "frame_budget_ms": 16.67,
     "worst_frame_ceiling_ms": 20.0,
     "acceptance_actors": 5,
-    "benchmark": "res://src/tools/animation_benchmark.gd --actors=5 --window=fullscreen --vsync=on --gate"
+    "hot_gameplay": {
+      "_why": "[CODEX] O gate de Lei 4 arranca gameplay.tscn e apresenta o tecto da zona: dois jogadores e cinco inimigos reais. Os IDs adicionais sao descobertos nos actores/catalogos ja carregados; nao existe lista de conteudo duplicada no benchmark. O piloto usa as accoes configuraveis reais e recusa user:// nao isolado. Razao: uma sonda de esqueletos nao prova o fio jogador-mundo-render. Alternativa descartada: declarar a Lei 4 verde com cinco GLB parados.",
+      "scene": "lei4",
+      "expected_players": 2,
+      "expected_enemies": 5,
+      "warmup_seconds": 30.0,
+      "measure_seconds": 1200.0,
+      "settle_frames": 4,
+      "presentation_settle_frames": 4,
+      "formation_columns": 3,
+      "formation_distance_m": 6.5,
+      "formation_spacing_m": 2.4,
+      "formation_row_spacing_m": 2.0,
+      "partner_forward_m": 2.0,
+      "partner_right_m": 1.5,
+      "continuous_actions": ["move_right"],
+      "pulse_actions": ["lock_on", "dodge_sprint"],
+      "pulse_interval_seconds": 1.25,
+      "pulse_hold_seconds": 0.12,
+      "minimum_player_displacement_m": 0.25,
+      "requires_isolated_user_dir": true
+    },
+    "benchmark": "res://src/tools/animation_benchmark.gd --mode=hot-gameplay --window=fullscreen --vsync=on --engine-cap=120 --gate"
   },
 
   "presets": {
