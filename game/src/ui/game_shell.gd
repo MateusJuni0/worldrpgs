@@ -1548,12 +1548,28 @@ func _update_preview() -> void:
 	if is_instance_valid(_preview_visual):
 		_fechar_no(_preview_visual)
 	var appearance: Dictionary = _draft.get("appearance", {}) as Dictionary
-	_preview_visual = CharacterVisual.new()
+	# ⚠️ 02-08: isto criava um CharacterVisual — o corpo base, que nao sabe
+	# vestir. Resultado: o ecra de criacao mostrava caixas onde o jogo ja
+	# mostrava roupa modular, e o Mateus via "o quadrado feio" exactamente aqui.
+	# ⭐ Quem sabe vestir e o ArmorVisual, e e ele que o mundo usa. O ecra de
+	# escolha tem de mostrar O MESMO boneco que se vai jogar, senao a escolha e
+	# feita as cegas.
+	var armadura := ArmorVisual.new()
+	_preview_visual = armadura
 	_preview_pivot.add_child(_preview_visual)
 	var tint: Color = SKIN_TINTS.get(String(appearance.get("skin_tone_id", "skin_02")), Color.WHITE)
 	# O tint da pre-visualizacao distingue os quatro tons sem duplicar texturas;
 	# a fisica e o material do mundo continuam independentes desta escolha.
-	_preview_visual.setup(2.2, tint, false, String(appearance.get("body_id", "body_male")))
+	var origem := String(_draft.get("class_id", "warrior"))
+	_preview_visual.setup(2.2, tint, false,
+		String(appearance.get("body_id", "body_male")), origem)
+	# Veste o kit inicial da origem escolhida — as mesmas pecas com que se vai
+	# comecar a jogar, lidas do catalogo e nunca escritas a mao aqui.
+	var kit: Dictionary = (GameData.weapons.get("loadouts", {}) as Dictionary).get(
+		origem, {}) as Dictionary
+	var pecas: Array = kit.get("pecas", []) as Array
+	if not pecas.is_empty():
+		armadura.apply_equipment(pecas)
 	_preview_visual.position = Vector3(0, -0.15, 0)
 
 
