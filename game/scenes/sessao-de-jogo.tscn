@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://src/tools/sessao_de_jogo.gd" id="1_sessao"]
+[ext_resource type="Script" path="res://src/combat/sessao_morte_real.gd" id="1_sessao"]
 
 [node name="SessaoDeJogo" type="Node"]
 script = ExtResource("1_sessao")
