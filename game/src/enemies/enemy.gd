@@ -714,6 +714,15 @@ func _try_hit() -> void:
 			or not _active_gameplay_cue.has_method("covers_world_point") \
 			or not bool(_active_gameplay_cue.call(
 				"covers_world_point", target.global_position)):
+		# ⚠️ 02-08: o merge deixou este `if` SEM CORPO e o ficheiro deixou de
+		# compilar — o auto-teste passou de 3 minutos a nunca acabar. O que
+		# faltava era esta linha, e ela e a regra toda: fora da forma que o
+		# jogador VE, nao ha contacto nenhum. E o achado nº1 da revisao de
+		# codigo — "a geometria de dano mente ao jogador" — fechado aqui.
+		return
+
+	# ⛔ O cone abaixo deixou de ser autoridade: e apenas um segundo travao.
+	# Um golpe tem de passar NAS DUAS coisas — a forma visivel primeiro.
 	var hit := false
 	if bool(_atk.get("is_aoe", false)):
 		hit = _distance_to_target() <= float(_atk["radius"])

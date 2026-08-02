@@ -188,7 +188,6 @@ func _build_edge_mark() -> void:
 
 
 func _update_pulse() -> void:
-	var startup := maxi(int(_attack.get("startup")), 1)
 	var startup := maxi(int(_attack["startup"]), 1)
 	var t := clampf(float(_frame) / float(startup), 0.0, 1.0)
 	var pulse := 0.35 + 0.65 * t
@@ -197,7 +196,6 @@ func _update_pulse() -> void:
 	var scale_value := 0.82 + 0.18 * t
 	_world_glyph.scale = Vector3.ONE * scale_value
 	if String(_attack.get("tipo_contacto", "")) == "volume_persistente" and _frame > startup:
-		var interval := maxi(int(_attack.get("damage_interval_frames")), 1)
 		var interval := maxi(int(_attack["damage_interval_frames"]), 1)
 		var tick_t := float((_frame - startup) % interval) / float(interval)
 		_material.albedo_color.a = 0.20 + tick_t * 0.30

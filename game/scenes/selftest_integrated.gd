@@ -77,7 +77,7 @@ func _test_integrations_in_real_game() -> void:
 			var alvo := Vector2(marker.global_position.x, marker.global_position.z)
 			var servido := false
 			for node: Node in get_tree().get_nodes_in_group("enemies"):
-				var enemy := node as Enemy
+				var enemy: Enemy = node as Enemy
 				if enemy != null and gameplay.is_ancestor_of(enemy) 						and Vector2(enemy.global_position.x, enemy.global_position.z)							.distance_to(alvo) < maxf(enemy.body_radius * 2.0, 2.5):
 					servido = true
 					break
@@ -118,7 +118,7 @@ func _prove_monsters(gameplay: Node) -> void:
 	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
 	var visible_monsters := 0
 	for node: Node in enemies:
-		var enemy := node as Enemy
+		var enemy: Enemy = node as Enemy
 		if enemy == null or not gameplay.is_ancestor_of(enemy):
 			continue
 		var visual := enemy.get("_visual") as MonsterVisual
@@ -154,7 +154,7 @@ func _prove_first_boss_defeat(gameplay: Node, actor: Player) -> void:
 	if vorgar.died.is_connected(persistence_handler):
 		vorgar.died.disconnect(persistence_handler)
 	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		var enemy := node as Enemy
+		var enemy: Enemy = node as Enemy
 		if enemy != null and gameplay.is_ancestor_of(enemy):
 			enemy.target = null
 			enemy.set_physics_process(false)
