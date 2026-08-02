@@ -182,7 +182,7 @@ func _test_gameplay_two_processes() -> void:
 					or line.begins_with("saves:"):
 				print("  " + line)
 	_check(exit_code == 0,
-		"jogo real: F3, Hospedar/Entrar, duas origens, dois corpos e movimento remoto")
+		"jogo real: clique em JOGAR A DOIS, F3, Hospedar/Entrar, duas origens, dois corpos e movimento remoto")
 
 
 func _report() -> void:
