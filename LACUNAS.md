@@ -1198,6 +1198,22 @@ As quatro perguntas do fio ficam, portanto: o jogador usa a arena andando pelo n
 | ✅ | A prova arranca `scenes/main.tscn`, cria o mundo/jogador/HUD reais, carrega em `move_forward` + `dodge_sprint` por 30,02 s, anda 170,8 m, descobre a fogueira e valida os pixels renderizados do caminho, marco e escala. | `--bench --scene=ui-map-proof --warmup=0 --seconds=60 --map-proof` → `[MAP_PROOF] PASS`; 1 212 pixels de caminho, 993 de marco, 143 da escala; `user://` temporário removido. |
 | 🟠 | A prova jogável ainda não está no comando canónico porque `game/VERIFICAR.bat` e as cenas de teste não pertencem a esta árvore. O runner vive no próprio `NavigationHud` e já falha com código 1 se a captura não mostrar o resultado, mas outro dono tem de acrescentar o comando acima ao batch. | `game/VERIFICAR.bat` não contém `--map-proof`; não foi alterado por respeito à lista de ficheiros autorizada. |
 | 🟠 | A cena completa continua sem estabilidade a 60 fps e os agentes concorrentes impediram isolar custo temporal: no A/B final o minimapa ligado mediu **81,8 fps / p99 29,114 ms** e desligado **75,5 fps / p99 40,039 ms**, inversão que não pode ser causal. O custo determinístico observado foi **+19 draw calls, +736 primitivas, +2,2 MiB VRAM e +0,2 MiB de memória estática**. | Mobile/Vulkan, Iris Xe, 1920×1080, 6 s de aquecimento + 10 s de amostra, VSync off. Não declarar a Lei 4 satisfeita; repetir o A/B em máquina sem agentes concorrentes. |
+## Brumal povoado — prova do percurso ainda vermelha, 02-08-2026
+
+O runtime autorizado já lê o orçamento `6+3+3`, intercala uma representação de
+cada tipo comum com os três encontros nomeados na rota principal e mantém os
+restantes comuns nos desvios de descanso/bivaque. A população inteira continua
+virtual: a cena curta real passou **29/29**, publicou **7 identidades lógicas** e
+respeitou o teto de **5 inimigos / 8 atores**. Isto ainda não fecha a prova pedida.
+
+| Estado | Lacuna fora dos ficheiros desta árvore | Prova exacta / alteração pedida |
+|---|---|---|
+| 🔴 | `percurso.gd::_contar_tipo()` conta apenas `Enemy.enemy_id`; por isso Ghar, Nilo e Urok são colapsados nos tipos-base e o resumo imprime **3 tipos**, apesar de os seis nomes visíveis terem aparecido e morrido. A cena também não falha quando essa contagem é menor que 6. | O dono de `game/src/tools/percurso.gd` deve contar `world_type_id` (meta já publicada pelo produtor), exigir `>= 6` antes de sair verde e listar os nomes visíveis. Não mudar `Enemy.enemy_id`, porque o ID-base alimenta combate, baralho e recompensa. |
+| 🔴 | A segunda passagem chegou viva a **9/17 destinos**, matou Batedor, Ghar, Brutamontes, Nilo, Lanceiro, Urok e outro lanceiro, mas a geometria da Toca bloqueou o destino 10 a **5,06 m**, depois dos dois desvios automáticos. O processo terminou vermelho. | O dono de `game/src/tools/percurso.gd`/rota publicada pela Toca deve corrigir o waypoint ou o contorno e voltar a correr a cena até ao guardião. Não teletransportar nem relaxar a falha: o jogador real tem de caber. |
+| 🔴 | `spawn_population_test.gd` fixa `plan.size() == 12` e a mensagem “8 comuns”; com o novo orçamento correto, todo o contrato dinâmico passa e sobra apenas `Brumal tem 16/12 colocacoes`. O teste também não está em `VERIFICAR.bat`. | O dono do teste deve derivar a quantidade da soma de `_zone_budgets.brumal.population + nomeados + guardião`, atualizar a mensagem para 12 comuns e ligar tanto esse contrato como `scenes/percurso.tscn` ao corredor obrigatório, com `user://` temporário. |
+| 🟠 | A prosa de `spec/67` ainda declara `4+2+2`, 390/3900 almas, enquanto `spec/69` já exige 12 comuns e a ordem desta tarefa elevou o catálogo para `6+3+3`, 585/5850. Esta árvore não possui a spec. | O dono de `spec/67-catalogo-do-bestiario.md` deve atualizar a linha de Brumal e os totais no mesmo merge; não baixar novamente o JSON para conservar texto substituído. |
+| 🔴 | A medição Mobile/Vulkan real na Iris Xe ficou em **59,2 fps / 16,88 ms médios / p95 24,98 ms / p99 32,40 ms** a 1920×1080; portanto não satisfaz a Lei 4. Havia ao mesmo tempo um benchmark de outra árvore em ecrã inteiro, com VSync, e não é possível atribuir o custo ao povoamento. | Repetir `scenes/main.tscn -- --bench --scene=zone --warmup=8 --seconds=20 --vsync=off` sem outros Godot gráficos. Esta árvore não terminou nem alterou o processo alheio; até existir uma amostra limpa de 60 fps, não declarar o teto cumprido. |
+
 ## Materiais de armas — lacuna do medidor, 02-08-2026
 
 | Estado | Lacuna fora dos ficheiros desta árvore | Prova exacta |

@@ -4,6 +4,11 @@ extends Node
 
 const STREAM_TICK_SECONDS := 0.25
 const STREAM_ACTIVATION_MARGIN_M := 4.0
+const COMMON_PATH_OFFSET_M := 1.8
+const NAMED_PATH_OFFSET_M := 3.2
+const RESIDENT_ROUTE_CLEARANCE_M := 10.0
+const RESIDENT_SPACING_M := 3.0
+const ROUTE_EDGE_ACTIVATION_FRACTION := 0.75
 
 var _main: Node
 var _game_data: Node
@@ -31,13 +36,28 @@ static func build_plan(zone_id: String, enemies: Dictionary,
 	for value: Variant in population.keys():
 		enemy_ids.append(String(value))
 	enemy_ids.sort()
+	var remaining: Dictionary = {}
+	var placed_by_enemy: Dictionary = {}
 	for enemy_id: String in enemy_ids:
 		var enemy: Dictionary = enemies.get(enemy_id, {}) as Dictionary
 		if enemy.is_empty() or not (enemy.get("biome_ids", []) as Array).has(zone_id):
 			push_error("[spawn] budget de %s contem inimigo incoerente: %s" % [
 				zone_id, enemy_id])
 			continue
-		for index: int in range(int(population.get(enemy_id, 0))):
+		remaining[enemy_id] = maxi(0, int(population.get(enemy_id, 0)))
+		placed_by_enemy[enemy_id] = 0
+
+	# Cada volta materializa uma colocacao de cada ficha declarada. Assim um
+	# aumento no catalogo nao cria blocos monotonos nem exige repetir IDs.
+	var has_remaining := true
+	while has_remaining:
+		has_remaining = false
+		for enemy_id: String in enemy_ids:
+			var left := int(remaining.get(enemy_id, 0))
+			if left <= 0:
+				continue
+			has_remaining = true
+			var index := int(placed_by_enemy.get(enemy_id, 0))
 			plan.append({
 				"kind": "common",
 				"zone_id": zone_id,
@@ -45,6 +65,8 @@ static func build_plan(zone_id: String, enemies: Dictionary,
 				"world_type_id": enemy_id,
 				"placement_id": "%s:common:%s:%02d" % [zone_id, enemy_id, index],
 			})
+			remaining[enemy_id] = left - 1
+			placed_by_enemy[enemy_id] = index + 1
 
 	var named_entries: Dictionary = named_catalog.get("encounters", {}) as Dictionary
 	var named_ids: Array[String] = []
@@ -188,8 +210,6 @@ func initialize(main_node: Node, player_node: Node3D, world_node: Node3D,
 	var enemies: Dictionary = _game_data.get("enemies") as Dictionary
 	var named_catalog: Dictionary = _game_data.get("named_catalog") as Dictionary
 	_plan = build_plan(zone_id, enemies, named_catalog)
-	_assign_brumal_positions()
-	_append_lair_placements()
 	var budget: Dictionary = ((enemies.get("_zone_budgets", {}) as Dictionary).get(
 		zone_id, {}) as Dictionary)
 	var defaults: Dictionary = enemies.get("_enemy_defaults", {}) as Dictionary
@@ -201,6 +221,8 @@ func initialize(main_node: Node, player_node: Node3D, world_node: Node3D,
 		float(defaults.get("leash_range", 34.0)))
 	_animated_actor_limit = int(budget.get("animated_actor_limit", 0))
 	_active_enemy_limit = int(budget.get("active_enemy_limit", 0))
+	_assign_brumal_positions()
+	_append_lair_placements()
 	set_meta("planned_population", _plan.size())
 	set_meta("distinct_world_types", distinct_world_type_count(_plan))
 	set_meta("animated_actor_limit", _animated_actor_limit)
@@ -406,54 +428,126 @@ func _assign_brumal_positions() -> void:
 	if path.size() < 7:
 		push_error("[spawn] Brumal nao forneceu as sete ancoras do caminho")
 		return
-	var camp: Vector3 = _world.get("camp_point") as Vector3
-	var rest: Vector3 = _world.get("rest_point") as Vector3
-	var common_positions := {
-		"orc_spearman": [
-			(path[0] as Vector3).lerp(path[1] as Vector3, 0.6) + Vector3.UP * 0.5,
-			path[2] + Vector3(-2.6, 0.5, 1.2),
-			path[2] + Vector3(2.6, 0.5, -1.2),
-			camp + Vector3(-3.2, 0.5, 1.5),
-		],
-		"orc_brute": [
-			path[3] + Vector3.UP * 0.5,
-			camp + Vector3(3.0, 0.5, 1.2),
-		],
-		"goblin_mist_scout": [
-			path[4] + Vector3(-7.0, 0.5, 5.0),
-			path[5] + Vector3(7.0, 0.5, -4.0),
-		],
-	}
-	var used_by_enemy: Dictionary = {}
-	var fallback_index := 1
+	var route_common_placements: Array[Dictionary] = []
+	var resident_placements: Array[Dictionary] = []
+	var named_placements: Array[Dictionary] = []
+	var represented_common_types: Dictionary = {}
 	for placement: Dictionary in _plan:
-		var kind := String(placement.get("kind", ""))
-		var position := Vector3.ZERO
-		if kind == "common":
-			var enemy_id := String(placement.get("enemy_id", ""))
-			var index := int(used_by_enemy.get(enemy_id, 0))
-			var positions: Array = common_positions.get(enemy_id, []) as Array
-			if index < positions.size():
-				position = positions[index] as Vector3
-			else:
-				position = path[mini(fallback_index, path.size() - 2)] as Vector3
-				position += Vector3(float((index % 3) - 1) * 3.0, 0.5, 0.0)
-				fallback_index += 1
-			used_by_enemy[enemy_id] = index + 1
-		elif kind == "named":
-			match String(placement.get("named_encounter_id", "")):
-				"ghar_lanca_partida":
-					position = ((path[2] as Vector3) + (path[3] as Vector3)) * 0.5 \
-						+ Vector3(-5.0, 0.5, 2.0)
-				"urok_sete_rebites":
-					position = rest + Vector3(-5.0, 0.5, -6.0)
-				"nilo_mascara_molhada":
-					position = (path[5] as Vector3) + Vector3(8.0, 0.5, 5.0)
-				_:
-					position = path[5] + Vector3.UP * 0.5
-		elif kind == "guardian":
-			position = _guardian_position()
-		placement["position"] = position
+		match String(placement.get("kind", "")):
+			"common":
+				var enemy_id := String(placement.get("enemy_id", ""))
+				if represented_common_types.has(enemy_id):
+					resident_placements.append(placement)
+				else:
+					represented_common_types[enemy_id] = true
+					route_common_placements.append(placement)
+			"named":
+				named_placements.append(placement)
+			"guardian":
+				placement["position"] = _guardian_position()
+
+	var route_placements: Array[Dictionary] = []
+	for index: int in maxi(route_common_placements.size(), named_placements.size()):
+		if index < route_common_placements.size():
+			route_placements.append(route_common_placements[index])
+		if index < named_placements.size():
+			route_placements.append(named_placements[index])
+	_assign_route_positions(route_placements, path)
+	_assign_resident_positions(resident_placements, path, [
+		_world.get("rest_point") as Vector3,
+		_world.get("camp_point") as Vector3,
+	])
+
+
+func _assign_route_positions(placements: Array[Dictionary], path: Array) -> void:
+	var route_length := _route_length(path)
+	var edge_distance := minf(_activation_distance_m * ROUTE_EDGE_ACTIVATION_FRACTION,
+		route_length * 0.25)
+	var edge_fraction := edge_distance / maxf(route_length, 0.001)
+	for index: int in placements.size():
+		# As extremidades ficam livres para o nascimento do jogador e a transicao
+		# da Toca. A primeira batida entra no raio de streaming publicado e as
+		# restantes repartem o percurso sem duplicar uma distancia de percepcao.
+		var progress := float(index) / float(maxi(1, placements.size() - 1))
+		var fraction := lerpf(edge_fraction, 1.0 - edge_fraction, progress)
+		var route_sample := _sample_route(path, fraction)
+		var position: Vector3 = route_sample.get("position", Vector3.ZERO) as Vector3
+		var tangent: Vector3 = route_sample.get("tangent", Vector3.FORWARD) as Vector3
+		var side := -1.0 if index % 2 == 0 else 1.0
+		var right := Vector3(tangent.z, 0.0, -tangent.x).normalized()
+		var lateral_offset_m := NAMED_PATH_OFFSET_M \
+			if String(placements[index].get("kind", "")) == "named" \
+			else COMMON_PATH_OFFSET_M
+		placements[index]["position"] = position + right * lateral_offset_m * side \
+			+ Vector3.UP * 0.5
+
+
+func _assign_resident_positions(placements: Array[Dictionary], path: Array,
+		anchors: Array) -> void:
+	if anchors.is_empty():
+		return
+	for index: int in placements.size():
+		var anchor := anchors[index % anchors.size()] as Vector3
+		var nearest := _nearest_route_sample(path, anchor)
+		var route_position: Vector3 = nearest.get("position", anchor) as Vector3
+		var tangent: Vector3 = nearest.get("tangent", Vector3.FORWARD) as Vector3
+		var away := anchor - route_position
+		away.y = 0.0
+		if away.is_zero_approx():
+			away = Vector3(tangent.z, 0.0, -tangent.x)
+		away = away.normalized()
+		var row := index / anchors.size()
+		var fan_step := float((row % 3) - 1)
+		var depth_step := float(row / 3)
+		placements[index]["position"] = anchor \
+			+ away * (RESIDENT_ROUTE_CLEARANCE_M + depth_step * RESIDENT_SPACING_M) \
+			+ tangent * fan_step * RESIDENT_SPACING_M + Vector3.UP * 0.5
+
+
+func _sample_route(path: Array, fraction: float) -> Dictionary:
+	var segment_lengths: Array[float] = []
+	var total_length := 0.0
+	for index: int in path.size() - 1:
+		var length := (path[index] as Vector3).distance_to(path[index + 1] as Vector3)
+		segment_lengths.append(length)
+		total_length += length
+	var remaining := total_length * clampf(fraction, 0.0, 1.0)
+	for index: int in segment_lengths.size():
+		var start := path[index] as Vector3
+		var finish := path[index + 1] as Vector3
+		var length := segment_lengths[index]
+		if remaining <= length or index == segment_lengths.size() - 1:
+			var tangent := (finish - start).normalized()
+			return {
+				"position": start.lerp(finish, remaining / maxf(length, 0.001)),
+				"tangent": tangent,
+			}
+		remaining -= length
+	return {"position": path[-1] as Vector3, "tangent": Vector3.FORWARD}
+
+
+func _route_length(path: Array) -> float:
+	var total := 0.0
+	for index: int in path.size() - 1:
+		total += (path[index] as Vector3).distance_to(path[index + 1] as Vector3)
+	return total
+
+
+func _nearest_route_sample(path: Array, point: Vector3) -> Dictionary:
+	var best_distance := INF
+	var best := {"position": path[0] as Vector3, "tangent": Vector3.FORWARD}
+	for index: int in path.size() - 1:
+		var start := path[index] as Vector3
+		var finish := path[index + 1] as Vector3
+		var delta := finish - start
+		var fraction := clampf((point - start).dot(delta) \
+			/ maxf(delta.length_squared(), 0.001), 0.0, 1.0)
+		var position := start + delta * fraction
+		var distance := point.distance_squared_to(position)
+		if distance < best_distance:
+			best_distance = distance
+			best = {"position": position, "tangent": delta.normalized()}
+	return best
 
 
 func _append_lair_placements() -> void:
