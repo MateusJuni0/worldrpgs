@@ -15,6 +15,7 @@ const ArmorVisualScript = preload("res://src/visual/armor_visual.gd")
 const WeaponVisualScript = preload("res://src/visual/weapon_visual.gd")
 const WeaponFamilyIcons = preload("res://assets/ui/weapon_family_icons.gd")
 const EMPTY_CANDIDATE := "__empty__"
+const BACKPACK_BUTTON_NAME := "EditQuickAccessButton"
 
 class PreviewActor extends Node3D:
 	var main_weapon := ""
@@ -57,6 +58,51 @@ static func quick_slot_actions() -> Array[String]:
 	return actions
 
 
+## O menu da mochila pertence a outro modulo. Este ponto de montagem permite
+## acrescentar a entrada sem duplicar ou alterar o seu codigo.
+static func install_backpack_button(menu: Node, callback: Callable) -> Button:
+	if not is_instance_valid(menu):
+		return null
+	var existing := menu.find_child(BACKPACK_BUTTON_NAME, true, false) as Button
+	if existing != null:
+		return existing
+	var root: Control
+	for child: Node in menu.get_children():
+		if child is Control:
+			root = child as Control
+			break
+	if root == null:
+		return null
+	var button := Button.new()
+	button.name = BACKPACK_BUTTON_NAME
+	button.text = "EDITAR ACESSO RÁPIDO"
+	button.position = Vector2(1330, 30)
+	button.size = Vector2(310, 54)
+	button.tooltip_text = "Escolher o consumível de cada atalho"
+	button.pressed.connect(callback)
+	root.add_child(button)
+	return button
+
+
+## Aplica a mesma copia confirmada ao actor real. A conversao de `null` para
+## string vazia acontece apenas na fronteira antiga de Player; o save conserva
+## o contrato canonico que admite uma mao sem arma.
+static func apply_state_to_gameplay(gameplay: Node, state: Dictionary) -> bool:
+	if not is_instance_valid(gameplay):
+		return false
+	var player: Node = gameplay.get("player") as Node
+	if not is_instance_valid(player):
+		player = gameplay.find_child("Player", true, false)
+	if not is_instance_valid(player) or not player.has_method("apply_inventory_state"):
+		return false
+	var equipment := _equipment_from_state(state).duplicate(true)
+	for hand: String in ["main", "offhand"]:
+		if equipment.get(hand) == null:
+			equipment[hand] = ""
+	player.call("apply_inventory_state", equipment, load_profile_for_state(state))
+	return true
+
+
 static func slot_grammar(state: Dictionary) -> Array[Dictionary]:
 	var slots: Array[Dictionary] = [
 		{"id": "main", "group": "maos", "label": "MÃO PRINCIPAL", "kind": "arma"},
@@ -83,10 +129,13 @@ static func slot_grammar(state: Dictionary) -> Array[Dictionary]:
 			"id": "ring:%d" % index, "group": "aneis",
 			"label": "ANEL %d" % (index + 1), "kind": "anel", "index": index,
 		})
-	for index: int in quick_slot_actions().size():
+	var hotbar_actions := quick_slot_actions()
+	for index: int in hotbar_actions.size():
+		var action := hotbar_actions[index]
 		slots.append({
 			"id": "quick:%d" % index, "group": "atalhos",
-			"label": "ATALHO %s" % quick_slot_actions()[index].trim_prefix("hotbar_"),
+			"label": "ATALHO %s · %s" % [action.trim_prefix("hotbar_"),
+				SettingsSystem.binding_label(action).to_upper()],
 			"kind": "consumivel", "index": index,
 		})
 	return slots
@@ -139,7 +188,7 @@ static func candidates_for_slot(state: Dictionary, slot_id: String) -> Array[Dic
 		"key": EMPTY_CANDIDATE, "id": "", "kind": "vazio", "name": "— VAZIO",
 		"data": {}, "equipped": current_key_for_slot(state, slot_id) == "",
 	}]
-	for entry: Dictionary in InventorySystem.entries(state):
+	for entry: Dictionary in InventorySystem.entries(state_for_inventory_read(state)):
 		if slot_accepts_entry(slot_id, entry):
 			result.append(entry)
 	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -185,8 +234,12 @@ static func current_key_for_slot(state: Dictionary, slot_id: String) -> String:
 	if slot_id.begins_with("quick:"):
 		var quick_slots: Array = _inventory_from_state(state).get("quick_slots", []) as Array
 		var index := slot_id.trim_prefix("quick:").to_int()
-		return "consumivel:%s" % String(quick_slots[index]) \
-			if index >= 0 and index < quick_slots.size() and String(quick_slots[index]) != "" else ""
+		if index < 0 or index >= quick_slots.size():
+			return ""
+		var quick_key := String(quick_slots[index])
+		if quick_key != "" and not quick_key.contains(":"):
+			quick_key = "consumivel:%s" % quick_key
+		return quick_key
 	return ""
 
 
@@ -207,7 +260,8 @@ static func apply_candidate_to_state(state: Dictionary, slot_id: String,
 		item_id = String(parts[1])
 		if int((inventory.get("items", {}) as Dictionary).get(candidate_key, 0)) <= 0:
 			return {"ok": false, "message": "O objecto não está na mochila."}
-		var described := InventorySystem.describe_item(candidate_key, 1, state)
+		var described := InventorySystem.describe_item(candidate_key, 1,
+			state_for_inventory_read(state))
 		if described.is_empty() or not slot_accepts_entry(slot_id, described):
 			return {"ok": false, "message": "O objecto não cabe nesta ranhura."}
 
@@ -239,9 +293,11 @@ static func apply_candidate_to_state(state: Dictionary, slot_id: String,
 		_ensure_positional_size(quick_slots, quick_slot_actions().size())
 		if not empty:
 			for previous: int in quick_slots.size():
-				if String(quick_slots[previous]) == item_id:
+				var previous_key := String(quick_slots[previous])
+				if previous_key == candidate_key \
+						or previous_key == candidate_key.trim_prefix("consumivel:"):
 					quick_slots[previous] = ""
-		quick_slots[index] = "" if empty else item_id
+		quick_slots[index] = "" if empty else candidate_key
 		inventory["quick_slots"] = quick_slots
 	else:
 		return {"ok": false, "message": "Ranhura desconhecida."}
@@ -270,6 +326,20 @@ static func load_profile_for_state(state: Dictionary) -> Dictionary:
 	var attributes: Dictionary = progression.get("attributes", {}) as Dictionary
 	var capacity := GameData.load_capacity_for(int(attributes.get("carga", 0)))
 	return ArmorSystem.load_profile_for_weight(weight, capacity)
+
+
+static func state_for_inventory_read(state: Dictionary) -> Dictionary:
+	var readable := state.duplicate(true)
+	var inventory := _inventory_from_state(readable)
+	var equipment := (inventory.get("equipment", {}) as Dictionary).duplicate(true)
+	for hand: String in ["main", "offhand"]:
+		if equipment.get(hand) == null:
+			equipment[hand] = ""
+	inventory["equipment"] = equipment
+	var character: Dictionary = readable.get("character", {}) as Dictionary
+	character["inventory"] = inventory
+	readable["character"] = character
+	return readable
 
 
 func open(theme: Theme, gameplay: Node, initial_slot := "main") -> void:
@@ -378,6 +448,7 @@ func _build_slot_panel() -> Control:
 	label.add_theme_color_override("font_color", Color("d4b36f"))
 	box.add_child(label)
 	_slot_list = ItemList.new()
+	_slot_list.name = "EquipmentSlotList"
 	_slot_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_slot_list.select_mode = ItemList.SELECT_SINGLE
 	_slot_list.item_selected.connect(_on_slot_selected)
@@ -396,6 +467,7 @@ func _build_candidate_panel() -> Control:
 	label.add_theme_color_override("font_color", Color("d4b36f"))
 	box.add_child(label)
 	_candidate_list = ItemList.new()
+	_candidate_list.name = "EquipmentCandidateList"
 	_candidate_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_candidate_list.select_mode = ItemList.SELECT_SINGLE
 	_candidate_list.fixed_icon_size = Vector2i(48, 48)
@@ -440,6 +512,7 @@ func _build_preview_panel() -> Control:
 	actions.add_theme_constant_override("separation", 10)
 	box.add_child(actions)
 	_confirm_button = Button.new()
+	_confirm_button.name = "EquipmentConfirmButton"
 	_confirm_button.text = "CONFIRMAR TROCA"
 	_confirm_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_confirm_button.custom_minimum_size.y = 54
@@ -573,7 +646,8 @@ func _refresh_comparison() -> void:
 	_load_banner.text = _load_text(before, after, true)
 	var candidate_key := String(preview.get("candidate_key", ""))
 	var entry := InventorySystem.describe_item(candidate_key, 1,
-		preview.get("state", {}) as Dictionary) if candidate_key != EMPTY_CANDIDATE else {}
+		state_for_inventory_read(preview.get("state", {}) as Dictionary)) \
+		if candidate_key != EMPTY_CANDIDATE else {}
 	var description := String((entry.get("data", {}) as Dictionary).get(
 		"descricao_visual", (entry.get("data", {}) as Dictionary).get("visual", "Ranhura vazia.")))
 	var effect := _effect_text(before, after)
@@ -622,8 +696,7 @@ func _confirm_selection() -> void:
 			_message.text = "Não foi possível guardar a troca. Nada mudou."
 			return
 		InventorySystem.emit_signal("inventory_changed")
-		if is_instance_valid(_gameplay) and _gameplay.has_method("refresh_inventory_state"):
-			_gameplay.call("refresh_inventory_state")
+		apply_state_to_gameplay(_gameplay, next_state)
 	_base_state = next_state
 	var result := {"ok": true, "slot_id": _selected_slot, "item_id": item_id,
 		"load": load_profile_for_state(next_state)}
@@ -688,7 +761,8 @@ static func _icon_for_entry(entry: Dictionary) -> Texture2D:
 static func _name_for_key(item_key: String, state: Dictionary) -> String:
 	if item_key.is_empty():
 		return "—"
-	return String(InventorySystem.describe_item(item_key, 1, state).get("name", item_key))
+	return String(InventorySystem.describe_item(item_key, 1,
+		state_for_inventory_read(state)).get("name", item_key))
 
 
 static func _group_label(group: String) -> String:

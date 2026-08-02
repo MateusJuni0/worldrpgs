@@ -63,7 +63,7 @@ func _test_slot_assignment() -> void:
 	_check(bool(offhand_result.get("ok", false)) and String(equipment.offhand) == "dagger",
 		"escolher a mão secundária não desvia a adaga para a principal")
 	_check(bool(quick_result.get("ok", false)) and quick_slots.size() > 1
-		and String(quick_slots[1]) == "bomba_bruma",
+		and String(quick_slots[1]) == "consumivel:bomba_bruma",
 		"mochila configura o item do atalho exacto sem deslocar os restantes")
 
 
