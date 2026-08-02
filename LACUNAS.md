@@ -1055,3 +1055,16 @@ O scan inicial encontrou **8 órfãos / 1744 linhas**. Depois da segunda volta e
 - **Kit do Mago do Mal:** um save novo arranca com `staff + talisma`, ambos sem requisitos em falta. A passagem isolada imprimiu `hand_l -> Offhand_talisma` e `hand_r -> Main_staff`; o HUD mostrou `Cajado + talisma`, a caixa deixou de mostrar X e o estado nunca apresentou o multiplicador ×0,6.
 - **Uma verdade:** save/inventário guarda IDs; `Player.equipment_weapon_id()` normaliza `null`, texto ou carta na fronteira; `WeaponAttach` lê os IDs do `Player`; a caixa integrada pelo `integrador2` lê o mesmo equipamento persistente e actualiza o jogador por `apply_inventory_state()`.
 - **Empunhadura:** transformação de punho vem de `weapons.json`; sino e talismã usam silhuetas compactas próprias. A adaga importada deixou de receber a compressão transversal da espada, conserva os 38 cm catalogados e roda pelo punho, em vez de parecer uma haste.
+
+## 🔴 Combate filmado e comparado com o DS3 — 02-08
+
+> Filmado com `scenes/filme-de-combate.tscn`. **A `sessao-de-jogo` verifica se as coisas existem; isto filma o que o jogador vê.** Foi o Mateus que apontou a diferença: *"tu tá a ver poucos erros, eu tô a ver muita coisa"*.
+
+| | O que se vê | O que o DS3 faz | Porque dói |
+|---|---|---|---|
+| 🔴 | ⭐ **O inimigo é uma mancha preta sem forma.** Não se percebe o que é, nem para onde está virado, nem o que está a fazer | cada inimigo lê-se pela silhueta e pela cor, mesmo em contraluz | é a raiz de *"não consigo ver nem prever nem nada"*, e do *"morrem e ficam se mexendo bugado preto"* |
+| 🔴 | ⭐ **O inimigo não tem estado legível.** Filmei 3,5 s de luta: o estado dele foi `3` do princípio ao fim, e o jogador perdeu 64 PV sem que nada mudasse no ecrã | cada ataque tem preparação visível, golpe e recuperação — três fases que se leem | **sem preparação não há esquiva justa.** É a Lei 1 quebrada |
+| 🔴 | **O inimigo não tem barra de vida.** Bati 4 vezes e nunca soube o quanto faltava | barra por cima do alvo engatado | sem ela não há decisão de arriscar mais um golpe |
+| 🔴 | **Levar dano não se vê.** 442 → 410 → 378 sem clarão, sem número, sem recuo — só o texto `[hit-stun]` no canto | ecrã pisca, o corpo recua, o som muda | o jogador não sabe que levou, nem de onde |
+| 🟠 | ⚠️ **A dica de tutorial tapa o meio do ecrã durante o combate:** uma caixa preta com *"Left Mouse Button — ataque leve"* por cima da luta | | |
+| 🟠 | ⭐ **A luta está fácil demais.** Medido: o inimigo tira 32 PV de 442 — **13 golpes até morrer**. E morre em 4 | um inimigo comum mata em 4–6 e morre em 3–5 | 13 golpes de margem transforma um souls-like num jogo de acção |
