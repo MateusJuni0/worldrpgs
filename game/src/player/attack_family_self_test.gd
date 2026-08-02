@@ -71,7 +71,26 @@ func _test_real_game_damage_geometry() -> void:
 	save_system.set("active_slot", TECHNICAL_SAVE_SLOT)
 	game_data.call("replace_save_state", save_system.call("create_save",
 		"geometry-proof", "warrior", {"name": "Geometria", "appearance": {}}))
+	var fresh_start := _start_gameplay_in_fresh_process()
+	var compile_log := String(fresh_start.get("log", ""))
+	var gameplay_compiled := int(fresh_start.get("exit_code", -1)) == 0 \
+		and "SCRIPT ERROR:" not in compile_log \
+		and "Failed to load script" not in compile_log
+	_check(gameplay_compiled,
+		"cena de gameplay real arranca com Main compilado")
+	if not gameplay_compiled:
+		printerr(compile_log)
+		_delete_geometry_proof_files(save_system)
+		game_data.call("replace_save_state", previous_state)
+		save_system.set("active_slot", previous_slot)
+		return
 	var gameplay_scene := load(GAMEPLAY_PATH) as PackedScene
+	_check(gameplay_scene != null, "cena de gameplay real e importavel")
+	if gameplay_scene == null:
+		_delete_geometry_proof_files(save_system)
+		game_data.call("replace_save_state", previous_state)
+		save_system.set("active_slot", previous_slot)
+		return
 	var gameplay := gameplay_scene.instantiate()
 	root.add_child(gameplay)
 	current_scene = gameplay
@@ -279,6 +298,67 @@ func _wait_physics(frames: int) -> void:
 func _wait_process(frames: int) -> void:
 	for _frame: int in maxi(frames, 0):
 		await process_frame
+
+
+func _start_gameplay_in_fresh_process() -> Dictionary:
+	var isolated_root := OS.get_temp_dir().path_join(
+		"worldrpgs-geometry-startup-%s" % Time.get_ticks_usec())
+	DirAccess.make_dir_recursive_absolute(isolated_root)
+	var environment_names := PackedStringArray(["APPDATA", "WORLDRPGS_TEST_USER_ROOT"])
+	var previous_environment := {}
+	for environment_name: String in environment_names:
+		previous_environment[environment_name] = {
+			"exists": OS.has_environment(environment_name),
+			"value": OS.get_environment(environment_name),
+		}
+		OS.set_environment(environment_name, isolated_root)
+	var output := []
+	var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+		"--headless", "--audio-driver", "Dummy", "--path",
+		ProjectSettings.globalize_path("res://"), "--quit-after", "2", GAMEPLAY_PATH,
+	]), output, true)
+	for environment_name: String in environment_names:
+		var previous: Dictionary = previous_environment[environment_name] as Dictionary
+		if bool(previous.get("exists", false)):
+			OS.set_environment(environment_name, String(previous.get("value", "")))
+		else:
+			OS.unset_environment(environment_name)
+	var log := ""
+	for line: String in output:
+		log += line
+	_remove_isolated_tree(isolated_root)
+	return {"exit_code": exit_code, "log": log}
+
+
+func _remove_isolated_tree(path: String) -> void:
+	var temp_root := OS.get_temp_dir().simplify_path()
+	var safe_path := path.simplify_path()
+	if safe_path.get_base_dir() != temp_root \
+			or not safe_path.get_file().begins_with("worldrpgs-geometry-startup-"):
+		_check(false, "limpeza da prova fica confinada a pasta temporaria propria")
+		return
+	if not DirAccess.dir_exists_absolute(safe_path):
+		return
+	var directory := DirAccess.open(safe_path)
+	if directory == null:
+		_check(false, "pasta temporaria da prova pode ser limpa")
+		return
+	for file_name: String in directory.get_files():
+		DirAccess.remove_absolute(safe_path.path_join(file_name))
+	for directory_name: String in directory.get_directories():
+		_remove_isolated_tree_contents(safe_path.path_join(directory_name))
+	DirAccess.remove_absolute(safe_path)
+
+
+func _remove_isolated_tree_contents(path: String) -> void:
+	var directory := DirAccess.open(path)
+	if directory == null:
+		return
+	for file_name: String in directory.get_files():
+		DirAccess.remove_absolute(path.path_join(file_name))
+	for directory_name: String in directory.get_directories():
+		_remove_isolated_tree_contents(path.path_join(directory_name))
+	DirAccess.remove_absolute(path)
 
 
 func _capture_geometry_if_requested(camera: Node3D, enemy: Node3D) -> void:
