@@ -44,6 +44,7 @@ func _jogar() -> void:
 	_diz("o jogo arranca com um jogador", true,
 		"origem %s" % String(_jogador.get("class_id")))
 
+	await _passo_rede()
 	await _passo_equipamento()
 	await _passo_atacar()
 	await _passo_inimigos()
@@ -51,6 +52,44 @@ func _jogar() -> void:
 	await _passo_fogueira()
 	await _passo_mundo()
 	_fim()
+
+
+## A entrada de rede nunca pode parecer clicável enquanto o rato está preso.
+## A tecla indicada no HUD tem de abrir o menu real, não apenas libertar o rato.
+func _passo_rede() -> void:
+	var menu := _jogo.get("net_menu") as NetMenu
+	var interface := _jogo.get("hud") as Hud
+	var botao := interface.get_node_or_null("JogarADois") as Button \
+		if interface != null else null
+	var alcancavel := botao != null and botao.visible \
+		and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+	_diz("o botão Jogar a dois está alcançável", alcancavel,
+		"rato livre e botão visível" if alcancavel else (
+			"o rato está capturado enquanto o botão continua visível" if botao != null \
+			and botao.visible else "a entrada de rede não apareceu"))
+	if menu == null or botao == null:
+		return
+
+	botao.pressed.emit()
+	await _esperar(2)
+	var hospedar := menu.get("_host_button") as Button
+	var entrar := menu.get("_join_button") as Button
+	var menu_real := menu.visible and hospedar != null and hospedar.visible \
+		and entrar != null and entrar.visible
+	_diz("o botão abre o menu de rede real", menu_real,
+		"Hospedar e Entrar visíveis" if menu_real \
+		else "Hospedar e Entrar não ficaram disponíveis")
+	_jogo.call("_toggle_network_menu")
+	await _esperar(2)
+
+	await _accionar("toggle_mouse")
+	var tecla_abriu := menu.visible and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+	_diz("a tecla de rede abre o menu e liberta o rato", tecla_abriu,
+		"menu aberto e rato livre" if tecla_abriu \
+		else "a tecla apenas libertou o rato sem abrir Jogar a dois")
+	if menu.visible:
+		_jogo.call("_toggle_network_menu")
+		await _esperar(2)
 
 
 ## O que se leva na mão, e se bate certo com o que a interface diz.
@@ -71,6 +110,23 @@ func _passo_equipamento() -> void:
 	_diz("há geometria pendurada no esqueleto", not pendurados.is_empty(),
 		"ossos com coisa: %s" % ", ".join(pendurados))
 
+	var visual := _jogador.get("_visual") as Node
+	var estado := GameData.save_state_snapshot()
+	var inventario: Dictionary = (estado.get("character", {}) as Dictionary).get(
+		"inventory", {}) as Dictionary
+	var esperada: Array = (inventario.get("equipment", {}) as Dictionary).get(
+		"armor", []) as Array
+	var visivel: Array = visual.call("equipped_piece_ids") as Array \
+		if visual != null and visual.has_method("equipped_piece_ids") else []
+	var faltam: Array[String] = []
+	for peca: Variant in esperada:
+		if not String(peca) in visivel:
+			faltam.append(String(peca))
+	_diz("a armadura equipada aparece no boneco",
+		not esperada.is_empty() and faltam.is_empty(),
+		"peças sem geometria: %s" % ", ".join(faltam) if not faltam.is_empty() \
+		else "%d peça(s) equipadas e visíveis" % esperada.size())
+
 	# ⚠️ Uma arma abaixo do requisito corta o dano: o jogador começa castigado.
 	var aviso := String(_jogador.get("requirement_warning")) if "requirement_warning" in _jogador else ""
 	_diz("a arma inicial cumpre o requisito da origem", aviso == "",
@@ -89,7 +145,8 @@ func _passo_atacar() -> void:
 	_diz("atacar muda a pose do boneco", antes != meio,
 		"o esqueleto não se mexeu entre o repouso e o meio do golpe" if antes == meio else "")
 
-	var estado := String(_jogador.get("state_name")) if "state_name" in _jogador else "?"
+	var estado := String(_jogador.call("state_name")) \
+		if _jogador.has_method("state_name") else "?"
 	_diz("atacar entra em estado de ataque", estado != "?", "estado=%s" % estado)
 
 
@@ -103,20 +160,71 @@ func _passo_inimigos() -> void:
 	var alvo: Node3D = inimigos[0] as Node3D
 	if alvo == null:
 		return
+	await _provar_telegrafo(alvo)
+
 	# Mata-o à força e vê o que acontece ao corpo — a queixa foi "morrem e
 	# ficam-se a mexer, pretos".
-	if alvo.has_method("apply_damage"):
-		alvo.call("apply_damage", 99999.0)
-	elif "health" in alvo:
-		alvo.set("health", 0.0)
+	if alvo.has_method("take_damage"):
+		var morte := DamageInfo.make(float(alvo.get("health")), _jogador, "heavy")
+		alvo.call("take_damage", morte)
 	await _esperar(60)
 
 	var vivo := is_instance_valid(alvo)
 	var pos_a := alvo.global_position if vivo else Vector3.ZERO
 	await _esperar(60)
 	var mexeu := vivo and alvo.global_position.distance_to(pos_a) > 0.05
-	_diz("o inimigo morto pára de se mexer", not mexeu,
+	var morreu := vivo and alvo.has_method("is_alive") and not bool(alvo.call("is_alive"))
+	_diz("o dano real mata o inimigo", morreu,
+		"estado DEAD confirmado" if morreu else "a prova não chegou ao estado DEAD")
+	_diz("o inimigo morto pára a IA e fica quieto", morreu and not mexeu \
+		and not alvo.is_physics_processing(),
 		"continuou a deslocar-se depois de morrer" if mexeu else "")
+
+	var visual := alvo.get("_visual") as Node
+	var animacao := String(visual.get("_current_animation")) if visual != null else ""
+	var tinta: Variant = visual.get("_current_tint") if visual != null else null
+	_diz("o cadáver toca Death01 uma vez", animacao.to_lower().contains("death"),
+		"animação actual=%s" % animacao)
+	var tinta_inteira := typeof(tinta) == TYPE_COLOR \
+		and (tinta as Color).is_equal_approx(Color.WHITE)
+	_diz("o cadáver não fica preto", tinta_inteira,
+		"material conserva a cor" if tinta_inteira else "a morte escureceu o material")
+	var placement_id := String(alvo.get_meta("placement_id", ""))
+	_diz("o cadáver tem identidade para o descanso", placement_id != "",
+		placement_id if placement_id != "" \
+		else "sem placement_id a fogueira recusa depois de uma morte real")
+
+
+## O aviso tem de existir durante o startup e antes de a vida descer.
+func _provar_telegrafo(alvo: Node3D) -> void:
+	var ficha: Dictionary = alvo.get("data") as Dictionary
+	var ataques: Array = ficha.get("attacks", []) as Array
+	if ataques.is_empty() or not alvo.has_method("_begin_attack"):
+		_diz("o inimigo telegrafa antes de bater", false, "não há ataque executável")
+		return
+	var ataque := ataques[0] as Dictionary
+	var posicao_jogador := _jogador.global_position
+	var vida_original := float(_jogador.get("health"))
+	_jogador.set("health", _jogador.get("max_health"))
+	_jogador.global_position = alvo.global_position + Vector3(0.0, 0.1, -1.5)
+	alvo.set("target", _jogador)
+	alvo.look_at(_jogador.global_position, Vector3.UP)
+	alvo.call("_begin_attack", ataque)
+	await _esperar(2)
+	var vida_antes := float(_jogador.get("health"))
+	var anunciou := int(alvo.call("telegraphing_parryable")) >= 0 \
+		and is_instance_valid(alvo.get("_active_gameplay_cue"))
+	var nao_bateu_cedo := is_equal_approx(float(_jogador.get("health")), vida_antes)
+	var startup := int(ataque.get("startup", 30))
+	var activos := int(ataque.get("active", 6))
+	await _esperar(startup + activos + 2)
+	var bateu := float(_jogador.get("health")) < vida_antes
+	_diz("o inimigo telegrafa o ataque antes de bater",
+		anunciou and nao_bateu_cedo and bateu,
+		"aviso=%s, dano antes=%s, dano depois=%s" % [
+			anunciou, not nao_bateu_cedo, bateu])
+	_jogador.global_position = posicao_jogador
+	_jogador.set("health", vida_original)
 
 
 ## As ranhuras rápidas têm de ter coisas e a tecla tem de as usar.
@@ -154,9 +262,10 @@ func _passo_fogueira() -> void:
 	Input.action_release("interact")
 	await _esperar(150)
 	var vida_depois := float(_jogador.get("health"))
-	_diz("descansar na fogueira cura", vida_depois > vida_antes,
-		"vida %.0f -> %.0f (a mensagem no ecrã era 'Não foi possível descansar agora')"
-			% [vida_antes, vida_depois])
+	var descansou := vida_depois > vida_antes
+	_diz("descansar na fogueira cura", descansou,
+		"vida %.0f -> %.0f" % [vida_antes, vida_depois] if descansou \
+		else "vida %.0f -> %.0f; o descanso foi recusado" % [vida_antes, vida_depois])
 
 
 ## O mundo tem as coisas que o jogo promete.
@@ -171,12 +280,12 @@ func _passo_mundo() -> void:
 		for f in no.get_children():
 			por_ver.append(f)
 	_diz("o gestor de espólio existe na cena", gestor != null,
-		"WorldPickupManager não foi encontrado — nada de baús nem de coisas no chão")
+		"WorldPickupManager montado" if gestor != null \
+		else "WorldPickupManager não foi encontrado — nada de baús nem de coisas no chão")
 	if gestor != null:
-		var n := 0
-		for f in gestor.get_children():
-			n += 1
-		_diz("o gestor tem coisas dentro", n > 0, "%d filhos" % n)
+		var baus := int(gestor.call("chest_count")) \
+			if gestor.has_method("chest_count") else 0
+		_diz("o gestor monta os três baús de Brumal", baus == 3, "%d baús" % baus)
 	var fps := Engine.get_frames_per_second()
 	_diz("corre a 60 fps", fps >= 55.0, "%.0f fps" % fps)
 
@@ -213,3 +322,16 @@ func _achar_esqueleto(no: Node) -> Skeleton3D:
 func _esperar(frames: int) -> void:
 	for _i in frames:
 		await get_tree().process_frame
+
+
+func _accionar(action: String) -> void:
+	var pressed := InputEventAction.new()
+	pressed.action = action
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await _esperar(2)
+	var released := InputEventAction.new()
+	released.action = action
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _esperar(2)
