@@ -53,7 +53,12 @@ func _tick_boss_phase() -> void:
 
 
 func _begin_pattern() -> void:
-	if _anti_kite_ready() or not is_instance_valid(_arena_vorgar):
+	# O cronometro anti-kite so tem prioridade quando o catalogo fornece uma
+	# resposta anti-kite executavel. Vorgar nao tem uma; tratar o cronometro como
+	# ataque fazia qualquer jogador que corresse durante quatro segundos saltar
+	# SEPARAR/JUNTAR para sempre, embora as sequencias existissem na ficha.
+	if (_anti_kite_ready() and _has_catalogued_anti_kite_attack()) \
+			or not is_instance_valid(_arena_vorgar):
 		_normal_patterns_since_sequence += 1
 		super._begin_pattern()
 		return
@@ -69,6 +74,13 @@ func _begin_pattern() -> void:
 		super._begin_pattern()
 		return
 	_start_coop_sequence(sequence)
+
+
+func _has_catalogued_anti_kite_attack() -> bool:
+	for attack_value: Variant in data.get("attacks", []):
+		if bool((attack_value as Dictionary).get("anti_kite_only", false)):
+			return true
+	return false
 
 
 func _start_coop_sequence(sequence: Dictionary) -> void:
