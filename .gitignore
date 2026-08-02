@@ -32,3 +32,4 @@ desktop.ini
 # Node (as ferramentas de apoio)
 node_modules/
 graphify-out/
+.codex-a-correr
