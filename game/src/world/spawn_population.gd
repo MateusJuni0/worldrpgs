@@ -189,6 +189,7 @@ func initialize(main_node: Node, player_node: Node3D, world_node: Node3D,
 	var named_catalog: Dictionary = _game_data.get("named_catalog") as Dictionary
 	_plan = build_plan(zone_id, enemies, named_catalog)
 	_assign_brumal_positions()
+	_append_lair_placements()
 	var budget: Dictionary = ((enemies.get("_zone_budgets", {}) as Dictionary).get(
 		zone_id, {}) as Dictionary)
 	var defaults: Dictionary = enemies.get("_enemy_defaults", {}) as Dictionary
@@ -453,6 +454,29 @@ func _assign_brumal_positions() -> void:
 		elif kind == "guardian":
 			position = _guardian_position()
 		placement["position"] = position
+
+
+func _append_lair_placements() -> void:
+	if not is_instance_valid(_lair) or not _lair.has_method("get_enemy_markers"):
+		return
+	# A arquitectura e o catalogo sao as duas autoridades: cada marcador fornece
+	# a posicao/papel e Main resolve o ID sem duplicar uma lista de conteudo aqui.
+	var markers: Array = _lair.call("get_enemy_markers") as Array
+	for marker_value: Variant in markers:
+		var marker := marker_value as Marker3D
+		if marker == null:
+			continue
+		var enemy_id := String(_main.call("_enemy_id_for_lair_marker", marker))
+		if enemy_id.is_empty():
+			continue
+		_plan.append({
+			"kind": "lair",
+			"zone_id": _zone_id,
+			"enemy_id": enemy_id,
+			"world_type_id": enemy_id,
+			"placement_id": "%s:lair:%s" % [_zone_id, String(marker.name)],
+			"position": marker.global_position,
+		})
 
 
 func _guardian_position() -> Vector3:

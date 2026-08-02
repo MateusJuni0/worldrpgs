@@ -467,50 +467,6 @@ func _populate() -> void:
 			}
 
 
-func _populate_zone() -> void:
-	var p := world.path_points
-	# spec/27, primeiros cinco minutos: vazio -> um de costas -> dois de frente
-	# -> brutamontes no arco -> descanso e bivaque ao longe.
-	var lone := _spawn("orc_spearman", p[1] + Vector3.UP * 0.5)
-	_face_enemy_towards(lone, p[2])
-	var approach := (p[2] - p[1]).normalized()
-	var right := Vector3(approach.z, 0.0, -approach.x)
-	var spear_left := _spawn("orc_spearman", p[2] - right * 2.6 + Vector3.UP * 0.5)
-	var spear_right := _spawn("orc_spearman", p[2] + right * 2.6 + Vector3.UP * 0.5)
-	_face_enemy_towards(spear_left, p[1])
-	_face_enemy_towards(spear_right, p[1])
-	var brute := _spawn("orc_brute", p[3] + Vector3.UP * 0.5)
-	_face_enemy_towards(brute, p[2])
-
-	for camp_offset: Vector3 in [Vector3(-3.2, 0.5, 1.5),
-			Vector3(3.0, 0.5, 1.2), Vector3(0.5, 0.5, -3.0)]:
-		var camper := _spawn("orc_spearman", world.camp_point + camp_offset)
-		_face_enemy_towards(camper, world.rest_point)
-
-	# Os pontos de aprendizagem sao as ancoras que o tutorial usa para ensinar no
-	# sitio certo. Vem do HEAD; apontam agora para a disposicao do spec/27.
-	_learning_points = {
-		"attack": p[1],
-		"dodge": p[2],
-		"parry": p[3],
-		"flask": p[4],
-	}
-
-	# A arquitectura da Toca e a autoridade sobre encontros. O primeiro termo do
-	# papel (lanceiro/brutamontes) resolve o inimigo pelo nome do catalogo, sem uma
-	# segunda lista de IDs que possa ficar para tras.
-	if is_instance_valid(lair):
-		for marker: Marker3D in lair.get_enemy_markers():
-			var enemy_id := _enemy_id_for_lair_marker(marker)
-			if not enemy_id.is_empty():
-				_spawn(enemy_id, marker.global_position)
-
-	var defeated: Array = ((GameData.save_state.get("world", {}) as Dictionary).get(
-		"bosses_defeated", []) as Array)
-	if not "vorgar" in defeated:
-		_register_boss(_spawn("vorgar", _vorgar_spawn_position(), BossVorgar.new()))
-
-
 func _vorgar_spawn_position() -> Vector3:
 	if is_instance_valid(lair):
 		var marker := lair.get_node_or_null("Boss_Vorgar") as Marker3D
@@ -543,13 +499,6 @@ func _enemy_id_for_lair_marker(marker: Marker3D) -> String:
 			return enemy_id
 	push_warning("A Toca nao encontrou no catalogo o papel '%s'" % architecture_role)
 	return ""
-
-
-func _face_enemy_towards(enemy: Enemy, point: Vector3) -> void:
-	var direction := point - enemy.global_position
-	direction.y = 0.0
-	if direction.length_squared() > 0.001:
-		enemy.rotation.y = atan2(-direction.x, -direction.z)
 
 
 # --- Morte e recomeco ---------------------------------------------------------
