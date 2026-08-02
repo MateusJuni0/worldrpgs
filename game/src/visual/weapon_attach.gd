@@ -14,6 +14,9 @@ const CENTIMETRES_PER_METRE := 100.0
 # GDScript. Alternativa descartada: dicionarios EXACT_MODELS/FAMILY_MODELS; foi
 # precisamente uma lista dessas que deixou conteudo existente invisivel.
 
+# Cacheia o resultado da mesma fronteira usada pelo corpo. As armas importadas
+# partilham a entrada pela identidade do material-fonte; as procedurais pelo
+# nome do material. Assim trocar de arma nao recompila o shader de recorte.
 static var _visual_materials := {}
 
 const RIGHT_HAND_CANDIDATES := [
@@ -177,7 +180,7 @@ func _replace_model(attachment: BoneAttachment3D, previous: Node3D,
 			push_error("[weapon-attach] modelo nao importavel: %s" % scene_path)
 			return null
 		model = packed.instantiate() as Node3D
-		_tune_imported_materials(model)
+		_tune_imported_materials(model, weapon_data)
 	if model == null:
 		push_error("[weapon-attach] sem geometria credivel: %s" % weapon_id)
 		return null
@@ -544,13 +547,14 @@ static func _box_mesh_instance(node_name: String, size: Vector3,
 
 
 static func _visual_material(key: String, colour: Color, roughness: float,
-		metallic: float) -> StandardMaterial3D:
+		metallic: float) -> ShaderMaterial:
 	if _visual_materials.has(key):
-		return _visual_materials[key] as StandardMaterial3D
-	var material := StandardMaterial3D.new()
-	material.albedo_color = colour
-	material.roughness = roughness
-	material.metallic = metallic
+		return _visual_materials[key] as ShaderMaterial
+	var source := StandardMaterial3D.new()
+	source.albedo_color = colour
+	source.roughness = roughness
+	source.metallic = metallic
+	var material := CharacterVisual._shared_material_for(source)
 	_visual_materials[key] = material
 	return material
 
@@ -595,9 +599,16 @@ static func _disable_prop_shadows(model: Node3D) -> void:
 			GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 
-static func _tune_imported_materials(model: Node3D) -> void:
-	# Os atlas KayKit sao vivos para leitura a distancia. Multiplica a textura,
-	# sem a apagar, para a paleta fria/desgastada do conceito aprovado.
+static func _tune_imported_materials(model: Node3D, weapon_data: Dictionary) -> void:
+	# Os atlas KayKit conservam a textura e recebem apenas a resposta mate do
+	# conceito aprovado. O resultado entra pela fronteira do corpo: e ela que
+	# levanta texturas escuras e aplica a luz de recorte ao escudo e a todas as
+	# outras silhuetas equipadas.
+	# O verso do atlas de escudo mede ~25/255 na cena real mesmo depois da curva
+	# do corpo. Levanta-se pelo tipo declarado no catalogo, nunca por uma lista de
+	# IDs; a textura, o aro e o veio continuam a ser a arte importada.
+	var albedo_lift := 3.0 \
+		if not String(weapon_data.get("familia_escudo", "")).is_empty() else 1.0
 	for descendant: Node in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := descendant as MeshInstance3D
 		if mesh_instance.mesh == null:
@@ -611,11 +622,24 @@ static func _tune_imported_materials(model: Node3D) -> void:
 				mesh_instance.set_surface_override_material(surface_index,
 					_visual_material("imported_fallback", Color("788080"), 0.72, 0.04))
 				continue
-			var tuned := source.duplicate() as StandardMaterial3D
-			tuned.albedo_color *= Color(0.68, 0.70, 0.70, 1.0)
-			tuned.roughness = maxf(tuned.roughness, 0.68)
-			tuned.metallic = minf(tuned.metallic, 0.18)
-			mesh_instance.set_surface_override_material(surface_index, tuned)
+			mesh_instance.set_surface_override_material(surface_index,
+				_shared_imported_material_for(source, albedo_lift))
+
+
+static func _shared_imported_material_for(source: StandardMaterial3D,
+		albedo_lift: float) -> ShaderMaterial:
+	var key := "imported:%d:%.2f" % [source.get_instance_id(), albedo_lift]
+	if _visual_materials.has(key):
+		return _visual_materials[key] as ShaderMaterial
+	var tuned := source.duplicate() as StandardMaterial3D
+	var albedo := tuned.albedo_color
+	tuned.albedo_color = Color(albedo.r * albedo_lift, albedo.g * albedo_lift,
+		albedo.b * albedo_lift, albedo.a)
+	tuned.roughness = maxf(tuned.roughness, 0.68)
+	tuned.metallic = minf(tuned.metallic, 0.18)
+	var material := CharacterVisual._shared_material_for(tuned)
+	_visual_materials[key] = material
+	return material
 
 
 static func _find_hand_bone(skeleton: Skeleton3D, right_hand: bool) -> String:
