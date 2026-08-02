@@ -54,7 +54,7 @@ O `MAPA.md` é gerado pelo [`tools/mapa.mjs`](tools/mapa.mjs), que **varria o di
 
 ⚠️ **Incidente de desenvolvimento já recuperado:** a primeira versão da prova deixou o perfil temporário chegar ao slot 0. Foi detectado na própria execução, o slot e o backup foram restaurados byte a byte a partir de `saves.backup-165816`, e a quarentena contendo apenas os dois `prova-*` foi depois removida. A prova final usa slots altos exclusivos, limpa `.json/.bak/.tmp` e recusa terminar verde se deixar um perfil seu nos slots 0–2; as execuções finais não deixaram nenhum.
 
-⚠️ **Regressão global fora desta árvore:** em três execuções, `scenes/selftest.tscn` terminou **9763/9764**; a única falha foi `jogo real: os marcadores da Toca tem encontro (com corpo ou planeado)` em `scenes/selftest_integrated.gd:93`. Rede/coop passa e não cria corpo quando offline. O dono de `SpawnPopulation`/prova integrada precisa alinhar plano e marcadores; esta árvore não pode editar esses ficheiros.
+✅ **Regressão global fechada no estado integrado:** `scenes/selftest.tscn` terminou **9765/9765** em 02-08; a verificação `jogo real: os marcadores da Toca tem encontro (com corpo ou planeado)` voltou a passar. Rede/coop continua sem criar corpo quando offline.
 
 ---
 
