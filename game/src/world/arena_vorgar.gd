@@ -26,6 +26,8 @@ signal revive_channel_cancelled(reason: String)
 signal player_revived(player: Node3D)
 signal revive_window_expired(player: Node3D)
 
+const PILOTO_COMBATE_SCRIPT = preload("res://src/tools/piloto_combate.gd")
+
 var arena_id := StringName()
 var _arena_contract: Dictionary = {}
 var _marker_positions: Dictionary = {}
@@ -81,21 +83,10 @@ var _resurrection_was_used := false
 const FULL_FIGHT_PROOF_ARG := "--vorgar-full-fight-proof"
 
 var _proof_running := false
-var _proof_pulsed_actions: Array[String] = []
-var _proof_oriented_target_id := 0
-var _proof_dodged_attacks: Dictionary = {}
-var _proof_pending_dodge_key := ""
-var _proof_pending_dodge_direction := Vector3.ZERO
-var _proof_dodge_release_sent := false
-var _proof_visible_sequences: Dictionary = {}
-var _proof_finished_sequences: Dictionary = {}
-var _proof_active_objective := ""
+var _proof_pilot: PilotoCombate
 var _proof_hits_landed := 0
 var _proof_hits_received := 0
 var _proof_deaths := 0
-var _proof_parries := 0
-var _proof_dodges := 0
-var _proof_blocks := 0
 var _proof_last_boss_health := 0.0
 var _proof_last_player_health := 0.0
 
@@ -1555,6 +1546,8 @@ func _run_full_fight_proof() -> void:
 	if _proof_running:
 		return
 	_proof_running = true
+	_proof_pilot = PILOTO_COMBATE_SCRIPT.new() as PilotoCombate
+	_proof_pilot.configure(get_tree(), self)
 	var game: Node = _boss.get_parent() if is_instance_valid(_boss) else null
 	var player: Player = game.get("player") as Player if game != null else null
 	var hud: Hud = game.get("hud") as Hud if game != null else null
@@ -1600,18 +1593,14 @@ func _run_full_fight_proof() -> void:
 	_proof_last_player_health = player.health
 	boss.hit_landed.connect(_proof_on_boss_hit_landed)
 	var starting_health := boss.health
-	var expected_hits := _proof_expected_light_hits(player, boss)
+	var expected_hits := _proof_pilot.expected_light_hits(player, boss)
 	var start_frame := Engine.get_physics_frames()
-	var deadline := start_frame + _proof_frame_budget(player, boss, expected_hits)
+	var deadline := start_frame + _proof_pilot.frame_budget(player, boss, expected_hits)
 	print(("[vorgar-prova] JOGO REAL: %.0f PV, barra visivel, %s, " \
 		+ "estimativa %d golpes; jogador %.0f/%.0f PV, %d frascos") % [
 		starting_health, player.main_weapon, expected_hits, player.health,
 		player.max_health, player.flask_uses])
-	Input.action_press("lock_on")
-	await get_tree().physics_frame
-	Input.action_release("lock_on")
-	await get_tree().physics_frame
-	if player.lock_on == null or player.lock_on.target != boss:
+	if not await _proof_pilot.lock_on(player, boss):
 		_proof_fail("carregar na accao lock_on nao fixou o Vorgar visivel")
 		return
 	await get_tree().process_frame
@@ -1641,11 +1630,11 @@ func _run_full_fight_proof() -> void:
 			await _proof_capture("vorgar-tempo-esgotado")
 			_proof_fail("a luta nao acabou no orcamento derivado dos ciclos catalogados")
 			return
-		_proof_drive_frame(player, boss)
+		_proof_pilot.drive_frame(player, boss)
 		await get_tree().physics_frame
 
 	_proof_observe_health(player, boss)
-	_proof_release_all_inputs()
+	_proof_pilot.release_all_inputs()
 	for _frame: int in int(GameData.section("hit_stop").get("kill", 1)):
 		await get_tree().process_frame
 	var elapsed_frames := Engine.get_physics_frames() - start_frame
@@ -1659,9 +1648,9 @@ func _run_full_fight_proof() -> void:
 	var missing_finished: Array[String] = []
 	for objective_value: Variant in expected_objectives:
 		var objective := String(objective_value)
-		if not bool(_proof_visible_sequences.get(objective, false)):
+		if not bool(_proof_pilot.visible_sequences.get(objective, false)):
 			missing_visible.append(objective)
-		if not bool(_proof_finished_sequences.get(objective, false)):
+		if not bool(_proof_pilot.finished_sequences.get(objective, false)):
 			missing_finished.append(objective)
 	var expected_toast := GameData.ui_text("toast.boss_defeated")
 	var defeated_panel_visible := combat_target.visible \
@@ -1681,47 +1670,14 @@ func _run_full_fight_proof() -> void:
 	print("=== VORGAR LUTA REAL OK ===")
 	print(("[vorgar-prova] vida %.0f -> %.0f; golpes=%d; duracao=%.2f s; " \
 		+ "mortes=%d; parries=%d; esquivas=%d; bloqueios=%d") % [starting_health, boss.health,
-		_proof_hits_landed, elapsed_seconds, _proof_deaths, _proof_parries,
-		_proof_dodges, _proof_blocks])
+		_proof_hits_landed, elapsed_seconds, _proof_deaths, _proof_pilot.parries,
+		_proof_pilot.dodges, _proof_pilot.blocks])
 	print("[vorgar-prova] SEPARAR e JUNTAR: sinal visivel + sequencia completa")
 	print("[vorgar-prova] resultado visivel: painel=%s; toast=%s" % [
 		combat_phase.text, toast.text])
 	if not capture_path.is_empty():
 		print("[vorgar-prova] captura=%s" % capture_path)
 	get_tree().quit(0)
-
-
-func _proof_expected_light_hits(player: Player, boss: Enemy) -> int:
-	var weapon := GameData.weapon(player.main_weapon)
-	var light := weapon.get("light", {}) as Dictionary
-	var damage := GameData.compute_damage(float(light.get("mv")), player.main_weapon,
-		player.attrs, boss.defense)
-	return ceili(boss.health / maxf(damage, 1.0))
-
-
-func _proof_frame_budget(player: Player, boss: Enemy, expected_hits: int) -> int:
-	var longest_enemy_cycle := 0
-	for attack_value: Variant in boss.data.get("attacks", []):
-		var attack := attack_value as Dictionary
-		longest_enemy_cycle = maxi(longest_enemy_cycle, int(attack.get("startup")) \
-			+ int(attack.get("active")) + int(attack.get("recovery")))
-	for sequence_value: Variant in (_config.get("coop_sequences", {}) as Dictionary).values():
-		var sequence := sequence_value as Dictionary
-		longest_enemy_cycle = maxi(longest_enemy_cycle, int(sequence.get("startup")) \
-			+ int(sequence.get("active")) + int(sequence.get("recovery")))
-	var weapon := GameData.weapon(player.main_weapon)
-	var light := weapon.get("light", {}) as Dictionary
-	var player_cycle := int(light.get("startup")) + int(light.get("active")) \
-		+ int(light.get("recovery"))
-	var longest_gap_frames := 0
-	for phase_value: Variant in (boss.data.get("phases", {}) as Dictionary).values():
-		var phase := phase_value as Dictionary
-		longest_gap_frames = maxi(longest_gap_frames, ceili(
-			float(phase.get("gap_between_patterns")) \
-			* float(GameData.combat.get("reference_fps"))))
-	var phase_count := maxi(1, (boss.data.get("phases", {}) as Dictionary).size())
-	return maxi(1, expected_hits) * maxi(1,
-		longest_enemy_cycle + player_cycle + longest_gap_frames) * phase_count
 
 
 func _proof_observe_health(player: Player, boss: Enemy) -> void:
@@ -1751,243 +1707,24 @@ func _proof_on_boss_hit_landed(victim: Node3D, damage: float, _origin: Vector3) 
 		int(boss.get("_atk_frame"))])
 
 
-func _proof_drive_frame(player: Player, boss: Enemy) -> void:
-	if not _proof_pending_dodge_key.is_empty() and player.state == Player.State.DODGE:
-		_proof_dodged_attacks[_proof_pending_dodge_key] = true
-		_proof_pending_dodge_key = ""
-		_proof_pending_dodge_direction = Vector3.ZERO
-		_proof_dodge_release_sent = false
-	_proof_release_pulses()
-	Input.action_release("block")
-	_proof_clear_movement()
-	var objective := String(_active_sequence.get("objectivo_coop", ""))
-	if objective != "":
-		# A pergunta espacial substitui qualquer toque defensivo anterior: ficar a
-		# espera de uma esquiva cancelada fazia o jogador ignorar a zona JUNTAR.
-		_proof_pending_dodge_key = ""
-		_proof_pending_dodge_direction = Vector3.ZERO
-		_proof_dodge_release_sent = false
-		if objective != _proof_active_objective:
-			print("[vorgar-prova] fase espacial iniciou: %s" % objective.to_upper())
-		_proof_active_objective = objective
-		if sequence_visuals_visible() and _proof_has_visible_sequence_label():
-			_proof_visible_sequences[objective] = true
-		_proof_drive_sequence(player, objective)
-		_proof_oriented_target_id = 0
-		return
-	if not _proof_active_objective.is_empty():
-		if bool(_proof_visible_sequences.get(_proof_active_objective, false)):
-			_proof_finished_sequences[_proof_active_objective] = true
-			print("[vorgar-prova] fase espacial completou: %s" \
-				% _proof_active_objective.to_upper())
-			_proof_active_objective = ""
-	# O toque de esquiva precisa de um frame em que Espaço esteja efectivamente
-	# largado. Recarregar aqui transformava o toque num sprint e o jogador levava
-	# todas as investidas apesar de o contador dizer "esquiva". Se o estado nao
-	# nascer no tick seguinte (por exemplo, por hit-stun), a espera e cancelada.
-	if not _proof_pending_dodge_key.is_empty():
-		if not _proof_dodge_release_sent:
-			_proof_dodge_release_sent = true
-			_proof_set_movement(player, _proof_pending_dodge_direction, false)
-			return
-		_proof_pending_dodge_key = ""
-		_proof_pending_dodge_direction = Vector3.ZERO
-		_proof_dodge_release_sent = false
-
-	var waiting_for_sequence := _proof_waiting_for_catalogued_sequence(boss)
-	var threat := _proof_next_threat()
-	var should_heal := _proof_should_heal(player)
-	if player.state == Player.State.USING_ITEM:
-		_proof_set_movement(player, _proof_direction_away_from_enemies(player), false)
-		_proof_oriented_target_id = 0
-		return
-	if should_heal and player.state == Player.State.FREE:
-		var flask_frames := ceili(float(GameData.section("flask").get("use_seconds")) \
-			* float(GameData.combat.get("reference_fps")))
-		if threat.is_empty() or int(threat.get("frames_until_active")) > flask_frames:
-			_proof_set_movement(player, _proof_direction_away_from_enemies(player), false)
-			_proof_pulse("use_item")
-			_proof_oriented_target_id = 0
-			return
-	if not threat.is_empty():
-		var threat_enemy := threat.get("enemy") as Enemy
-		var frames_until_active := int(threat.get("frames_until_active"))
-		var dodge := GameData.section("dodge")
-		var parry := GameData.section("parry")
-		# A esquiva nasce de um toque: um tick para carregar e outro para largar.
-		# A janela invulneravel so abre depois desses dois flancos de entrada.
-		var input_edge_frames := maxi(1, ceili(float(Engine.physics_ticks_per_second) \
-			/ float(GameData.combat.get("reference_fps"))))
-		var dodge_input_lead := int(dodge.get("iframe_start_frame")) \
-			+ input_edge_frames * 2
-		var parry_input_lead := int(parry.get("startup_frames")) + input_edge_frames
-		var attack_key := String(threat.get("key"))
-		var away := player.global_position - threat_enemy.global_position
-		away.y = 0.0
-		var lateral := Vector3(-away.z, 0.0, away.x).normalized()
-		var threat_attack := threat.get("attack") as Dictionary
-		var escape := _proof_escape_direction(player, threat_enemy, threat_attack)
-		var escape_vectors := threat_attack.get("vectores_fuga", []) as Array
-		var escape_needs_sprint := escape_vectors.has("afastar_se") \
-			or escape_vectors.has("sair_da_area") or escape_vectors.has("rolar_para_fora")
-		var attack_commitment := _proof_player_attack_commitment_frames(player)
-		if should_heal or frames_until_active <= attack_commitment:
-			var lethal_now := player.health <= _proof_largest_incoming_damage(player)
-			if bool(threat.get("parryable", false)) and lethal_now:
-				_proof_set_movement(player,
-					(threat_enemy.global_position - player.global_position).normalized(), false)
-				Input.action_press("block")
-				if not bool(_proof_dodged_attacks.get(attack_key, false)):
-					_proof_blocks += 1
-					_proof_dodged_attacks[attack_key] = true
-			elif bool(threat.get("parryable", false)) \
-					and frames_until_active <= parry_input_lead \
-					and not bool(_proof_dodged_attacks.get(attack_key, false)):
-				_proof_set_movement(player,
-					(threat_enemy.global_position - player.global_position).normalized(), false)
-				_proof_pulse("parry")
-				_proof_parries += 1
-				_proof_dodged_attacks[attack_key] = true
-			elif frames_until_active <= dodge_input_lead \
-					and not bool(_proof_dodged_attacks.get(attack_key, false)):
-				_proof_set_movement(player, escape, false)
-				_proof_pulse("dodge_sprint")
-				if _proof_pending_dodge_key != attack_key:
-					_proof_dodges += 1
-				_proof_pending_dodge_key = attack_key
-				_proof_pending_dodge_direction = escape
-				_proof_dodge_release_sent = false
-			else:
-				_proof_set_movement(player, escape if not escape.is_zero_approx() \
-					else lateral, escape_needs_sprint)
-			_proof_oriented_target_id = 0
-			return
-	if player.state != Player.State.FREE or not player.stamina.can_act():
-		_proof_set_sprint(false)
-		return
-	if waiting_for_sequence:
-		_proof_set_sprint(false)
-		_proof_oriented_target_id = 0
-		return
-	if not _proof_attack_window_open(player, boss):
-		_proof_set_sprint(false)
-		_proof_oriented_target_id = 0
-		return
-
-	var target := _proof_attack_target(player, boss)
-	if target == null:
-		_proof_set_sprint(false)
-		return
-	var weapon := GameData.weapon(player.main_weapon)
-	var light := weapon.get("light", {}) as Dictionary
-	var defensive_reserve := maxf(float(GameData.section("dodge").get("stamina_cost")),
-		float(GameData.section("parry").get("stamina_cost")))
-	if player.stamina.current < float(light.get("stamina")) + defensive_reserve:
-		var recover_away := player.global_position - boss.global_position
-		recover_away.y = 0.0
-		_proof_set_movement(player, recover_away.normalized(), false)
-		_proof_oriented_target_id = 0
-		return
-	var reach := float(weapon.get("range"))
-	var to_target := target.global_position - player.global_position
-	to_target.y = 0.0
-	if to_target.length() > reach:
-		_proof_set_movement(player, to_target.normalized(), false)
-		_proof_oriented_target_id = 0
-		return
-	if _proof_oriented_target_id != target.get_instance_id():
-		_proof_set_movement(player, to_target.normalized(), false)
-		_proof_oriented_target_id = target.get_instance_id()
-		return
-	_proof_pulse("attack")
-	_proof_oriented_target_id = 0
+func piloto_objectivo_activo() -> String:
+	return String(_active_sequence.get("objectivo_coop", ""))
 
 
-func _proof_waiting_for_catalogued_sequence(boss: Enemy) -> bool:
+func piloto_sequencia_visivel() -> bool:
+	return sequence_visuals_visible() and _proof_has_visible_sequence_label()
+
+
+func piloto_espera_sequencia(boss: Enemy) -> bool:
 	var phase := str(int(boss.get("_phase")))
 	var plans := _config.get("coop_phase_plan", {}) as Dictionary
 	var plan := plans.get(phase, {}) as Dictionary
 	var sequence_id := String(plan.get("sequence_id", ""))
 	return not sequence_id.is_empty() \
-		and not bool(_proof_finished_sequences.get(sequence_id, false))
+		and not bool(_proof_pilot.finished_sequences.get(sequence_id, false))
 
 
-func _proof_player_attack_commitment_frames(player: Player) -> int:
-	var weapon := GameData.weapon(player.main_weapon)
-	var light := weapon.get("light", {}) as Dictionary
-	var rules := GameData.section("attack_rules")
-	return int(light.get("startup")) + int(light.get("active")) + ceili(
-		float(light.get("recovery")) * float(rules.get("cancel_threshold_fraction_of_recovery")))
-
-
-func _proof_attack_window_open(player: Player, boss: Enemy) -> bool:
-	if boss.state == Enemy.State.BROKEN:
-		return true
-	if boss.state != Enemy.State.ATTACK:
-		return false
-	var attack := boss.get("_atk") as Dictionary
-	if attack.is_empty() or not String(attack.get("objectivo_coop", "")).is_empty():
-		return false
-	var attack_frame := int(boss.get("_atk_frame"))
-	var active_end := int(attack.get("startup")) + int(attack.get("active"))
-	var remaining_recovery := active_end + int(attack.get("recovery")) - attack_frame
-	var light := GameData.weapon(player.main_weapon).get("light", {}) as Dictionary
-	var frames_until_player_hit := int(light.get("startup")) + int(light.get("active"))
-	return attack_frame > active_end \
-		and remaining_recovery >= frames_until_player_hit
-
-
-func _proof_direction_away_from_enemies(player: Player) -> Vector3:
-	var away := Vector3.ZERO
-	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		var enemy := node as Enemy
-		if enemy == null or not enemy.is_alive():
-			continue
-		var delta := player.global_position - enemy.global_position
-		delta.y = 0.0
-		if not delta.is_zero_approx():
-			away += delta.normalized()
-	return away.normalized()
-
-
-func _proof_escape_direction(player: Player, enemy: Enemy, attack: Dictionary) -> Vector3:
-	var vectors := attack.get("vectores_fuga", []) as Array
-	var away := player.global_position - enemy.global_position
-	away.y = 0.0
-	if vectors.has("afastar_se") or vectors.has("sair_da_area") \
-			or vectors.has("rolar_para_fora"):
-		var best_goal := player.global_position + away.normalized()
-		var best_distance := best_goal.distance_to(enemy.global_position)
-		var coop_space := _arena_contract.get("coop_space", {}) as Dictionary
-		for marker_value: Variant in coop_space.get("separate_markers", []):
-			var candidate := marker_position(StringName(String(marker_value)))
-			var distance := candidate.distance_to(enemy.global_position)
-			if distance > best_distance:
-				best_goal = candidate
-				best_distance = distance
-		var toward_goal := best_goal - player.global_position
-		toward_goal.y = 0.0
-		return toward_goal.normalized()
-	if vectors.has("rolar_para_dentro") or vectors.has("aproximar_se"):
-		return -away.normalized()
-	return Vector3(-away.z, 0.0, away.x).normalized()
-
-
-func _proof_attack_target(player: Player, boss: Enemy) -> Enemy:
-	var closest_common: Enemy
-	var closest_distance := INF
-	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		var enemy := node as Enemy
-		if enemy == null or enemy == boss or enemy.is_boss or not enemy.is_alive():
-			continue
-		var distance := player.global_position.distance_to(enemy.global_position)
-		if distance < closest_distance:
-			closest_common = enemy
-			closest_distance = distance
-	return closest_common if closest_common != null else boss
-
-
-func _proof_drive_sequence(player: Player, objective: String) -> void:
+func piloto_conduzir_sequencia(player: Player, objective: String) -> void:
 	var goal := player.global_position
 	var tolerance := 0.0
 	match objective:
@@ -2019,57 +1756,24 @@ func _proof_drive_sequence(player: Player, objective: String) -> void:
 	var direction := goal - player.global_position
 	direction.y = 0.0
 	if direction.length() <= tolerance:
-		_proof_set_sprint(false)
+		_proof_pilot.set_movement(player, Vector3.ZERO, false)
 		return
-	_proof_set_movement(player, direction.normalized(), true)
+	_proof_pilot.set_movement(player, direction.normalized(), true)
 
 
-func _proof_next_threat() -> Dictionary:
-	var chosen: Dictionary = {}
-	var fewest_frames := INF
-	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		var enemy := node as Enemy
-		if enemy == null or not enemy.is_alive() or enemy.telegraphing_parryable() < 0:
-			continue
-		var attack := enemy.get("_atk") as Dictionary
-		if attack.is_empty():
-			continue
-		var attack_frame := int(enemy.get("_atk_frame"))
-		var frames_until_active := int(attack.get("startup")) - attack_frame
-		if frames_until_active >= fewest_frames:
-			continue
-		fewest_frames = frames_until_active
-		var attack_start_frame := Engine.get_physics_frames() - attack_frame
-		chosen = {
-			"enemy": enemy,
-			"attack": attack,
-			"frames_until_active": frames_until_active,
-			"parryable": enemy.telegraphing_parryable() == 1,
-			"key": "%d:%s:%d" % [enemy.get_instance_id(),
-				String(attack.get("id")), attack_start_frame],
-		}
-	return chosen
+func piloto_destinos_de_fuga() -> Array[Vector3]:
+	var goals: Array[Vector3] = []
+	var coop_space := _arena_contract.get("coop_space", {}) as Dictionary
+	for marker_value: Variant in coop_space.get("separate_markers", []):
+		goals.append(marker_position(StringName(String(marker_value))))
+	return goals
 
 
-func _proof_should_heal(player: Player) -> bool:
-	if player.flask_uses <= 0 or player.health >= player.max_health:
-		return false
-	var largest_incoming := _proof_largest_incoming_damage(player)
-	return largest_incoming > 0.0 \
-		and player.health <= player.max_health - largest_incoming
-
-
-func _proof_largest_incoming_damage(player: Player) -> float:
-	var largest_incoming := 0.0
-	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		var enemy := node as Enemy
-		if enemy == null or not enemy.is_alive():
-			continue
-		for attack_value: Variant in enemy.data.get("attacks", []):
-			var attack := attack_value as Dictionary
-			largest_incoming = maxf(largest_incoming,
-				GameData.apply_defense(float(attack.get("damage")), player.defense))
-	return largest_incoming
+func piloto_ciclos_adicionais() -> Array[Dictionary]:
+	var cycles: Array[Dictionary] = []
+	for sequence_value: Variant in (_config.get("coop_sequences", {}) as Dictionary).values():
+		cycles.append(sequence_value as Dictionary)
+	return cycles
 
 
 func _proof_has_visible_sequence_label() -> bool:
@@ -2082,59 +1786,6 @@ func _proof_has_visible_sequence_label() -> bool:
 					and not label.text.is_empty():
 				return true
 	return false
-
-
-func _proof_set_movement(player: Player, world_direction: Vector3, sprint: bool) -> void:
-	_proof_clear_movement()
-	_proof_set_sprint(sprint)
-	if world_direction.is_zero_approx() or player.camera == null:
-		return
-	var direction := world_direction.normalized()
-	var right := player.camera.right_flat()
-	var forward := player.camera.forward_flat()
-	var axis_x := clampf(direction.dot(right), -1.0, 1.0)
-	var axis_y := clampf(-direction.dot(forward), -1.0, 1.0)
-	if axis_x < 0.0:
-		Input.action_press("move_left", -axis_x)
-	elif axis_x > 0.0:
-		Input.action_press("move_right", axis_x)
-	if axis_y < 0.0:
-		Input.action_press("move_forward", -axis_y)
-	elif axis_y > 0.0:
-		Input.action_press("move_back", axis_y)
-
-
-func _proof_clear_movement() -> void:
-	for action: String in ["move_left", "move_right", "move_forward", "move_back"]:
-		Input.action_release(action)
-
-
-func _proof_set_sprint(sprint: bool) -> void:
-	if sprint:
-		if not Input.is_action_pressed("dodge_sprint"):
-			Input.action_press("dodge_sprint")
-	else:
-		Input.action_release("dodge_sprint")
-
-
-func _proof_pulse(action: String) -> void:
-	Input.action_press(action)
-	if not _proof_pulsed_actions.has(action):
-		_proof_pulsed_actions.append(action)
-
-
-func _proof_release_pulses() -> void:
-	for action: String in _proof_pulsed_actions:
-		Input.action_release(action)
-	_proof_pulsed_actions.clear()
-
-
-func _proof_release_all_inputs() -> void:
-	_proof_release_pulses()
-	for action_value: Variant in (GameData.controls.get("actions", {}) as Dictionary).keys():
-		var action := String(action_value)
-		if InputMap.has_action(action):
-			Input.action_release(action)
 
 
 func _proof_capture(label: String) -> String:
@@ -2155,14 +1806,18 @@ func _proof_capture(label: String) -> String:
 
 
 func _proof_fail(message: String) -> void:
-	_proof_release_all_inputs()
+	if _proof_pilot != null:
+		_proof_pilot.release_all_inputs()
 	printerr("=== VORGAR LUTA REAL FALHOU ===")
 	printerr("[vorgar-prova] %s" % message)
 	printerr(("[vorgar-prova] golpes=%d; recebidos=%d; mortes=%d; parries=%d; " \
 		+ "esquivas=%d; bloqueios=%d; visiveis=%s; completas=%s") % [
-		_proof_hits_landed, _proof_hits_received, _proof_deaths, _proof_parries,
-		_proof_dodges, _proof_blocks,
-		str(_proof_visible_sequences), str(_proof_finished_sequences)])
+		_proof_hits_landed, _proof_hits_received, _proof_deaths,
+		_proof_pilot.parries if _proof_pilot != null else 0,
+		_proof_pilot.dodges if _proof_pilot != null else 0,
+		_proof_pilot.blocks if _proof_pilot != null else 0,
+		str(_proof_pilot.visible_sequences if _proof_pilot != null else {}),
+		str(_proof_pilot.finished_sequences if _proof_pilot != null else {})])
 	get_tree().quit(1)
 
 

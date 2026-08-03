@@ -9,15 +9,21 @@ extends Node
 ## `WORLDRPGS_PROOF_CAPTURE_DIR` para uma pasta temporaria.
 
 const GAMEPLAY := preload("res://scenes/gameplay.tscn")
+const PILOTO_COMBATE_SCRIPT := preload("res://src/tools/piloto_combate.gd")
 
 const AQUECIMENTO_FRAMES := 90
 const TOLERANCIA_DESTINO_M := 1.35
 const TOLERANCIA_PROGRESSO_M := 0.08
 const FRAMES_SEM_PROGRESSO := 180
+const TEST_SLOT_MIN := 9000
+const TEST_SLOT_MAX := 9999
+
+enum ResultadoCombate { VITORIA, RESSUSCITOU, APROXIMAR, FALHA }
 
 var _jogo: Node
 var _jogador: Player
 var _camara: Camera3D
+var _piloto: PilotoCombate
 var _dir := ""
 var _tarefas: Array[int] = []
 var _relatorio: Array[String] = []
@@ -26,9 +32,25 @@ var _mortos := 0
 var _mortes_observadas: Dictionary = {}
 var _tipos_vistos: Dictionary = {}
 var _jogador_morreu := false
+var _mortes_jogador := 0
+var _tentativas_maximas := 0
+var _destino_actual := 0
+var _destinos_totais := 0
+var _alvo_actual: Enemy
+var _retomar_da_fogueira := false
+var _proximo_lock_frame := 0
+var _lock_target_id := 0
+var _test_slot := -1
 
 
 func _ready() -> void:
+	_test_slot = _find_unused_test_slot()
+	if _test_slot < 0:
+		_falhar("nao encontrou um slot temporario livre para isolar a prova")
+		_fim()
+		return
+	SaveSystem.active_slot = _test_slot
+	GameData.replace_save_state(SaveSystem.create_save("prova-percurso", "warrior"))
 	_dir = OS.get_environment("WORLDRPGS_PROOF_CAPTURE_DIR")
 	if _dir.is_empty():
 		_dir = ProjectSettings.globalize_path("res://captures/percurso-honesto")
@@ -39,6 +61,8 @@ func _ready() -> void:
 		_fim()
 		return
 	get_tree().node_added.connect(_ao_no_adicionado)
+	_piloto = PILOTO_COMBATE_SCRIPT.new() as PilotoCombate
+	_piloto.configure(get_tree())
 	_jogo = GAMEPLAY.instantiate()
 	add_child(_jogo)
 	_correr.call_deferred()
@@ -61,13 +85,19 @@ func _correr() -> void:
 		_falhar("a cena real nao criou o jogador")
 		_fim()
 		return
-	_jogador.died.connect(_ao_jogador_morrer, CONNECT_ONE_SHOT)
+	_jogador.died.connect(_ao_jogador_morrer)
 	for no: Node in get_tree().get_nodes_in_group("enemies"):
 		_observar_inimigo(no)
 
 	var mundo := _jogo.get("world") as Node3D
 	var rota := _rota_publicada(mundo)
+	_destinos_totais = rota.size()
+	# Uma tentativa inicial e uma nova tentativa por destino publicado. O tecto e
+	# da prova, nao altera qualquer numero de combate nem o jogador.
+	_tentativas_maximas = maxi(1, rota.size())
 	_diz("rota publicada com %d destinos" % rota.size())
+	_diz("tecto da prova: %d tentativas com ressurreicao na fogueira" \
+		% _tentativas_maximas)
 	if rota.is_empty():
 		_falhar("o mundo nao publicou uma rota continua ate a arena")
 		_fim()
@@ -78,24 +108,34 @@ func _correr() -> void:
 	add_child(_camara)
 	_camara.make_current()
 
-	for indice: int in rota.size():
-		if not await _andar_ate(rota[indice]):
-			await _capturar("falha-%02d" % indice)
-			_fim()
-			return
-		_diz("destino %02d/%02d alcancado a pe" % [indice + 1, rota.size()])
-		await _capturar("destino-%02d" % indice)
-
-	_parar_movimento()
-	var chefe := _chefe_vivo()
-	if chefe == null:
-		_falhar("chegou a arena a pe, mas o guardiao nao apareceu")
-		await _capturar("arena-sem-chefe")
+	if not await _atravessar_rota(rota, true):
 		_fim()
 		return
-	_diz("guardiao encontrado na arena: %s" % chefe.display_name())
-	var vida_chefe_inicial := chefe.health
-	var venceu := await _combater(chefe)
+
+	_parar_movimento()
+	var chefe: Enemy
+	var vida_chefe_inicial := 0.0
+	var venceu := false
+	while not venceu:
+		chefe = _chefe_vivo()
+		if chefe == null:
+			_falhar("chegou a arena a pe, mas o guardiao nao apareceu")
+			await _capturar("arena-sem-chefe")
+			_fim()
+			return
+		if vida_chefe_inicial <= 0.0:
+			vida_chefe_inicial = chefe.health
+			_diz("guardiao encontrado na arena: %s" % chefe.display_name())
+		var resultado := await _combater(chefe)
+		if resultado == ResultadoCombate.VITORIA:
+			venceu = true
+		elif resultado == ResultadoCombate.RESSUSCITOU:
+			_diz("a regressar a pe da fogueira ate ao guardiao")
+			if not await _atravessar_rota(rota, false):
+				_fim()
+				return
+		else:
+			break
 	await _capturar("vorgar-derrotado" if venceu else "vorgar-falha")
 	if not venceu:
 		_falhar("a luta real nao derrotou o guardiao")
@@ -107,9 +147,27 @@ func _correr() -> void:
 
 	if _mortos <= 0:
 		_falhar("atravessou a rota sem provar a morte de nenhum inimigo")
-	if _jogador_morreu or not _jogador.is_alive():
-		_falhar("o piloto morreu; nao atravessou o percurso vivo")
 	_fim()
+
+
+func _atravessar_rota(rota: Array[Vector3], anunciar_destinos: bool) -> bool:
+	_retomar_da_fogueira = false
+	var indice := 0
+	while indice < rota.size():
+		_destino_actual = indice + 1
+		if not await _andar_ate(rota[indice]):
+			await _capturar("falha-%02d" % indice)
+			return false
+		if _retomar_da_fogueira:
+			_retomar_da_fogueira = false
+			indice = 0
+			_diz("retomou o percurso desde o primeiro waypoint da fogueira")
+			continue
+		if anunciar_destinos:
+			_diz("destino %02d/%02d alcancado a pe" % [indice + 1, rota.size()])
+			await _capturar("destino-%02d" % indice)
+		indice += 1
+	return true
 
 
 func _rota_publicada(mundo: Node3D) -> Array[Vector3]:
@@ -147,20 +205,27 @@ func _andar_ate(destino: Vector3) -> bool:
 	var lados := [1.0, -1.0]
 	while melhor_distancia > TOLERANCIA_DESTINO_M:
 		if _jogador_morreu or not _jogador.is_alive():
-			_parar_movimento()
-			_falhar("o jogador morreu antes de chegar a %s" % str(destino))
-			return false
+			if not await _esperar_ressurreicao():
+				return false
+			return true
 
 		var inimigo := _inimigo_em_confronto()
 		if inimigo != null:
 			var nome_inimigo := inimigo.display_name()
 			_parar_movimento()
-			if not await _combater(inimigo):
+			var resultado := await _combater(inimigo)
+			if resultado == ResultadoCombate.FALHA:
 				_falhar("nao conseguiu ultrapassar %s no caminho" % nome_inimigo)
 				return false
-			melhor_distancia = _distancia_plana(_jogador.global_position, destino)
-			sem_progresso = 0
-			continue
+			if resultado == ResultadoCombate.RESSUSCITOU:
+				return true
+			if resultado != ResultadoCombate.APROXIMAR:
+				melhor_distancia = _distancia_plana(_jogador.global_position, destino)
+				sem_progresso = 0
+				desvios_tentados = 0
+				continue
+		else:
+			_alvo_actual = null
 
 		var direccao := destino - _jogador.global_position
 		direccao.y = 0.0
@@ -200,189 +265,98 @@ func _contornar(destino: Vector3, lado: float) -> void:
 	_parar_movimento()
 
 
-func _combater(alvo: Enemy) -> bool:
+func _combater(alvo: Enemy) -> int:
 	if alvo == null or not alvo.is_alive():
-		return true
+		return ResultadoCombate.VITORIA
 	_observar_inimigo(alvo)
-	_contar_tipo(alvo)
 	var identidade := alvo.get_instance_id()
 	var nome_alvo := alvo.display_name()
-	var arma: Dictionary = GameData.weapon(_jogador.main_weapon)
-	var golpe: Dictionary = arma.get("light", {}) as Dictionary
-	var alcance := float(arma.get("range", 0.0))
-	var dano_esperado := GameData.compute_damage(float(golpe.get("mv", 0.0)),
-		_jogador.main_weapon, _jogador.attrs, alvo.defense)
-	if alcance <= 0.0 or dano_esperado <= 0.0:
-		_falhar("a arma equipada nao fornece alcance/dano executaveis")
-		return false
-	var golpes_necessarios := ceili(alvo.health / dano_esperado)
-	var ataques_catalogados := (alvo.data.get("attacks", []) as Array).size()
-	# A margem para falhas tambem vem do conteudo que o alvo pode escolher. Um
-	# inimigo com mais perguntas de ataque desloca-se mais e exige mais novas
-	# aproximacoes; nao se escreve aqui um numero de golpes de combate.
-	var tentativas_maximas := golpes_necessarios * (maxi(1, ataques_catalogados) + 1)
-	var tentativas := 0
-	var acertos := 0
+	_alvo_actual = alvo
 	var vida_inicial := alvo.health
-	var ciclo_jogador := int(golpe.get("startup", 0)) + int(golpe.get("active", 0)) \
-		+ int(golpe.get("recovery", 0))
-	var ciclos_inimigo := 0
-	for valor: Variant in alvo.data.get("attacks", []) as Array:
-		var ataque := valor as Dictionary
-		ciclos_inimigo += int(ataque.get("startup", 0)) \
-			+ int(ataque.get("active", 0)) + int(ataque.get("recovery", 0))
+	var vida_anterior := alvo.health
+	var acertos := 0
+	var golpes_esperados := _piloto.expected_light_hits(_jogador, alvo)
 	var frame_limite := Engine.get_physics_frames() \
-		+ tentativas_maximas * maxi(1, ciclo_jogador + ciclos_inimigo)
+		+ _piloto.frame_budget(_jogador, alvo, golpes_esperados)
+	if _lock_target_id != identidade:
+		_lock_target_id = identidade
+		_proximo_lock_frame = 0
+	while Engine.get_physics_frames() < _proximo_lock_frame:
+		_piloto.drive_frame(_jogador, alvo, false)
+		if not _piloto.consumed_frame:
+			return ResultadoCombate.APROXIMAR
+		await get_tree().physics_frame
+		if _jogador_morreu or not _jogador.is_alive():
+			var ressuscitou := await _esperar_ressurreicao()
+			_alvo_actual = null
+			return ResultadoCombate.RESSUSCITOU if ressuscitou else ResultadoCombate.FALHA
+	var fixou := await _piloto.lock_on(_jogador, alvo)
+	if _jogador_morreu or not _jogador.is_alive():
+		var ressuscitou := await _esperar_ressurreicao()
+		_alvo_actual = null
+		return ResultadoCombate.RESSUSCITOU if ressuscitou else ResultadoCombate.FALHA
+	if not fixou:
+		_proximo_lock_frame = Engine.get_physics_frames() \
+			+ maxi(1, int(GameData.combat.get("reference_fps")))
+		return ResultadoCombate.APROXIMAR
+	_contar_tipo(alvo)
+	_proximo_lock_frame = 0
+	_diz("lock-on real fixou %s" % nome_alvo)
 
 	while is_instance_valid(alvo) and alvo.is_alive() \
-			and tentativas < tentativas_maximas \
 			and Engine.get_physics_frames() < frame_limite:
 		if _jogador_morreu or not _jogador.is_alive():
-			_parar_movimento()
-			return false
-		if _jogador.state != Player.State.FREE:
-			await get_tree().physics_frame
-			continue
-		var ameaca := _ameaca_em_preparacao()
-		if ameaca != null:
-			await _defender(ameaca)
-			continue
-		if _deve_curar() and _jogador.flask_uses > 0:
-			await _accionar("use_item")
-			await _esperar_jogador_livre(golpe)
-			continue
-		if not _jogador.stamina.can_act():
-			await get_tree().physics_frame
-			continue
-		if alvo.state_name() == "golpe":
-			await get_tree().physics_frame
-			continue
-
-		var distancia := _distancia_plana(_jogador.global_position, alvo.global_position)
-		if distancia > alcance:
-			var direccao := alvo.global_position - _jogador.global_position
-			direccao.y = 0.0
-			_aplicar_movimento(direccao.normalized(), false)
-			await get_tree().physics_frame
-			continue
-
-		# O ultimo passo de aproximacao orienta o boneco; o golpe seguinte entra
-		# exclusivamente pela accao remapeavel `attack`.
-		var orientar := alvo.global_position - _jogador.global_position
-		orientar.y = 0.0
-		_aplicar_movimento(orientar.normalized(), false)
+			_piloto.release_all_inputs()
+			var ressuscitou := await _esperar_ressurreicao()
+			_alvo_actual = null
+			return ResultadoCombate.RESSUSCITOU if ressuscitou else ResultadoCombate.FALHA
+		_piloto.drive_frame(_jogador, alvo)
 		await get_tree().physics_frame
-		_parar_movimento()
-		var antes := alvo.health
-		if not await _tentar_atacar():
-			continue
-		tentativas += 1
-		await _esperar_resultado_do_golpe(alvo, antes, golpe)
-		if is_instance_valid(alvo) and alvo.health < antes:
+		if is_instance_valid(alvo) and alvo.health < vida_anterior:
 			acertos += 1
+			vida_anterior = alvo.health
 
-	_parar_movimento()
+	_piloto.release_all_inputs()
+	_alvo_actual = null
 	if not is_instance_valid(alvo):
 		if _mortes_observadas.has(identidade):
 			_diz("%s morreu e o streaming retirou o cadaver depois do sinal" % nome_alvo)
-			return true
+			return ResultadoCombate.VITORIA
 		_diz("combate falhou: %s desapareceu sem emitir died" % nome_alvo)
-		return false
+		return ResultadoCombate.FALHA
 	if alvo.is_alive():
-		_diz("combate falhou: %s conservou %.0f/%.0f PV (%d acertos/%d tentativas)" % [
-			nome_alvo, alvo.health, vida_inicial, acertos, tentativas])
-		return false
+		_diz("combate falhou: %s conservou %.0f/%.0f PV (%d acertos; orcamento catalogado)" % [
+			nome_alvo, alvo.health, vida_inicial, acertos])
+		return ResultadoCombate.FALHA
 	_diz("%s morreu: %.0f -> %.0f PV, %d acertos por entrada" % [
 		nome_alvo, vida_inicial, alvo.health, acertos])
-	return true
+	return ResultadoCombate.VITORIA
 
 
-func _esperar_resultado_do_golpe(alvo: Enemy, vida_antes: float,
-		golpe: Dictionary) -> void:
-	var total := int(golpe.get("startup", 0)) + int(golpe.get("active", 0)) \
-		+ int(golpe.get("recovery", 0))
-	var viu_ataque := _jogador.state in [Player.State.ATTACK, Player.State.RIPOSTE]
-	var ataques_catalogados := maxi(1, (alvo.data.get("attacks", []) as Array).size())
-	for _frame: int in maxi(1, total * ataques_catalogados):
-		await get_tree().physics_frame
-		if _jogador_morreu or not is_instance_valid(alvo):
-			break
-		viu_ataque = viu_ataque \
-			or _jogador.state in [Player.State.ATTACK, Player.State.RIPOSTE]
-		if not alvo.is_alive():
-			break
-		if viu_ataque and _jogador.state == Player.State.FREE:
-			break
-
-
-func _esperar_jogador_livre(golpe: Dictionary) -> void:
-	var total := int(golpe.get("startup", 0)) + int(golpe.get("active", 0)) \
-		+ int(golpe.get("recovery", 0))
-	for _frame: int in maxi(1, total + 1):
-		if _jogador.state == Player.State.FREE:
-			return
-		await get_tree().physics_frame
-
-
-func _defender(alvo: Enemy) -> void:
-	var encarar := alvo.global_position - _jogador.global_position
-	encarar.y = 0.0
-	_aplicar_movimento(encarar.normalized(), false)
-	await get_tree().physics_frame
+func _esperar_ressurreicao() -> bool:
 	_parar_movimento()
-	var lado := _jogador.camera.right_flat() \
-		if _jogador.camera != null else Vector3.RIGHT
-	_aplicar_movimento(lado, false)
-	Input.action_press("dodge_sprint")
-	await get_tree().physics_frame
-	Input.action_release("dodge_sprint")
-	await get_tree().physics_frame
-	_parar_movimento()
-	var maior_duracao := 1
-	for valor: Variant in alvo.data.get("attacks", []) as Array:
-		var ataque := valor as Dictionary
-		maior_duracao = maxi(maior_duracao, int(ataque.get("startup", 0)) \
-			+ int(ataque.get("active", 0)) + int(ataque.get("recovery", 0)))
-	for _frame: int in maior_duracao:
-		await get_tree().physics_frame
-		if _jogador_morreu or not is_instance_valid(alvo) or (
-				_jogador.state == Player.State.FREE and alvo.state_name() in [
-					"recuperacao", "persegue", "livre", "patrulha", "postura quebrada"]):
-			break
-	_parar_movimento()
-
-
-func _ameaca_em_preparacao() -> Enemy:
-	var melhor: Enemy
-	var melhor_distancia := INF
-	for no: Node in get_tree().get_nodes_in_group("enemies"):
-		var inimigo := no as Enemy
-		if inimigo == null or not inimigo.is_alive() \
-				or inimigo.telegraphing_parryable() < 0:
-			continue
-		var distancia := _distancia_plana(inimigo.global_position, _jogador.global_position)
-		if distancia < melhor_distancia:
-			melhor = inimigo
-			melhor_distancia = distancia
-	return melhor
-
-
-func _deve_curar() -> bool:
-	if _jogador.health >= _jogador.max_health:
+	var proxima_tentativa := _mortes_jogador + 1
+	if proxima_tentativa > _tentativas_maximas:
+		_falhar("ultrapassou o tecto de %d tentativas depois de %d mortes" % [
+			_tentativas_maximas, _mortes_jogador])
 		return false
-	var perda_concorrente_possivel := 0.0
-	for no: Node in get_tree().get_nodes_in_group("enemies"):
-		var inimigo := no as Enemy
-		if inimigo == null or not inimigo.is_alive():
-			continue
-		var maior_deste_inimigo := 0.0
-		for valor: Variant in inimigo.data.get("attacks", []) as Array:
-			var ataque := valor as Dictionary
-			maior_deste_inimigo = maxf(maior_deste_inimigo,
-				GameData.apply_defense(float(ataque.get("damage", 0.0)), _jogador.defense))
-		perda_concorrente_possivel += maior_deste_inimigo
-	return perda_concorrente_possivel > 0.0 \
-		and _jogador.health <= perda_concorrente_possivel
+	var reference_fps := float(GameData.combat.get("reference_fps"))
+	var fade_seconds := float(GameData.section("death").get("respawn_fade_seconds"))
+	var wait_frames := ceili(fade_seconds * reference_fps) + maxi(1, ceili(reference_fps))
+	var deadline := Engine.get_physics_frames() + wait_frames
+	while not _jogador.is_alive() and Engine.get_physics_frames() < deadline:
+		await get_tree().physics_frame
+	if not _jogador.is_alive():
+		_falhar("a morte nao regressou a fogueira dentro da janela declarada nos dados")
+		return false
+	_jogador_morreu = false
+	_retomar_da_fogueira = true
+	_proximo_lock_frame = 0
+	_lock_target_id = 0
+	_piloto.reset_attempt()
+	_diz("ressuscitou na fogueira; tentativa %d/%d" % [
+		proxima_tentativa, _tentativas_maximas])
+	return true
 
 
 func _inimigo_em_confronto() -> Enemy:
@@ -434,8 +408,19 @@ func _ao_inimigo_morrer(inimigo: Enemy) -> void:
 
 func _ao_jogador_morrer() -> void:
 	_jogador_morreu = true
+	_mortes_jogador += 1
 	_parar_movimento()
-	_falhar("o jogador morreu durante a prova")
+	var nome_alvo := "sem inimigo fixado"
+	var vida_alvo := 0.0
+	var vida_alvo_maxima := 0.0
+	if is_instance_valid(_alvo_actual):
+		nome_alvo = _alvo_actual.display_name()
+		vida_alvo = _alvo_actual.health
+		vida_alvo_maxima = _alvo_actual.max_health
+	_diz(("morte %d no destino %02d/%02d contra %s; " \
+		+ "jogador %.0f/%.0f PV; inimigo %.0f/%.0f PV") % [
+		_mortes_jogador, _destino_actual, _destinos_totais, nome_alvo,
+		_jogador.health, _jogador.max_health, vida_alvo, vida_alvo_maxima])
 
 
 func _contar_tipo(inimigo: Enemy) -> void:
@@ -464,25 +449,12 @@ func _aplicar_movimento(direccao_mundo: Vector3, sprint: bool) -> void:
 
 
 func _parar_movimento() -> void:
+	if _piloto != null:
+		_piloto.release_all_inputs()
+		return
 	for accao: String in ["move_left", "move_right", "move_forward", "move_back",
-			"dodge_sprint", "attack", "block", "parry", "use_item"]:
+			"dodge_sprint", "attack", "block", "parry", "use_item", "lock_on"]:
 		Input.action_release(accao)
-
-
-func _accionar(accao: String) -> void:
-	Input.action_press(accao)
-	await get_tree().physics_frame
-	Input.action_release(accao)
-	await get_tree().physics_frame
-
-
-func _tentar_atacar() -> bool:
-	Input.action_press("attack")
-	await get_tree().physics_frame
-	var iniciou := _jogador.state in [Player.State.ATTACK, Player.State.RIPOSTE]
-	Input.action_release("attack")
-	await get_tree().physics_frame
-	return iniciou
 
 
 func _capturar(nome: String) -> void:
@@ -516,8 +488,15 @@ func _fim() -> void:
 		print("  ", linha)
 	print("  inimigos mortos por sinal: %d" % _mortos)
 	print("  tipos enfrentados: %d -> %s" % [_tipos_vistos.size(), str(_tipos_vistos)])
-	print("  jogador morreu: %s" % str(_jogador_morreu))
+	print("  mortes do piloto: %d" % _mortes_jogador)
+	if _piloto != null:
+		print("  piloto: parries=%d; esquivas=%d; bloqueios=%d" % [
+			_piloto.parries, _piloto.dodges, _piloto.blocks])
 	print("======================================")
+	# Main guarda ao sair. Esvaziar primeiro impede que esse ultimo callback volte
+	# a criar o slot de prova depois da limpeza abaixo.
+	GameData.replace_save_state({})
+	_cleanup_test_slot()
 	get_tree().quit(1 if _falhas > 0 else 0)
 
 
@@ -536,3 +515,23 @@ func _distancia_plana(a: Vector3, b: Vector3) -> float:
 	var delta := b - a
 	delta.y = 0.0
 	return delta.length()
+
+
+func _find_unused_test_slot() -> int:
+	for candidate: int in range(TEST_SLOT_MIN, TEST_SLOT_MAX + 1):
+		var path := SaveSystem.slot_path(candidate)
+		if not FileAccess.file_exists(path) \
+				and not FileAccess.file_exists(path + ".bak") \
+				and not FileAccess.file_exists(path + ".tmp"):
+			return candidate
+	return -1
+
+
+func _cleanup_test_slot() -> void:
+	if _test_slot < 0:
+		return
+	var path := SaveSystem.slot_path(_test_slot)
+	for suffix: String in ["", ".tmp", ".bak", ".corrupt"]:
+		var candidate := path + suffix
+		if FileAccess.file_exists(candidate):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(candidate))
