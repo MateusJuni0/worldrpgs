@@ -33,6 +33,7 @@ const DUNGEON_FLOOR: PackedScene = preload("res://assets/models/environment/toca
 const DUNGEON_PILLAR: PackedScene = preload("res://assets/models/environment/toca/pillar.gltf")
 const DUNGEON_RUBBLE: PackedScene = preload("res://assets/models/environment/toca/rubble_large.gltf")
 const DUNGEON_TORCH: PackedScene = preload("res://assets/models/environment/toca/torch_mounted.gltf")
+const LAIR_SCRIPT := preload("res://src/world/lair.gd")
 
 var preset: Dictionary = {}
 var palette: Dictionary = {}
@@ -248,36 +249,77 @@ func _find_mesh_instance(node: Node) -> MeshInstance3D:
 
 # --- Pecas --------------------------------------------------------------------
 
-func _add_ground(size: Vector2, centre: Vector3) -> void:
+func _add_ground(size: Vector2, centre: Vector3, passage := Rect2()) -> void:
+	var panels := _ground_panels(size, centre, passage)
 	var mesh := BoxMesh.new()
-	mesh.size = Vector3(size.x, 1.0, size.y)
-	var mi := MeshInstance3D.new()
+	mesh.size = Vector3.ONE
+	var ground_multimesh := MultiMesh.new()
+	ground_multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	ground_multimesh.mesh = mesh
+	ground_multimesh.instance_count = panels.size()
+	for index: int in panels.size():
+		var panel := panels[index]
+		ground_multimesh.set_instance_transform(index, Transform3D(
+			Basis.IDENTITY.scaled(Vector3(panel.size.x, mesh.size.y, panel.size.y)),
+			Vector3(panel.get_center().x, centre.y - mesh.size.y * 0.5,
+				panel.get_center().y)))
+	var mi := MultiMeshInstance3D.new()
 	mi.name = "Ground"
-	mi.mesh = mesh
+	mi.multimesh = ground_multimesh
 	mi.material_override = _material("ground")
-	mi.position = centre + Vector3(0, -0.5, 0)
 	# O cubo fica apenas como fundo sem fendas. A lamina Kenney por cima traz
 	# um material rugoso coerente e continua a custar uma unica instancia.
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
 	var grass_mesh := _asset_mesh(GROUND_GRASS, 0.94, Color("#56604c"), false)
 	if grass_mesh != null:
-		var grass := MeshInstance3D.new()
+		var grass_multimesh := MultiMesh.new()
+		grass_multimesh.transform_format = MultiMesh.TRANSFORM_3D
+		grass_multimesh.mesh = grass_mesh
+		grass_multimesh.instance_count = panels.size()
+		for index: int in panels.size():
+			var panel := panels[index]
+			grass_multimesh.set_instance_transform(index, Transform3D(
+				Basis.IDENTITY.scaled(Vector3(panel.size.x, 1.0, panel.size.y)),
+				Vector3(panel.get_center().x, centre.y + 0.012, panel.get_center().y)))
+		var grass := MultiMeshInstance3D.new()
 		grass.name = "KenneyGround"
-		grass.mesh = grass_mesh
-		grass.scale = Vector3(size.x, 1.0, size.y)
-		grass.position = centre + Vector3(0, 0.012, 0)
+		grass.multimesh = grass_multimesh
 		grass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(grass)
 
 	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = mesh.size
-	shape.shape = box
-	body.add_child(shape)
-	body.position = mi.position
+	body.name = "GroundCollision"
+	for panel: Rect2 in panels:
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(panel.size.x, mesh.size.y, panel.size.y)
+		shape.shape = box
+		shape.position = Vector3(panel.get_center().x, centre.y - mesh.size.y * 0.5,
+			panel.get_center().y)
+		body.add_child(shape)
 	add_child(body)
+
+
+func _ground_panels(size: Vector2, centre: Vector3, passage: Rect2) -> Array[Rect2]:
+	var full := Rect2(Vector2(centre.x, centre.z) - size * 0.5, size)
+	if passage.size.x <= 0.0 or passage.size.y <= 0.0 or not full.intersects(passage):
+		return [full]
+	var cut := full.intersection(passage)
+	var panels: Array[Rect2] = []
+	if cut.position.y > full.position.y:
+		panels.append(Rect2(full.position,
+			Vector2(full.size.x, cut.position.y - full.position.y)))
+	if cut.end.y < full.end.y:
+		panels.append(Rect2(Vector2(full.position.x, cut.end.y),
+			Vector2(full.size.x, full.end.y - cut.end.y)))
+	if cut.position.x > full.position.x:
+		panels.append(Rect2(Vector2(full.position.x, cut.position.y),
+			Vector2(cut.position.x - full.position.x, cut.size.y)))
+	if cut.end.x < full.end.x:
+		panels.append(Rect2(Vector2(cut.end.x, cut.position.y),
+			Vector2(full.end.x - cut.end.x, cut.size.y)))
+	return panels
 
 
 ## Parede/bloco solido, com colisao. A base do greybox.
@@ -536,8 +578,6 @@ func _build_arena() -> void:
 
 ## Brumal: floresta fechada de bruma, com um caminho que leva a boca da Toca.
 func _build_brumal() -> void:
-	_add_ground(Vector2(220, 220), Vector3.ZERO)
-
 	# A coluna vertebral do Brumal. Os dois desvios na clareira prometem
 	# descanso e perigo sem seta nem marcador de missão.
 	path_points = [
@@ -554,6 +594,20 @@ func _build_brumal() -> void:
 	arena_center = lair_entrance + Vector3(0, 0, -26)
 	rest_point = path_points[4] + Vector3(17, 0, -1)
 	camp_point = path_points[4] + Vector3(5, 0, -19)
+	var lair_route: Array = LAIR_SCRIPT.MAIN_ROUTE
+	var lair_origin_xz := Vector2(lair_entrance.x, lair_entrance.z) \
+		- Vector2((lair_route[0] as Vector3).x, (lair_route[0] as Vector3).z)
+	var descent_start := lair_origin_xz \
+		+ Vector2((lair_route[1] as Vector3).x, (lair_route[1] as Vector3).z)
+	var descent_finish := lair_origin_xz \
+		+ Vector2((lair_route[2] as Vector3).x, (lair_route[2] as Vector3).z)
+	var passage_margin := float(LAIR_SCRIPT.MODULE) * 0.5
+	var passage_min := Vector2(minf(descent_start.x, descent_finish.x),
+		minf(descent_start.y, descent_finish.y)) - Vector2.ONE * passage_margin
+	var passage_max := Vector2(maxf(descent_start.x, descent_finish.x),
+		maxf(descent_start.y, descent_finish.y)) + Vector2.ONE * passage_margin
+	_add_ground(Vector2(220, 220), Vector3.ZERO,
+		Rect2(passage_min, passage_max - passage_min))
 	map_path_segments = [
 		PackedVector3Array(path_points),
 		PackedVector3Array([path_points[4], rest_point]),
