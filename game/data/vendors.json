@@ -1,0 +1,217 @@
+{
+  "_fonte": "Decisão directa de Mateus, 01-08-2026; spec/31-referencias.md; spec/40 §9; spec/68; spec/72",
+  "_decision": {
+    "status": "DECIDIDO",
+    "owner": "Mateus",
+    "date": "2026-08-01",
+    "catalogue_availability": "all_items_from_start",
+    "currency": "souls",
+    "discovery_gate": false,
+    "class_gate": false,
+    "supersedes": "spec/56 §§6-7 e a regra anterior de vender apenas o que o jogador descobriu",
+    "summary": "Todos os itens dos seis catálogos comerciais estão visíveis e compráveis desde o início; preço e custo de oportunidade contra subir de nível são a única ordem económica."
+  },
+  "_reference_protocol": {
+    "sources": [
+      "https://media-center.namcobandaigames.eu/manuals/darksouls2/pc/DS2-PC-Manual-EN.pdf",
+      "https://www.fromsoftware.jp/manual/darksouls3/win/menu1.html",
+      "https://www.fromsoftware.jp/manual/darksouls3/win/action1.html",
+      "https://www.gamespot.com/articles/everything-you-need-to-know-before-playing-dark-souls-2/1100-6418150/"
+    ],
+    "comparison": [
+      {
+        "aspect": "trocas de mão",
+        "eles": "DS2 e DS3 equipam três posições na mão direita e três na esquerda e percorrem cada mão separadamente.",
+        "nos": "Dois grupos canónicos, mão direita e mão esquerda, cada um com três posições; o leitor aceita arrays futuros e faz fallback ao main/offhand do save v2.",
+        "difference": "Adoptamos a estrutura sem copiar conteúdo; a migração do save fica isolada da loja."
+      },
+      {
+        "aspect": "selecção por casa",
+        "eles": "No ecrã de equipamento de DS3 escolhe-se primeiro a casa e só depois aparecem os itens compatíveis; o inventário usa separadores de categoria.",
+        "nos": "Loja e mochila recebem a mesma função de correspondência por casa: mãos, nove peças, anéis, rápidos, feitiços e materiais.",
+        "difference": "Somos deliberadamente mais consistentes que a referência porque Mateus proibiu duas gramáticas para o mesmo objecto."
+      },
+      {
+        "aspect": "comparação na compra",
+        "eles": "Os menus de equipamento mostram estado do item e do personagem, mas as lojas de DS2/DS3 não garantem comparação lado a lado com o que está equipado.",
+        "nos": "A loja mostra a ficha seleccionada e todas as posições equipadas da mesma casa sem sair da compra.",
+        "difference": "Melhoria intencional pedida pelos donos; compara verbos, alcance, peso e efeito, nunca pinta um item como numericamente melhor."
+      },
+      {
+        "aspect": "listas grandes",
+        "eles": "Separadores, casas e paginação reduzem a quantidade apresentada de cada vez.",
+        "nos": "Filtro de casa, ordenação por preço/nome e páginas de 24 linhas.",
+        "difference": "O catálogo completo existe, mas nunca é despejado numa lista única."
+      }
+    ]
+  },
+  "_four_questions": {
+    "player_action": "E/acção interact junto do NPC pede a loja; setas ou rato escolhem casa e item; Comprar gasta almas; Esc/cancelar fecha sem pausar o mundo.",
+    "proof": "O contrato dirigido valida 120 armas, 68 armaduras, 70 anéis, 53 feitiços, 15 consumíveis e 40 materiais; compra, venda, falta de almas, unicidade, paginação e ausência de gates. O auto-teste canónico continua obrigatório.",
+    "art_and_sound": "A interface actual é composta por Controls, tema e texto e não acrescenta arte nem som. As fichas comerciais preservam asset_path/icon_path dos catálogos para o dono visual ligar depois, sem duplicar assets.",
+    "target_cost": "Medido no Intel Iris Xe a 1920x1080/Mobile: 60,3 fps médios, p99 24,63 ms, 24 linhas e 45 draw calls; vazio 60,2 fps/p99 30,44 ms. O menu não processa quando fechado."
+  },
+  "_performance": {
+    "date": "2026-08-01",
+    "target_gpu": "Intel(R) Iris(R) Xe Graphics",
+    "resolution": "1920x1080",
+    "renderer": "Forward Mobile",
+    "sample_seconds_each": 5,
+    "baseline": {"average_fps": 60.2, "p99_frame_ms": 30.44},
+    "shop": {"average_fps": 60.3, "p99_frame_ms": 24.63, "visible_rows": 24, "draw_calls": 45},
+    "interpretation": "A média mantém 60 fps; o p99 da loja fica abaixo do baseline ruidoso, portanto esta medição não atribui o pico ao menu."
+  },
+  "mortality_contract": {
+    "status": "TENSAO",
+    "owner_question": "Os vendedores morrem e o stock pode desaparecer?",
+    "runtime_boundary": "external_trade_enabled",
+    "if_mortal": "O dono do NPC chama set_trading_enabled(false, reason) quando a morte for confirmada.",
+    "if_immortal": "O dono do NPC nunca desactiva a troca; o catálogo e a transacção não mudam.",
+    "stock_storage": "O stock é catálogo imutável e não vive no corpo do NPC, por isso as duas respostas cabem sem migrar saves.",
+    "codex_recommendation": "[CODEX] Recomenda-se que morte acidental não destrua acesso ao catálogo, porque preço é a única ordem decidida. Alternativa: morte remove o acesso local e outro vendedor herda o mesmo catálogo. A escolha continua dos donos."
+  },
+  "catalogue_contract": {
+    "kinds": ["arma", "armadura", "anel", "magia", "consumivel", "material"],
+    "expected_counts": {
+      "arma": 120,
+      "armadura": 68,
+      "anel": 70,
+      "magia": 53,
+      "consumivel": 15,
+      "material": 40
+    },
+    "expected_total": 366,
+    "unique_kinds": ["arma", "armadura", "anel", "magia"],
+    "stackable_kinds": ["consumivel", "material"]
+  },
+  "vendors": {
+    "ferreiro": {
+      "display_name": "O Ferreiro",
+      "stock_kinds": ["arma", "material"],
+      "roster_status": "PROTO",
+      "interaction_action": "interact"
+    },
+    "trapeiro": {
+      "display_name": "O Trapeiro",
+      "stock_kinds": ["armadura", "anel"],
+      "roster_status": "PROTO",
+      "interaction_action": "interact"
+    },
+    "escriba": {
+      "display_name": "A Escriba",
+      "stock_kinds": ["magia"],
+      "roster_status": "PROTO",
+      "interaction_action": "interact"
+    },
+    "caldeireiro": {
+      "display_name": "O Caldeireiro",
+      "stock_kinds": ["consumivel"],
+      "roster_status": "PROTO",
+      "interaction_action": "interact"
+    }
+  },
+  "vendor_by_kind": {
+    "arma": "ferreiro",
+    "armadura": "trapeiro",
+    "anel": "trapeiro",
+    "magia": "escriba",
+    "consumivel": "caldeireiro",
+    "material": "ferreiro"
+  },
+  "slot_groups": [
+    {"id": "mao_direita", "label": "MÃO DIREITA · 3 TROCAS", "kind": "arma", "capacity": 3, "equipment_array": "right_hand_slots", "legacy_equipment_key": "main"},
+    {"id": "mao_esquerda", "label": "MÃO ESQUERDA · 3 TROCAS", "kind": "arma", "capacity": 3, "equipment_array": "left_hand_slots", "legacy_equipment_key": "offhand"},
+    {"id": "armadura_cabeca", "label": "ARMADURA · CABEÇA", "kind": "armadura", "item_slot": "cabeca", "capacity": 1},
+    {"id": "armadura_rosto", "label": "ARMADURA · ROSTO", "kind": "armadura", "item_slot": "rosto", "capacity": 1},
+    {"id": "armadura_ombros", "label": "ARMADURA · OMBROS", "kind": "armadura", "item_slot": "ombros", "capacity": 1},
+    {"id": "armadura_peito", "label": "ARMADURA · PEITO", "kind": "armadura", "item_slot": "peito", "capacity": 1},
+    {"id": "armadura_maos", "label": "ARMADURA · MÃOS", "kind": "armadura", "item_slot": "maos", "capacity": 1},
+    {"id": "armadura_cintura", "label": "ARMADURA · CINTURA", "kind": "armadura", "item_slot": "cintura", "capacity": 1},
+    {"id": "armadura_pernas", "label": "ARMADURA · PERNAS", "kind": "armadura", "item_slot": "pernas", "capacity": 1},
+    {"id": "armadura_pes", "label": "ARMADURA · PÉS", "kind": "armadura", "item_slot": "pes", "capacity": 1},
+    {"id": "armadura_capa", "label": "ARMADURA · CAPA", "kind": "armadura", "item_slot": "capa", "capacity": 1},
+    {"id": "aneis", "label": "ANÉIS", "kind": "anel", "initial_capacity": 2, "capacity": 10, "equipment_array": "rings"},
+    {"id": "consumiveis_rapidos", "label": "CONSUMÍVEIS RÁPIDOS", "kind": "consumivel", "capacity": 5, "equipment_array": "quick_slots"},
+    {"id": "feiticos", "label": "FEITIÇOS", "kind": "magia", "capacity": 8, "equipment_array": "spell_favorites"},
+    {"id": "materiais", "label": "MATERIAIS", "kind": "material", "capacity": 0}
+  ],
+  "presentation": {
+    "page_size": 24,
+    "sort": ["price_ascending", "name_ascending"],
+    "show_equipped_comparison": true,
+    "pause_world": false
+  },
+  "pricing": {
+    "currency": "souls",
+    "round_to": 10,
+    "sellback_ratio": 0.25,
+    "materials_sell_at_trade_value": true,
+    "level_cost_anchors": [
+      {"level": 20, "cost": 2601},
+      {"level": 40, "cost": 9505},
+      {"level": 70, "cost": 28351},
+      {"level": 100, "cost": 60265}
+    ],
+    "zone_order": ["brumal", "selva_funda", "campas_cinzentas", "fojo", "costa_quebrada", "cimeira", "fornalha", "fulgor", "raizama", "cidade_afogada", "santuario_branco", "raiz"],
+    "zone_markers": {
+      "brumal": ["brumal"],
+      "selva_funda": ["selva funda", "selva_funda"],
+      "campas_cinzentas": ["campas cinzentas", "campas_cinzentas"],
+      "fojo": ["fojo"],
+      "costa_quebrada": ["costa quebrada", "costa_quebrada"],
+      "cimeira": ["cimeira"],
+      "fornalha": ["fornalha"],
+      "fulgor": ["fulgor"],
+      "raizama": ["raizama"],
+      "cidade_afogada": ["cidade afogada", "cidade_afogada"],
+      "santuario_branco": ["santuário branco", "santuario branco", "santuario_branco"],
+      "raiz": ["a raiz", " raiz", "raiz"]
+    },
+    "by_kind": {
+      "arma": {"mode": "zone", "base": 300, "zone_step": 350, "fallback_band_size": 12, "fallback_step": 350},
+      "armadura": {"mode": "zone", "base": 200, "zone_step": 220, "fallback_band_size": 7, "fallback_step": 220},
+      "anel": {"mode": "zone", "base": 700, "zone_step": 450, "fallback_band_size": 6, "fallback_step": 450},
+      "magia": {
+        "mode": "mana_band",
+        "bands": [
+          {"max_mana": 14, "price": 300},
+          {"max_mana": 22, "price": 650},
+          {"max_mana": 30, "price": 1200},
+          {"max_mana": 38, "price": 2200},
+          {"max_mana": 48, "price": 3800},
+          {"max_mana": 62, "price": 6000},
+          {"max_mana": 85, "price": 9000}
+        ]
+      },
+      "consumivel": {
+        "mode": "explicit",
+        "prices": {
+          "agua_lustral": 180,
+          "antidoto_selva": 100,
+          "bomba_bruma": 140,
+          "lanterna_raiz": 220,
+          "musgo_seco": 100,
+          "oleo_condutor": 160,
+          "oleo_salino": 160,
+          "pedra_raio": 200,
+          "po_terra": 140,
+          "resina_bruma": 160,
+          "sal_gelo": 100,
+          "sal_seco": 120,
+          "solvente_teia": 140,
+          "tocha_esporo": 180,
+          "veu_sombra": 240
+        }
+      },
+      "material": {"mode": "trade_value_multiplier", "multiplier": 3}
+    },
+    "rationale": [
+      "Brumal paga 390 almas na primeira limpeza: uma arma-base custa 300, deixando a decisão entre uma ferramenta nova ou consumíveis; comprar tudo continua impossível.",
+      "No nível 20, subir custa 2601 almas: uma arma de Brumal custa 11,5% desse nível; uma arma da Raiz custa 4150 e já exige abdicar de mais de um nível inicial.",
+      "Anéis começam em 700 e chegam a 5650 porque acrescentam uma regra passiva inteira; não são mais fortes por número, são opções mais complexas.",
+      "Feitiços usam bandas de mana já autoradas como custo de compromisso: 300 para 10-14 de mana, até 9000 para 70-85. O preço não lê dano base nem Fatia 1.",
+      "Materiais mantêm o trade_value do spec/72: o jogador vende por esse valor e recompra por 3x, impedindo arbitragem sem inventar outra moeda.",
+      "O total das dez limpezas declaradas por zona vai de 3900 a 20500; opções finais custam várias limpezas, mas nenhuma exige descobrir ou desbloquear o item."
+    ]
+  }
+}
