@@ -38,11 +38,13 @@ var _main_tip: Marker3D
 var _main_weapon_id := ""
 var _offhand_weapon_id := ""
 var _two_handed := false
+var _actor_properties := {}
 
 
 func setup(actor: Node, character_visual: Node3D) -> bool:
 	name = "WeaponAttach"
 	_actor = actor
+	_cache_actor_properties()
 	_skeleton = character_visual.call("get_equipment_skeleton") as Skeleton3D \
 		if character_visual.has_method("get_equipment_skeleton") else _find_skeleton(character_visual)
 	if _skeleton == null:
@@ -73,9 +75,9 @@ func sync_from_actor() -> void:
 	if not is_instance_valid(_actor):
 		return
 	sync_loadout(
-		String(_read_property(_actor, "main_weapon", "")),
-		String(_read_property(_actor, "offhand_weapon", "")),
-		bool(_read_property(_actor, "is_two_handed", false)))
+		String(_read_actor_property(&"main_weapon", "")),
+		String(_read_actor_property(&"offhand_weapon", "")),
+		bool(_read_actor_property(&"is_two_handed", false)))
 
 
 func sync_loadout(main_weapon: String, offhand_weapon: String, two_handed: bool) -> void:
@@ -672,11 +674,17 @@ static func _find_skeleton(node: Node) -> Skeleton3D:
 	return null
 
 
-static func _read_property(object: Object, property_name: StringName,
-		fallback: Variant) -> Variant:
-	for property: Dictionary in object.get_property_list():
-		if StringName(property.get("name", "")) == property_name:
-			return object.get(property_name)
+func _cache_actor_properties() -> void:
+	_actor_properties.clear()
+	if not is_instance_valid(_actor):
+		return
+	for property: Dictionary in _actor.get_property_list():
+		_actor_properties[StringName(property.get("name", ""))] = true
+
+
+func _read_actor_property(property_name: StringName, fallback: Variant) -> Variant:
+	if _actor_properties.has(property_name):
+		return _actor.get(property_name)
 	return fallback
 
 
