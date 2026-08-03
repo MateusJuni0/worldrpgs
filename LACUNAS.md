@@ -1259,3 +1259,27 @@ respeitou o teto de **5 inimigos / 8 atores**. Isto ainda não fecha a prova ped
 ⚠️ **Logo a conclusão é outra, e é mais importante:** o problema não é a densidade de Brumal — é que **o jogo tem uma zona só**. Encher mais Brumal com os mesmos três não resolve a sensação de mundo vazio que o Mateus descreve; **construir a segunda zona resolve**.
 
 ⏳ **Isto é decisão do dono:** ou (a) desenhar mais tipos nativos de Brumal, ou (b) construir a zona seguinte e deixar Brumal como está — que é o que a spec já previa, uma travessia de 8–12 minutos por zona.
+
+## 🔴 O percurso falha de DUAS maneiras diferentes na mesma versão (02-08)
+
+⚠️ Duas corridas seguidas do passo 9/13, sem mexer em nada entre elas:
+
+| corrida | até onde | como falhou |
+|---|---|---|
+| A | — | `combate falhou: Orc lanceiro desapareceu sem emitir died` → `não conseguiu ultrapassar Orc lanceiro no caminho` |
+| B | 9/17 | `colisão ou geometria bloqueou a caminhada a 5,06 m do destino` |
+
+⭐ **São dois defeitos distintos, não um defeito instável:**
+
+1. 🔴 **Um inimigo desaparece a meio da luta sem emitir `died`.** Isto cheira à
+   população virtualizada: o corpo é retirado quando sai do raio activo, e o
+   sinal de morte nunca sai. Consequências para além do percurso — quem contar
+   mortes pelo sinal conta a menos, e a necromancia fica sem cadáver.
+   ⚠️ Já fomos mordidos pelo lado oposto disto: o contador antigo usava
+   `is_instance_valid()` e dava 0 mortes porque o cadáver **fica** de propósito.
+2. 🔴 **A geometria bloqueia mesmo** — a corrida B contornou pelos dois lados e
+   não passou.
+
+⛔ **Não fechar isto declarando o percurso "instável".** Um souls-like que não se
+atravessa não é um jogo, é um conjunto de arenas. As duas causas são reais e as
+duas têm de cair.
