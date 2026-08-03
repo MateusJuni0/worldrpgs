@@ -241,6 +241,58 @@ Ordem inversa: **o mais recente primeiro.**
 
 ⚠️ **Divergência viva:** o WP8 desenhou **6 zonas**; foram aprovados **10+**.
 
+## 03-08-2026 · quatro decisões do Mateus, ao fechar a sessão
+
+Respondidas por ele directamente, depois de eu lhe pôr as quatro em cima da mesa.
+`[DECIDIDO]` (Mateus, 03-08-2026).
+
+### 1. Os 410 MB de packs CC0 ficam no repositório
+
+> *"deixa pô, não vamos reescrever as coisas"*
+
+Fecha a pergunta que ficou pendurada do PR #19 (6454 ficheiros, irreversível). O
+Fable tinha recomendado `_local/` e o Rico decidiu "tudo no repositório". **Fica
+como está** — a razão é o custo de reescrever a história, não o mérito da opção.
+⚠️ Se o repositório voltar a crescer assim, avaliar Git LFS **antes**, não depois.
+
+### 2. O Voto de Sangue passa a cumprir a Lei 2
+
+> *"sim pô"*
+
+Fecha a `[TENSÃO]` deixada pelo agente das leis. Hoje é um multiplicador
+(+30/+60/+90% de dano por −20/−40/−60% de PV máximo) e **um multiplicador é um
+número**. A Lei 2 diz que as melhorias dão **opções**. A proposta está no
+[`LACUNAS.md`](LACUNAS.md), secção do Voto.
+
+✅ O lado funcional já está arranjado (02-08): antes **cobrava a vida e o bónus
+nunca era lido por ninguém** — cobrava e não pagava. O que falta é o desenho.
+
+### 3. Constrói-se a segunda zona; Brumal fica como está
+
+> *"constrói, depois a gente volta e melhora"*
+
+Fecha a questão dos 3 tipos de inimigo em Brumal contra 34 no catálogo. ⭐ Não era
+falta de trabalho: a lei da coerência bioma-raça-item só deixa **4** inimigos
+viverem em Brumal, e um é o chefe. O vazio que o Mateus sente **não se resolve
+com densidade, resolve-se com uma zona nova** — que é o que a spec já previa
+(8–12 minutos por zona).
+
+⏳ Melhorar Brumal fica para depois, explicitamente.
+
+### 4. Ao subir de nível: por decidir, e é pergunta dele
+
+> *"ao subir de nível a vida aumenta se tu aumentar o HP, não?"*
+
+**Sim — e desde 02-08 funciona mesmo.** Até essa data **não funcionava**:
+`player.gd` carregava os atributos **da classe** e deitava fora o que o jogador
+tinha comprado, portanto subir de nível não mexia em nada no combate. Está ligado.
+
+⏳ **O que continua por decidir é mais estreito:** quando os PV **máximos** sobem,
+os PV **actuais** enchem até ao topo ou mantêm a proporção? Hoje mantêm a
+proporção, provisoriamente, marcado `[TENSÃO]`. Não foi decidido nesta sessão.
+
+---
+
 ## 30-07-2026 · sessão 1 (gravada)
 
 As decisões originais, com timestamp, em [`spec/00-visao.md`](spec/00-visao.md) e nos documentos de cada área. As quatro leis saem daqui.

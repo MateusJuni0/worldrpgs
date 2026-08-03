@@ -67,16 +67,16 @@ inimigos, e tinha razão: isso pintava o passo de verde e escondia o defeito.
 | 🟠 **Lei 2 falha** | o **Voto de Sangue** é um multiplicador (+30/+60/+90% de dano por −20/−40/−60% de PV máximo). Um multiplicador é um número, e a Lei 2 diz que as melhorias dão **opções**. ✅ O lado funcional está arranjado — antes cobrava a vida e o bónus **nunca era lido**. ⏳ O desenho é `[TENSÃO]` e é do Mateus |
 | 🟠 **Brumal só tem 3 tipos de inimigo** | e o catálogo tem 34. ⭐ **Não é preguiça: é a lei da coerência bioma-raça-item.** Só 4 inimigos declaram `brumal`, e um é o chefe. A conclusão verdadeira é outra — o problema não é a densidade, é **o jogo ter uma zona só** |
 
-### ⏳ À espera do Mateus — ninguém pode decidir por ele
+### ✅ As quatro decisões — fechadas pelo Mateus em 03-08
 
-1. **Os 410 MB de packs CC0 dentro do repositório** (PR #19, 6454 ficheiros). O
-   Fable recomendou o contrário, o Rico decidiu "tudo no repositório", e ficou
-   à espera do 👍. **Já está fundido** — desfazer agora obriga a reescrever a história.
-2. **O Voto de Sangue**: multiplicador (quebra a Lei 2) ou opção (muda o desenho)?
-   A proposta `[TENSÃO]` do agente está no [`LACUNAS.md`](LACUNAS.md).
-3. **Brumal com mais tipos, ou uma segunda zona?** A spec previa 8–12 minutos por zona.
-4. **Ao subir de nível, os PV actuais enchem ou mantêm a proporção?** Hoje mantêm
-   a proporção, provisoriamente, e está marcado `[TENSÃO]`.
+Detalhe e razões em [`DECISOES.md`](DECISOES.md). Resumo:
+
+| | `[DECIDIDO]` (Mateus, 03-08) |
+|---|---|
+| **410 MB de packs** | **Ficam.** *"deixa pô, não vamos reescrever as coisas"* ⚠️ Se voltar a crescer assim, avaliar Git LFS **antes** |
+| **Voto de Sangue** | **Passa a cumprir a Lei 2** — deixa de ser multiplicador. O lado funcional já está arranjado; falta o desenho |
+| **Brumal / zonas** | ⭐ **Constrói-se a segunda zona**, Brumal fica como está. *"depois a gente volta e melhora"* |
+| **PV ao subir de nível** | ⏳ **Continua em aberto** — máximos sobem (isso funciona desde 02-08); falta decidir se os **actuais** enchem ou mantêm a proporção |
 
 ### ⚠️ Duas armadilhas que custaram tempo hoje
 
