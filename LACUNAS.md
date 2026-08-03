@@ -1319,3 +1319,22 @@ descartada: aumentar PV/frascos do piloto ou baixar população/dano no JSON par
 pintar o passo 9 de verde — mudaria números de combate e esconderia o contrato
 solto. Isto exige `game/src/tools/percurso.gd` e/ou o fio de alvo do jogador,
 ficheiros fora desta árvore.
+
+## 🔧 Dois defeitos do supervisor da frota, encontrados a arder (02-08)
+
+Não são do jogo — são da máquina que põe agentes a trabalhar. Ficam escritos
+porque custaram trabalho repetido e quase custaram trabalho perdido.
+
+1. **Relançava quem já tinha sido aceite.** A vigia perguntava
+   `git log HEAD ^main` — quantos commits o ramo tem à frente da `main`. Depois
+   de eu fazer o merge essa conta é **zero**, e o supervisor concluía "morreu
+   sem entregar" e mandava o agente refazer trabalho já fundido. ⭐ A pergunta
+   estava errada: "está à frente da main?" não é o mesmo que "entregou?".
+   Corrigido com um marcador `.entregue`, que sobrevive ao merge.
+2. **Dois supervisores lançaram o mesmo agente na mesma árvore**, e o segundo
+   fazia `git reset --hard main` por cima do trabalho do primeiro. Agora
+   recusa-se a entrar numa árvore que já tem alguém lá dentro.
+
+⚠️ O padrão é o mesmo dos defeitos do jogo que apanhámos hoje: **uma pergunta
+que parece a certa e não é.** `is_instance_valid()` para contar mortes,
+`hitbox_active` comparada consigo própria, exit 0 num script que imprime FALHOU.
