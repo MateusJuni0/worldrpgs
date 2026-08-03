@@ -119,7 +119,15 @@ func cycle(direction: float) -> void:
 
 
 func tick(delta: float) -> void:
-	_update_free_aim()
+	if is_instance_valid(target) and not _transient_free_aim_target:
+		# Com engate, o alvo e a unica entrega visivel e a unica direccao consumida
+		# pela magia. Fazer os raycasts da mira livre neste estado calculava pixels
+		# que o HUD nao apresenta e uma direccao que o Player nao usa.
+		_free_aim_valid = false
+		_free_aim_collider = null
+		_free_aim_spell_type = ""
+	else:
+		_update_free_aim()
 	if _transient_free_aim_target:
 		return
 	if not is_instance_valid(target):

@@ -87,7 +87,6 @@ func _build_world_mark() -> void:
 	_material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_world_mark = MeshInstance3D.new()
 	_footprint = _build_footprint()
-	_world_mark.mesh = _mesh_from_footprint(_footprint)
 	_world_mark.position.y = 0.035
 	var contact := String(_attack.get("tipo_contacto", "instantaneo"))
 	if bool(_attack.get("is_aoe", false)) or contact == "volume_persistente":
@@ -155,22 +154,6 @@ func _sector_footprint(reach: float, arc_degrees: float) -> PackedVector2Array:
 		var angle := lerpf(-half_arc, half_arc, progress)
 		points.append(Vector2(sin(angle), -cos(angle)) * reach)
 	return points
-
-
-func _mesh_from_footprint(points: PackedVector2Array) -> ArrayMesh:
-	var mesh := ArrayMesh.new()
-	var indices := Geometry2D.triangulate_polygon(points)
-	if indices.is_empty():
-		return mesh
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	var vertices := PackedVector3Array()
-	for point: Vector2 in points:
-		vertices.append(Vector3(point.x, 0.0, point.y))
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_INDEX] = indices
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	return mesh
 
 
 func _build_edge_mark() -> void:

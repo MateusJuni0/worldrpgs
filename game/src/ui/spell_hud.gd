@@ -105,6 +105,14 @@ class SpellSurface extends Control:
 
 
 var _surface: SpellSurface
+var _has_visible_snapshot := false
+var _last_favorites: Array = []
+var _last_selected_spell := ""
+var _last_mana := 0
+var _last_max_mana := 0
+var _last_meditation_uses := 0
+var _last_meditation_uses_max := 0
+var _last_player_state := ""
 
 
 func setup(player: Node) -> void:
@@ -112,8 +120,40 @@ func setup(player: Node) -> void:
 	_surface = SpellSurface.new()
 	_surface.player = player
 	add_child(_surface)
+	if not SettingsSystem.controls_changed.is_connected(_on_controls_changed):
+		SettingsSystem.controls_changed.connect(_on_controls_changed)
 
 
 func _process(_delta: float) -> void:
+	if not is_instance_valid(_surface) or not is_instance_valid(_surface.player):
+		return
+	var player := _surface.player
+	var favorites: Array = (player.get("favorite_spells") as Array).duplicate()
+	var selected_spell := String(player.get("selected_spell"))
+	var mana := int(player.get("mana"))
+	var max_mana := int(player.get("max_mana"))
+	var meditation_uses := int(player.get("meditation_uses"))
+	var meditation_uses_max := int(player.get("meditation_uses_max"))
+	var player_state := String(player.call("state_name")) \
+		if player.has_method("state_name") else ""
+	if _has_visible_snapshot and favorites == _last_favorites \
+			and selected_spell == _last_selected_spell and mana == _last_mana \
+			and max_mana == _last_max_mana \
+			and meditation_uses == _last_meditation_uses \
+			and meditation_uses_max == _last_meditation_uses_max \
+			and player_state == _last_player_state:
+		return
+	_has_visible_snapshot = true
+	_last_favorites = favorites
+	_last_selected_spell = selected_spell
+	_last_mana = mana
+	_last_max_mana = max_mana
+	_last_meditation_uses = meditation_uses
+	_last_meditation_uses_max = meditation_uses_max
+	_last_player_state = player_state
+	_surface.queue_redraw()
+
+
+func _on_controls_changed() -> void:
 	if is_instance_valid(_surface):
 		_surface.queue_redraw()
