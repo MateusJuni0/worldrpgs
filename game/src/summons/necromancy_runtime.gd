@@ -184,6 +184,16 @@ func apply_blood_oath() -> Dictionary:
 	return result
 
 
+## O Voto e o dono unico deste multiplicador. Player consulta esta fronteira
+## no momento do golpe; assim o preco visivel e o beneficio saem do mesmo
+## controlador e continuam a ler exclusivamente as camadas de spells.json.
+## A origem explicita impede o parceiro de herdar o Voto deste conjurador.
+func apply_blood_oath_to_damage(base_damage: float, source: Node3D) -> float:
+	if source != _caster:
+		return base_damage
+	return base_damage * _controller.blood_oath_damage_multiplier()
+
+
 func corpses() -> Array[RaisedCorpse]:
 	var result: Array[RaisedCorpse] = []
 	for corpse_value: Variant in _corpses.values():
