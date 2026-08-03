@@ -1,6 +1,14 @@
 # LACUNAS — o que falta, e ninguém está a fazer
 
-**Actualizado: 01-08-2026, Revisão 3.** Mantido pelo **Claude/Codex**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
+**Actualizado: 03-08-2026.** Mantido pelo **Claude/Codex**. É a lista de tudo o que foi identificado como buraco e **ainda não tem dono**.
+
+> ⚠️ **Este ficheiro tem mais de 1500 linhas e cresce por baixo.** Não o leias de cima.
+>
+> ⭐ **Vai ao FIM** — as últimas cinco secções são de 02/03-08 e são as que valem hoje:
+> os dois ramos guardados fora da `main`, o percurso que falha de duas maneiras,
+> a variedade de Brumal (que é lei, não preguiça) e os defeitos do supervisor da frota.
+>
+> **E antes disso, lê a [`secção 0 do ESTADO.md`](ESTADO.md)** — é o resumo de tudo isto em uma página.
 
 > **Porque existe:** as lacunas que eu encontro a rever viviam em **comentários de PR**. Um comentário lê-se uma vez e desaparece — e uma lacuna esquecida é uma lacuna que se descobre no fim, quando custa dez vezes mais.
 >

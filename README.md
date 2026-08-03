@@ -4,14 +4,35 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-o
 
 > **Especificação primeiro, código depois — e o depois é agora.** Os 20 pacotes de spec estão escritos (31-07-2026) e a construção arrancou. A spec continua a mandar: código que diverja dela obriga a mudar a spec no mesmo PR.
 
-## Estado
+---
+
+## ⛔ COMEÇA AQUI
+
+**Ninguém está a trabalhar nisto agora** (parado em 03-08-2026). Três passos, por esta ordem:
+
+1. ⭐ **Lê a [`secção 0 do ESTADO.md`](ESTADO.md)** — o que está verde, o que está vermelho e porquê. É o único sítio que precisas para te orientares.
+2. **Vê por ti** se o que lá está escrito ainda é verdade:
+   ```
+   cd game && VERIFICAR.bat --rapido
+   ```
+   Corre 12 dos 13 passos em poucos minutos e diz `TUDO PASSOU` ou nomeia o que falhou. ⚠️ **Devolve código de erro** — até 03-08 dizia "FALHOU" e saía com sucesso, o que fazia qualquer script confiar nele à toa.
+3. **Só depois** abre o [`LACUNAS.md`](LACUNAS.md), e vai **ao fim** — é longo, e o que interessa é o mais recente.
+
+**Para jogar mesmo:** `game/JOGAR.bat` (a fatia inteira) ou `game/JOGAR-ARENA.bat` (arena limpa, para sentir o combate).
+
+---
+
+## Estado — 03-08-2026
 
 | | |
 |---|---|
-| Fase | **Construção** — 20/20 pacotes escritos; a Revisão 1 reabriu **5 lacunas vermelhas** em [`LACUNAS.md`](LACUNAS.md) |
-| Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada |
-| Código | **Em [`game/`](game/)** — protótipo jogável em Godot 4.7.1; abre com `game/JOGAR.bat` |
-| Engine | **Godot 4.7.1**, renderer Mobile |
+| Fase | ⏸️ **Parado.** Construção suspensa; retoma-se pela [`secção 0 do ESTADO.md`](ESTADO.md) |
+| Verificação | ✅ **12 dos 13 passos verdes.** 🔴 O único vermelho é o **percurso a pé de ponta a ponta** (passo 9) |
+| Provado no jogo | o chefe cai a **nível 1** · co-op a dois · fogueira grava · **9765** auto-testes · **zero** código órfão |
+| Leis por cumprir | 🟠 **Lei 4** (p99 24,9 ms contra 16,67) · 🟠 **Lei 2** (Voto de Sangue, já decidido mudar) |
+| Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada. ⚠️ **Nunca foi medido na máquina do Rico**, que é a que manda |
+| Código | **Em [`game/`](game/)** — Godot 4.7.1, renderer Mobile |
+| Ramos por integrar | [`vendedores-por-integrar`](../../tree/vendedores-por-integrar) e [`mundo-povoado`](../../tree/mundo-povoado) — ⛔ fora da `main` de propósito, ver [`LACUNAS.md`](LACUNAS.md) |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 
 ## Como isto funciona
