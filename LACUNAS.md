@@ -1386,3 +1386,12 @@ usaria o mesmo cast do Voto; a prova teria de o lançar na cena real e observar
 perfuração/fogo/explosão; a arte/som partiriam dos anéis/coração e cues descritos
 em `spells.json`; e o custo de chão persistente + invocados explosivos ainda tem
 de ser medido na Iris Xe, sobretudo com o tecto de invocações do preset baixo.
+
+⚠️ **A suite canónica ainda suja o `user://` fora da prova nova:** a execução
+`VERIFICAR.bat --rapido` de 03-08 deixou `saves/slot_00.json`, o respectivo `.bak`
+e `weapon-family-icons-32.png` na raiz real partilhada. Eram fixtures da execução
+(Guerreiro, nível 1) e foram apagadas imediatamente; a pasta `saves/` ficou sem
+ficheiros. A prova nova da Lei 1 não é a origem: o passo 10 troca `APPDATA` por uma
+pasta temporária exclusiva e apaga-a no fim. Falta ao dono dos passos antigos
+isolar igualmente qualquer teste que escreva save/captura, sem depender de limpeza
+posterior que já não consegue restaurar um save real sobrescrito.
