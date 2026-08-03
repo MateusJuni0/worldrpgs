@@ -1492,3 +1492,18 @@ Voto continua a usar os anéis/coração sintetizados por `SpellCastVfx` e o per
 sonoro data-driven já declarado; a cena A/B passou. Como não houve alteração de
 render, não se inventa nem se repete aqui um número de FPS.
 
+
+## 🗂️ Trabalho salvo em ramos, ao fechar a sessão de 03-08
+
+⛔ **Nada disto está na `main`, e é de propósito** — a `main` tem de continuar
+verde. Ficam aqui escritos para não se perderem.
+
+| ramo | o que traz | porque não entrou |
+|---|---|---|
+| `vendedores-por-integrar` | ⭐ **1462 linhas**: `vendors.json`, `vendor{,_catalog,_service,_self_test,_test_runner}.gd`, `shop_{menu,slots,benchmark}.gd` | **Quase perdido.** A pasta `worldrpgs-vendedores` **não era uma árvore de trabalho** — era uma pasta normal dentro do `workspace/`, que é ele próprio um repo (`rm-games`). O git subia e encontrava o repo errado, por isso o trabalho nunca podia ser fundido e ninguém dava por isso. ⚠️ Nada está ligado ao jogo: quem integrar tem de **ligar o fio e provar no jogo**, não no motor |
+| `mundo-povoado` | `bb11ce0 corrige streaming para preservar combates de Brumal` | Resolve **o mesmo problema** que o `confronto-estavel` já resolveu na `main`, mas de uma base mais velha, e o merge dá conflito a sério em `spawn_population.gd`. ⛔ Tomá-lo arriscava regredir uma correcção já verificada. Se a versão dele for melhor, compara-se — não se funde às cegas |
+
+⚠️ **A lição da pasta dos vendedores:** `git worktree add` pode falhar em silêncio e
+deixar uma pasta normal no lugar. Se essa pasta cair dentro de outro repo, **tudo
+o que lá se fizer parece versionado e não está.** Verificar `git remote -v` e
+`git rev-parse --git-dir` antes de contar com uma árvore.
