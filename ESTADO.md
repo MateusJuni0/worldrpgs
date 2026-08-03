@@ -1,8 +1,94 @@
 # ESTADO — o que é verdade hoje
 
-**Actualizado: 01-08-2026, Revisão 3 concluída.** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
+**Actualizado: 03-08-2026.** ⛔ **O Claude parou aqui** — o Codex bateu o limite de uso até 07-08, e `[DECIDIDO]` (Mateus, 03-08) **daqui para a frente continua o Rico**. Lê a secção **0** primeiro: é onde parámos, o que está verde, o que está vermelho e as decisões que ficaram à espera do Mateus.
+
+**Revisão 3 concluída (01-08-2026).** Este é o ficheiro que se lê primeiro. O [`SPEC.md`](SPEC.md) diz **onde** as coisas estão; este diz **em que pé** estão e **por que ordem** se pega nelas.
 
 > **Porque existe:** a spec tem **75 documentos** e ~50 decisões. Onze dos documentos de execução são **anteriores** a decisões que os mudam. Sem um sítio que diga o que vale hoje, qualquer agente constrói sobre o que já foi substituído.
+
+---
+
+## 0. ⛔ ONDE PARÁMOS — 03-08-2026
+
+> Um dia inteiro a jogar o jogo e a mandar corrigir o que se via. **Ninguém está a trabalhar nisto agora.**
+
+### O corredor obrigatório passou de 8 para 13 passos, e deixou de mentir
+
+⭐ **O achado mais importante do dia:** o [`game/VERIFICAR.bat`](game/VERIFICAR.bat) imprimia
+`## ALGUMA VERIFICACAO FALHOU ##` no ecrã **e saía com código 0**. Quem o corresse por
+script via sempre verde. Foi assim que se disse "está tudo bem" com o jogo partido.
+
+E tinha só contratos. Os quatro passos que **jogam** nunca lá tinham entrado.
+
+```
+VERIFICAR.bat              (humano, faz pausa no fim)
+VERIFICAR.bat --rapido     (salta o percurso, que demora minutos)
+VERIFICAR.bat --sem-pausa  (para correr dentro de um script)
+```
+
+**Estado corrente: `--rapido` dá `TUDO PASSOU`, código 0.**
+
+| passo | | |
+|---|---|---|
+| 1–7 | ✅ | contratos: auto-teste **9765**, áudio/ícones 64, abertura 28, arranque real, fogueira **11/11**, armas 661, rede 27 |
+| 8 | ✅ | sessão de jogo: nasce, equipa, bate, mata, bebe, descansa — 29 passos |
+| 9 | 🔴 | **percurso a pé de ponta a ponta — o ÚNICO vermelho** |
+| 10 | ✅ | **Lei 1**: piloto **nível 1** vence o Vorgar. Falha se alguém lhe subir o nível |
+| 11 | ✅ | órfãos: **zero** — todo o `class_name` é chamado pelo jogo |
+| 12–13 | ✅ | cobertura da spec · guarda de coerência (138 ficheiros, 0 erros) |
+
+### 🔴 O único vermelho: o passo 9
+
+O percurso anda **a pé, por teclas**, pelos 17 destinos até à arena. Três causas
+caíram hoje, uma continua aberta:
+
+| | |
+|---|---|
+| ✅ | **a geometria bloqueava** — Brumal tapava a descida da Toca |
+| ✅ | **inimigos sumiam a meio da luta sem emitir `died`** — o selector despejava quem estava a lutar porque cinco colocações estavam mais perto |
+| ✅ | **o piloto jogava mal** — tinha **0 lock-on** e morria a um goblin. Extraído `game/src/tools/piloto_combate.gd`, o mesmo que mata o Vorgar |
+| 🔴 | **por medir:** o piloto novo nunca chegou a correr o percurso inteiro. O agente morreu com a sessão antes disso |
+
+⭐ **É a primeira coisa a fazer.** Uma corrida diz tudo:
+
+```bash
+godot --headless --audio-driver Dummy --path game/ scenes/percurso.tscn
+```
+
+Procura `destino 17/17 alcancado a pe`. ⛔ **Se falhar, não baixes o teste** — o
+agente anterior recusou por escrito subir os PV do piloto ou baixar o dano dos
+inimigos, e tinha razão: isso pintava o passo de verde e escondia o defeito.
+
+### 🟠 Aberto e medido — não é opinião
+
+| | |
+|---|---|
+| 🟠 **Lei 4 falha** | caso quente 2 jogadores + 5 inimigos: p99 **24,9 ms** contra um orçamento de **16,67**. ⭐ Baixar qualidade **não resolve** — preset baixo, tirar camadas de chão e escala 0,85 não mexeram nada. O custo não está no que se desenha, está no que se calcula. E foi medido no i7 do Mateus **com 36 processos ao lado**; na máquina do Rico não há certificação nenhuma |
+| 🟠 **Lei 2 falha** | o **Voto de Sangue** é um multiplicador (+30/+60/+90% de dano por −20/−40/−60% de PV máximo). Um multiplicador é um número, e a Lei 2 diz que as melhorias dão **opções**. ✅ O lado funcional está arranjado — antes cobrava a vida e o bónus **nunca era lido**. ⏳ O desenho é `[TENSÃO]` e é do Mateus |
+| 🟠 **Brumal só tem 3 tipos de inimigo** | e o catálogo tem 34. ⭐ **Não é preguiça: é a lei da coerência bioma-raça-item.** Só 4 inimigos declaram `brumal`, e um é o chefe. A conclusão verdadeira é outra — o problema não é a densidade, é **o jogo ter uma zona só** |
+
+### ⏳ À espera do Mateus — ninguém pode decidir por ele
+
+1. **Os 410 MB de packs CC0 dentro do repositório** (PR #19, 6454 ficheiros). O
+   Fable recomendou o contrário, o Rico decidiu "tudo no repositório", e ficou
+   à espera do 👍. **Já está fundido** — desfazer agora obriga a reescrever a história.
+2. **O Voto de Sangue**: multiplicador (quebra a Lei 2) ou opção (muda o desenho)?
+   A proposta `[TENSÃO]` do agente está no [`LACUNAS.md`](LACUNAS.md).
+3. **Brumal com mais tipos, ou uma segunda zona?** A spec previa 8–12 minutos por zona.
+4. **Ao subir de nível, os PV actuais enchem ou mantêm a proporção?** Hoje mantêm
+   a proporção, provisoriamente, e está marcado `[TENSÃO]`.
+
+### ⚠️ Duas armadilhas que custaram tempo hoje
+
+- **`.bat` tem de ser ASCII puro.** Escrevi o `VERIFICAR.bat` com emoji e acentos
+  e o `cmd` desalinhou o ficheiro inteiro a partir do primeiro byte alto — `setlocal`
+  partido, `rem` executado como comando. Parece um erro de lógica e não é.
+- **Uma classe nova com `class_name` não compila até o Godot a registar.**
+  O merge do `PilotoCombate` deu `Could not find type` em cinco ficheiros e o
+  código estava certo. Resolve-se com:
+  ```bash
+  godot --headless --editor --quit --path game/
+  ```
 
 ---
 
