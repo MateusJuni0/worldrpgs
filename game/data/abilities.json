@@ -2,6 +2,15 @@
   "_fonte": "spec/12-classes.md (WP3) + DECISOES.md 01-08 para a 7.a origem. Habilidade especial por origem, sob a Lei 2: verbos novos, nao numeros. Cooldowns fixos, nada escala com nivel.",
   "_tecla": "A accao remapeavel ability existe em controls.json: V no teclado e Start/Options no comando por defeito. O mago do mal declara ainda raise_dead: B por defeito, sempre lido do mapa de controlos.",
   "_execution_baseline": "[CODEX] Tarefa 5: tempos de activacao/compromisso e regra de cooldown sao ponto de partida mensuravel; validar feel no M2 e manter a pergunta 45 aberta.",
+  "_law_1_vorgar_proof": {
+    "source": "[DECIDIDO] spec/00-visao.md §1: um jogador bom mata um chefe acima do seu nivel; o nivel nunca abre a porta",
+    "required_pilot_level": 1,
+    "scene_arg": "vorgar",
+    "como_o_jogador_usa": "Na cena real, fixa Vorgar e usa movimento, esquiva, parry, bloqueio, frasco e ataque pelas accoes remapeaveis do InputMap.",
+    "como_se_prova": "game/src/progression/law1_vorgar_gameplay_proof.gd arranca gameplay.tscn com save isolado, falha se o piloto nao for nivel 1 e so termina verde quando o HUD mostra Vorgar com 0 PV, DERROTADO e o toast de vitoria.",
+    "arte_e_som": "Usa os modelos, efeitos, HUD e audio da luta real; o selo de prova e texto procedural e nao acrescenta asset.",
+    "custo_na_maquina_do_rico": "O invólucro nao acrescenta actores de combate nem efeitos; a luta conserva o custo do cenario dedicado ja medido, e o gate de frame pacing continua separado na Lei 4."
+  },
 
   "warrior":   { "id": "impeto",        "display_name": "Impeto",        "effect_type": "dash_then_strike",       "cooldown_s": 15.0, "activation_s": 0.35, "commit_point_s": 0.18, "interruptible_before_commit": true, "cooldown_starts": "on_commit", "stamina_cost": 30.0, "dash_m": 6.0, "dash_seconds": 0.35, "strike_mv": 1.2 },
   "sorcerer":  { "id": "eco",           "display_name": "Eco",           "effect_type": "repeat_last_spell",      "cooldown_s": 60.0, "activation_s": 0.15, "commit_point_s": 0.15, "interruptible_before_commit": true, "cooldown_starts": "on_repeated_spell_commit", "mana_cost": 0.0, "source_spell_policy": "last_committed_spell", "target_policy": "current_aim", "timing_policy": "repeat_source_cast", "interrupt_policy": "repeat_source_cast", "preserved_non_mana_costs": ["health", "corpse", "item"], "invalid_when": ["no_committed_spell", "invalid_current_target", "missing_non_mana_resource"], "invalid_attempt_starts_cooldown": false, "_estado": "[CODEX] baseline executavel; custos nao-mana continuam sujeitos a confirmacao dos donos na pergunta 45 e validacao M2" },

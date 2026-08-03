@@ -1366,3 +1366,78 @@ esta tarefa concluída. Todos os `user://` e diretórios de captura temporários
 destas corridas foram removidos. Alterar dano, PV, frascos, população ou esconder
 os inimigos da Toca foi rejeitado: pintaria o corredor de verde sem corrigir a
 ação que o jogador precisa de executar.
+## ⭐ Prova das Leis 1 e 2 — CODEX, 03-08-2026
+
+Esta secção regista a verdade observada depois da revisão de código e **substitui
+apenas o estado factual** das linhas antigas “Lei 1 continua sem prova jogada” e
+“Vorgar ligado apenas como inimigo básico”. Não apaga o histórico nem fecha as
+lacunas independentes do percurso Brumal → arena.
+
+### Lei 1 — nível 1 vence; gating não foi encontrado; progressão não chega ao corpo
+
+| Estado | Resultado observado agora | Evidência |
+|---|---|---|
+| ✅ | **O jogo real criou um Guerreiro nível 1 com 442/442 PV e ele venceu Vorgar com 1950 PV.** A prova carregou `gameplay.tscn`, fixou o alvo por `Input`, moveu, esquivou, aparou, curou e atacou. Terminou com Vorgar `0/1950`, painel `DERROTADO`, toast de vitória, 0 mortes, 19 parries e 9 esquivas. | `game/src/progression/law1_vorgar_gameplay_proof.gd` · `game/VERIFICAR.bat` passo 10 · execução de 03-08: `=== VORGAR LUTA REAL OK ===` |
+| ✅ | **A prova fica vermelha se o piloto subir de nível.** O controlo negativo adulterou o mesmo save isolado para nível 2 depois de o jogo criar jogador/HUD e o processo saiu 1 antes da luta: `o piloto ... entrou no nivel 2; ... exige nivel 1`. O nível exigido também aparece num selo visível na captura final da prova positiva. | `--lei-1-regression-level=2` · exit 1 observado em 03-08 |
+| ✅ | **Não foi encontrado gating por nível em arma, zona, feitiço, classe ou chefe.** A varredura de todos os `.gd` e `game/data/*.json` não encontrou `required_level`, `min_level`, `level_requirement`, `requires_level`, `unlock_level` ou `level_gate`. As únicas leituras do nível de personagem estão na compra/preview do próprio nível; `progression.json::leveling.opens_content_by_level` é `false`. | `rg` global pelos campos acima · `progression_rules.gd:151-171` · `levelup_model.gd:11-18,114-141` · `progression.json:42-48` |
+| ✅ | **Requisitos de arma não são porta:** o cálculo aplica rendimento abaixo do requisito e continua; não existe rejeição de equipamento por nível. Evoluções de origem estão decididas por marco, nunca por nível, e ainda não têm runtime. | `game_data.gd:538-571` · `attributes.json::below_requirement_damage_multiplier` · `spec/12-classes.md:80-98` |
+| 🔴 | ⭐ **Subir nível não reduz hoje a margem de erro no corpo jogável.** O ecrã/`ProgressionRuntime` compra e persiste o ponto, mas `Main._build_player()` passa apenas o ID da origem e `Player.setup()` volta a carregar `GameData.class_attributes(class_id)`. Nenhum fio aplica `character.progression.attributes` ao `Player`, nem actualiza PV/STA/DEF/mana depois de confirmar. Logo a Lei 1 passa o lado “não abre porta”, mas falha o lado “o nível reduz a margem de erro”: os números do save não chegam ao combate. | `game/src/main.gd:147-160` · `game/src/player/player.gd:139-149` · `game/src/world/bonfire.gd:199-200` · `game/src/progression/progression_runtime.gd:78-88,138-147` |
+
+**Correcção pedida ao dono de `Player/Main/bonfire`:** `Player.setup` deve receber
+os atributos persistidos (descobertos por `attribute_ids`, sem lista manual), e a
+confirmação de nível deve recalcular os derivados preservando a proporção de
+recursos actual ou outra regra decidida em dados. Depois, uma prova jogável deve
+comprar Vida na fogueira e observar no HUD o PV máximo mudar no mesmo jogo e após
+reabrir o save. Não se alterou essa fronteira nesta árvore.
+
+### Lei 2 — varredura completa dos sistemas chamados “melhoria”
+
+| Sistema | Universo varrido | Número ou opção? | Estado real |
+|---|---:|---|---|
+| **Armas +0…+6** | 6 níveis, **20 escolhas** (2 postura + 2 arte + 4 escala + 8 conversão + 2 postura + 2 arte) | ✅ **Opções.** Cada escolha substitui postura, arte, escala ou tipo e declara perda; todas têm `increases_base_damage:false`. | Runtime e menu existem; o teste dedicado percorre +1…+6. A ligação da acção de arte ao `Player` continua lacuna separada. |
+| **Feitiços +1…+5** | 53 feitiços × 5 = **265 propostas** | ⚠️ **106 números:** os 53 níveis +1 baixam custo de mana e os 53 níveis +5 devolvem mana. **159 opções:** +2/+4 trocam forma e +3 troca área/alvo com limite ou perda. | ✅ Gate honesto: só nível 0 está disponível; os 265 continuam `proposals_are_non_executable` até a pergunta 41 ser decidida. Portanto não quebram o runtime actual, mas o desenho futuro ainda não cumpre integralmente a Lei 2. |
+| **Voto de Sangue base** | 3 camadas | 🔴 **Número:** +30/+60/+90% de dano por −20/−40/−60% de PV máximo. | `DarkMage` calcula e devolve o multiplicador; `NecromancyRuntime` reserva os PV, mas o dano de `Player` nunca consulta o resultado. Hoje pode cobrar o preço sem entregar sequer o número prometido. Lei 2 falha e o fio funcional também. |
+| **Evoluções de origem** | decisão global das origens | ✅ **Opções por marco**, não números nem nível. | Só existe na spec/decisão; `abilities.json` contém a habilidade base de cada origem e nenhum catálogo/runtime de patamares. Não declarar jogável. |
+| **Receitas de melhoria** | custos de Limalha/Limalha Nobre | ➖ **Números de preço, não benefício.** | Não violam a Lei 2 por si: compram uma escolha. `limalha_nobre` continua sem ficha económica, lacuna já registada. |
+| **Nível/atributos** | nível 1→100 e oito atributos | ➖ **Fora do escopo estrito da Lei 2:** a Lei 1 decide explicitamente que estes números compram margem. | O efeito no corpo está desligado, como registado acima. |
+| **Traços de origem** | 7 propostas; só o Mago do Mal tem ficha/runtime focal | ⚠️ **Identidade inicial, não melhoria adquirida**, mas o Mago do Mal é um multiplicador de mana. | O teste focal prova `DarkMage.mana_capacity`; `Player.max_mana` não chama essa API, logo o +40% também não está provado no jogo. Se “melhoria” incluir qualquer bónus permanente, esta fronteira precisa de decisão explícita dos donos. |
+| **Anéis, instrumentos e equipamento encontrado** | 70 anéis e instrumentos catalogados | ➖ **Opções de construção com custo de slot/mão**, não uma escada +N. | Não foram reclassificados como “melhoria”; números internos só são honestos quando a escolha/custo permanece. A execução individual de todos os 70 efeitos não está provada. |
+
+🔴 **O Voto tem ainda um fio de acesso desligado antes do multiplicador:** a
+origem `evil_mage` declara `agulha`, `levantar` e `voto_sangue` como feitiços
+iniciais, mas `SaveSystem.create_save()` e `Player.setup()` dão a todas as origens
+os favoritos globais Dardo/Ruína/Égide. O Voto fica fora de `known_spells` e dos
+favoritos; `NecromancyRuntime.apply_blood_oath()` só é alcançável se outro código
+injectar a selecção. São três defeitos distintos: violação de desenho, acesso do
+jogador desligado e benefício desligado.
+
+### ⚠️ `[TENSÃO]` — proposta para o Voto de Sangue, sem decisão tomada
+
+As duas autoridades continuam incompatíveis: Mateus decidiu +30/+60/+90%; a Lei
+2 `[DECIDIDO]` proíbe uma melhoria que seja apenas multiplicador; `spec/53` propõe
+três verbos (perfurar, deixar chão em fogo, explodir invocados). **Não se mudou o
+Voto nesta árvore.**
+
+`[CODEX]` **Recomendação aos donos:** substituir as três parcelas de dano pelos
+três verbos de `spec/53`, conservando o custo visível de PV, e exigir uma prova no
+jogo para cada camada: tecla/feitiço real, geometria visível, contacto e resultado
+no alvo. Razão: resolve a Lei 2 e a fantasia “apelona” com comportamento novo no
+ecrã. **Alternativa:** Mateus regista uma excepção explícita à Lei 2 para o Voto e
+manda ligar o multiplicador ao dano; é mais barato, mas mantém a contradição como
+decisão consciente. Até uma dessas decisões existir, o estado honesto é **Lei 2
+FAIL**, não “feito”.
+
+As quatro perguntas do fio continuam abertas para a versão por verbos: o jogador
+usaria o mesmo cast do Voto; a prova teria de o lançar na cena real e observar
+perfuração/fogo/explosão; a arte/som partiriam dos anéis/coração e cues descritos
+em `spells.json`; e o custo de chão persistente + invocados explosivos ainda tem
+de ser medido na Iris Xe, sobretudo com o tecto de invocações do preset baixo.
+
+⚠️ **A suite canónica ainda suja o `user://` fora da prova nova:** a execução
+`VERIFICAR.bat --rapido` de 03-08 deixou `saves/slot_00.json`, o respectivo `.bak`
+e `weapon-family-icons-32.png` na raiz real partilhada. Eram fixtures da execução
+(Guerreiro, nível 1) e foram apagadas imediatamente; a pasta `saves/` ficou sem
+ficheiros. A prova nova da Lei 1 não é a origem: o passo 10 troca `APPDATA` por uma
+pasta temporária exclusiva e apaga-a no fim. Falta ao dono dos passos antigos
+isolar igualmente qualquer teste que escreva save/captura, sem depender de limpeza
+posterior que já não consegue restaurar um save real sobrescrito.
