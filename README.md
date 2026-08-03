@@ -32,7 +32,7 @@ RPG 3D para PC, **primeira ou terceira pessoa à escolha**, **souls-like**, co-o
 | Leis por cumprir | 🟠 **Lei 4** (p99 24,9 ms contra 16,67) · 🟠 **Lei 2** (Voto de Sangue, já decidido mudar) |
 | Máquina alvo | **Gráficos integrados, 1080p @ 60 fps** — sem placa dedicada. ⚠️ **Nunca foi medido na máquina do Rico**, que é a que manda |
 | Código | **Em [`game/`](game/)** — Godot 4.7.1, renderer Mobile |
-| Ramos por integrar | [`vendedores-por-integrar`](../../tree/vendedores-por-integrar) e [`mundo-povoado`](../../tree/mundo-povoado) — ⛔ fora da `main` de propósito, ver [`LACUNAS.md`](LACUNAS.md) |
+| Ramos por integrar | `vendedores-por-integrar` e `mundo-povoado` — ⛔ fora da `main` de propósito. A razão de cada um está no fim do [`LACUNAS.md`](LACUNAS.md) |
 | Sessões gravadas | 1 (30-07-2026, 13m13s) |
 
 ## Como isto funciona
