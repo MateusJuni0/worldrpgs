@@ -1373,7 +1373,7 @@ apenas o estado factual** das linhas antigas “Lei 1 continua sem prova jogada�
 “Vorgar ligado apenas como inimigo básico”. Não apaga o histórico nem fecha as
 lacunas independentes do percurso Brumal → arena.
 
-### Lei 1 — nível 1 vence; gating não foi encontrado; progressão não chega ao corpo
+### Lei 1 — nível 1 vence; gating não foi encontrado; fio ligado, prova comparativa em falta
 
 | Estado | Resultado observado agora | Evidência |
 |---|---|---|
@@ -1381,14 +1381,24 @@ lacunas independentes do percurso Brumal → arena.
 | ✅ | **A prova fica vermelha se o piloto subir de nível.** O controlo negativo adulterou o mesmo save isolado para nível 2 depois de o jogo criar jogador/HUD e o processo saiu 1 antes da luta: `o piloto ... entrou no nivel 2; ... exige nivel 1`. O nível exigido também aparece num selo visível na captura final da prova positiva. | `--lei-1-regression-level=2` · exit 1 observado em 03-08 |
 | ✅ | **Não foi encontrado gating por nível em arma, zona, feitiço, classe ou chefe.** A varredura de todos os `.gd` e `game/data/*.json` não encontrou `required_level`, `min_level`, `level_requirement`, `requires_level`, `unlock_level` ou `level_gate`. As únicas leituras do nível de personagem estão na compra/preview do próprio nível; `progression.json::leveling.opens_content_by_level` é `false`. | `rg` global pelos campos acima · `progression_rules.gd:151-171` · `levelup_model.gd:11-18,114-141` · `progression.json:42-48` |
 | ✅ | **Requisitos de arma não são porta:** o cálculo aplica rendimento abaixo do requisito e continua; não existe rejeição de equipamento por nível. Evoluções de origem estão decididas por marco, nunca por nível, e ainda não têm runtime. | `game_data.gd:538-571` · `attributes.json::below_requirement_damage_multiplier` · `spec/12-classes.md:80-98` |
-| 🔴 | ⭐ **Subir nível não reduz hoje a margem de erro no corpo jogável.** O ecrã/`ProgressionRuntime` compra e persiste o ponto, mas `Main._build_player()` passa apenas o ID da origem e `Player.setup()` volta a carregar `GameData.class_attributes(class_id)`. Nenhum fio aplica `character.progression.attributes` ao `Player`, nem actualiza PV/STA/DEF/mana depois de confirmar. Logo a Lei 1 passa o lado “não abre porta”, mas falha o lado “o nível reduz a margem de erro”: os números do save não chegam ao combate. | `game/src/main.gd:147-160` · `game/src/player/player.gd:139-149` · `game/src/world/bonfire.gd:199-200` · `game/src/progression/progression_runtime.gd:78-88,138-147` |
+| 🟠 | ⭐ **O fio dos atributos persistidos foi ligado, mas a margem adicional ainda não tem a prova jogável comparativa exigida.** `Main._build_player()` passa `character.progression.attributes` ao `Player`; cada `Bonfire.level_purchased` reaplica o save ao corpo já sentado e recalcula também o perfil de Carga. `Player` descobre os oito IDs pelo catálogo e actualiza PV/STA/DEF/mana. O auto-teste ficou em **9765/0**, a fogueira real em **11/11**, e o piloto nível 1 voltou a vencer Vorgar; nenhuma destas provas, porém, compra Vida e compara quantos golpes do mesmo inimigo aguentam dois personagens da mesma origem. Logo esta tarefa **não se declara concluída**. | `game/src/main.gd::_build_player/_on_bonfire_level_purchased` · `game/src/player/player.gd::setup/apply_progression_attributes` · execuções isoladas de 03-08-2026 |
 
-**Correcção pedida ao dono de `Player/Main/bonfire`:** `Player.setup` deve receber
-os atributos persistidos (descobertos por `attribute_ids`, sem lista manual), e a
-confirmação de nível deve recalcular os derivados preservando a proporção de
-recursos actual ou outra regra decidida em dados. Depois, uma prova jogável deve
-comprar Vida na fogueira e observar no HUD o PV máximo mudar no mesmo jogo e após
-reabrir o save. Não se alterou essa fronteira nesta árvore.
+`[TENSÃO][CODEX]` **Política provisória dos recursos actuais:** preservar a
+proporção de PV, stamina e mana ao reaplicar atributos. Razão: não transforma uma
+melhoria em dano aparente e não cria uma cura grátis caso a API venha a ser usada
+fora do descanso. No fluxo actual a compra só acontece depois de descansar, logo
+a proporção já é 100% e os novos máximos ficam cheios. Alternativas descartadas
+provisoriamente: conservar o valor absoluto (a barra parece perder recurso) e
+encher sempre (abre cura fora da fogueira). Isto não fecha a tensão; Mateus tem de
+decidir ou mandar a regra para dados.
+
+🔴 **Prova que continua a faltar ao dono de `game/src/progression/*repro*` e
+`game/VERIFICAR.bat`:** arrancar `gameplay.tscn` com `user://` isolado; criar dois
+Guerreiros, um nível 1 e outro nível alto; comprar Vida pela interacção/ecrã real;
+reabrir o save; deixar o mesmo inimigo acertar o mesmo golpe até à morte; e exigir
+mais golpes no personagem de nível alto, com barras/HUD observados. Esta árvore
+não alterou a cena nem o batch porque esses ficheiros não estão na sua lista de
+posse. A prova canónica de Vorgar permanece separada e obrigatoriamente nível 1.
 
 ### Lei 2 — varredura completa dos sistemas chamados “melhoria”
 

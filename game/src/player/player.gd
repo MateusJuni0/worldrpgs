@@ -136,10 +136,11 @@ func _reference_fps() -> float:
 	return float(GameData.combat["reference_fps"])
 
 
-func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> void:
+func setup(p_class_id: String, palette: Dictionary, body_id := "body_male",
+		progression_attributes: Dictionary = {}) -> void:
 	class_id = p_class_id
 	_palette = palette
-	attrs = GameData.class_attributes(class_id).duplicate()
+	attrs = _resolved_progression_attributes(progression_attributes)
 
 	max_health = GameData.max_health_for(int(attrs["vida"]))
 	health = max_health
@@ -175,6 +176,44 @@ func setup(p_class_id: String, palette: Dictionary, body_id := "body_male") -> v
 	_build_body(body_id)
 	_build_children()
 	call_deferred("_install_world_bounds_warning")
+
+
+## Aplica o save ao corpo que ja esta no mundo. [TENSÃO][CODEX] Enquanto os
+## donos nao fecharem a regra dos recursos actuais, preservamos a proporcao:
+## evita transformar uma melhoria em dano aparente e nao oferece cura gratuita
+## se esta fronteira vier a ser reutilizada fora da fogueira. No fluxo actual a
+## compra acontece depois do descanso, portanto a proporcao preservada e cheia.
+## Alternativas descartadas provisoriamente: conservar o valor absoluto, que faz
+## a barra parecer perder recurso, e encher sempre, que permitiria cura fora do
+## descanso se outro consumidor chamar esta API no futuro.
+func apply_progression_attributes(progression_attributes: Dictionary) -> void:
+	var health_fraction := _resource_fraction(health, max_health)
+	var stamina_fraction := stamina.fraction()
+	var mana_fraction := _resource_fraction(float(mana), float(max_mana))
+	attrs = _resolved_progression_attributes(progression_attributes)
+
+	max_health = GameData.max_health_for(int(attrs["vida"]))
+	health = clampf(max_health * health_fraction, 0.0, max_health)
+	defense = GameData.defense_for(int(attrs["constituicao"]))
+	stamina.maximum = GameData.max_stamina_for(int(attrs["stamina"]))
+	stamina.current = clampf(stamina.maximum * stamina_fraction, 0.0, stamina.maximum)
+	max_mana = GameData.max_mana_for(attrs)
+	mana = clampi(roundi(float(max_mana) * mana_fraction), 0, max_mana)
+
+
+func _resolved_progression_attributes(progression_attributes: Dictionary) -> Dictionary:
+	var resolved := GameData.class_attributes(class_id).duplicate(true)
+	for attribute_value: Variant in GameData.attributes.get("attribute_ids", []):
+		var attribute_id := String(attribute_value)
+		if progression_attributes.has(attribute_id):
+			resolved[attribute_id] = int(progression_attributes[attribute_id])
+	return resolved
+
+
+func _resource_fraction(current: float, maximum: float) -> float:
+	if maximum <= 0.0:
+		return 1.0
+	return clampf(current / maximum, 0.0, 1.0)
 
 
 func _build_body(body_id: String) -> void:

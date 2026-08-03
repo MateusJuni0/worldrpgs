@@ -145,14 +145,17 @@ func _build_world() -> void:
 
 
 func _build_player() -> void:
-	var identity: Dictionary = ((GameData.save_state.get("character", {}) as Dictionary).get(
-		"identity", {}) as Dictionary)
+	var character: Dictionary = GameData.save_state.get("character", {}) as Dictionary
+	var identity: Dictionary = character.get("identity", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	var progression_attributes: Dictionary = progression.get("attributes", {}) as Dictionary
 	var class_id := String(identity.get("class_id", "warrior"))
 	var appearance: Dictionary = identity.get("appearance", {}) as Dictionary
 	player = Player.new()
 	player.name = "Player"
 	add_child(player)
-	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")))
+	player.setup(class_id, _palette, String(appearance.get("body_id", "body_male")),
+		progression_attributes)
 	_attach_player_equipment_visual(
 		player, String(appearance.get("body_id", "body_male")), class_id)
 	refresh_inventory_state()
@@ -643,6 +646,7 @@ func _build_bonfire(rest_id: String, at: Vector3) -> void:
 	root.add_child(controller)
 	controller.configure("brumal", rest_id)
 	controller.rest_completed.connect(_on_bonfire_rest_completed.bind(rest_id))
+	controller.level_purchased.connect(_on_bonfire_level_purchased)
 	controller.operation_failed.connect(_on_bonfire_operation_failed)
 	_bonfires[rest_id] = controller
 
@@ -698,6 +702,20 @@ func _on_bonfire_rest_completed(_result: Dictionary, rest_id: String) -> void:
 		# ⚠️ Nunca em silencio: se a gravacao falhar, o jogador TEM de saber,
 		# senao continua a jogar a pensar que esta seguro.
 		hud.toast("Descansaste, mas NAO foi possivel gravar: %s" % SaveSystem.last_error, 6.0)
+
+
+func _on_bonfire_level_purchased(_result: Dictionary) -> void:
+	if not is_instance_valid(player):
+		return
+	var character: Dictionary = GameData.save_state.get("character", {}) as Dictionary
+	var progression: Dictionary = character.get("progression", {}) as Dictionary
+	var progression_attributes: Dictionary = progression.get("attributes", {}) as Dictionary
+	if progression_attributes.is_empty():
+		return
+	player.apply_progression_attributes(progression_attributes)
+	# Carga tambem e um atributo persistido. Recalcular o perfil aqui garante que
+	# a compra muda imediatamente as opcoes de esquiva/corrida do corpo sentado.
+	refresh_inventory_state()
 
 
 func _on_bonfire_operation_failed(_result: Dictionary) -> void:
