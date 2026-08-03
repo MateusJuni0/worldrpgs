@@ -106,7 +106,7 @@ if "!RAPIDO!"=="1" (
 )
 
 echo.
-echo == 10/13  o chefe cai: luta inteira, 1950 PV, sem baixar a vida dele ==
+echo == 10/13  Lei 1: piloto NIVEL 1 vence Vorgar na luta real, com resultado visivel ==
 set "VORGAR_PARENT=%TEMP%\worldrpgs-verificar"
 for %%I in ("!VORGAR_PARENT!") do set "VORGAR_PARENT=%%~fI"
 set "VORGAR_APPDATA=!VORGAR_PARENT!\vorgar-!RANDOM!-!RANDOM!"
@@ -117,7 +117,7 @@ if errorlevel 1 (
 ) else (
   set "APPDATA=!VORGAR_APPDATA!"
   set "WORLDRPGS_TEST_USER_ROOT=!VORGAR_APPDATA!"
-  "%GODOT%" --headless --audio-driver Dummy --path . scenes/arena_vorgar.tscn -- --scene=vorgar --vorgar-full-fight-proof || set FALHOU=1
+  "%GODOT%" --headless --audio-driver Dummy --path . --script src/progression/law1_vorgar_gameplay_proof.gd -- --scene=vorgar --vorgar-full-fight-proof || set FALHOU=1
   set "APPDATA=!ORIGINAL_APPDATA!"
   set "WORLDRPGS_TEST_USER_ROOT=!ORIGINAL_WORLDRPGS_TEST_USER_ROOT!"
   if exist "!VORGAR_APPDATA!\" rd /s /q "!VORGAR_APPDATA!"
