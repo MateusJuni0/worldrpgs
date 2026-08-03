@@ -1170,7 +1170,7 @@ Relatório completo: [`docs/REVISAO-CODIGO.md`](docs/REVISAO-CODIGO.md). Nenhuma
 | 🔴 | ⭐ **O motor da geometria visível é autoridade única, mas a prova integrada está vermelha e fora do gate.** `GameplayCue` entrega o mesmo polígono ao mesh e a `covers_world_point()`; `Enemy` deixou de somar `body_radius` ou reconstruir cone/raio e, sem cue, não causa dano. O teste dedicado rejeita agora bytecode antigo: abre `gameplay.tscn` num Godot novo antes de usar input/HUD. Resultado actual: **170 passaram, 1 falhou**, porque `ArenaVorgar` não compila; por isso os controlos 10/10 não foram aceites nesta árvore. Mesmo depois dessa correcção, o dono de `VERIFICAR.bat` ainda tem de ligar o teste ao corredor obrigatório. | `game/src/enemies/enemy.gd` · `game/src/combat/gameplay_cue.gd` · `game/src/player/attack_family_self_test.gd` · `game/src/world/arena_vorgar.gd:77-84` · `game/VERIFICAR.bat` |
 | 🔴 | **O auto-teste central dá verde falso ao arrancar uma cena sem `Main` compilável.** A execução observada declarou **9764 passaram, 0 falharam** e código 0, mas no mesmo log aparecem `ArenaVorgar` inválido e `Failed to load script res://src/main.gd`. O total cumpre a quantidade, não a regra “jogo a sério”. | O dono do agregador deve tornar qualquer `SCRIPT ERROR` de dependência numa falha, e o dono da arena deve remover as declarações duplicadas; esta árvore só endureceu o teste que possui. |
 | 🔴 | **Vorgar está ligado apenas como inimigo básico.** A ficha não contém `vorgar_encounter`; `BossVorgar` exige-o e chama APIs que `ArenaVorgar` não tem. O auto-teste dedicado falha e não pertence a `VERIFICAR.bat`. | `game/data/enemies.json:620-639` · `game/src/enemies/boss_vorgar.gd:24-40` · `game/src/world/arena_vorgar.gd:60-128` · `game/VERIFICAR.bat:29-78` |
-| 🔴 | ⭐ **Lei 2 codificada como número e integração incompleta:** Voto de Sangue calcula +30/+60/+90% e o teste exige o multiplicador. O runtime de produção reserva os PV, mas o caminho de dano do jogador nunca consome o resultado; pode pagar a vida sem ganhar o benefício prometido. | `game/data/spells.json:3072-3108` · `game/src/classes/dark_mage.gd:102-121` · `game/src/summons/necromancy_runtime.gd:268-292` · `game/src/player/player.gd:823-833` |
+| ✅ | ~~**O Voto cobrava PV máximos e não aumentava o golpe físico.**~~ **CONTRATO PROVADO NO JOGO 03-08:** `Player` consulta o multiplicador data-driven do runtime; `repro-inicio.tscn`, já chamado pelo passo 4 de `VERIFICAR.bat`, carregou três vezes em `cast` e repetiu o mesmo golpe no mesmo inimigo: **31,7→60,3 PV** (×1,90), enquanto o HUD mostrou os PV máximos descerem **420→168** (−60%). A `[TENSÃO]` da Lei 2 e o dano mágico ficam separados abaixo, sem serem decididos por esta correcção. | `game/src/summons/necromancy_runtime.gd::apply_blood_oath_to_damage` · `game/src/player/player.gd::_deal_damage_to` · `game/src/tests/repro_inicio.gd::_provar_voto_sangue_em_jogo` |
 | 🔴 | **Os bancos de jogo dão verdes falsos.** A sessão aprova “estado de ataque” quando o estado observado é `livre`, mata por dano letal injectado, lê FPS uma vez e termina sempre com código 0. O filme de combate não reconhece `DEAD`; o filme de ataque grava pares duplicados. | `game/src/tools/sessao_de_jogo.gd:149-165,180-193,304-314` · `game/src/tools/filme_de_combate.gd:75-77` · `game/src/tools/filme_de_ataque.gd:77-96` |
 | 🔴 | **Lei 4 ainda vermelha.** Mobile está correcto, mas a medição de apresentação regista p99 18,323 ms e `fail_p99`; a prova quente integrada 2+5 continua por fazer. | `medicoes/animacao-esqueleto-2026-08-01.json:57-65,99-118` |
 | 🟠 | ⭐ **A regra de ouro voltou a falhar.** Há números de combate em `Player`/`Enemy`, famílias+clips no controlador de ataque, seis `CLASS_ROLES` para sete origens e uma lista “só de compatibilidade” que `main.gd` ainda usa para filtrar validação. | `game/src/player/player.gd:698-804` · `game/src/enemies/enemy.gd:613-712` · `game/src/player/attack_animation_controller.gd:9-58` · `game/src/ui/game_shell.gd:28-35` · `game/src/main.gd:541-555` |
@@ -1406,7 +1406,7 @@ posse. A prova canónica de Vorgar permanece separada e obrigatoriamente nível 
 |---|---:|---|---|
 | **Armas +0…+6** | 6 níveis, **20 escolhas** (2 postura + 2 arte + 4 escala + 8 conversão + 2 postura + 2 arte) | ✅ **Opções.** Cada escolha substitui postura, arte, escala ou tipo e declara perda; todas têm `increases_base_damage:false`. | Runtime e menu existem; o teste dedicado percorre +1…+6. A ligação da acção de arte ao `Player` continua lacuna separada. |
 | **Feitiços +1…+5** | 53 feitiços × 5 = **265 propostas** | ⚠️ **106 números:** os 53 níveis +1 baixam custo de mana e os 53 níveis +5 devolvem mana. **159 opções:** +2/+4 trocam forma e +3 troca área/alvo com limite ou perda. | ✅ Gate honesto: só nível 0 está disponível; os 265 continuam `proposals_are_non_executable` até a pergunta 41 ser decidida. Portanto não quebram o runtime actual, mas o desenho futuro ainda não cumpre integralmente a Lei 2. |
-| **Voto de Sangue base** | 3 camadas | 🔴 **Número:** +30/+60/+90% de dano por −20/−40/−60% de PV máximo. | `DarkMage` calcula e devolve o multiplicador; `NecromancyRuntime` reserva os PV, mas o dano de `Player` nunca consulta o resultado. Hoje pode cobrar o preço sem entregar sequer o número prometido. Lei 2 falha e o fio funcional também. |
+| **Voto de Sangue base** | 3 camadas | 🔴 **Número:** +30/+60/+90% de dano por −20/−40/−60% de PV máximo. | `DarkMage` calcula o multiplicador e `NecromancyRuntime` reserva os PV. O golpe físico de `Player` consulta o resultado e a cena A/B passou; dano de magia continua desligado. A tensão da Lei 2 não foi decidida. |
 | **Evoluções de origem** | decisão global das origens | ✅ **Opções por marco**, não números nem nível. | Só existe na spec/decisão; `abilities.json` contém a habilidade base de cada origem e nenhum catálogo/runtime de patamares. Não declarar jogável. |
 | **Receitas de melhoria** | custos de Limalha/Limalha Nobre | ➖ **Números de preço, não benefício.** | Não violam a Lei 2 por si: compram uma escolha. `limalha_nobre` continua sem ficha económica, lacuna já registada. |
 | **Nível/atributos** | nível 1→100 e oito atributos | ➖ **Fora do escopo estrito da Lei 2:** a Lei 1 decide explicitamente que estes números compram margem. | O efeito no corpo está desligado, como registado acima. |
@@ -1419,7 +1419,7 @@ iniciais, mas `SaveSystem.create_save()` e `Player.setup()` dão a todas as orig
 os favoritos globais Dardo/Ruína/Égide. O Voto fica fora de `known_spells` e dos
 favoritos; `NecromancyRuntime.apply_blood_oath()` só é alcançável se outro código
 injectar a selecção. São três defeitos distintos: violação de desenho, acesso do
-jogador desligado e benefício desligado.
+jogador desligado e dano mágico fora do multiplicador agora provado no golpe físico.
 
 ### ⚠️ `[TENSÃO]` — proposta para o Voto de Sangue, sem decisão tomada
 
@@ -1451,3 +1451,30 @@ ficheiros. A prova nova da Lei 1 não é a origem: o passo 10 troca `APPDATA` po
 pasta temporária exclusiva e apaga-a no fim. Falta ao dono dos passos antigos
 isolar igualmente qualquer teste que escreva save/captura, sem depender de limpeza
 posterior que já não consegue restaurar um save real sobrescrito.
+
+## 🩸 Varredura de contratos cobrados e não entregues — 03-08-2026
+
+O fio físico do Voto foi ligado sem decidir a `[TENSÃO]`: o golpe real pergunta ao
+`NecromancyRuntime`, que aplica o multiplicador da camada já lida de `spells.json`.
+A cena obrigatória equipa o Voto como fixture — o fio normal de feitiços iniciais
+continua vermelho abaixo — e depois só usa entradas reais: o mesmo `evil_mage`
+carregou três vezes em `cast` com `voto_sangue` e repetiu o mesmo ataque contra o
+mesmo inimigo. A execução observada retirou **31,7 PV sem Voto e 60,3 PV com
+Voto** (×1,90 exactos), mostrou **420→168 PV máximos** no HUD, continuou pela
+morte/levantamento do inimigo e saiu com código 0. Como o passo 4 de
+`VERIFICAR.bat` já chama `scenes/repro-inicio.tscn`, a asserção entrou no corredor
+obrigatório sem alterar o batch.
+
+| Estado | Contrato partido encontrado | Prova exacta / dono |
+|---|---|---|
+| 🔴 | **Voto recusado ainda cobra mana.** `Player._start_cast()` retira mana antes do compromisso; depois `NecromancyRuntime._on_caster_state_changed()` chama `apply_blood_oath()` e ignora `accepted/reason`. Na quarta camada ou sem orçamento de PV, há custo e zero camada/benefício/explicação. | `game/src/player/player.gd:1142-1161` · `game/src/summons/necromancy_runtime.gd:275-299`; dono da pré-validação/feedback do casting |
+| 🔴 | **Dano mágico continua fora do Voto.** O ataque físico consulta o runtime, mas o contacto de feitiço chama directamente `Spell.apply_contact()`; um Voto pode baixar PV máximos e aumentar a arma sem aumentar uma magia ofensiva. | `game/src/player/player.gd:1232-1235` · `game/src/combat/spell.gd`; dono da fronteira comum de dano mágico |
+| 🔴 | **O jogador não recebe os feitiços iniciais da própria origem.** `evil_mage.starting_spells` promete `agulha`, `levantar`, `voto_sangue`, mas o save dá a todas as origens os três favoritos globais. Sem injecção de teste, o jogador não consegue seleccionar o Voto que esta tarefa deveria provar. | `game/data/attributes.json:133` · `game/src/autoload/save_system.gd:43-73`; dono de save/inventário |
+| 🔴 | **Levantar entrega sem cobrar o custo de mana declarado.** A tecla remapeável `raise_dead` emite directamente `raise_requested`; `main.gd` cobra PV e materializa o aliado, mas não passa pelo custo de mana de `spells.json`. Pela rota normal de `cast`, por outro lado, pode gastar mana e o runtime ignorar uma rejeição. | `game/src/player/player.gd:1672-1675` · `game/src/main.gd::_on_raise_requested` · `game/data/spells.json::levantar`; donos de `main.gd`/casting |
+| 🟠 | **O traço de +40% de mana do Mago do Mal só paga no teste isolado.** `DarkMage.mana_capacity()` é chamado pelo teste da classe; `Player.setup()` usa `GameData.max_mana_for(attrs)` sem consultar o traço. É benefício prometido e não entregue, embora não cobre um recurso no acto. | `game/src/classes/dark_mage.gd::mana_capacity` · `game/src/classes/dark_mage_origin_test.gd:133` · `game/src/player/player.gd:148`; dono do arranque do jogador |
+
+Arte/som e custo de máquina não mudaram nesta ligação: ela acrescenta zero nós,
+meshes, luzes, áudio ou draw calls e faz uma consulta síncrona O(1) por golpe. O
+Voto continua a usar os anéis/coração sintetizados por `SpellCastVfx` e o perfil
+sonoro data-driven já declarado; a cena A/B passou. Como não houve alteração de
+render, não se inventa nem se repete aqui um número de FPS.

@@ -161,6 +161,8 @@ func _provar_necromancia_em_jogo(jogo: Node) -> void:
 	if isolated_golden_rule:
 		if not await _provar_ataque_do_catalogo(jogador, vivos[0]):
 			return
+	if not await _provar_voto_sangue_em_jogo(jogo, jogador, runtime, vivos[0]):
+		return
 	var shared_boss := jogo.get("boss") as Enemy
 	var shared_boss_health := shared_boss.health if shared_boss != null else 0.0
 	var corpo_futuro := vivos[0]
@@ -248,6 +250,173 @@ func _provar_necromancia_em_jogo(jogo: Node) -> void:
 	_limpar_slots_de_teste()
 	print("=== ARRANQUE + NECROMANCIA OK ===")
 	get_tree().quit(0)
+
+
+func _provar_voto_sangue_em_jogo(jogo: Node, jogador: Player,
+		runtime: NecromancyRuntime, alvo: Enemy) -> bool:
+	var hud := jogo.get("hud") as Hud
+	var health_text := hud.get("_info") as Label if hud != null else null
+	var enemy_hud := get_tree().current_scene.get_node_or_null("EnemyHud") as EnemyHud
+	var enemy_panel := enemy_hud.get("_target_group") as Control \
+		if enemy_hud != null else null
+	var enemy_bar := enemy_hud.get("_health_fill") as ColorRect \
+		if enemy_hud != null else null
+	var enemy_name := enemy_hud.get("_target_name") as Label \
+		if enemy_hud != null else null
+	if alvo == null or health_text == null or enemy_panel == null \
+			or enemy_bar == null or enemy_name == null:
+		_falhar("a prova do Voto nao encontrou o mesmo inimigo e as barras visiveis")
+		return false
+	if not InputMap.has_action("cast") or InputMap.action_get_events("cast").is_empty():
+		_falhar("o jogador nao tem uma tecla remapeavel para usar o Voto")
+		return false
+
+	var original_position := alvo.global_position
+	var original_health := alvo.health
+	var original_physics := alvo.is_physics_processing()
+	var original_favorites := jogador.favorite_spells.duplicate()
+	var original_selected := jogador.selected_spell
+	var original_main_weapon := jogador.main_weapon
+	var original_offhand_weapon := jogador.offhand_weapon
+	var original_two_handed := jogador.is_two_handed
+	var mage_loadout := (GameData.weapons.get("loadouts", {}) as Dictionary).get(
+		"evil_mage", {}) as Dictionary
+	jogador.main_weapon = Player.equipment_weapon_id(mage_loadout.get("main"))
+	jogador.offhand_weapon = Player.equipment_weapon_id(mage_loadout.get("offhand"))
+	jogador.is_two_handed = bool(jogador.call("_loadout_uses_two_hands",
+		jogador.main_weapon, jogador.offhand_weapon))
+	alvo.set_physics_process(false)
+	var weapon := GameData.weapon(jogador.main_weapon)
+	alvo.global_position = jogador.global_position \
+		- jogador.global_transform.basis.z * float(weapon.get("range")) * 0.5
+	alvo.health = alvo.max_health
+	await get_tree().process_frame
+	var full_bar_width := float(EnemyHud.BAR_WIDTH)
+	var damage_without := await _golpear_como_jogador(jogador, alvo)
+	await _esperar_barra_do_inimigo(enemy_bar, full_bar_width, false)
+	var bar_loss_without := full_bar_width - enemy_bar.size.x
+	print("[repro] Voto baseline: arma=%s dano=%.1f barra=%.1f->%.1f visivel=%s estado=%s" % [
+		jogador.main_weapon, damage_without, full_bar_width, enemy_bar.size.x,
+		str(enemy_panel.visible), jogador.state_name()])
+	if damage_without <= 0.0 or bar_loss_without <= 0.0 \
+			or not enemy_panel.visible or not enemy_name.text.contains(alvo.display_name().to_upper()):
+		_falhar("sem Voto, carregar no ataque nao tirou PV na barra do inimigo")
+		return false
+
+	for _frame: int in 240:
+		if jogador.state == Player.State.FREE:
+			break
+		await get_tree().physics_frame
+	alvo.health = alvo.max_health
+	await _esperar_barra_do_inimigo(enemy_bar, full_bar_width, true)
+	var max_health_without := jogador.max_health
+	var oath := GameData.spell("voto_sangue")
+	var layers := (oath.get("effect", {}) as Dictionary).get("layers", []) as Array
+	if layers.is_empty():
+		_falhar("o catalogo nao declarou as camadas do Voto")
+		return false
+	# Fixture explícita: a origem promete o Voto, mas o save ainda entrega os
+	# mesmos três favoritos globais a todas as origens. Essa lacuna de acesso
+	# está em LACUNAS.md; daqui para a frente conjuração e golpes usam Input real.
+	if not jogador.favorite_spells.has("voto_sangue"):
+		jogador.favorite_spells.append("voto_sangue")
+	if not jogador.select_spell("voto_sangue"):
+		_falhar("o jogador nao conseguiu seleccionar o Voto equipado")
+		return false
+	var final_layer := layers.back() as Dictionary
+	for layer_value: Variant in layers:
+		var layer := layer_value as Dictionary
+		var layer_expected_max := max_health_without * (1.0 - float(
+			layer.get("health_cost_fraction_total", 0.0)))
+		Input.action_press("cast")
+		await get_tree().physics_frame
+		Input.action_release("cast")
+		for _frame: int in 240:
+			await get_tree().physics_frame
+			if jogador.state == Player.State.FREE \
+					and is_equal_approx(jogador.max_health, layer_expected_max):
+				break
+		if not is_equal_approx(jogador.max_health, layer_expected_max):
+			_falhar("carregar em cast nao aplicou todas as camadas do Voto")
+			return false
+	await get_tree().process_frame
+	var expected_max := max_health_without * (1.0 - float(
+		final_layer.get("health_cost_fraction_total", 0.0)))
+	var visible_health := "%d/%d PV" % [int(jogador.health), int(jogador.max_health)]
+	print("[repro] Voto custo: PV max %.1f->%.1f esperado=%.1f HUD=%s" % [
+		max_health_without, jogador.max_health, expected_max, health_text.text])
+	if not is_equal_approx(jogador.max_health, expected_max) \
+			or not health_text.text.contains(visible_health):
+		_falhar("carregar em cast cobrou o Voto, mas a perda de PV maximos nao apareceu no HUD")
+		return false
+
+	var damage_with := await _golpear_como_jogador(jogador, alvo)
+	await _esperar_barra_do_inimigo(enemy_bar, full_bar_width, false)
+	var bar_loss_with := full_bar_width - enemy_bar.size.x
+	var expected_multiplier := 1.0 + float(final_layer.get(
+		"damage_bonus_fraction_total", 0.0))
+	print("[repro] Voto beneficio: dano %.1f->%.1f esperado=%.1f barra=%.1f->%.1f" % [
+		damage_without, damage_with, damage_without * expected_multiplier,
+		bar_loss_without, bar_loss_with])
+	if not is_equal_approx(damage_with, damage_without * expected_multiplier) \
+			or bar_loss_with <= bar_loss_without:
+		_falhar("o Voto cobrou PV maximos, mas o mesmo golpe nao tirou mais PV visiveis")
+		return false
+
+	print("[repro] 5b. Voto por tecla: PV max %.1f->%.1f; mesmo golpe %.1f->%.1f" % [
+		max_health_without, jogador.max_health, damage_without, damage_with])
+	for _frame: int in 240:
+		if jogador.state == Player.State.FREE and jogador.hitstop_frames <= 0:
+			break
+		await get_tree().physics_frame
+	runtime.rest()
+	jogador.health = jogador.max_health
+	jogador.favorite_spells.assign(original_favorites)
+	jogador.selected_spell = original_selected
+	jogador.main_weapon = original_main_weapon
+	jogador.offhand_weapon = original_offhand_weapon
+	jogador.is_two_handed = original_two_handed
+	alvo.health = original_health
+	alvo.global_position = original_position
+	alvo.set_physics_process(original_physics)
+	await get_tree().process_frame
+	return true
+
+
+func _golpear_como_jogador(jogador: Player, alvo: Enemy) -> float:
+	for _frame: int in 240:
+		if jogador.state == Player.State.FREE and jogador.hitstop_frames <= 0:
+			break
+		await get_tree().physics_frame
+	var health_before := alvo.health
+	Input.action_release("attack")
+	Input.action_release("heavy_mod")
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	Input.action_press("heavy_mod")
+	Input.action_press("attack")
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	Input.action_release("attack")
+	Input.action_release("heavy_mod")
+	var heavy := (GameData.weapon(jogador.main_weapon).get("heavy", {}) as Dictionary)
+	var frames_to_watch := int(heavy.get("startup", 0)) \
+		+ int(heavy.get("active", 0)) + int(heavy.get("recovery", 0))
+	for _frame: int in frames_to_watch:
+		await get_tree().physics_frame
+		if alvo.health < health_before:
+			break
+	return health_before - alvo.health
+
+
+func _esperar_barra_do_inimigo(bar: ColorRect, full_width: float,
+		expect_full: bool) -> void:
+	for _frame: int in 30:
+		await get_tree().process_frame
+		var is_full := is_equal_approx(bar.size.x, full_width)
+		if is_full == expect_full:
+			return
+		await get_tree().physics_frame
 
 
 func _caminhar_ate_encontros(jogador: Player) -> Array[Enemy]:

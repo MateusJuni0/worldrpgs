@@ -869,7 +869,13 @@ func _deal_damage_to(e: Node3D, mv: float, weapon_id: String, is_bash: bool) -> 
 	if not e.has_method("take_damage"):
 		return
 	var target_def: float = e.get("defense") if e.get("defense") != null else 0.0
-	var info := DamageInfo.make(GameData.compute_damage(mv, weapon_id, attrs, target_def), self,
+	var damage := GameData.compute_damage(mv, weapon_id, attrs, target_def)
+	var necromancy_runtime := get_node_or_null("../NecromancyRuntime")
+	if necromancy_runtime != null \
+			and necromancy_runtime.has_method("apply_blood_oath_to_damage"):
+		damage = float(necromancy_runtime.call(
+			"apply_blood_oath_to_damage", damage, self))
+	var info := DamageInfo.make(damage, self,
 		"heavy" if _atk_kind == "heavy" else "light")
 	var posture_mult := float(GameData.section("poise")["standard_posture_multiplier"])
 	if is_bash:
