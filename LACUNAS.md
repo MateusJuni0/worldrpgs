@@ -1285,3 +1285,37 @@ respeitou o teto de **5 inimigos / 8 atores**. Isto ainda não fecha a prova ped
 ⛔ **Não fechar isto declarando o percurso "instável".** Um souls-like que não se
 atravessa não é um jogo, é um conjunto de arenas. As duas causas são reais e as
 duas têm de cair.
+
+## 🔴 Passo 9 depois da estabilidade de confronto — ainda sem 17/17 (03-08-2026)
+
+`SpawnPopulation` passou a reservar primeiro os corpos cujo confronto já
+começou, continua a ler os tetos `5/8` de `data/enemies.json` e não volta a
+escrever esses números em GDScript. Um corpo vivo escolhido para sair regressa
+fisicamente ao `home` e só depois é libertado; um morto nunca percorre esse fio,
+portanto `died` continua a ser a autoridade e o cadáver fica disponível para a
+necromancia.
+
+⚠️ **Isto removeu o sintoma original, mas não fechou a prova.** Em três corridas
+reais e isoladas depois da alteração nenhum alvo desapareceu sem `died`; porém o
+piloto morreu antes da arena:
+
+| corrida | resultado visível | mortes por `died` |
+|---|---|---:|
+| 1 — conservar também corpos próximos | `destino 08/17 alcancado a pe`; morreu contra Orc lanceiro no destino 09 | 6 |
+| 2 — reservar confrontos, restantes regressam ao `home` | `destino 05/17 alcancado a pe`; morreu contra Batedor goblin | 5 |
+| 3 — `CHASE` só conta depois de uma ação trocada | repetiu exatamente `destino 05/17`; morreu contra Batedor goblin | 5 |
+
+🔴 Portanto **não existem as duas linhas `destino 17/17 alcancado a pe` pedidas**
+e esta tarefa não pode ser declarada concluída. Os três `user://` temporários,
+incluindo saves e capturas, foram removidos após cada execução.
+
+[CODEX] A fronteira precisa agora de um dono explícito do alvo de combate, em
+vez de o produtor inferir intenção a partir dos estados de até cinco inimigos.
+Recomendação: o jogador/piloto publicar o alvo que escolheu e a população reservar
+esse corpo, mais qualquer ator que já trocou dano, antes de admitir vizinhos.
+Razão: reservar todo `CHASE` repete a multidão já rejeitada; inferir apenas por
+distância não sabe qual dos corpos o jogador está a tentar matar. Alternativa
+descartada: aumentar PV/frascos do piloto ou baixar população/dano no JSON para
+pintar o passo 9 de verde — mudaria números de combate e esconderia o contrato
+solto. Isto exige `game/src/tools/percurso.gd` e/ou o fio de alvo do jogador,
+ficheiros fora desta árvore.

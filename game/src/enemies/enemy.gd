@@ -67,6 +67,9 @@ var _gap_timer := 0.0
 var _no_reach_time := 0.0
 var _phase := 1
 var _spawn_offset := Vector3.ZERO
+var _confrontation_started := false
+var _virtualization_requested := false
+var _virtualization_ready := false
 
 var _patrol_points: Array[Vector3] = []
 var _patrol_index := 0
@@ -357,20 +360,24 @@ func _physics_process(delta: float) -> void:
 	_state_frame += 1
 	_state_time += delta
 
-	if state != State.DEAD:
+	if state != State.DEAD and not _virtualization_requested:
 		_tick_boss_phase()
 		_tick_anti_kite(delta)
 
-	match state:
-		State.IDLE:   _tick_idle(delta)
-		State.PATROL: _tick_patrol(delta)
-		State.CHASE:  _tick_chase(delta)
-		State.ATTACK: _tick_attack(delta)
-		State.STAGGER, State.BROKEN: _tick_downed(delta)
-		State.DEAD:
-			velocity.x = 0.0
-			velocity.z = 0.0
-	if state in [State.IDLE, State.PATROL, State.CHASE]:
+	if _virtualization_requested:
+		_tick_virtualization(delta)
+	else:
+		match state:
+			State.IDLE:   _tick_idle(delta)
+			State.PATROL: _tick_patrol(delta)
+			State.CHASE:  _tick_chase(delta)
+			State.ATTACK: _tick_attack(delta)
+			State.STAGGER, State.BROKEN: _tick_downed(delta)
+			State.DEAD:
+				velocity.x = 0.0
+				velocity.z = 0.0
+	if not _virtualization_requested \
+			and state in [State.IDLE, State.PATROL, State.CHASE]:
 		var maximum_speed := maxf(float(data.get("chase_speed", 0.0)),
 			float(data.get("patrol_speed", 0.0)))
 		velocity = CrowdSteering.separate_velocity(self, velocity,
@@ -388,6 +395,10 @@ func _physics_process(delta: float) -> void:
 
 func _change_state(next: int) -> void:
 	var previous := state
+	if next in [State.ATTACK, State.STAGGER, State.BROKEN]:
+		_confrontation_started = true
+	elif next in [State.IDLE, State.PATROL, State.DEAD]:
+		_confrontation_started = false
 	state = next
 	_state_frame = 0
 	_state_time = 0.0
@@ -409,6 +420,68 @@ func _set_attack_phase(next: int, progress: float) -> void:
 
 func _target_valid() -> bool:
 	return is_instance_valid(target) and (not target.has_method("is_alive") or target.call("is_alive"))
+
+
+## O alvo e atribuido ao materializar, por isso a referencia e CHASE sozinhos nao
+## provam confronto. A marca nasce quando uma das partes troca uma accao e dura
+## durante a perseguicao; so desistir para IDLE/PATROL a limpa.
+func is_in_confrontation() -> bool:
+	return _target_valid() and _confrontation_started and state != State.DEAD
+
+
+## Streaming pede uma saida, nao um desaparecimento. O corpo larga o alvo e
+## regressa visivelmente a colocacao de autoria; continua a ocupar o seu lugar no
+## tecto ate chegar, portanto a retirada nao abre uma vaga prematura.
+func begin_virtualization() -> void:
+	if state == State.DEAD or is_in_confrontation() or _virtualization_requested:
+		return
+	_cancel_attack_presentation()
+	_virtualization_requested = true
+	_virtualization_ready = false
+	target = null
+	_queue.clear()
+	_atk = {}
+	_gap_timer = 0.0
+	_no_reach_time = 0.0
+	_change_state(State.PATROL if not _patrol_points.is_empty() else State.IDLE)
+
+
+func cancel_virtualization(next_target: Node3D) -> void:
+	if not _virtualization_requested:
+		return
+	_virtualization_requested = false
+	_virtualization_ready = false
+	target = next_target
+	_change_state(State.PATROL if not _patrol_points.is_empty() else State.IDLE)
+
+
+func is_ready_for_virtualization() -> bool:
+	return _virtualization_requested and _virtualization_ready \
+		and not is_in_confrontation() and state != State.DEAD
+
+
+func _tick_virtualization(delta: float) -> void:
+	var destination := home + _spawn_offset
+	var displacement := destination - global_position
+	displacement.y = 0.0
+	if displacement.is_zero_approx():
+		velocity.x = 0.0
+		velocity.z = 0.0
+		_virtualization_ready = true
+		return
+	var return_speed := maxf(float(data.get("patrol_speed", 0.0)),
+		float(data.get("chase_speed", 0.0)))
+	if return_speed <= 0.0 or delta <= 0.0:
+		_brake(delta)
+		return
+	_virtualization_ready = false
+	var distance := displacement.length()
+	if distance <= return_speed * delta:
+		velocity.x = displacement.x / delta
+		velocity.z = displacement.z / delta
+		rotation.y = atan2(-displacement.x, -displacement.z)
+	else:
+		_walk_towards(destination, return_speed)
 
 
 func _refresh_target_actionability() -> void:
@@ -765,6 +838,12 @@ func _try_hit() -> void:
 func take_damage(info: DamageInfo) -> void:
 	if state == State.DEAD:
 		return
+	_confrontation_started = true
+	if _virtualization_requested:
+		cancel_virtualization(info.attacker)
+		if is_instance_valid(info.attacker):
+			target = info.attacker
+			_change_state(State.CHASE)
 
 	var previous_health := health
 	health = maxf(0.0, health - info.amount)
@@ -783,6 +862,8 @@ func take_damage(info: DamageInfo) -> void:
 
 func _die() -> void:
 	_cancel_attack_presentation()
+	_virtualization_requested = false
+	_virtualization_ready = false
 	_change_state(State.DEAD)
 	velocity = Vector3.ZERO
 	hitstop_frames = 0
@@ -819,6 +900,9 @@ func is_alive() -> bool:
 
 func full_reset() -> void:
 	_cancel_attack_presentation()
+	_confrontation_started = false
+	_virtualization_requested = false
+	_virtualization_ready = false
 	set_physics_process(true)
 	var previous_health := health
 	health = max_health
@@ -935,6 +1019,7 @@ func display_name() -> String:
 func taunt(by: Node3D, _seconds: float) -> void:
 	if state == State.DEAD:
 		return
+	_confrontation_started = true
 	target = by
 	if state == State.IDLE or state == State.PATROL:
 		_change_state(State.CHASE)

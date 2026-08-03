@@ -164,10 +164,12 @@ static func catalog_contract_errors(enemies: Dictionary, named_catalog: Dictiona
 		errors.append("Brumal tem %d/1 guardiao" % guardian_count)
 	if world_types.size() < 6:
 		errors.append("Brumal tem %d/6 tipos distintos no mundo" % world_types.size())
-	if actor_limit != 8:
-		errors.append("o tecto e %d/8 actores animados" % actor_limit)
-	if active_enemy_limit != 5:
-		errors.append("Brumal permite %d/5 inimigos animados" % active_enemy_limit)
+	if actor_limit <= 0:
+		errors.append("o catalogo nao declara tecto de actores animados")
+	if active_enemy_limit <= 0:
+		errors.append("o catalogo nao declara tecto de inimigos animados")
+	if active_enemy_limit > actor_limit:
+		errors.append("o tecto de inimigos excede o tecto total de actores")
 	return errors
 
 
@@ -263,7 +265,8 @@ func _refresh_active_set() -> void:
 	_prune_invalid_actors()
 	var external_enemies := _external_enemy_count()
 	var reserved := _reserved_actor_count() + external_enemies
-	var eligible: Array[Dictionary] = []
+	var engaged_ids: Array[String] = []
+	var fill_candidates: Array[Dictionary] = []
 	for placement: Dictionary in _plan:
 		var placement_id := String(placement.get("placement_id", ""))
 		var actor := _active.get(placement_id) as Node
@@ -273,13 +276,24 @@ func _refresh_active_set() -> void:
 			continue
 		var distance := _player.global_position.distance_to(
 			placement.get("position", Vector3.ZERO) as Vector3)
-		if distance <= _activation_distance_m \
-				or (is_instance_valid(actor) and distance <= _deactivation_distance_m):
-			eligible.append(placement)
-	var desired := select_for_activation(eligible, _player.global_position,
-		reserved, _animated_actor_limit,
-		maxi(0, _active_enemy_limit - external_enemies),
+		if is_instance_valid(actor):
+			if _actor_in_confrontation(actor):
+				engaged_ids.append(placement_id)
+			elif distance <= _deactivation_distance_m:
+				fill_candidates.append(placement)
+		elif distance <= _activation_distance_m:
+			fill_candidates.append(placement)
+
+	# O confronto manda primeiro. So os lugares que sobrarem sao preenchidos
+	# pelas colocacoes mais proximas; um corpo substituido continua a ocupar a
+	# vaga enquanto regressa visivelmente ao `home`.
+	engaged_ids.sort()
+	var desired := engaged_ids.duplicate()
+	var fill_ids := select_for_activation(fill_candidates, _player.global_position,
+		reserved + desired.size(), _animated_actor_limit,
+		maxi(0, _active_enemy_limit - external_enemies - desired.size()),
 		_deactivation_distance_m)
+	desired.append_array(fill_ids)
 
 	for placement_id_value: Variant in _active.keys().duplicate():
 		var placement_id := String(placement_id_value)
@@ -291,6 +305,8 @@ func _refresh_active_set() -> void:
 			continue
 		if not desired.has(placement_id):
 			_deactivate_actor(placement_id, actor)
+		elif actor.has_method("cancel_virtualization"):
+			actor.call("cancel_virtualization", _player)
 
 	var free_slots := mini(
 		maxi(0, _animated_actor_limit - _animated_actor_count()),
@@ -334,6 +350,17 @@ func _spawn_placement(placement: Dictionary) -> void:
 
 
 func _deactivate_actor(placement_id: String, actor: Node) -> void:
+	# Morte nao e streaming: o sinal `died` e o cadaver persistente sao a
+	# autoridade para recompensa, contadores e necromancia.
+	if _is_actor_dead(actor) or _actor_in_confrontation(actor):
+		return
+	if not actor.has_method("begin_virtualization") \
+			or not actor.has_method("is_ready_for_virtualization"):
+		push_error("[spawn] %s nao implementa retirada visivel" % placement_id)
+		return
+	actor.call("begin_virtualization")
+	if not bool(actor.call("is_ready_for_virtualization")):
+		return
 	_active.erase(placement_id)
 	if String(actor.get_meta("world_type_id", "")).begins_with("guardian:"):
 		if _main.get("boss") == actor:
@@ -368,6 +395,11 @@ func _prune_invalid_actors() -> void:
 
 func _is_actor_dead(actor: Node) -> bool:
 	return actor.has_method("is_alive") and not bool(actor.call("is_alive"))
+
+
+func _actor_in_confrontation(actor: Node) -> bool:
+	return actor.has_method("is_in_confrontation") \
+		and bool(actor.call("is_in_confrontation"))
 
 
 func _reserved_actor_count() -> int:
