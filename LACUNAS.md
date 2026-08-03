@@ -1319,3 +1319,32 @@ descartada: aumentar PV/frascos do piloto ou baixar população/dano no JSON par
 pintar o passo 9 de verde — mudaria números de combate e esconderia o contrato
 solto. Isto exige `game/src/tools/percurso.gd` e/ou o fio de alvo do jogador,
 ficheiros fora desta árvore.
+
+### [CODEX] Prova do bloqueio seguinte — o alvo já não some; o piloto não cura (03-08-2026)
+
+Foram feitas mais cinco corridas reais e isoladas do passo 9. A versão de
+produção repetiu `destino 08/17 alcancado a pe`, contou **6 mortes por `died`** e
+morreu contra o lanceiro da primeira sala; nenhuma corrida voltou a imprimir
+`desapareceu sem emitir died`.
+
+Para separar cerco de desgaste, foi ensaiada temporariamente a política mais
+forte possível dentro do produtor: um único dono de perseguição, zero novas
+admissões durante confronto e os restantes corpos sem alvo. Três corridas
+repetiram exatamente o mesmo resultado e a instrumentação mostrou sempre **um
+único inimigo em confronto**. O ensaio e toda a instrumentação foram removidos
+porque não melhoraram o resultado e mudariam o jogo sem fechar a prova.
+
+Na transição visível para a Toca, o piloto tinha **214 PV e 1 frasco**. O
+`brumal:lair:room_1_front` entrou sozinho, permaneceu materializado durante todo o
+confronto e levou o piloto a **0 PV em duas fases de golpe**, sem o piloto usar o
+frasco restante. Portanto o bloqueio atual já não pertence a
+`SpawnPopulation`/`Enemy`: está em `game/src/tools/percurso.gd`, que passa pela
+fogueira da entrada sem descansar e só decide curar contra a estimativa de uma
+ameaça isolada. O dono desse ficheiro deve provar a ação real de descansar antes
+da Toca ou corrigir a decisão de cura para sobreviver à sequência catalogada.
+
+🔴 Continuam a faltar as duas linhas `destino 17/17 alcancado a pe`; não declarar
+esta tarefa concluída. Todos os `user://` e diretórios de captura temporários
+destas corridas foram removidos. Alterar dano, PV, frascos, população ou esconder
+os inimigos da Toca foi rejeitado: pintaria o corredor de verde sem corrigir a
+ação que o jogador precisa de executar.
