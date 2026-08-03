@@ -1374,6 +1374,7 @@ apenas o estado factual** das linhas antigas “Lei 1 continua sem prova jogada�
 lacunas independentes do percurso Brumal → arena.
 
 ### Lei 1 — nível 1 vence; gating não foi encontrado; fio ligado, prova comparativa em falta
+### Lei 1 — nível 1 vence; gating não foi encontrado; progressão não chega ao corpo
 
 | Estado | Resultado observado agora | Evidência |
 |---|---|---|
@@ -1399,6 +1400,16 @@ reabrir o save; deixar o mesmo inimigo acertar o mesmo golpe até à morte; e ex
 mais golpes no personagem de nível alto, com barras/HUD observados. Esta árvore
 não alterou a cena nem o batch porque esses ficheiros não estão na sua lista de
 posse. A prova canónica de Vorgar permanece separada e obrigatoriamente nível 1.
+| ✅ | **Não foi encontrado gating por nível em arma, zona, feitiço, classe ou chefe.** Fora do contrato negativo desta própria prova, a varredura dos `.gd` de produção e de `game/data/*.json` não encontrou campos de conteúdo `required_level`, `min_level`, `level_requirement`, `requires_level`, `unlock_level` ou `level_gate`. As únicas leituras de nível de personagem no runtime de produção são a compra/preview do próprio nível; `progression.json::leveling.opens_content_by_level` é `false`. | `rg` global pelos campos acima, separando `law1_vorgar_gameplay_proof.gd` · `progression_rules.gd:151-171` · `levelup_model.gd:11-18,114-141` · `progression.json:42-48` |
+| ✅ | **Requisitos de arma não são porta:** o cálculo aplica rendimento abaixo do requisito e continua; não existe rejeição de equipamento por nível. Evoluções de origem estão decididas por marco, nunca por nível, e ainda não têm runtime. | `game_data.gd:538-571` · `attributes.json::below_requirement_damage_multiplier` · `spec/12-classes.md:80-98` |
+| 🔴 | ⭐ **Subir nível não reduz hoje a margem de erro no corpo jogável.** O ecrã/`ProgressionRuntime` compra e persiste o ponto, mas `Main._build_player()` passa apenas o ID da origem e `Player.setup()` volta a carregar `GameData.class_attributes(class_id)`. Nenhum fio aplica `character.progression.attributes` ao `Player`, nem actualiza PV/STA/DEF/mana depois de confirmar. Logo a Lei 1 passa o lado “não abre porta”, mas falha o lado “o nível reduz a margem de erro”: os números do save não chegam ao combate. | `game/src/main.gd:147-160` · `game/src/player/player.gd:139-149` · `game/src/world/bonfire.gd:199-200` · `game/src/progression/progression_runtime.gd:78-88,138-147` |
+
+**Correcção pedida ao dono de `Player/Main/bonfire`:** `Player.setup` deve receber
+os atributos persistidos (descobertos por `attribute_ids`, sem lista manual), e a
+confirmação de nível deve recalcular os derivados preservando a proporção de
+recursos actual ou outra regra decidida em dados. Depois, uma prova jogável deve
+comprar Vida na fogueira e observar no HUD o PV máximo mudar no mesmo jogo e após
+reabrir o save. Não se alterou essa fronteira nesta árvore.
 
 ### Lei 2 — varredura completa dos sistemas chamados “melhoria”
 
@@ -1407,6 +1418,7 @@ posse. A prova canónica de Vorgar permanece separada e obrigatoriamente nível 
 | **Armas +0…+6** | 6 níveis, **20 escolhas** (2 postura + 2 arte + 4 escala + 8 conversão + 2 postura + 2 arte) | ✅ **Opções.** Cada escolha substitui postura, arte, escala ou tipo e declara perda; todas têm `increases_base_damage:false`. | Runtime e menu existem; o teste dedicado percorre +1…+6. A ligação da acção de arte ao `Player` continua lacuna separada. |
 | **Feitiços +1…+5** | 53 feitiços × 5 = **265 propostas** | ⚠️ **106 números:** os 53 níveis +1 baixam custo de mana e os 53 níveis +5 devolvem mana. **159 opções:** +2/+4 trocam forma e +3 troca área/alvo com limite ou perda. | ✅ Gate honesto: só nível 0 está disponível; os 265 continuam `proposals_are_non_executable` até a pergunta 41 ser decidida. Portanto não quebram o runtime actual, mas o desenho futuro ainda não cumpre integralmente a Lei 2. |
 | **Voto de Sangue base** | 3 camadas | 🔴 **Número:** +30/+60/+90% de dano por −20/−40/−60% de PV máximo. | `DarkMage` calcula o multiplicador e `NecromancyRuntime` reserva os PV. O golpe físico de `Player` consulta o resultado e a cena A/B passou; dano de magia continua desligado. A tensão da Lei 2 não foi decidida. |
+| **Voto de Sangue base** | 3 camadas | 🔴 **Número:** +30/+60/+90% de dano por −20/−40/−60% de PV máximo. | `DarkMage` calcula e devolve o multiplicador; `NecromancyRuntime` reserva os PV, mas o dano de `Player` nunca consulta o resultado. Hoje pode cobrar o preço sem entregar sequer o número prometido. Lei 2 falha e o fio funcional também. |
 | **Evoluções de origem** | decisão global das origens | ✅ **Opções por marco**, não números nem nível. | Só existe na spec/decisão; `abilities.json` contém a habilidade base de cada origem e nenhum catálogo/runtime de patamares. Não declarar jogável. |
 | **Receitas de melhoria** | custos de Limalha/Limalha Nobre | ➖ **Números de preço, não benefício.** | Não violam a Lei 2 por si: compram uma escolha. `limalha_nobre` continua sem ficha económica, lacuna já registada. |
 | **Nível/atributos** | nível 1→100 e oito atributos | ➖ **Fora do escopo estrito da Lei 2:** a Lei 1 decide explicitamente que estes números compram margem. | O efeito no corpo está desligado, como registado acima. |
@@ -1420,6 +1432,7 @@ os favoritos globais Dardo/Ruína/Égide. O Voto fica fora de `known_spells` e d
 favoritos; `NecromancyRuntime.apply_blood_oath()` só é alcançável se outro código
 injectar a selecção. São três defeitos distintos: violação de desenho, acesso do
 jogador desligado e dano mágico fora do multiplicador agora provado no golpe físico.
+jogador desligado e benefício desligado.
 
 ### ⚠️ `[TENSÃO]` — proposta para o Voto de Sangue, sem decisão tomada
 
@@ -1478,3 +1491,4 @@ meshes, luzes, áudio ou draw calls e faz uma consulta síncrona O(1) por golpe.
 Voto continua a usar os anéis/coração sintetizados por `SpellCastVfx` e o perfil
 sonoro data-driven já declarado; a cena A/B passou. Como não houve alteração de
 render, não se inventa nem se repete aqui um número de FPS.
+
